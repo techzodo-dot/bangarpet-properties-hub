@@ -129,6 +129,8 @@ class VercelSettingsTests(TestCase):
             "print(json.dumps({'hosts': settings.ALLOWED_HOSTS, 'csrf': settings.CSRF_TRUSTED_ORIGINS,"
             "'site': settings.SITE_URL, 'storages': settings.STORAGES, 'private': settings.PRIVATE_FILE_STORAGE,"
             "'version': settings.STATIC_VERSION, 'conn': settings.DATABASES['default']['CONN_MAX_AGE'],"
+            "'cursors': settings.DATABASES['default'].get('DISABLE_SERVER_SIDE_CURSORS'),"
+            "'prepare': settings.DATABASES['default']['OPTIONS'].get('prepare_threshold', 'unset'),"
             "'handlers': settings.LOGGING['root']['handlers'], 'finders': settings.WHITENOISE_USE_FINDERS}))"
         )
         return subprocess.run([sys.executable, "-c", code], cwd=BASE_DIR, env=env, capture_output=True, text=True)
@@ -145,6 +147,8 @@ class VercelSettingsTests(TestCase):
         self.assertEqual(data["private"], "core.storage.DatabaseStorage")
         self.assertEqual(data["version"], "XyZ9876543")
         self.assertEqual(data["conn"], 0)
+        self.assertTrue(data["cursors"])
+        self.assertIsNone(data["prepare"])
         self.assertEqual(data["handlers"], ["console"])
         self.assertTrue(data["finders"])
 

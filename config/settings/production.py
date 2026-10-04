@@ -23,6 +23,12 @@ if ON_VERCEL:
         )
     # Serverless instances come and go: don't hold connections open between requests.
     DATABASES["default"]["CONN_MAX_AGE"] = 0  # noqa: F405
+    if DATABASES["default"]["ENGINE"] == "django.db.backends.postgresql":  # noqa: F405
+        # Works behind transaction-mode poolers (Supabase Supavisor :6543,
+        # Neon/PgBouncer), which support neither prepared statements nor
+        # server-side cursors.
+        DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True  # noqa: F405
+        DATABASES["default"].setdefault("OPTIONS", {})["prepare_threshold"] = None  # noqa: F405
     _prod_host = env("VERCEL_PROJECT_PRODUCTION_URL", "")
     if _prod_host and not env("SITE_URL"):
         SITE_URL = f"https://{_prod_host}"
