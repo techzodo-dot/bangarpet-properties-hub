@@ -1,0 +1,92 @@
+{% extends "dashboard/partner_base.html" %}
+{% load bph static %}
+{% block title %}{{ prop.reference }} - manage listing | {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head">
+  <div class="min-w-0">
+    <a class="small" href="{% url 'dashboard:partner_properties' %}"><i class="bi bi-arrow-left"></i> My listings</a>
+    <h1 class="text-truncate">{{ prop.title }}</h1>
+    <p class="text-muted mb-0">{{ prop.reference }} &middot; {% status_badge prop %}{% if prop.expires_at and prop.status == 'active' %} &middot; live until {{ prop.expires_at|date:"d M Y" }}{% endif %}</p>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <a class="btn btn-soft" href="{{ prop.get_absolute_url }}" target="_blank" rel="noopener"><i class="bi bi-eye me-1"></i>{% if prop.is_public %}View live{% else %}Preview{% endif %}</a>
+    {% if prop.can_edit %}<a class="btn btn-primary" href="{% url 'dashboard:partner_property_step' prop.pk 1 %}"><i class="bi bi-pencil me-1"></i>Edit</a>{% endif %}
+  </div>
+</div>
+
+{% if prop.moderation_note and prop.status in 'rejected,changes_requested,removed' %}
+<div class="alert {% if prop.status == 'changes_requested' %}alert-warning{% else %}alert-danger{% endif %} rounded-4"><strong>{% if prop.status == 'changes_requested' %}Changes requested{% elif prop.status == 'removed' %}Removed by moderator{% else %}Not approved{% endif %}:</strong> {{ prop.moderation_note }}{% if prop.status != 'removed' %}<div class="mt-2"><a class="btn btn-sm btn-primary" href="{% url 'dashboard:partner_property_step' prop.pk 1 %}">Update and resubmit</a></div>{% endif %}</div>
+{% endif %}
+{% if prop.status == 'draft' %}<div class="alert alert-info rounded-4">This listing is a draft. <a href="{% url 'dashboard:partner_property_step' prop.pk prop.wizard_step %}">Continue where you left off</a>.</div>{% endif %}
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3"><div class="stat-card"><span class="ic"><i class="bi bi-eye"></i></span><div><div class="v">{{ prop.view_count }}</div><div class="k">Views</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card"><span class="ic"><i class="bi bi-chat-left-text"></i></span><div><div class="v">{{ prop.enquiry_count }}</div><div class="k">Enquiries</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card"><span class="ic red"><i class="bi bi-heart"></i></span><div><div class="v">{{ favourites }}</div><div class="k">Saved by users</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="stat-card"><span class="ic yellow"><i class="bi bi-calendar-check"></i></span><div><div class="v">{{ visits }}</div><div class="k">Visit requests</div></div></div></div>
+</div>
+
+<div class="row g-4">
+  <div class="col-xl-8">
+    <div class="card mb-4">
+      <div class="card-header py-3">Views in the last 30 days</div>
+      <div class="card-body">
+        {% if plan.has_performance_stats %}
+          <div class="chart-box"><canvas id="viewsChart" aria-label="Daily views chart" role="img"></canvas></div>
+          {{ chart|json_script:"views-data" }}
+        {% else %}
+          <div class="text-center py-4"><i class="bi bi-graph-up fs-1 text-muted"></i><p class="text-muted mb-2">Daily performance charts are available on the Pro and Broker plans.</p><a class="btn btn-sm btn-primary" href="{% url 'dashboard:partner_subscription' %}">Compare plans</a></div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between py-3">Recent enquiries <a class="small" href="{% url 'dashboard:partner_enquiries' %}?property={{ prop.pk }}">View all</a></div>
+      <div class="list-group list-group-flush">
+        {% for e in enquiries %}<a class="list-group-item list-group-item-action d-flex justify-content-between" href="{% url 'dashboard:partner_enquiry_detail' e.pk %}"><span>{{ e.contact_name }} <span class="small text-muted">&middot; {{ e.created_at|date:"d M" }}</span></span>{% status_badge e %}</a>
+        {% empty %}<div class="p-3 text-muted text-center">No enquiries yet.</div>{% endfor %}
+      </div>
+    </div>
+    {% if reviews or revisions %}
+    <div class="card">
+      <div class="card-header py-3">History</div>
+      <ul class="list-group list-group-flush small">
+        {% for r in reviews %}<li class="list-group-item"><strong>{{ r.get_decision_display }}</strong> by moderator &middot; {{ r.created_at|date:"d M Y, h:i A" }}{% if r.reason %}<div class="text-muted">{{ r.reason }}</div>{% endif %}</li>{% endfor %}
+        {% for rev in revisions %}<li class="list-group-item">Edited {{ rev.created_at|date:"d M Y, h:i A" }}: {% for k in rev.changes %}{{ k }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if rev.requires_moderation %} <span class="badge badge-status status-pending">sent for review</span>{% endif %}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+  <div class="col-xl-4">
+    <div class="card">
+      <div class="card-header py-3">Actions</div>
+      <div class="card-body d-grid gap-2">
+        {% if prop.can_pause %}<form method="post" action="{% url 'dashboard:partner_property_action' prop.pk 'pause' %}">{% csrf_token %}<input type="hidden" name="return_to" value="manage"><button class="btn btn-soft w-100" type="submit"><i class="bi bi-pause-circle me-1"></i>Pause listing</button></form>{% endif %}
+        {% if prop.can_resume %}<form method="post" action="{% url 'dashboard:partner_property_action' prop.pk 'resume' %}">{% csrf_token %}<input type="hidden" name="return_to" value="manage"><button class="btn btn-primary w-100" type="submit"><i class="bi bi-play-circle me-1"></i>Resume listing</button></form>{% endif %}
+        {% if prop.can_renew %}<form method="post" action="{% url 'dashboard:partner_property_action' prop.pk 'renew' %}">{% csrf_token %}<input type="hidden" name="return_to" value="manage"><button class="btn btn-accent w-100" type="submit"><i class="bi bi-arrow-repeat me-1"></i>Renew listing</button></form>{% endif %}
+        {% if prop.can_close %}
+          {% if prop.purpose == 'rent' %}<form method="post" action="{% url 'dashboard:partner_property_action' prop.pk 'rented' %}" data-confirm="Mark as rented out? Open enquiries will be closed.">{% csrf_token %}<input type="hidden" name="return_to" value="manage"><button class="btn btn-outline-primary w-100" type="submit"><i class="bi bi-house-check me-1"></i>Mark as rented</button></form>
+          {% else %}<form method="post" action="{% url 'dashboard:partner_property_action' prop.pk 'sold' %}" data-confirm="Mark as sold? Open enquiries will be closed.">{% csrf_token %}<input type="hidden" name="return_to" value="manage"><button class="btn btn-outline-primary w-100" type="submit"><i class="bi bi-house-check me-1"></i>Mark as sold</button></form>{% endif %}
+        {% endif %}
+        <form method="post" action="{% url 'dashboard:partner_property_action' prop.pk 'duplicate' %}">{% csrf_token %}<button class="btn btn-soft w-100" type="submit"><i class="bi bi-copy me-1"></i>Duplicate as new draft</button></form>
+        {% if prop.can_delete %}
+        <button class="btn btn-outline-danger w-100" type="button" data-bs-toggle="collapse" data-bs-target="#deleteBox"><i class="bi bi-trash me-1"></i>Delete listing</button>
+        <div class="collapse" id="deleteBox">
+          <form method="post" action="{% url 'dashboard:partner_property_action' prop.pk 'delete' %}" class="border rounded-4 p-3 mt-2">
+            {% csrf_token %}<input type="hidden" name="return_to" value="manage">
+            <p class="small mb-2">This removes the listing permanently from search and closes all open enquiries. Type <strong>{{ prop.reference }}</strong> to confirm.</p>
+            <input class="form-control mb-2" name="confirm_reference" autocomplete="off" aria-label="Type the listing ID to confirm">
+            <button class="btn btn-danger w-100" type="submit">Delete permanently</button>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+{% if plan.has_performance_stats %}
+<script src="{% static 'vendor/chartjs/chart.umd.min.js' %}" defer></script>
+<script src="{% static 'js/charts.js' %}" defer></script>
+{% endif %}
+{% endblock %}

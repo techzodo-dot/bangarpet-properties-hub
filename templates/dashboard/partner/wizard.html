@@ -1,0 +1,206 @@
+{% extends "dashboard/partner_base.html" %}
+{% load bph static %}
+{% block title %}{% if prop %}Edit {{ prop.reference }}{% else %}Add property{% endif %} - {{ step_title }} | {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head">
+  <div>
+    <h1>{% if prop and prop.status != 'draft' %}Edit listing {{ prop.reference }}{% else %}List your property{% endif %}</h1>
+    <p class="text-muted mb-0">Step {{ step }} of 7 &middot; {{ step_title }}{% if prop %} &middot; {% status_badge prop %}{% endif %}</p>
+  </div>
+  {% if prop %}<a class="btn btn-soft" href="{% if prop.status == 'draft' %}{% url 'dashboard:partner_properties' %}?status=draft{% else %}{% url 'dashboard:partner_property_manage' prop.pk %}{% endif %}"><i class="bi bi-x-lg me-1"></i>Close</a>{% endif %}
+</div>
+
+<nav class="wizard-steps mb-4" aria-label="Listing steps">
+  {% for num, label, icon in steps %}
+    {% if prop and num <= done_step %}
+      <a href="{% url 'dashboard:partner_property_step' prop.pk num %}" class="{% if num == step %}current{% elif num < done_step %}done{% endif %}" {% if num == step %}aria-current="step"{% endif %}><span class="n">{% if num < done_step and num != step %}<i class="bi bi-check"></i>{% else %}{{ num }}{% endif %}</span>{{ label }}</a>
+    {% else %}
+      <span class="{% if num == step %}current{% endif %}" {% if num == step %}aria-current="step"{% endif %}><span class="n">{{ num }}</span>{{ label }}</span>
+    {% endif %}
+  {% endfor %}
+</nav>
+
+{% if is_live and step != 7 %}
+<div class="alert alert-info rounded-4 small"><i class="bi bi-info-circle me-1"></i>This listing is live. Changing the title, description, category, location, price or photos sends it back for review, and it will be hidden until approved.</div>
+{% endif %}
+{% if prop.moderation_note and prop.status == 'changes_requested' or prop.moderation_note and prop.status == 'rejected' %}
+<div class="alert alert-warning rounded-4"><strong>Moderator feedback:</strong> {{ prop.moderation_note }}</div>
+{% endif %}
+
+{% if step == 1 and not prop and not slots_ok %}
+<div class="alert alert-warning rounded-4">You're using all {{ limit }} active listing slot{{ limit|pluralize }} on your plan. You can still prepare a draft; to publish it, <a href="{% url 'dashboard:partner_subscription' %}">upgrade your plan</a> or close another listing.</div>
+{% endif %}
+
+{% if step == 5 %}
+  {# ---------- Photos ---------- #}
+  <div class="surface p-4 mb-4">
+    <h2 class="h5">Photos</h2>
+    <p class="text-muted small">Upload clear photos of the actual property: exterior, living room, bedrooms, kitchen and bathrooms. JPG, PNG or WEBP, up to 5 MB each, at least 300 &times; 200 px. We remove location metadata from photos automatically.</p>
+    <form method="post" enctype="multipart/form-data" data-once>
+      {% csrf_token %}<input type="hidden" name="action" value="upload">
+      <label class="upload-drop d-block" for="{{ upload_form.images.id_for_label }}">
+        <i class="bi bi-cloud-arrow-up fs-1 text-navy"></i>
+        <div class="fw-semibold">Drag photos here or click to choose</div>
+        <div class="small text-muted">You can select several photos at once (max 20 per listing)</div>
+        {{ upload_form.images }}
+      </label>
+      {% for e in upload_form.images.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}
+      <div id="upload-errors" class="alert alert-danger small mt-2" hidden></div>
+      <div id="upload-preview" class="preview-grid mt-3"></div>
+      <button class="btn btn-primary mt-3" type="submit"><i class="bi bi-upload me-1"></i>Upload photos <span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
+    </form>
+    {% if images %}
+    <h3 class="h6 mt-4">Uploaded photos ({{ images|length }})</h3>
+    <div class="preview-grid">
+      {% for img in images %}
+      <div class="pv">
+        <img src="{{ img.thumb_url }}" alt="{{ img.alt_text }}" loading="lazy">
+        {% if img.is_primary %}<span class="glass-chip yellow position-absolute top-0 start-0 m-2">Cover</span>{% endif %}
+        <div class="pv-actions">
+          {% if not img.is_primary %}<form method="post" action="{% url 'dashboard:partner_image_action' prop.pk img.pk 'primary' %}">{% csrf_token %}<button class="btn btn-sm btn-light" type="submit" title="Set as cover photo" aria-label="Set as cover photo"><i class="bi bi-star"></i></button></form>{% endif %}
+          <form method="post" action="{% url 'dashboard:partner_image_action' prop.pk img.pk 'delete' %}" data-confirm="Remove this photo?">{% csrf_token %}<button class="btn btn-sm btn-light text-danger" type="submit" title="Remove photo" aria-label="Remove photo"><i class="bi bi-trash"></i></button></form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  <form method="post" class="surface p-4" data-once novalidate>
+    {% csrf_token %}<input type="hidden" name="action" value="save">
+    <h2 class="h5">Video tour (optional)</h2>
+    {% include "partials/field.html" with field=media_form.video_url %}
+    <div class="d-flex justify-content-between">
+      <a class="btn btn-soft" href="{% url 'dashboard:partner_property_step' prop.pk 4 %}"><i class="bi bi-arrow-left"></i> Back</a>
+      <button class="btn btn-primary" type="submit">Save &amp; continue <i class="bi bi-arrow-right"></i></button>
+    </div>
+  </form>
+
+{% elif step == 7 %}
+  {# ---------- Review & submit ---------- #}
+  {% if problems %}
+  <div class="alert alert-danger rounded-4">
+    <strong>Complete these details before submitting:</strong>
+    <ul class="mb-0 mt-2">{% for s, p in problems %}<li><a href="{% url 'dashboard:partner_property_step' prop.pk s %}">{{ p }}</a></li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+  <div class="surface p-4 mb-4">
+    <div class="d-flex justify-content-between flex-wrap gap-2">
+      <h2 class="h5 mb-3">Preview</h2>
+      <a class="btn btn-sm btn-soft" href="{{ prop.get_absolute_url }}" target="_blank" rel="noopener"><i class="bi bi-eye me-1"></i>Open full preview</a>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-5">
+        {% with img=images.0 %}{% if img %}<img src="{{ img.thumb_url }}" class="w-100 rounded-4" alt="">{% else %}<img src="{% static 'img/property-placeholder.svg' %}" class="w-100 rounded-4" alt="">{% endif %}{% endwith %}
+        <div class="small text-muted mt-1">{{ images|length }} photo{{ images|length|pluralize }}</div>
+      </div>
+      <div class="col-md-7">
+        <span class="badge badge-soft">{{ prop.get_purpose_display }}</span> <span class="badge badge-soft">{{ prop.category.name }}</span>
+        <h3 class="h4 mt-2">{{ prop.title }}</h3>
+        <p class="text-muted mb-2"><i class="bi bi-geo-alt"></i> {{ prop.public_address|default:"Location not set" }}</p>
+        <p class="fs-4 fw-bold text-navy mb-2">{% if prop.purpose == 'rent' %}{{ prop.monthly_rent|inr }} /month{% else %}{{ prop.sale_price|inr }}{% endif %}</p>
+        <ul class="list-unstyled small mb-2">
+          {% if prop.bedrooms %}<li>{{ prop.bedrooms }} bedroom(s), {{ prop.bathrooms|default:0 }} bathroom(s)</li>{% endif %}
+          {% if prop.built_up_area %}<li>{{ prop.built_up_area }} sq.ft built-up</li>{% endif %}
+          {% if prop.furnishing %}<li>{{ prop.get_furnishing_display }}</li>{% endif %}
+          <li>Contact: {{ prop.contact_name }} &middot; {{ prop.contact_phone }} ({{ prop.get_contact_visibility_display }})</li>
+        </ul>
+        {% if amenities %}<p class="small mb-0">{% for a in amenities %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+      </div>
+    </div>
+    <hr>
+    <p class="prose small mb-0">{{ prop.description|truncatechars:600 }}</p>
+  </div>
+
+  {% if submittable %}
+  <form method="post" class="surface p-4" data-once>
+    {% csrf_token %}
+    <h2 class="h5">Listing policy</h2>
+    <div class="small text-muted prose mb-3 p-3 bg-soft rounded-4">{{ site_policy }}</div>
+    {% if not slots_ok %}<div class="alert alert-warning rounded-4">Your plan's active listing limit is reached. <a href="{% url 'dashboard:partner_subscription' %}">Upgrade your plan</a> or close another listing to submit this one.</div>{% endif %}
+    <div class="form-check mb-3">{{ form.accept_policy }}<label class="form-check-label" for="{{ form.accept_policy.id_for_label }}">{{ form.accept_policy.label }}</label>{% for e in form.accept_policy.errors %}<div class="invalid-feedback d-block">{{ e }}</div>{% endfor %}</div>
+    <div class="d-flex justify-content-between flex-wrap gap-2">
+      <a class="btn btn-soft" href="{% url 'dashboard:partner_property_step' prop.pk 6 %}"><i class="bi bi-arrow-left"></i> Back</a>
+      <button class="btn btn-accent btn-lg" type="submit" {% if problems or not slots_ok %}disabled{% endif %}><i class="bi bi-send me-1"></i>Submit for approval</button>
+    </div>
+  </form>
+  {% else %}
+  <div class="alert alert-success rounded-4">This listing has already been submitted ({{ prop.get_status_display|lower }}). Changes you make in earlier steps are saved directly.</div>
+  <a class="btn btn-primary" href="{% url 'dashboard:partner_property_manage' prop.pk %}">Back to listing</a>
+  {% endif %}
+
+{% else %}
+  {# ---------- Form steps 1-4 and 6 ---------- #}
+  <form method="post" class="surface p-4" data-once novalidate>
+    {% csrf_token %}
+    {% include "partials/form_errors.html" %}
+    {% if step == 1 %}
+      {% include "partials/field.html" with field=form.title %}
+      <div class="row g-3">
+        <div class="col-md-6">{% include "partials/field.html" with field=form.category wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.purpose wrapper_class="" %}</div>
+      </div>
+      <div class="mt-3">{% include "partials/field.html" with field=form.description %}</div>
+      <div class="row g-3">
+        <div class="col-md-6">{% include "partials/field.html" with field=form.availability wrapper_class="" %}</div>
+        <div class="col-md-6" data-toggle-source="availability" data-toggle-value="from_date">{% include "partials/field.html" with field=form.available_from wrapper_class="" %}</div>
+      </div>
+    {% elif step == 2 %}
+      <div class="row g-3">
+        <div class="col-md-6">{% include "partials/field.html" with field=form.state wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.district wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.town wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.area wrapper_class="" %}</div>
+        <div class="col-md-8">{% include "partials/field.html" with field=form.locality wrapper_class="" %}</div>
+        <div class="col-md-4">{% include "partials/field.html" with field=form.pin_code wrapper_class="" %}</div>
+        <div class="col-12">{% include "partials/field.html" with field=form.street_address wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.latitude wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.longitude wrapper_class="" %}</div>
+        <div class="col-12"><p class="small text-muted mb-0">Tip: open Google Maps, long-press the property location and copy the coordinates. Coordinates help your listing appear on the map view.</p></div>
+        <div class="col-12">{% include "partials/field.html" with field=form.show_exact_address wrapper_class="" %}</div>
+      </div>
+    {% elif step == 3 %}
+      <div class="row g-3">
+        <div class="col-6 col-md-4">{% include "partials/field.html" with field=form.bedrooms wrapper_class="" %}</div>
+        <div class="col-6 col-md-4">{% include "partials/field.html" with field=form.bathrooms wrapper_class="" %}</div>
+        <div class="col-6 col-md-4">{% include "partials/field.html" with field=form.balconies wrapper_class="" %}</div>
+        <div class="col-6 col-md-4">{% include "partials/field.html" with field=form.built_up_area wrapper_class="" %}</div>
+        <div class="col-6 col-md-4">{% include "partials/field.html" with field=form.land_area wrapper_class="" %}</div>
+        <div class="col-6 col-md-4">{% include "partials/field.html" with field=form.land_area_unit wrapper_class="" %}</div>
+        <div class="col-6 col-md-4">{% include "partials/field.html" with field=form.furnishing wrapper_class="" %}</div>
+        <div class="col-6 col-md-4">{% include "partials/field.html" with field=form.parking wrapper_class="" %}</div>
+        <div class="col-6 col-md-4">{% include "partials/field.html" with field=form.property_age_years wrapper_class="" %}</div>
+        <div class="col-6 col-md-4">{% include "partials/field.html" with field=form.floor_number wrapper_class="" %}</div>
+        <div class="col-6 col-md-4">{% include "partials/field.html" with field=form.total_floors wrapper_class="" %}</div>
+        <div class="col-12">{% include "partials/field.html" with field=form.amenities wrapper_class="" %}</div>
+      </div>
+    {% elif step == 4 %}
+      <p class="text-muted small">Enter amounts in rupees without commas. This listing is <strong>{{ prop.get_purpose_display|lower }}</strong>{% if prop.status == 'draft' %} (<a href="{% url 'dashboard:partner_property_step' prop.pk 1 %}">change</a>){% endif %}.</p>
+      <div class="row g-3">
+        {% if prop.purpose == 'rent' %}
+          <div class="col-md-6">{% include "partials/field.html" with field=form.monthly_rent wrapper_class="" %}</div>
+          <div class="col-md-6">{% include "partials/field.html" with field=form.security_deposit wrapper_class="" %}</div>
+        {% else %}
+          <div class="col-md-6">{% include "partials/field.html" with field=form.sale_price wrapper_class="" %}</div>
+        {% endif %}
+        <div class="col-md-6">{% include "partials/field.html" with field=form.maintenance_charge wrapper_class="" %}</div>
+        <div class="col-12">{% include "partials/field.html" with field=form.is_negotiable wrapper_class="" %}</div>
+      </div>
+    {% elif step == 6 %}
+      <div class="row g-3">
+        <div class="col-md-6">{% include "partials/field.html" with field=form.contact_name wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.preferred_contact wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.contact_phone wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.whatsapp_number wrapper_class="" %}</div>
+        <div class="col-12">{% include "partials/field.html" with field=form.contact_visibility wrapper_class="" %}</div>
+      </div>
+    {% endif %}
+    <div class="d-flex justify-content-between flex-wrap gap-2 mt-4">
+      {% if step > 1 %}<a class="btn btn-soft" href="{% url 'dashboard:partner_property_step' prop.pk step|add:'-1' %}"><i class="bi bi-arrow-left"></i> Back</a>{% else %}<span></span>{% endif %}
+      <div class="d-flex gap-2">
+        {% if prop %}<button class="btn btn-soft" type="submit" name="save_and_exit" value="1">Save &amp; exit</button>{% endif %}
+        <button class="btn btn-primary" type="submit" name="next_step" value="1">Save &amp; continue <i class="bi bi-arrow-right"></i></button>
+      </div>
+    </div>
+  </form>
+{% endif %}
+{% endblock %}

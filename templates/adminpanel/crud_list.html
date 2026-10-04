@@ -1,0 +1,39 @@
+{% extends "adminpanel/base.html" %}
+{% block title %}{{ conf.title }} - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head">
+  <h1>{{ conf.title }}</h1>
+  <a class="btn btn-primary" href="{% url 'adminpanel:crud_add' kind %}"><i class="bi bi-plus-lg me-1"></i>Add {{ conf.singular }}</a>
+</div>
+{% if conf.active == 'catalog' %}
+<ul class="nav nav-pills mb-3 gap-1">
+  <li class="nav-item"><a class="nav-link {% if kind == 'locations' %}active{% endif %}" href="{% url 'adminpanel:crud_list' 'locations' %}">Locations</a></li>
+  <li class="nav-item"><a class="nav-link {% if kind == 'categories' %}active{% endif %}" href="{% url 'adminpanel:crud_list' 'categories' %}">Categories</a></li>
+  <li class="nav-item"><a class="nav-link {% if kind == 'amenities' %}active{% endif %}" href="{% url 'adminpanel:crud_list' 'amenities' %}">Amenities</a></li>
+</ul>
+{% elif conf.active == 'banners' %}
+<ul class="nav nav-pills mb-3 gap-1">
+  <li class="nav-item"><a class="nav-link {% if kind == 'banners' %}active{% endif %}" href="{% url 'adminpanel:crud_list' 'banners' %}">Homepage banners</a></li>
+  <li class="nav-item"><a class="nav-link {% if kind == 'ads' %}active{% endif %}" href="{% url 'adminpanel:crud_list' 'ads' %}">Sponsored placements</a></li>
+</ul>
+{% endif %}
+{% if rows %}
+<div class="table-card"><div class="table-responsive"><table class="table">
+  <thead><tr>{% if conf.image %}<th></th>{% endif %}{% for label, attr in conf.columns %}<th>{{ label }}</th>{% endfor %}<th></th></tr></thead>
+  <tbody>
+  {% for row in rows %}
+  <tr>
+    {% if conf.image %}<td>{% if row.obj.image %}<img class="thumb-sm" src="{{ row.obj.image.url }}" alt="">{% endif %}</td>{% endif %}
+    {% for cell in row.cells %}<td>{% if cell is True %}<i class="bi bi-check-circle-fill text-verified" aria-label="Yes"></i>{% elif cell is False %}<i class="bi bi-dash-circle text-muted" aria-label="No"></i>{% elif cell is None %}<span class="text-muted">-</span>{% else %}{{ cell }}{% endif %}</td>{% endfor %}
+    <td class="text-end text-nowrap">
+      <a class="btn btn-sm btn-soft" href="{% url 'adminpanel:crud_edit' kind row.obj.pk %}">Edit</a>
+      {% if not conf.no_delete %}<form class="d-inline" method="post" action="{% url 'adminpanel:crud_delete' kind row.obj.pk %}" data-confirm="Delete this {{ conf.singular }}?">{% csrf_token %}<button class="btn btn-sm btn-outline-danger" type="submit" aria-label="Delete"><i class="bi bi-trash"></i></button></form>{% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table></div></div>
+{% else %}
+  {% include "partials/empty_state.html" with icon="inbox" title="Nothing here yet" %}
+{% endif %}
+{% endblock %}

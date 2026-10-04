@@ -1,0 +1,15 @@
+{% extends "adminpanel/base.html" %}
+{% load bph %}
+{% block title %}Enquiries - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Enquiries</h1>
+  <form method="get"><select class="form-select" name="status" data-autosubmit aria-label="Status"><option value="">All statuses</option>{% for v, l in statuses %}<option value="{{ v }}" {% if status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></form>
+</div>
+<div class="table-card"><div class="table-responsive"><table class="table">
+  <thead><tr><th>#</th><th>Property</th><th>Customer</th><th>Owner/broker</th><th>Date</th><th>Status</th></tr></thead>
+  <tbody>{% for e in page_obj.object_list %}<tr><td>{{ e.pk }}</td><td><a href="{% url 'adminpanel:property_review' e.property_id %}">{{ e.property.reference }}</a></td><td class="small"><a href="{% url 'adminpanel:user_detail' e.customer_id %}">{{ e.customer.email }}</a></td><td class="small"><a href="{% url 'adminpanel:user_detail' e.partner_id %}">{{ e.partner.email }}</a></td><td class="small">{{ e.created_at|date:"d M Y" }}</td><td>{% status_badge e %}</td></tr>
+  {% empty %}<tr><td colspan="6" class="text-center text-muted p-4">No enquiries.</td></tr>{% endfor %}</tbody>
+</table></div></div>
+{% include "partials/pagination.html" %}
+<p class="small text-muted mt-2">Message contents are private between the customer and the owner/broker and are not shown here.</p>
+{% endblock %}

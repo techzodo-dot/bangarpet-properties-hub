@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 96" role="img" aria-label="Bangarpet Property Hub">
+  <g>
+    <polygon points="30,30 44,22 44,52 30,60" fill="#FFD600"/>
+    <polygon points="38,22 50,15 50,46 38,53" fill="#172B4D"/>
+    <polygon points="52,10 66,2 66,34 52,42" fill="#172B4D"/>
+    <polygon points="68,2 80,10 80,40 68,32" fill="#FFD600"/>
+    <polygon points="82,14 92,20 92,48 82,42" fill="#FFD600"/>
+    <rect x="90" y="40" width="8" height="18" fill="#172B4D"/>
+    <polygon points="10,72 60,34 110,72 100,72 60,44 22,72" fill="#172B4D"/>
+    <rect x="53" y="50" width="6.5" height="6.5" fill="#FFD600"/>
+    <rect x="61" y="50" width="6.5" height="6.5" fill="#FFD600"/>
+    <rect x="53" y="58" width="6.5" height="6.5" fill="#FFD600"/>
+    <rect x="61" y="58" width="6.5" height="6.5" fill="#FFD600"/>
+    <path d="M14 88 C 34 72, 60 70, 84 74 C 96 76, 106 74, 114 74 C 104 80, 92 82, 80 80 C 56 76, 34 78, 14 88 Z" fill="#FFD600"/>
+    <path d="M70 80 C 86 82, 100 80, 114 74 C 104 84, 88 86, 70 80 Z" fill="#172B4D"/>
+  </g>
+</svg>

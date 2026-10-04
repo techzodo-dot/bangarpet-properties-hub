@@ -1,0 +1,13 @@
+{% extends "adminpanel/base.html" %}
+{% block title %}Contact messages - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Contact messages</h1><div class="d-flex gap-2"><a class="btn btn-sm {% if show != 'all' %}btn-primary{% else %}btn-soft{% endif %}" href="?">Open</a><a class="btn btn-sm {% if show == 'all' %}btn-primary{% else %}btn-soft{% endif %}" href="?show=all">All</a></div></div>
+{% for m in page_obj.object_list %}
+<div class="surface p-3 mb-3">
+  <div class="d-flex justify-content-between flex-wrap gap-2"><div><strong>{{ m.subject }}</strong><div class="small text-muted">{{ m.name }} &middot; <a href="mailto:{{ m.email }}">{{ m.email }}</a>{% if m.phone %} &middot; {{ m.phone }}{% endif %} &middot; {{ m.created_at|date:"d M Y, h:i A" }}</div></div>
+  <form method="post">{% csrf_token %}<input type="hidden" name="id" value="{{ m.pk }}"><button class="btn btn-sm {% if m.is_resolved %}btn-soft{% else %}btn-success{% endif %}" type="submit">{% if m.is_resolved %}Reopen{% else %}Mark resolved{% endif %}</button></form></div>
+  <p class="small mt-2 mb-0 prose">{{ m.message }}</p>
+</div>
+{% empty %}{% include "partials/empty_state.html" with icon="envelope-open" title="No messages" %}{% endfor %}
+{% include "partials/pagination.html" %}
+{% endblock %}

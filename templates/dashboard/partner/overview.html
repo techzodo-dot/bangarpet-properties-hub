@@ -1,0 +1,58 @@
+{% extends "dashboard/partner_base.html" %}
+{% load bph %}
+{% block title %}Partner dashboard - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head">
+  <div><h1>Welcome, {{ user.get_short_name }}</h1><p class="text-muted mb-0">Here's how your listings are doing.</p></div>
+  <a class="btn btn-accent" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-lg me-1"></i>Add property</a>
+</div>
+
+{% if verification_status != 'verified' %}
+<div class="alert {% if verification_status == 'pending' %}alert-info{% else %}alert-warning{% endif %} rounded-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
+  <span>{% if verification_status == 'pending' %}<i class="bi bi-hourglass-split me-1"></i>Your verification documents are under review.{% elif verification_status == 'rejected' %}<i class="bi bi-x-circle me-1"></i>Your verification was not approved. Please upload new documents.{% elif verification_status == 'expired' %}<i class="bi bi-clock-history me-1"></i>Your verification has expired.{% else %}<i class="bi bi-patch-check me-1"></i>Get a <strong>Verified</strong> badge on your listings by submitting your ID documents.{% endif %}</span>
+  {% if verification_status != 'pending' %}<a class="btn btn-sm btn-primary" href="{% url 'dashboard:partner_profile' %}#verification">Get verified</a>{% endif %}
+</div>
+{% endif %}
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'dashboard:partner_properties' %}?status=active"><div class="stat-card"><span class="ic green"><i class="bi bi-house-check"></i></span><div><div class="v">{{ counts.active }}</div><div class="k">Active listings</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'dashboard:partner_properties' %}?status=pending"><div class="stat-card"><span class="ic yellow"><i class="bi bi-hourglass-split"></i></span><div><div class="v">{{ counts.pending }}</div><div class="k">Pending approval</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'dashboard:partner_properties' %}?status=attention"><div class="stat-card"><span class="ic red"><i class="bi bi-exclamation-octagon"></i></span><div><div class="v">{{ counts.rejected }}</div><div class="k">Rejected / changes</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><div class="stat-card"><span class="ic yellow"><i class="bi bi-alarm"></i></span><div><div class="v">{{ counts.expiring }}</div><div class="k">Expiring in 7 days</div></div></div></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'dashboard:partner_enquiries' %}"><div class="stat-card"><span class="ic"><i class="bi bi-chat-left-text"></i></span><div><div class="v">{{ total_enquiries }}</div><div class="k">Total enquiries{% if new_enquiries %} &middot; <span class="text-danger">{{ new_enquiries }} new</span>{% endif %}</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'dashboard:partner_visits' %}"><div class="stat-card"><span class="ic"><i class="bi bi-calendar-plus"></i></span><div><div class="v">{{ visit_requests }}</div><div class="k">Visit requests</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><div class="stat-card"><span class="ic"><i class="bi bi-eye"></i></span><div><div class="v">{{ counts.views|default:0 }}</div><div class="k">Listing views</div></div></div></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'dashboard:partner_subscription' %}"><div class="stat-card"><span class="ic yellow"><i class="bi bi-stars"></i></span><div><div class="v fs-5">{{ plan.name|default:"Free" }}</div><div class="k">{{ used_slots }} / {{ plan.listing_limit|default:1 }} slots used{% if subscription %} &middot; {{ subscription.days_remaining }} days left{% endif %}</div></div></div></a></div>
+</div>
+
+<div class="row g-4">
+  <div class="col-xl-7">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between py-3">Recent enquiries <a class="small" href="{% url 'dashboard:partner_enquiries' %}">View all</a></div>
+      <div class="list-group list-group-flush">
+        {% for e in recent_enquiries %}
+        <a class="list-group-item list-group-item-action d-flex justify-content-between gap-2 align-items-center" href="{% url 'dashboard:partner_enquiry_detail' e.pk %}">
+          <div class="min-w-0"><div class="fw-semibold">{{ e.contact_name }}</div><div class="small text-muted text-truncate">{{ e.property.reference }} &middot; {{ e.message|truncatechars:60 }}</div></div>
+          {% status_badge e %}
+        </a>
+        {% empty %}<div class="p-4 text-center text-muted">No enquiries yet. Complete your listing details and photos to attract more interest.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-5">
+    <div class="card mb-4">
+      <div class="card-header py-3">Needs your attention</div>
+      <div class="list-group list-group-flush">
+        {% for p in recent_reviews %}
+          <a class="list-group-item list-group-item-action" href="{% url 'dashboard:partner_property_manage' p.pk %}"><div class="d-flex justify-content-between"><strong class="text-truncate">{{ p.title }}</strong>{% status_badge p %}</div><div class="small text-muted">{{ p.moderation_note|truncatechars:90 }}</div></a>
+        {% endfor %}
+        {% for p in expiring_list %}
+          <a class="list-group-item list-group-item-action" href="{% url 'dashboard:partner_property_manage' p.pk %}"><div class="d-flex justify-content-between"><strong class="text-truncate">{{ p.title }}</strong><span class="badge badge-status status-pending">Expires {{ p.expires_at|date:"d M" }}</span></div></a>
+        {% endfor %}
+        {% if counts.drafts %}<a class="list-group-item list-group-item-action" href="{% url 'dashboard:partner_properties' %}?status=draft"><i class="bi bi-pencil-square me-1"></i>{{ counts.drafts }} draft listing{{ counts.drafts|pluralize }} to finish</a>{% endif %}
+        {% if not recent_reviews and not expiring_list and not counts.drafts %}<div class="p-4 text-center text-muted">All caught up.</div>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="dash-layout">
+    <aside class="dash-sidebar" aria-label="Dashboard navigation">
+      <div class="surface p-3">
+        <div class="side-profile d-flex align-items-center gap-2 px-2 pb-3 mb-2 border-bottom">
+          {% load bph %}{% if user.profile.avatar %}<img class="avatar avatar-sm" src="{{ user.profile.avatar.url }}" alt="">{% else %}<span class="avatar avatar-sm">{{ user|initials }}</span>{% endif %}
+          <div class="min-w-0"><div class="fw-semibold text-truncate">{{ user.display_name }}</div><div class="small text-muted">{{ user.get_role_display }}</div></div>
+        </div>
+        <nav class="nav flex-column dash-nav">{% block sidebar_links %}{% endblock %}</nav>
+      </div>
+    </aside>
+    <section class="min-w-0">
+      {% if not user.email_verified %}
+      <div class="alert alert-warning rounded-4 d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <span><i class="bi bi-envelope-exclamation me-1"></i>Please verify your email address ({{ user.email }}).</span>
+        <form method="post" action="{% url 'accounts:resend_verification' %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="btn btn-sm btn-outline-dark" type="submit">Resend link</button></form>
+      </div>
+      {% endif %}
+      {% block dash_content %}{% endblock %}
+    </section>
+  </div>
+</div>
+{% endblock %}

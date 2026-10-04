@@ -1,0 +1,19 @@
+<form method="post" action="{% url 'enquiries:create' prop.pk %}" data-once novalidate>
+  {% csrf_token %}
+  {% include "partials/form_errors.html" %}
+  <div class="row g-3">
+    <div class="col-md-6">{% include "partials/field.html" with field=form.contact_name wrapper_class="" %}</div>
+    <div class="col-md-6">{% include "partials/field.html" with field=form.contact_phone wrapper_class="" %}</div>
+    <div class="col-md-6">{% include "partials/field.html" with field=form.contact_email wrapper_class="" %}</div>
+    <div class="col-md-6">{% include "partials/field.html" with field=form.preferred_contact wrapper_class="" %}</div>
+    <div class="col-12">{% include "partials/field.html" with field=form.message wrapper_class="" %}</div>
+    <div class="col-12">{% include "partials/field.html" with field=form.request_visit wrapper_class="" %}</div>
+  </div>
+  <div class="row g-3 mt-0" data-toggle-source="request_visit" data-toggle-value="on">
+    <div class="col-md-6">{% include "partials/field.html" with field=form.preferred_date wrapper_class="" %}</div>
+    <div class="col-md-6">{% include "partials/field.html" with field=form.preferred_slot wrapper_class="" %}</div>
+    <div class="col-12">{% include "partials/field.html" with field=form.visit_note wrapper_class="" %}</div>
+  </div>
+  <p class="small text-muted mt-3 mb-3">Your name, phone and message will be shared with the owner/broker of this listing.</p>
+  <button class="btn btn-primary w-100" type="submit">Send <span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
+</form>

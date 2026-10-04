@@ -1,0 +1,4 @@
+{% extends base_template %}
+{% load humanize %}
+{% block title %}Notifications - {{ site.site_name }}{% endblock %}
+{% block dash_content %}{% include "notifications/_list.html" %}{% endblock %}

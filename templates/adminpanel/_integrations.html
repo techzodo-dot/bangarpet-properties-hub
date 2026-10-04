@@ -1,0 +1,8 @@
+{% for i in integrations %}
+<div class="integration-row">
+  <div><div class="fw-semibold">{{ i.name }}</div>{% if not i.configured %}<div class="small text-muted">{{ i.hint }}</div>{% endif %}</div>
+  {% if i.configured and i.enabled %}<span class="badge badge-status status-active"><i class="bi bi-check-circle"></i> Configured</span>
+  {% elif i.configured %}<span class="badge badge-status status-paused">Configured, disabled</span>
+  {% else %}<span class="badge badge-status status-not_configured"><i class="bi bi-exclamation-circle"></i> Not configured</span>{% endif %}
+</div>
+{% endfor %}

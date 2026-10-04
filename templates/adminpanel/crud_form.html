@@ -1,0 +1,14 @@
+{% extends "adminpanel/base.html" %}
+{% block title %}{% if obj %}Edit{% else %}Add{% endif %} {{ conf.singular }} - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head"><div><a class="small" href="{% url 'adminpanel:crud_list' kind %}"><i class="bi bi-arrow-left"></i> {{ conf.title }}</a><h1>{% if obj %}Edit {{ conf.singular }}{% else %}Add {{ conf.singular }}{% endif %}</h1></div></div>
+<form method="post" enctype="multipart/form-data" class="surface p-4" style="max-width:820px" data-once novalidate>
+  {% csrf_token %}
+  {% include "partials/form_errors.html" %}
+  <div class="row g-3">
+    {% for field in form %}<div class="{% if field.widget_type == 'textarea' or field.widget_type == 'clearablefile' %}col-12{% else %}col-md-6{% endif %}">{% include "partials/field.html" with wrapper_class="" %}</div>{% endfor %}
+  </div>
+  <button class="btn btn-primary mt-4" type="submit">Save</button>
+  <a class="btn btn-link mt-4" href="{% url 'adminpanel:crud_list' kind %}">Cancel</a>
+</form>
+{% endblock %}

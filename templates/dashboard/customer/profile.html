@@ -1,0 +1,20 @@
+{% extends base_template %}
+{% block title %}My profile - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>My profile</h1></div>
+<form method="post" enctype="multipart/form-data" class="surface p-4" data-once novalidate>
+  {% csrf_token %}
+  {% include "partials/form_errors.html" with form=account_form %}
+  <div class="row g-3">
+    <div class="col-md-6">{% include "partials/field.html" with field=account_form.full_name wrapper_class="" %}</div>
+    <div class="col-md-6"><label class="form-label">Email</label><input class="form-control" value="{{ user.email }}" disabled>{% if user.email_verified %}<div class="form-text text-verified"><i class="bi bi-check-circle"></i> Verified</div>{% else %}<div class="form-text">Not verified yet</div>{% endif %}</div>
+    <div class="col-md-6">{% include "partials/field.html" with field=account_form.phone wrapper_class="" %}</div>
+    <div class="col-md-6">{% include "partials/field.html" with field=profile_form.whatsapp_number wrapper_class="" %}</div>
+    <div class="col-md-6">{% include "partials/field.html" with field=profile_form.city wrapper_class="" %}</div>
+    <div class="col-md-6">{% include "partials/field.html" with field=profile_form.preferred_contact wrapper_class="" %}</div>
+    <div class="col-12">{% include "partials/field.html" with field=profile_form.avatar wrapper_class="" %}</div>
+    <div class="col-12">{% include "partials/field.html" with field=profile_form.about wrapper_class="" %}</div>
+  </div>
+  <button class="btn btn-primary mt-3" type="submit">Save profile</button>
+</form>
+{% endblock %}

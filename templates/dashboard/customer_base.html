@@ -1,0 +1,17 @@
+{% extends "dashboard/dash_layout.html" %}
+{% block sidebar_links %}
+<span class="side-label">My account</span>
+<a class="nav-link {% if active == 'overview' %}active{% endif %}" href="{% url 'dashboard:customer_overview' %}"><i class="bi bi-grid"></i>Overview</a>
+<a class="nav-link {% if active == 'enquiries' %}active{% endif %}" href="{% url 'dashboard:customer_enquiries' %}"><i class="bi bi-chat-left-text"></i>My enquiries</a>
+<a class="nav-link {% if active == 'visits' %}active{% endif %}" href="{% url 'dashboard:customer_visits' %}"><i class="bi bi-calendar-check"></i>Property visits</a>
+<a class="nav-link {% if active == 'favourites' %}active{% endif %}" href="{% url 'dashboard:customer_favourites' %}"><i class="bi bi-heart"></i>Saved properties</a>
+<a class="nav-link {% if active == 'searches' %}active{% endif %}" href="{% url 'dashboard:customer_saved_searches' %}"><i class="bi bi-bookmark"></i>Saved searches</a>
+<a class="nav-link {% if active == 'recent' %}active{% endif %}" href="{% url 'dashboard:customer_recent' %}"><i class="bi bi-clock-history"></i>Recently viewed</a>
+<a class="nav-link {% if active == 'notifications' %}active{% endif %}" href="{% url 'notifications:list' %}"><i class="bi bi-bell"></i>Notifications{% if unread_notifications %} <span class="badge bg-danger ms-auto">{{ unread_notifications }}</span>{% endif %}</a>
+<span class="side-label">Settings</span>
+<a class="nav-link {% if active == 'profile' %}active{% endif %}" href="{% url 'dashboard:customer_profile' %}"><i class="bi bi-person"></i>My profile</a>
+<a class="nav-link {% if active == 'settings' %}active{% endif %}" href="{% url 'dashboard:customer_settings' %}"><i class="bi bi-sliders"></i>Notification settings</a>
+<a class="nav-link {% if active == 'password' %}active{% endif %}" href="{% url 'accounts:password_change' %}"><i class="bi bi-key"></i>Change password</a>
+{% if user.is_partner %}<a class="nav-link" href="{% url 'dashboard:partner_overview' %}"><i class="bi bi-buildings"></i>Partner dashboard</a>{% endif %}
+<form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="nav-link w-100 text-start border-0 bg-transparent text-danger" type="submit"><i class="bi bi-box-arrow-right text-danger"></i>Sign out</button></form>
+{% endblock %}

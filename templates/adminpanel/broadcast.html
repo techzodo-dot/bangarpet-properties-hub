@@ -1,0 +1,15 @@
+{% extends "adminpanel/base.html" %}
+{% block title %}Send notice - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Send an important notice</h1></div>
+<form method="post" class="surface p-4" style="max-width:720px" data-once data-confirm="Send this notice now?">
+  {% csrf_token %}
+  {% include "partials/form_errors.html" %}
+  {% include "partials/field.html" with field=form.audience %}
+  {% include "partials/field.html" with field=form.title %}
+  {% include "partials/field.html" with field=form.body %}
+  {% include "partials/field.html" with field=form.send_external %}
+  <p class="small text-muted">In-app notices are always delivered. External delivery uses each member's email/WhatsApp preferences and is skipped if the integration is not configured.</p>
+  <button class="btn btn-primary" type="submit"><i class="bi bi-megaphone me-1"></i>Send notice</button>
+</form>
+{% endblock %}

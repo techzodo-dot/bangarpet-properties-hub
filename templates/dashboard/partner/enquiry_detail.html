@@ -1,0 +1,72 @@
+{% extends "dashboard/partner_base.html" %}
+{% load bph %}
+{% block title %}Enquiry #{{ enquiry.pk }} - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head">
+  <div><a class="small" href="{% url 'dashboard:partner_enquiries' %}"><i class="bi bi-arrow-left"></i> All enquiries</a><h1>Enquiry from {{ enquiry.contact_name }}</h1></div>
+  {% status_badge enquiry %}
+</div>
+<div class="row g-4">
+  <div class="col-xl-7">
+    <div class="surface p-4 mb-4">
+      <div class="small text-muted mb-2">About <a href="{{ enquiry.property.get_absolute_url }}" target="_blank" rel="noopener">{{ enquiry.property.reference }} - {{ enquiry.property.title }}</a> &middot; {{ enquiry.created_at|date:"d M Y, h:i A" }}</div>
+      <p class="fs-6">{{ enquiry.message|linebreaksbr }}</p>
+      <hr>
+      <div class="row g-2 small">
+        <div class="col-sm-6"><i class="bi bi-telephone me-1"></i><a href="tel:{{ enquiry.contact_phone }}">{{ enquiry.contact_phone }}</a></div>
+        {% if enquiry.contact_email %}<div class="col-sm-6"><i class="bi bi-envelope me-1"></i><a href="mailto:{{ enquiry.contact_email }}">{{ enquiry.contact_email }}</a></div>{% endif %}
+        <div class="col-sm-6"><i class="bi bi-chat-dots me-1"></i>Prefers: {{ enquiry.get_preferred_contact_display }}</div>
+      </div>
+      <div class="d-flex flex-wrap gap-2 mt-3">
+        <a class="btn btn-primary btn-sm" href="tel:{{ enquiry.contact_phone }}"><i class="bi bi-telephone me-1"></i>Call</a>
+        <a class="btn btn-whatsapp btn-sm" target="_blank" rel="noopener" href="https://wa.me/{{ enquiry.contact_phone|cut:'+' }}?text={{ 'Hello, regarding your enquiry on Bangarpet Property Hub for '|urlencode }}{{ enquiry.property.reference|urlencode }}"><i class="bi bi-whatsapp me-1"></i>WhatsApp</a>
+        {% if enquiry.contact_email %}<a class="btn btn-soft btn-sm" href="mailto:{{ enquiry.contact_email }}?subject={{ 'Your enquiry for '|urlencode }}{{ enquiry.property.reference|urlencode }}"><i class="bi bi-envelope me-1"></i>Email</a>{% endif %}
+      </div>
+    </div>
+
+    <div class="surface p-4 mb-4">
+      <h2 class="h6">Visits</h2>
+      {% for v in visits %}
+        <div class="border rounded-4 p-3 mb-2">
+          <div class="d-flex justify-content-between"><span>{% if v.scheduled_at %}{{ v.scheduled_at|date:"D, d M Y h:i A" }}{% else %}Requested: {{ v.preferred_date|date:"D, d M Y" }} ({{ v.get_preferred_slot_display }}){% endif %}</span>{% status_badge v %}</div>
+          {% if v.customer_note %}<div class="small text-muted">Customer note: {{ v.customer_note }}</div>{% endif %}
+          {% if v.is_active %}
+          <form method="post" action="{% url 'dashboard:partner_visit_action' v.pk 'schedule' %}" class="row g-2 mt-1 align-items-end">
+            {% csrf_token %}<input type="hidden" name="return_to" value="enquiry">
+            <div class="col-sm-4"><label class="form-label small">Date</label><input class="form-control" type="date" name="visit-scheduled_date" value="{{ v.preferred_date|date:'Y-m-d' }}" required></div>
+            <div class="col-sm-3"><label class="form-label small">Time</label><input class="form-control" type="time" name="visit-scheduled_time" value="{% if v.scheduled_at %}{{ v.scheduled_at|date:'H:i' }}{% else %}10:00{% endif %}" required></div>
+            <div class="col-sm-5"><label class="form-label small">Note</label><input class="form-control" name="visit-partner_note" maxlength="500" value="{{ v.partner_note }}" placeholder="Meeting point / instructions"></div>
+            <div class="col-12 d-flex flex-wrap gap-2"><button class="btn btn-sm btn-primary" type="submit">{% if v.status == 'scheduled' %}Reschedule{% else %}Confirm visit{% endif %}</button></div>
+          </form>
+          <div class="d-flex gap-2 mt-2">
+            {% if v.status == 'scheduled' %}<form method="post" action="{% url 'dashboard:partner_visit_action' v.pk 'complete' %}">{% csrf_token %}<input type="hidden" name="return_to" value="enquiry"><button class="btn btn-sm btn-soft" type="submit">Mark completed</button></form>{% endif %}
+            <form method="post" action="{% url 'dashboard:partner_visit_action' v.pk 'cancel' %}" data-confirm="Cancel this visit? The customer will be notified.">{% csrf_token %}<input type="hidden" name="return_to" value="enquiry"><button class="btn btn-sm btn-outline-danger" type="submit">Cancel visit</button></form>
+          </div>
+          {% endif %}
+        </div>
+      {% empty %}<p class="text-muted small mb-0">No visit requested.</p>{% endfor %}
+    </div>
+  </div>
+  <div class="col-xl-5">
+    {% if enquiry.is_open %}
+    <form method="post" class="surface p-4 mb-4" data-once>
+      {% csrf_token %}
+      <h2 class="h6">Update status</h2>
+      {% include "partials/field.html" with field=status_form.status %}
+      {% include "partials/field.html" with field=status_form.note %}
+      <button class="btn btn-primary" type="submit">Update &amp; notify customer</button>
+    </form>
+    {% endif %}
+    <form method="post" class="surface p-4 mb-4">
+      {% csrf_token %}
+      {% include "partials/field.html" with field=note_form.partner_note %}
+      <button class="btn btn-soft" type="submit">Save notes</button>
+      <div class="form-text">Only you can see these notes.</div>
+    </form>
+    <div class="surface p-4">
+      <h2 class="h6">Timeline</h2>
+      <ul class="list-unstyled small mb-0">{% for c in history %}<li class="mb-2"><i class="bi bi-dot"></i>{{ c.created_at|date:"d M, h:i A" }} - {{ c.get_to_status_display }}{% if c.note %}: <span class="text-muted">{{ c.note }}</span>{% endif %}</li>{% endfor %}</ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "adminpanel/base.html" %}
+{% block title %}Users - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Users</h1></div>
+<form method="get" class="surface p-3 mb-3"><div class="row g-2 align-items-end">
+  <div class="col-md-5"><label class="form-label small" for="uq">Search</label><input id="uq" class="form-control" type="search" name="q" value="{{ q }}" placeholder="Name, email, phone or agency"></div>
+  <div class="col-md-3"><label class="form-label small" for="ur">Role</label><select id="ur" class="form-select" name="role"><option value="">All roles</option>{% for v, l in roles %}<option value="{{ v }}" {% if role == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><label class="form-label small" for="us">Status</label><select id="us" class="form-select" name="status"><option value="">Any</option><option value="active" {% if status == 'active' %}selected{% endif %}>Active</option><option value="suspended" {% if status == 'suspended' %}selected{% endif %}>Suspended</option><option value="unverified_email" {% if status == 'unverified_email' %}selected{% endif %}>Email not verified</option></select></div>
+  <div class="col-md-2 d-grid"><button class="btn btn-primary">Filter</button></div>
+</div></form>
+<div class="table-card"><div class="table-responsive"><table class="table">
+  <thead><tr><th>Name</th><th>Email / phone</th><th>Role</th><th>Verification</th><th>Joined</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for u in page_obj.object_list %}
+  <tr>
+    <td><strong>{{ u.full_name }}</strong>{% if u.role == 'broker' and u.broker_profile %}<div class="small text-muted">{{ u.broker_profile.agency_name }}</div>{% endif %}</td>
+    <td class="small">{{ u.email }}{% if u.email_verified %} <i class="bi bi-check-circle text-verified" title="Email verified"></i>{% endif %}<div class="text-muted">{{ u.phone }}</div></td>
+    <td><span class="badge badge-soft">{{ u.get_role_display }}</span></td>
+    <td>{% if u.is_partner %}<span class="badge badge-status status-{{ u.verification_status }}">{{ u.verification_status|cut:"_"|capfirst }}</span>{% else %}<span class="text-muted small">-</span>{% endif %}</td>
+    <td class="small text-nowrap">{{ u.date_joined|date:"d M Y" }}</td>
+    <td>{% if u.is_active %}<span class="badge badge-status status-active">Active</span>{% else %}<span class="badge badge-status status-rejected">Suspended</span>{% endif %}</td>
+    <td class="text-end"><a class="btn btn-sm btn-soft" href="{% url 'adminpanel:user_detail' u.pk %}">View</a></td>
+  </tr>
+  {% empty %}<tr><td colspan="7" class="text-center text-muted p-4">No users found.</td></tr>{% endfor %}
+  </tbody>
+</table></div></div>
+{% include "partials/pagination.html" %}
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "core/page_base.html" %}
+{% load static %}
+{% block title %}About us - {{ site.site_name }}{% endblock %}
+{% block meta_description %}Bangarpet Property Hub is a local property marketplace for Bangarpet, Karnataka, connecting tenants, buyers, owners and brokers.{% endblock %}
+{% block crumb %}About{% endblock %}
+{% block page_heading %}About Bangarpet Property Hub{% endblock %}
+{% block page_body %}
+<div class="row g-4 g-lg-5 align-items-center">
+  <div class="col-lg-7">
+    <h2 class="h3">A property marketplace built for Bangarpet</h2>
+    <p class="lead text-muted">{{ site.tagline }}</p>
+    <p>Finding a rental house, a PG room or a plot in Bangarpet often depends on word of mouth, wall posters and phone calls. Bangarpet Property Hub brings those listings online in one place, so tenants and buyers can compare options and property owners can reach serious enquiries.</p>
+    <p>We focus on Bangarpet town and nearby places in Kolar district, including KGF, Kolar, Malur, Budikote and Kamasamudra.</p>
+    <h3 class="h5 mt-4">What we stand for</h3>
+    <div class="trust-strip mt-3">
+      <div class="item"><i class="bi bi-shield-check"></i><div><strong>Reviewed listings</strong><div class="text-muted small">Every listing is checked by our team before it is published.</div></div></div>
+      <div class="item"><i class="bi bi-person-lock"></i><div><strong>Privacy first</strong><div class="text-muted small">Owners control who sees their phone number and exact address.</div></div></div>
+      <div class="item"><i class="bi bi-chat-square-heart"></i><div><strong>Direct contact</strong><div class="text-muted small">Talk to owners and brokers directly, without hidden charges from us.</div></div></div>
+    </div>
+  </div>
+  <div class="col-lg-5 text-center"><img src="{% static 'img/logo-full.webp' %}" alt="Bangarpet Property Hub logo" class="img-fluid" style="max-width:420px" loading="lazy"></div>
+</div>
+<div class="surface p-4 mt-5">
+  <h2 class="h5">A note on verification</h2>
+  <p class="mb-0 text-muted">The "Verified" badge means our team reviewed identity (and for brokers, business) documents submitted by the owner or broker. It is <strong>not</strong> a legal verification of property title or ownership. Before paying any advance or signing an agreement, check original documents yourself and consider consulting a lawyer.</p>
+</div>
+{% endblock %}

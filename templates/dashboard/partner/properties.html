@@ -1,0 +1,50 @@
+{% extends "dashboard/partner_base.html" %}
+{% load bph %}
+{% block title %}My listings - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head">
+  <div><h1>My listings</h1><p class="small text-muted mb-0">{{ used_slots }} of {{ limit }} active listing slots used. <a href="{% url 'dashboard:partner_subscription' %}">Need more?</a></p></div>
+  <a class="btn btn-accent" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-lg me-1"></i>Add property</a>
+</div>
+<div class="d-flex flex-wrap gap-2 mb-3 align-items-center">
+  <a class="btn btn-sm {% if not status %}btn-primary{% else %}btn-soft{% endif %}" href="?">All</a>
+  <a class="btn btn-sm {% if status == 'active' %}btn-primary{% else %}btn-soft{% endif %}" href="?status=active">Active</a>
+  <a class="btn btn-sm {% if status == 'pending' %}btn-primary{% else %}btn-soft{% endif %}" href="?status=pending">Pending</a>
+  <a class="btn btn-sm {% if status == 'attention' %}btn-primary{% else %}btn-soft{% endif %}" href="?status=attention">Needs attention</a>
+  <a class="btn btn-sm {% if status == 'draft' %}btn-primary{% else %}btn-soft{% endif %}" href="?status=draft">Drafts</a>
+  <a class="btn btn-sm {% if status == 'paused' %}btn-primary{% else %}btn-soft{% endif %}" href="?status=paused">Paused</a>
+  <a class="btn btn-sm {% if status == 'closed' %}btn-primary{% else %}btn-soft{% endif %}" href="?status=closed">Closed</a>
+  <form class="ms-auto" method="get">{% if status %}<input type="hidden" name="status" value="{{ status }}">{% endif %}<input class="form-control form-control-sm" style="min-height:38px" type="search" name="q" value="{{ q }}" placeholder="Search title or ID" aria-label="Search listings"></form>
+</div>
+{% if page_obj.object_list %}
+<div class="table-card"><div class="table-responsive"><table class="table align-middle">
+  <thead><tr><th>Listing</th><th>Status</th><th>Price</th><th class="text-center">Views</th><th class="text-center">Enquiries</th><th class="text-center">Saved</th><th>Expires</th><th></th></tr></thead>
+  <tbody>
+  {% for p in page_obj.object_list %}
+  <tr>
+    <td style="min-width:260px">
+      <div class="d-flex gap-2 align-items-center">
+        {% with img=p.images.all.0 %}{% if img %}<img class="thumb-sm" src="{{ img.thumb_url }}" alt="">{% else %}<span class="thumb-sm d-inline-grid" style="place-items:center"><i class="bi bi-image text-muted"></i></span>{% endif %}{% endwith %}
+        <div class="min-w-0"><a class="fw-semibold d-block text-truncate" style="max-width:260px" href="{% url 'dashboard:partner_property_manage' p.pk %}">{{ p.title }}</a><span class="small text-muted">{{ p.reference }} &middot; {{ p.category.name }}</span></div>
+      </div>
+    </td>
+    <td>{% status_badge p %}{% if p.is_expiring_soon %}<div class="small text-danger mt-1">Expiring soon</div>{% endif %}</td>
+    <td class="text-nowrap">{% if p.price %}{% if p.purpose == 'rent' %}{{ p.price|inr }}/mo{% else %}{{ p.price|inr_short }}{% endif %}{% else %}-{% endif %}</td>
+    <td class="text-center">{{ p.view_count }}</td>
+    <td class="text-center">{{ p.enquiry_count }}</td>
+    <td class="text-center">{{ p.fav_count }}</td>
+    <td class="small text-nowrap">{% if p.expires_at %}{{ p.expires_at|date:"d M Y" }}{% else %}-{% endif %}</td>
+    <td class="text-end text-nowrap">
+      {% if p.status == 'draft' %}<a class="btn btn-sm btn-primary" href="{% url 'dashboard:partner_property_step' p.pk p.wizard_step|default:1 %}">Continue</a>
+      {% else %}<a class="btn btn-sm btn-soft" href="{% url 'dashboard:partner_property_manage' p.pk %}">Manage</a>{% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table></div></div>
+{% include "partials/pagination.html" %}
+{% else %}
+  {% url 'dashboard:partner_property_add' as add_url %}
+  {% include "partials/empty_state.html" with icon="buildings" title="No listings here" text="Add your first property - it takes about 5 minutes." action_url=add_url action_label="Add property" %}
+{% endif %}
+{% endblock %}

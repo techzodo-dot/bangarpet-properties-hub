@@ -1,0 +1,30 @@
+{% extends "adminpanel/base.html" %}
+{% load bph %}
+{% block title %}Reports - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Reports &amp; complaints</h1>
+  <form method="get"><select class="form-select" name="status" data-autosubmit aria-label="Status"><option value="all" {% if status == 'all' %}selected{% endif %}>All</option>{% for v, l in statuses %}<option value="{{ v }}" {% if status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></form>
+</div>
+{% for r in page_obj.object_list %}
+<div class="surface p-3 mb-3">
+  <div class="d-flex flex-wrap justify-content-between gap-2">
+    <div><strong>{{ r.get_reason_display }}</strong> &middot; <a href="{% url 'adminpanel:property_review' r.property_id %}">{{ r.property.reference }} - {{ r.property.title|truncatechars:50 }}</a><div class="small text-muted">Reported by {{ r.reporter.email }} on {{ r.created_at|date:"d M Y, h:i A" }}</div></div>
+    {% status_badge r %}
+  </div>
+  {% if r.details %}<p class="small mt-2 mb-2">{{ r.details }}</p>{% endif %}
+  {% if r.admin_note %}<p class="small text-muted mb-2">Admin note: {{ r.admin_note }}</p>{% endif %}
+  {% if r.status == 'open' or r.status == 'reviewing' %}
+  <form method="post" class="d-flex flex-wrap gap-2 align-items-center" action="{% url 'adminpanel:report_action' r.pk 'resolve' %}">{% csrf_token %}
+    <input class="form-control form-control-sm" style="max-width:340px;min-height:36px" name="note" placeholder="Internal note (optional)">
+    {% if r.status == 'open' %}<button class="btn btn-sm btn-soft" type="submit" formaction="{% url 'adminpanel:report_action' r.pk 'reviewing' %}">Mark reviewing</button>{% endif %}
+    <button class="btn btn-sm btn-success" type="submit">Resolve (action taken)</button>
+    <button class="btn btn-sm btn-outline-secondary" type="submit" formaction="{% url 'adminpanel:report_action' r.pk 'dismiss' %}">Dismiss</button>
+    <a class="btn btn-sm btn-outline-danger" href="{% url 'adminpanel:property_review' r.property_id %}">Act on listing</a>
+  </form>
+  {% endif %}
+</div>
+{% empty %}
+  {% include "partials/empty_state.html" with icon="flag" title="No reports" text="Reports submitted by users will appear here." %}
+{% endfor %}
+{% include "partials/pagination.html" %}
+{% endblock %}

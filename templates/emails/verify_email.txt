@@ -1,0 +1,10 @@
+Hello {{ user.get_short_name }},
+
+Thank you for registering with Bangarpet Property Hub.
+
+Please confirm your email address by opening this link (valid for 3 days):
+{{ link }}
+
+If you did not create this account, you can ignore this email.
+
+- Bangarpet Property Hub

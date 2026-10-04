@@ -1,0 +1,27 @@
+{% extends base_template %}
+{% load bph static %}
+{% block title %}Complete payment - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Complete your payment</h1></div>
+<div class="surface p-4" style="max-width:560px">
+  {% if test_mode %}<div class="alert alert-warning rounded-4 small"><i class="bi bi-cone-striped me-1"></i>Razorpay is in <strong>test mode</strong>. No real money will be charged.</div>{% endif %}
+  <dl class="row mb-4">
+    <dt class="col-5 text-muted fw-normal">Plan</dt><dd class="col-7 fw-semibold">{{ payment.plan.name }} ({{ payment.plan.billing_period_days }} days)</dd>
+    <dt class="col-5 text-muted fw-normal">Amount</dt><dd class="col-7 fw-semibold">{{ payment.amount|inr }}</dd>
+    <dt class="col-5 text-muted fw-normal">Order</dt><dd class="col-7 small">{{ payment.gateway_order_id }}</dd>
+  </dl>
+  <button id="rzp-button" class="btn btn-accent btn-lg w-100" type="button"><i class="bi bi-lock me-1"></i>Pay {{ payment.amount|inr }} securely</button>
+  <p class="small text-muted mt-3 mb-0">UPI, cards, net banking and wallets are supported via Razorpay. We never see or store your card details.</p>
+  <form id="rzp-success" method="post" action="{% url 'payments:verify' %}" hidden>{% csrf_token %}
+    <input type="hidden" name="razorpay_order_id"><input type="hidden" name="razorpay_payment_id"><input type="hidden" name="razorpay_signature">
+  </form>
+  <form id="rzp-failed" method="post" action="{% url 'payments:failed' %}" hidden>{% csrf_token %}
+    <input type="hidden" name="razorpay_order_id" value="{{ payment.gateway_order_id }}"><input type="hidden" name="description">
+  </form>
+  <div id="rzp-config" hidden data-key="{{ key_id }}" data-amount="{{ payment.amount_paise }}" data-order="{{ payment.gateway_order_id }}" data-name="{{ site.site_name }}" data-description="{{ payment.plan.name }} plan" data-prefill-name="{{ user.full_name }}" data-prefill-email="{{ user.email }}" data-prefill-contact="{{ user.phone }}"></div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+<script src="{% static 'js/razorpay.js' %}" defer></script>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "adminpanel/base.html" %}
+{% block title %}Settings - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Platform settings</h1></div>
+<div class="row g-4">
+  <div class="col-xl-8">
+    <form method="post" enctype="multipart/form-data" class="surface p-4" data-once novalidate>
+      {% csrf_token %}
+      {% include "partials/form_errors.html" %}
+      <h2 class="h6 text-uppercase text-muted">Brand &amp; contact</h2>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">{% include "partials/field.html" with field=form.site_name wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.tagline wrapper_class="" %}</div>
+        <div class="col-12">{% include "partials/field.html" with field=form.logo wrapper_class="" %}</div>
+        <div class="col-md-4">{% include "partials/field.html" with field=form.contact_email wrapper_class="" %}</div>
+        <div class="col-md-4">{% include "partials/field.html" with field=form.support_phone wrapper_class="" %}</div>
+        <div class="col-md-4">{% include "partials/field.html" with field=form.whatsapp_number wrapper_class="" %}</div>
+        <div class="col-12">{% include "partials/field.html" with field=form.office_address wrapper_class="" %}</div>
+      </div>
+      <h2 class="h6 text-uppercase text-muted">Social media</h2>
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">{% include "partials/field.html" with field=form.facebook_url wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.instagram_url wrapper_class="" %}</div>
+        <div class="col-md-4">{% include "partials/field.html" with field=form.youtube_url wrapper_class="" %}</div>
+        <div class="col-md-4">{% include "partials/field.html" with field=form.x_url wrapper_class="" %}</div>
+        <div class="col-md-4">{% include "partials/field.html" with field=form.linkedin_url wrapper_class="" %}</div>
+      </div>
+      <h2 class="h6 text-uppercase text-muted">Locations</h2>
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">{% include "partials/field.html" with field=form.default_state wrapper_class="" %}</div>
+        <div class="col-md-4">{% include "partials/field.html" with field=form.default_district wrapper_class="" %}</div>
+        <div class="col-md-4">{% include "partials/field.html" with field=form.default_town wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.default_map_lat wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.default_map_lng wrapper_class="" %}</div>
+      </div>
+      <h2 class="h6 text-uppercase text-muted">Listings</h2>
+      <div class="row g-3 mb-4">
+        <div class="col-12">{% include "partials/field.html" with field=form.listing_policy wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.require_listing_approval wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.expiry_reminder_days wrapper_class="" %}</div>
+      </div>
+      <h2 class="h6 text-uppercase text-muted">Subscriptions &amp; billing</h2>
+      <div class="row g-3 mb-4">
+        <div class="col-12">{% include "partials/field.html" with field=form.allow_manual_payments wrapper_class="" %}</div>
+        <div class="col-12">{% include "partials/field.html" with field=form.manual_payment_instructions wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.invoice_business_name wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.gstin wrapper_class="" %}</div>
+      </div>
+      <h2 class="h6 text-uppercase text-muted">Notifications</h2>
+      <div class="row g-3 mb-2">
+        <div class="col-md-6">{% include "partials/field.html" with field=form.email_notifications_enabled wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.whatsapp_notifications_enabled wrapper_class="" %}</div>
+      </div>
+      <button class="btn btn-primary mt-3" type="submit">Save settings</button>
+    </form>
+  </div>
+  <div class="col-xl-4">
+    <div class="surface p-4">
+      <h2 class="h6 text-uppercase text-muted">Integration status</h2>
+      {% include "adminpanel/_integrations.html" %}
+      <p class="small text-muted mt-3 mb-0">API keys and secrets are configured with environment variables on the server, never in this panel. See the deployment README.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

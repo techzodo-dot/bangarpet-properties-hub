@@ -1,0 +1,48 @@
+{% extends "dashboard/customer_base.html" %}
+{% load bph %}
+{% block title %}My dashboard - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Hello, {{ user.get_short_name }}</h1><a class="btn btn-primary" href="{% url 'properties:search' %}"><i class="bi bi-search me-1"></i>Find properties</a></div>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'dashboard:customer_enquiries' %}?status=open"><div class="stat-card"><span class="ic"><i class="bi bi-chat-left-text"></i></span><div><div class="v">{{ open_enquiries }}</div><div class="k">Open enquiries</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'dashboard:customer_visits' %}"><div class="stat-card"><span class="ic yellow"><i class="bi bi-calendar-check"></i></span><div><div class="v">{{ upcoming_count }}</div><div class="k">Upcoming visits</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'dashboard:customer_favourites' %}"><div class="stat-card"><span class="ic red"><i class="bi bi-heart"></i></span><div><div class="v">{{ favourites_count }}</div><div class="k">Saved properties</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'dashboard:customer_saved_searches' %}"><div class="stat-card"><span class="ic green"><i class="bi bi-bookmark"></i></span><div><div class="v">{{ saved_search_count }}</div><div class="k">Saved searches</div></div></div></a></div>
+</div>
+<div class="row g-4">
+  <div class="col-xl-7">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center py-3">Latest enquiries <a class="small" href="{% url 'dashboard:customer_enquiries' %}">View all</a></div>
+      <div class="list-group list-group-flush">
+        {% for e in latest_enquiries %}
+          <div class="list-group-item d-flex justify-content-between align-items-center gap-2">
+            <div class="min-w-0"><a class="fw-semibold text-truncate d-block" href="{{ e.property.get_absolute_url }}">{{ e.property.title }}</a><span class="small text-muted">{{ e.created_at|date:"d M Y" }}</span></div>
+            {% status_badge e %}
+          </div>
+        {% empty %}
+          <div class="p-4 text-center text-muted">No enquiries yet. Found a place you like? Use "Contact owner" on the listing.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-5">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between align-items-center py-3">Upcoming visits <a class="small" href="{% url 'dashboard:customer_visits' %}">View all</a></div>
+      <div class="list-group list-group-flush">
+        {% for v in upcoming_visits %}
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between gap-2"><a class="fw-semibold text-truncate" href="{{ v.property.get_absolute_url }}">{{ v.property.title }}</a>{% status_badge v %}</div>
+            <div class="small text-muted">{% if v.scheduled_at %}{{ v.scheduled_at|date:"D, d M Y \a\t h:i A" }}{% else %}Requested for {{ v.preferred_date|date:"D, d M" }} ({{ v.get_preferred_slot_display }}){% endif %}</div>
+          </div>
+        {% empty %}
+          <div class="p-4 text-center text-muted">No upcoming visits.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% if recent %}
+<h2 class="h5 mt-4 mb-3">Recently viewed</h2>
+<div class="row g-3">{% for item in recent %}{% with prop=item.property %}<div class="col-sm-6 col-xl-3">{% include "partials/property_card.html" with hide_fav=True %}</div>{% endwith %}{% endfor %}</div>
+{% endif %}
+{% endblock %}

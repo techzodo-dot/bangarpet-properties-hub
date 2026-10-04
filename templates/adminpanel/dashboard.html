@@ -1,0 +1,51 @@
+{% extends "adminpanel/base.html" %}
+{% load bph static %}
+{% block title %}Dashboard - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Platform overview</h1><span class="small text-muted">{% now "D, d M Y" %}</span></div>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:users' %}"><div class="stat-card"><span class="ic"><i class="bi bi-people"></i></span><div><div class="v">{{ metrics.users }}</div><div class="k">Registered users</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:users' %}?role=owner"><div class="stat-card"><span class="ic"><i class="bi bi-house-heart"></i></span><div><div class="v">{{ metrics.owners }}</div><div class="k">Active owners</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:users' %}?role=broker"><div class="stat-card"><span class="ic"><i class="bi bi-briefcase"></i></span><div><div class="v">{{ metrics.brokers }}</div><div class="k">Registered brokers</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:properties' %}"><div class="stat-card"><span class="ic"><i class="bi bi-buildings"></i></span><div><div class="v">{{ metrics.listings }}</div><div class="k">Total listings</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:approvals' %}"><div class="stat-card"><span class="ic yellow"><i class="bi bi-hourglass-split"></i></span><div><div class="v">{{ metrics.pending }}</div><div class="k">Pending listings</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:properties' %}?status=active"><div class="stat-card"><span class="ic green"><i class="bi bi-check2-circle"></i></span><div><div class="v">{{ metrics.approved }}</div><div class="k">Approved &amp; live</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:properties' %}?status=rejected"><div class="stat-card"><span class="ic red"><i class="bi bi-x-circle"></i></span><div><div class="v">{{ metrics.rejected }}</div><div class="k">Rejected / changes</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:reports' %}"><div class="stat-card"><span class="ic red"><i class="bi bi-flag"></i></span><div><div class="v">{{ metrics.open_reports }}</div><div class="k">Open reports</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:subscriptions' %}?status=current"><div class="stat-card"><span class="ic yellow"><i class="bi bi-stars"></i></span><div><div class="v">{{ metrics.active_subs }}</div><div class="k">Active paid subscriptions</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:payments' %}?status=paid"><div class="stat-card"><span class="ic green"><i class="bi bi-currency-rupee"></i></span><div><div class="v">{{ metrics.month_revenue|inr }}</div><div class="k">Payments this month</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:enquiries' %}"><div class="stat-card"><span class="ic"><i class="bi bi-chat-left-text"></i></span><div><div class="v">{{ metrics.enquiries }}</div><div class="k">Enquiries ({{ metrics.month_enquiries }} this month)</div></div></div></a></div>
+  <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:verifications' %}"><div class="stat-card"><span class="ic"><i class="bi bi-patch-check"></i></span><div><div class="v">{{ metrics.pending_verifications }}</div><div class="k">Verifications pending{% if metrics.manual_payments %} &middot; {{ metrics.manual_payments }} manual payments{% endif %}</div></div></div></a></div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-xl-6"><div class="card h-100"><div class="card-header py-3">New registrations (6 months)</div><div class="card-body"><div class="chart-box"><canvas id="chartRegistrations" role="img" aria-label="New registrations per month"></canvas></div></div></div></div>
+  <div class="col-xl-6"><div class="card h-100"><div class="card-header py-3">Monthly enquiries</div><div class="card-body"><div class="chart-box"><canvas id="chartEnquiries" role="img" aria-label="Enquiries per month"></canvas></div></div></div></div>
+  <div class="col-xl-6"><div class="card h-100"><div class="card-header py-3">Subscription revenue (&#8377;)</div><div class="card-body"><div class="chart-box"><canvas id="chartRevenue" role="img" aria-label="Revenue per month"></canvas></div></div></div></div>
+  <div class="col-xl-3 col-md-6"><div class="card h-100"><div class="card-header py-3">Live listings by category</div><div class="card-body"><div class="chart-box"><canvas id="chartCategories" role="img" aria-label="Listings by category"></canvas></div></div></div></div>
+  <div class="col-xl-3 col-md-6"><div class="card h-100"><div class="card-header py-3">Active vs inactive</div><div class="card-body"><div class="chart-box"><canvas id="chartActive" role="img" aria-label="Active versus inactive listings"></canvas></div></div></div></div>
+</div>
+{{ charts|json_script:"admin-charts" }}
+
+<div class="row g-4">
+  <div class="col-xl-7">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between py-3">Approval queue <a class="small" href="{% url 'adminpanel:approvals' %}">Open queue</a></div>
+      <div class="list-group list-group-flush">
+        {% for p in pending_list %}<a class="list-group-item list-group-item-action d-flex justify-content-between" href="{% url 'adminpanel:property_review' p.pk %}"><span class="text-truncate"><strong>{{ p.reference }}</strong> {{ p.title }} <span class="small text-muted">by {{ p.owner.display_name }}</span></span><span class="small text-muted text-nowrap">{{ p.submitted_at|timesince }} ago</span></a>
+        {% empty %}<div class="p-4 text-center text-muted">Nothing waiting for approval.</div>{% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-5">
+    <div class="card h-100">
+      <div class="card-header d-flex justify-content-between py-3">Integrations <a class="small" href="{% url 'adminpanel:settings' %}">Settings</a></div>
+      <div class="card-body py-1">{% include "adminpanel/_integrations.html" %}</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'vendor/chartjs/chart.umd.min.js' %}" defer></script>
+<script src="{% static 'js/charts.js' %}" defer></script>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "adminpanel/base.html" %}
+{% load bph %}
+{% block title %}{% if approvals %}Approvals{% else %}Listings{% endif %} - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>{% if approvals %}Approval queue{% else %}All listings{% endif %}</h1><span class="text-muted small">{{ page_obj.paginator.count }} result{{ page_obj.paginator.count|pluralize }}</span></div>
+<form method="get" class="surface p-3 mb-3"><div class="row g-2 align-items-end">
+  <div class="col-md-4"><label class="form-label small" for="pq">Search</label><input id="pq" class="form-control" type="search" name="q" value="{{ q }}" placeholder="Title, ID, owner email"></div>
+  {% if not approvals %}<div class="col-md-2"><label class="form-label small" for="ps">Status</label><select id="ps" class="form-select" name="status"><option value="">Any (excl. drafts)</option>{% for v, l in statuses %}{% if v != 'deleted' %}<option value="{{ v }}" {% if status == v %}selected{% endif %}>{{ l }}</option>{% endif %}{% endfor %}</select></div>{% endif %}
+  <div class="col-md-2"><label class="form-label small" for="pc">Category</label><select id="pc" class="form-select" name="category"><option value="">All</option>{% for c in categories %}<option value="{{ c.slug }}" {% if category == c.slug %}selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="psus" name="suspicious" value="1" {% if request.GET.suspicious %}checked{% endif %}><label class="form-check-label small" for="psus">Suspicious only</label></div>{% if not approvals %}<div class="form-check"><input class="form-check-input" type="checkbox" id="pfeat" name="featured" value="1" {% if request.GET.featured %}checked{% endif %}><label class="form-check-label small" for="pfeat">Featured only</label></div>{% endif %}</div>
+  <div class="col-md-2 d-grid"><button class="btn btn-primary">Filter</button></div>
+</div></form>
+<div class="table-card"><div class="table-responsive"><table class="table">
+  <thead><tr><th>Listing</th><th>Owner</th><th>Price</th><th>Status</th><th>{% if approvals %}Submitted{% else %}Updated{% endif %}</th><th></th></tr></thead>
+  <tbody>
+  {% for p in page_obj.object_list %}
+  <tr>
+    <td style="min-width:240px"><strong>{{ p.reference }}</strong> {% if p.is_suspicious %}<span class="badge badge-status status-rejected">Suspicious</span>{% endif %}{% if p.open_reports %}<span class="badge badge-status status-pending">{{ p.open_reports }} report{{ p.open_reports|pluralize }}</span>{% endif %}{% if p.is_featured %}<span class="badge badge-featured">Featured</span>{% endif %}<div class="small text-truncate" style="max-width:300px">{{ p.title }}</div><div class="small text-muted">{{ p.category.name }} &middot; {{ p.location_label }}</div></td>
+    <td class="small">{{ p.owner.display_name }}<div class="text-muted">{{ p.owner.get_role_display }}</div></td>
+    <td class="small text-nowrap">{% if p.purpose == 'rent' %}{{ p.price|inr }}/mo{% else %}{{ p.price|inr_short }}{% endif %}</td>
+    <td>{% status_badge p %}</td>
+    <td class="small text-nowrap">{% if approvals %}{{ p.submitted_at|timesince }} ago{% else %}{{ p.updated_at|date:"d M Y" }}{% endif %}</td>
+    <td class="text-end"><a class="btn btn-sm {% if p.status == 'pending' %}btn-primary{% else %}btn-soft{% endif %}" href="{% url 'adminpanel:property_review' p.pk %}">{% if p.status == 'pending' %}Review{% else %}Open{% endif %}</a></td>
+  </tr>
+  {% empty %}<tr><td colspan="6" class="text-center text-muted p-4">{% if approvals %}The approval queue is empty.{% else %}No listings found.{% endif %}</td></tr>{% endfor %}
+  </tbody>
+</table></div></div>
+{% include "partials/pagination.html" %}
+{% endblock %}

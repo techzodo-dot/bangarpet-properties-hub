@@ -1,0 +1,20 @@
+{% extends "dashboard/customer_base.html" %}
+{% block title %}Saved properties - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Saved properties</h1></div>
+{% if page_obj.object_list %}
+<div class="row g-3">
+  {% for fav in page_obj.object_list %}{% with prop=fav.property %}
+  <div class="col-sm-6 col-xl-4">
+    {% if prop.is_public %}{% include "partials/property_card.html" %}{% else %}
+    <div class="surface p-3 h-100"><span class="badge badge-status status-{{ prop.status }} mb-2">{{ prop.get_status_display }}</span><div class="fw-semibold">{{ prop.title }}</div><p class="small text-muted">This listing is no longer available.</p>{% include "partials/fav_button.html" with btn_class="btn btn-sm btn-soft" with_label=True %}</div>
+    {% endif %}
+  </div>
+  {% endwith %}{% endfor %}
+</div>
+{% include "partials/pagination.html" %}
+{% else %}
+  {% url 'properties:search' as search_url %}
+  {% include "partials/empty_state.html" with icon="heart" title="No saved properties yet" text="Tap the heart on any listing to save it here." action_url=search_url action_label="Browse properties" %}
+{% endif %}
+{% endblock %}

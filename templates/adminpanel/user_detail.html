@@ -1,0 +1,107 @@
+{% extends "adminpanel/base.html" %}
+{% load bph %}
+{% block title %}{{ member.full_name }} - Users - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head">
+  <div><a class="small" href="{% url 'adminpanel:users' %}"><i class="bi bi-arrow-left"></i> Users</a><h1>{{ member.full_name }}</h1><div class="text-muted small">{{ member.get_role_display }} &middot; joined {{ member.date_joined|date:"d M Y" }}{% if member.last_login %} &middot; last login {{ member.last_login|date:"d M Y, h:i A" }}{% endif %}</div></div>
+  {% if member.is_active %}<span class="badge badge-status status-active">Active</span>{% else %}<span class="badge badge-status status-rejected">Suspended</span>{% endif %}
+</div>
+{% if not member.is_active and member.suspension_reason %}<div class="alert alert-danger rounded-4">Suspended {{ member.suspended_at|date:"d M Y" }}: {{ member.suspension_reason }}</div>{% endif %}
+<div class="row g-4">
+  <div class="col-xl-8">
+    <div class="surface p-4 mb-4">
+      <h2 class="h6 text-uppercase text-muted">Profile</h2>
+      <dl class="row mb-0 small">
+        <dt class="col-sm-4">Email</dt><dd class="col-sm-8">{{ member.email }} {% if member.email_verified %}<span class="badge badge-verified">Verified</span>{% else %}<span class="badge badge-status status-pending">Not verified</span>{% endif %}</dd>
+        <dt class="col-sm-4">Phone</dt><dd class="col-sm-8">{{ member.phone|default:"-" }} {% if member.phone_verified %}<span class="badge badge-verified">Verified</span>{% endif %}</dd>
+        <dt class="col-sm-4">WhatsApp</dt><dd class="col-sm-8">{{ member.profile.whatsapp_number|default:"-" }}</dd>
+        <dt class="col-sm-4">City</dt><dd class="col-sm-8">{{ member.profile.city|default:"-" }}</dd>
+        {% if member.role == 'broker' and partner_profile %}
+          <dt class="col-sm-4">Agency</dt><dd class="col-sm-8">{{ partner_profile.agency_name }}</dd>
+          <dt class="col-sm-4">Business phone / email</dt><dd class="col-sm-8">{{ partner_profile.business_phone|default:"-" }} / {{ partner_profile.business_email|default:"-" }}</dd>
+          <dt class="col-sm-4">RERA</dt><dd class="col-sm-8">{{ partner_profile.rera_number|default:"-" }}</dd>
+          <dt class="col-sm-4">Office</dt><dd class="col-sm-8">{{ partner_profile.office_address|default:"-" }}</dd>
+        {% elif partner_profile %}
+          <dt class="col-sm-4">Address</dt><dd class="col-sm-8">{{ partner_profile.address|default:"-" }}</dd>
+        {% endif %}
+        <dt class="col-sm-4">Activity</dt><dd class="col-sm-8">{{ enquiries_sent }} enquiries sent &middot; {{ reports_filed }} reports filed</dd>
+      </dl>
+      <p class="small text-muted mt-3 mb-0"><i class="bi bi-lock"></i> Passwords are stored as one-way hashes and cannot be viewed. Users can reset their own password by email.</p>
+    </div>
+
+    {% if partner_profile %}
+    <div class="surface p-4 mb-4">
+      <div class="d-flex justify-content-between"><h2 class="h6 text-uppercase text-muted">Verification</h2><span class="badge badge-status status-{{ partner_profile.verification_status }}">{{ partner_profile.get_verification_status_display }}</span></div>
+      {% if partner_profile.verification_note %}<p class="small">Note: {{ partner_profile.verification_note }}</p>{% endif %}
+      {% if documents %}
+      <div class="table-responsive"><table class="table table-sm">
+        <thead><tr><th>Document</th><th>Uploaded</th><th>Status</th><th></th></tr></thead>
+        <tbody>{% for d in documents %}<tr>
+          <td>{{ d.get_doc_type_display }}{% if d.note %}<div class="small text-muted">{{ d.note }}</div>{% endif %}</td>
+          <td class="small">{{ d.created_at|date:"d M Y" }}</td>
+          <td>{% status_badge d %}</td>
+          <td class="text-end text-nowrap">
+            {% if d.file %}<a class="btn btn-sm btn-soft" href="{% url 'accounts:verification_document' d.pk %}" target="_blank" rel="noopener">Open</a>{% else %}<span class="small text-muted">Purged</span>{% endif %}
+            {% if d.status == 'pending' %}
+            <form class="d-inline" method="post" action="{% url 'adminpanel:document_decide' d.pk %}">{% csrf_token %}<input type="hidden" name="decision" value="accepted"><button class="btn btn-sm btn-outline-success" type="submit">Accept</button></form>
+            <form class="d-inline" method="post" action="{% url 'adminpanel:document_decide' d.pk %}">{% csrf_token %}<input type="hidden" name="decision" value="rejected"><input type="hidden" name="note" value="Document not acceptable"><button class="btn btn-sm btn-outline-danger" type="submit">Reject</button></form>
+            {% endif %}
+          </td></tr>{% endfor %}</tbody>
+      </table></div>
+      <p class="small text-muted">Opening a document is recorded in the audit log.</p>
+      {% else %}<p class="text-muted small">No documents submitted.</p>{% endif %}
+      <form method="post" action="{% url 'adminpanel:verification_decide' member.pk %}" class="border rounded-4 p-3">
+        {% csrf_token %}
+        <div class="row g-2 align-items-end">
+          <div class="col-md-4">{% include "partials/field.html" with field=verification_form.decision wrapper_class="" %}</div>
+          <div class="col-md-5">{% include "partials/field.html" with field=verification_form.note wrapper_class="" %}{% include "partials/field.html" with field=verification_form.valid_days wrapper_class="mt-2" %}</div>
+          <div class="col-md-3 d-grid"><button class="btn btn-primary" type="submit">Save decision</button></div>
+        </div>
+        <p class="small text-muted mt-2 mb-0">Verify only after checking the documents. Verification confirms identity/business details, not legal title.</p>
+      </form>
+      {% if partner_profile.verification_status == 'verified' %}<form method="post" action="{% url 'adminpanel:verification_decide' member.pk %}" class="mt-2">{% csrf_token %}<input type="hidden" name="decision" value="expire"><button class="btn btn-sm btn-link text-danger px-0" type="submit">Mark verification as expired</button></form>{% endif %}
+    </div>
+    {% endif %}
+
+    {% if properties %}
+    <div class="surface p-4 mb-4">
+      <h2 class="h6 text-uppercase text-muted">Listings</h2>
+      <div class="table-responsive"><table class="table table-sm">{% for p in properties %}<tr><td><a href="{% url 'adminpanel:property_review' p.pk %}">{{ p.reference }}</a></td><td>{{ p.title|truncatechars:50 }}</td><td>{% status_badge p %}</td></tr>{% endfor %}</table></div>
+    </div>
+    {% endif %}
+    {% if payments %}
+    <div class="surface p-4 mb-4">
+      <h2 class="h6 text-uppercase text-muted">Payments</h2>
+      <div class="table-responsive"><table class="table table-sm">{% for p in payments %}<tr><td class="small">{{ p.created_at|date:"d M Y" }}</td><td>{{ p.plan.name }}</td><td>{{ p.amount|inr }}</td><td>{% status_badge p %}</td></tr>{% endfor %}</table></div>
+    </div>
+    {% endif %}
+    <div class="surface p-4">
+      <h2 class="h6 text-uppercase text-muted">Audit history</h2>
+      <ul class="list-unstyled small mb-0">{% for a in audit %}<li class="mb-1"><span class="text-muted">{{ a.created_at|date:"d M Y H:i" }}</span> &middot; <code>{{ a.action }}</code> {% if a.actor and a.actor != member %}by {{ a.actor.email }}{% endif %}{% if a.target_repr %} &middot; {{ a.target_repr|truncatechars:50 }}{% endif %}</li>{% empty %}<li class="text-muted">No activity recorded.</li>{% endfor %}</ul>
+    </div>
+  </div>
+  <div class="col-xl-4">
+    <div class="surface p-4">
+      <h2 class="h6 text-uppercase text-muted">Account actions</h2>
+      {% if member.role != 'admin' %}
+      <form method="post" action="{% url 'adminpanel:user_action' member.pk 'role' %}" class="mb-3">{% csrf_token %}
+        {% include "partials/field.html" with field=role_form.role wrapper_class="mb-2" %}
+        <button class="btn btn-sm btn-soft" type="submit">Change role</button>
+      </form>
+      {% endif %}
+      <div class="d-grid gap-2">
+        {% if not member.email_verified %}<form method="post" action="{% url 'adminpanel:user_action' member.pk 'verify_email' %}">{% csrf_token %}<button class="btn btn-sm btn-soft w-100" type="submit">Mark email verified</button></form>{% endif %}
+        <form method="post" action="{% url 'adminpanel:user_action' member.pk 'verify_phone' %}">{% csrf_token %}<button class="btn btn-sm btn-soft w-100" type="submit">{% if member.phone_verified %}Unmark phone verified{% else %}Mark phone verified{% endif %}</button></form>
+        {% if member.is_active %}
+        <form method="post" action="{% url 'adminpanel:user_action' member.pk 'suspend' %}" class="border rounded-4 p-3 mt-2" data-confirm="Suspend this account? The user will be signed out and their live listings paused.">{% csrf_token %}
+          {% include "partials/field.html" with field=suspend_form.reason wrapper_class="mb-2" %}
+          <button class="btn btn-sm btn-danger w-100" type="submit">Suspend account</button>
+        </form>
+        {% else %}
+        <form method="post" action="{% url 'adminpanel:user_action' member.pk 'reactivate' %}">{% csrf_token %}<button class="btn btn-sm btn-primary w-100" type="submit">Reactivate account</button></form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

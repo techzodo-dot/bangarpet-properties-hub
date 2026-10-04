@@ -1,0 +1,9 @@
+{% if banner.link_url %}<a class="promo-banner" href="{{ banner.link_url }}" rel="noopener">{% else %}<div class="promo-banner">{% endif %}
+  <img src="{{ banner.image.url }}" alt="{{ banner.alt_text|default:banner.title }}" loading="lazy">
+  <div class="promo-body glass">
+    <span class="glass-chip yellow mb-2">Promoted</span>
+    <h3 class="h4 mb-1">{{ banner.title }}</h3>
+    {% if banner.subtitle %}<p class="mb-2" style="color:rgba(255,255,255,.9)">{{ banner.subtitle }}</p>{% endif %}
+    {% if banner.cta_label and banner.link_url %}<span class="btn btn-accent btn-sm">{{ banner.cta_label }}</span>{% endif %}
+  </div>
+{% if banner.link_url %}</a>{% else %}</div>{% endif %}

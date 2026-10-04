@@ -1,0 +1,25 @@
+{% extends "dashboard/customer_base.html" %}
+{% block title %}Saved searches - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Saved searches</h1></div>
+{% if searches %}
+<div class="table-card"><div class="table-responsive"><table class="table">
+  <thead><tr><th>Name</th><th>Saved</th><th>Alerts</th><th></th></tr></thead>
+  <tbody>
+  {% for s in searches %}
+  <tr>
+    <td><a class="fw-semibold" href="{{ s.get_absolute_url }}">{{ s.name }}</a></td>
+    <td class="small text-muted">{{ s.created_at|date:"d M Y" }}</td>
+    <td>{% if s.notify %}<span class="badge badge-soft">On</span>{% else %}<span class="small text-muted">Off</span>{% endif %}</td>
+    <td class="text-end"><a class="btn btn-sm btn-soft" href="{{ s.get_absolute_url }}">Run</a>
+      <form class="d-inline" method="post" action="{% url 'dashboard:customer_saved_search_delete' s.pk %}" data-confirm="Delete this saved search?">{% csrf_token %}<button class="btn btn-sm btn-outline-danger" type="submit" aria-label="Delete {{ s.name }}"><i class="bi bi-trash"></i></button></form></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table></div></div>
+<p class="small text-muted mt-2">Searches with alerts on are checked daily; you'll get a notification when new matching listings are published.</p>
+{% else %}
+  {% url 'properties:search' as search_url %}
+  {% include "partials/empty_state.html" with icon="bookmark" title="No saved searches" text="Use 'Save search' on the search page to keep your filters." action_url=search_url action_label="Start a search" %}
+{% endif %}
+{% endblock %}

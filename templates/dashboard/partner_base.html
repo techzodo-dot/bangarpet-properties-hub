@@ -1,0 +1,19 @@
+{% extends "dashboard/dash_layout.html" %}
+{% block sidebar_links %}
+<a class="btn btn-accent w-100 mb-2 d-none d-lg-block" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-lg me-1"></i>Add property</a>
+<span class="side-label">Manage</span>
+<a class="nav-link {% if active == 'overview' %}active{% endif %}" href="{% url 'dashboard:partner_overview' %}"><i class="bi bi-grid"></i>Overview</a>
+<a class="nav-link {% if active == 'properties' %}active{% endif %}" href="{% url 'dashboard:partner_properties' %}"><i class="bi bi-buildings"></i>My listings</a>
+<a class="nav-link d-lg-none {% if active == 'add' %}active{% endif %}" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-square"></i>Add property</a>
+<a class="nav-link {% if active == 'enquiries' %}active{% endif %}" href="{% url 'dashboard:partner_enquiries' %}"><i class="bi bi-chat-left-text"></i>Enquiries</a>
+<a class="nav-link {% if active == 'visits' %}active{% endif %}" href="{% url 'dashboard:partner_visits' %}"><i class="bi bi-calendar-check"></i>Visits</a>
+<a class="nav-link {% if active == 'notifications' %}active{% endif %}" href="{% url 'notifications:list' %}"><i class="bi bi-bell"></i>Notifications{% if unread_notifications %} <span class="badge bg-danger ms-auto">{{ unread_notifications }}</span>{% endif %}</a>
+<span class="side-label">Billing</span>
+<a class="nav-link {% if active == 'subscription' %}active{% endif %}" href="{% url 'dashboard:partner_subscription' %}"><i class="bi bi-stars"></i>Subscription</a>
+<a class="nav-link {% if active == 'payments' %}active{% endif %}" href="{% url 'dashboard:partner_payments' %}"><i class="bi bi-receipt"></i>Payments &amp; invoices</a>
+<span class="side-label">Account</span>
+<a class="nav-link {% if active == 'profile' %}active{% endif %}" href="{% url 'dashboard:partner_profile' %}"><i class="bi bi-person-badge"></i>Profile &amp; verification</a>
+<a class="nav-link {% if active == 'password' %}active{% endif %}" href="{% url 'accounts:password_change' %}"><i class="bi bi-key"></i>Change password</a>
+<a class="nav-link" href="{% url 'dashboard:customer_overview' %}"><i class="bi bi-heart"></i>My saved homes &amp; enquiries</a>
+<form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="nav-link w-100 text-start border-0 bg-transparent text-danger" type="submit"><i class="bi bi-box-arrow-right text-danger"></i>Sign out</button></form>
+{% endblock %}

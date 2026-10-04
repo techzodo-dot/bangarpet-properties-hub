@@ -1,0 +1,73 @@
+{% extends "adminpanel/base.html" %}
+{% load bph %}
+{% block title %}Review {{ prop.reference }} - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head">
+  <div class="min-w-0"><a class="small" href="{% if prop.status == 'pending' %}{% url 'adminpanel:approvals' %}{% else %}{% url 'adminpanel:properties' %}{% endif %}"><i class="bi bi-arrow-left"></i> Back</a>
+    <h1 class="text-truncate">{{ prop.reference }} &middot; {{ prop.title }}</h1>
+    <div class="small text-muted">{% status_badge prop %} {% if prop.is_suspicious %}<span class="badge badge-status status-rejected">Suspicious</span>{% endif %} {% if prop.is_featured %}<span class="badge badge-featured">Featured until {{ prop.featured_until|date:"d M Y" }}</span>{% endif %} &middot; submitted {{ prop.submitted_at|date:"d M Y, h:i A"|default:"-" }}{% if prop.expires_at %} &middot; expires {{ prop.expires_at|date:"d M Y" }}{% endif %}</div>
+  </div>
+  <a class="btn btn-soft" href="{{ prop.get_absolute_url }}" target="_blank" rel="noopener"><i class="bi bi-eye me-1"></i>View page</a>
+</div>
+<div class="row g-4">
+  <div class="col-xl-8">
+    <div class="surface p-4 mb-4">
+      <h2 class="h6 text-uppercase text-muted">Photos ({{ images|length }})</h2>
+      {% if images %}<div class="preview-grid">{% for img in images %}<a class="pv" href="{{ img.image.url }}" target="_blank" rel="noopener"><img src="{{ img.thumb_url }}" alt="{{ img.alt_text }}" loading="lazy">{% if img.is_primary %}<span class="glass-chip yellow position-absolute top-0 start-0 m-1">Cover</span>{% endif %}</a>{% endfor %}</div>{% else %}<p class="text-danger small mb-0">No photos uploaded.</p>{% endif %}
+      {% if prop.video_url %}<p class="small mt-3 mb-0"><i class="bi bi-camera-reels"></i> Video: <a href="{{ prop.video_url }}" target="_blank" rel="noopener nofollow">{{ prop.video_url }}</a></p>{% endif %}
+    </div>
+    <div class="surface p-4 mb-4">
+      <h2 class="h6 text-uppercase text-muted">Details</h2>
+      <dl class="row small mb-0">
+        <dt class="col-sm-3">Purpose / type</dt><dd class="col-sm-9">{{ prop.get_purpose_display }} &middot; {{ prop.category.name }}</dd>
+        <dt class="col-sm-3">Price</dt><dd class="col-sm-9">{% if prop.purpose == 'rent' %}{{ prop.monthly_rent|inr }}/month, deposit {{ prop.security_deposit|inr|default:"-" }}{% else %}{{ prop.sale_price|inr }}{% endif %}{% if prop.maintenance_charge %}, maintenance {{ prop.maintenance_charge|inr }}{% endif %}{% if prop.is_negotiable %} (negotiable){% endif %}</dd>
+        <dt class="col-sm-3">Location</dt><dd class="col-sm-9">{{ prop.street_address }} {{ prop.locality }} {{ prop.location_label }} {{ prop.pin_code }} &middot; exact address {% if prop.show_exact_address %}public{% else %}hidden{% endif %}{% if prop.latitude %} &middot; <a href="https://www.google.com/maps/search/?api=1&amp;query={{ prop.latitude }},{{ prop.longitude }}" target="_blank" rel="noopener">map</a>{% endif %}</dd>
+        <dt class="col-sm-3">Specs</dt><dd class="col-sm-9">{{ prop.bedrooms|default:"-" }} bed &middot; {{ prop.bathrooms|default:"-" }} bath &middot; {{ prop.built_up_area|default:"-" }} sq.ft &middot; {{ prop.get_furnishing_display|default:"-" }} &middot; parking: {{ prop.get_parking_display|default:"-" }}</dd>
+        <dt class="col-sm-3">Amenities</dt><dd class="col-sm-9">{% for a in prop.amenities.all %}{{ a.name }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}</dd>
+        <dt class="col-sm-3">Contact</dt><dd class="col-sm-9">{{ prop.contact_name }} &middot; {{ prop.contact_phone }} &middot; WhatsApp {{ prop.whatsapp_number|default:"-" }} &middot; {{ prop.get_contact_visibility_display }}</dd>
+        <dt class="col-sm-3">Owner</dt><dd class="col-sm-9"><a href="{% url 'adminpanel:user_detail' prop.owner.pk %}">{{ prop.owner.display_name }}</a> ({{ prop.owner.get_role_display }}, {{ prop.owner.verification_status|cut:"_" }}) &middot; {{ owner_listing_count }} listing{{ owner_listing_count|pluralize }}</dd>
+      </dl>
+      <hr><h3 class="h6">Description</h3><div class="prose small">{{ prop.description }}</div>
+    </div>
+    {% if revisions %}<div class="surface p-4 mb-4"><h2 class="h6 text-uppercase text-muted">Edit history</h2>
+      {% for r in revisions %}<div class="small border-bottom py-2"><strong>{{ r.created_at|date:"d M Y, h:i A" }}</strong> by {{ r.user.email|default:"system" }}{% if r.requires_moderation %} <span class="badge badge-status status-pending">needs review</span>{% endif %}<ul class="mb-0">{% for field, vals in r.changes.items %}<li><code>{{ field }}</code>: <del class="text-danger">{{ vals.0|default:"-"|truncatechars:80 }}</del> &rarr; <span class="text-success">{{ vals.1|default:"-"|truncatechars:80 }}</span></li>{% endfor %}</ul></div>{% endfor %}
+    </div>{% endif %}
+    {% if reports %}<div class="surface p-4 mb-4"><h2 class="h6 text-uppercase text-muted">Reports</h2>
+      {% for r in reports %}<div class="small border-bottom py-2">{% status_badge r %} <strong>{{ r.get_reason_display }}</strong> by {{ r.reporter.email }} &middot; {{ r.created_at|date:"d M Y" }}{% if r.details %}<div class="text-muted">{{ r.details }}</div>{% endif %}</div>{% endfor %}
+    </div>{% endif %}
+    {% if reviews %}<div class="surface p-4"><h2 class="h6 text-uppercase text-muted">Moderation history</h2>
+      {% for r in reviews %}<div class="small border-bottom py-2"><strong>{{ r.get_decision_display }}</strong> by {{ r.reviewer.email|default:"-" }} &middot; {{ r.created_at|date:"d M Y, h:i A" }}{% if r.reason %}<div class="text-muted">{{ r.reason }}</div>{% endif %}</div>{% endfor %}
+    </div>{% endif %}
+  </div>
+  <div class="col-xl-4">
+    <div class="surface p-4 mb-4" style="position:sticky;top:1rem">
+      <h2 class="h6 text-uppercase text-muted">Moderation</h2>
+      {% if prop.status == 'pending' %}
+      <form method="post" action="{% url 'adminpanel:property_action' prop.pk 'approve' %}" class="mb-2">{% csrf_token %}<input type="hidden" name="next" value="queue"><button class="btn btn-success w-100" type="submit"><i class="bi bi-check2-circle me-1"></i>Approve &amp; publish</button></form>
+      {% endif %}
+      {% if prop.status in 'pending,active,paused' %}
+      <form method="post" action="{% url 'adminpanel:property_action' prop.pk 'request_changes' %}" class="border rounded-4 p-3 mb-2">{% csrf_token %}
+        <label class="form-label small" for="rc-reason">Reason (shown to owner)</label><textarea id="rc-reason" class="form-control mb-2" name="reason" rows="2" required></textarea>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-primary flex-fill" type="submit">Request changes</button>
+          <button class="btn btn-sm btn-outline-danger flex-fill" type="submit" formaction="{% url 'adminpanel:property_action' prop.pk 'reject' %}">Reject</button>
+        </div>
+      </form>
+      {% endif %}
+      {% if prop.status != 'removed' and prop.status != 'deleted' %}
+      <form method="post" action="{% url 'adminpanel:property_action' prop.pk 'remove' %}" class="border rounded-4 p-3 mb-2" data-confirm="Remove this listing for a policy violation?">{% csrf_token %}
+        <label class="form-label small" for="rm-reason">Policy violation</label><input id="rm-reason" class="form-control mb-2" name="reason" required>
+        <button class="btn btn-sm btn-danger w-100" type="submit">Remove listing</button>
+      </form>
+      {% endif %}
+      <form method="post" action="{% url 'adminpanel:property_action' prop.pk prop.is_suspicious|yesno:'unflag,flag' %}" class="mb-2">{% csrf_token %}<button class="btn btn-sm btn-soft w-100" type="submit"><i class="bi bi-exclamation-triangle me-1"></i>{% if prop.is_suspicious %}Clear suspicious flag{% else %}Mark as suspicious{% endif %}</button></form>
+      {% if prop.is_public %}
+      <form method="post" action="{% url 'adminpanel:property_action' prop.pk 'feature' %}" class="d-flex gap-2 align-items-end">{% csrf_token %}
+        <div class="flex-fill"><label class="form-label small" for="fd">Feature for (days, 0 = remove)</label><input id="fd" class="form-control" type="number" name="days" min="0" max="365" value="{% if prop.is_featured %}0{% else %}7{% endif %}"></div>
+        <button class="btn btn-sm btn-accent" type="submit">Apply</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

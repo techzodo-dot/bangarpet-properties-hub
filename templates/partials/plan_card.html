@@ -1,0 +1,20 @@
+{% load bph %}
+<div class="surface p-4 h-100 d-flex flex-column {% if highlight %}border-2 border-primary{% endif %}" {% if highlight %}style="border-color:var(--bph-navy)!important"{% endif %}>
+  <div class="d-flex justify-content-between align-items-start">
+    <h3 class="h5 mb-1">{{ plan.name }}</h3>
+    {% if is_current %}<span class="badge badge-verified">Current plan</span>{% elif plan.discount_active %}<span class="badge badge-featured">{{ plan.discount_label|default:"Offer" }} -{{ plan.discount_percent }}%</span>{% endif %}
+  </div>
+  <p class="small text-muted">{{ plan.description }}</p>
+  <div class="mb-3">
+    {% if plan.is_free %}<span class="h2 fw-800 text-navy">Free</span>
+    {% else %}
+      {% if plan.discount_active %}<span class="text-muted text-decoration-line-through me-1">{{ plan.price|inr }}</span>{% endif %}
+      <span class="h2 fw-800 text-navy">{{ plan.effective_price|inr }}</span><span class="text-muted"> / {{ plan.billing_period_days }} days</span>
+    {% endif %}
+  </div>
+  <ul class="list-unstyled small flex-grow-1">
+    {% for f in plan.feature_list %}<li class="mb-2"><i class="bi bi-check2-circle text-verified me-2"></i>{{ f }}</li>{% endfor %}
+    <li class="mb-2"><i class="bi bi-check2-circle text-verified me-2"></i>Listings stay live {{ plan.listing_duration_days }} days</li>
+  </ul>
+  {% if show_actions %}{% include "partials/plan_actions.html" %}{% endif %}
+</div>

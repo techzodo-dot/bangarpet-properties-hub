@@ -1,0 +1,46 @@
+{% extends "adminpanel/base.html" %}
+{% load bph %}
+{% block title %}Subscriptions - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Subscriptions</h1><a class="btn btn-primary" href="{% url 'adminpanel:crud_add' 'plans' %}"><i class="bi bi-plus-lg me-1"></i>New plan</a></div>
+<div class="row g-3 mb-4">
+  {% for p in plans %}
+  <div class="col-md-6 col-xl-3">
+    <div class="surface p-3 h-100">
+      <div class="d-flex justify-content-between"><strong>{{ p.name }}</strong>{% if p.is_active %}<span class="badge badge-status status-active">Active</span>{% else %}<span class="badge badge-status status-paused">Inactive</span>{% endif %}</div>
+      <div class="h5 mt-2 mb-0">{{ p.effective_price|inr }}{% if p.discount_active %} <small class="text-muted text-decoration-line-through">{{ p.price|inr }}</small>{% endif %}</div>
+      <div class="small text-muted">{{ p.listing_limit }} listings &middot; {{ p.listing_duration_days }}-day listings{% if p.is_default %} &middot; default{% endif %}</div>
+      <div class="small mt-1">{{ p.active_count }} active subscriber{{ p.active_count|pluralize }}</div>
+      <a class="btn btn-sm btn-soft mt-2" href="{% url 'adminpanel:crud_edit' 'plans' p.pk %}">Edit plan</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<div class="row g-4">
+  <div class="col-xl-8">
+    <div class="d-flex justify-content-between align-items-center mb-2"><h2 class="h5 mb-0">Subscriptions</h2>
+      <form method="get"><select class="form-select form-select-sm" name="status" data-autosubmit aria-label="Status" style="min-height:38px"><option value="">All</option><option value="current" {% if status == 'current' %}selected{% endif %}>Currently active</option>{% for v, l in statuses %}<option value="{{ v }}" {% if status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></form>
+    </div>
+    <div class="table-card"><div class="table-responsive"><table class="table">
+      <thead><tr><th>Partner</th><th>Plan</th><th>Status</th><th>Period</th><th>Paid</th></tr></thead>
+      <tbody>{% for s in page_obj.object_list %}<tr><td class="small"><a href="{% url 'adminpanel:user_detail' s.user_id %}">{{ s.user.email }}</a>{% if s.granted_by %}<div class="text-muted">granted: {{ s.notes }}</div>{% endif %}</td><td>{{ s.plan.name }}</td><td>{% status_badge s %}</td><td class="small">{{ s.starts_at|date:"d M Y" }} - {{ s.ends_at|date:"d M Y" }}</td><td>{{ s.amount_paid|inr }}</td></tr>
+      {% empty %}<tr><td colspan="5" class="text-center text-muted p-4">No subscriptions.</td></tr>{% endfor %}</tbody>
+    </table></div></div>
+    {% include "partials/pagination.html" %}
+  </div>
+  <div class="col-xl-4">
+    <div class="surface p-4 mb-4">
+      <h2 class="h6">Renewals due (7 days)</h2>
+      <ul class="list-unstyled small mb-0">{% for s in renewals_due %}<li class="mb-1">{{ s.user.email }} &middot; {{ s.plan.name }} &middot; ends {{ s.ends_at|date:"d M" }}</li>{% empty %}<li class="text-muted">None.</li>{% endfor %}</ul>
+    </div>
+    <form method="post" class="surface p-4" data-once>{% csrf_token %}
+      <h2 class="h6">Grant a plan manually</h2>
+      <p class="small text-muted">For offline payments, promotions or support cases. Recorded in the audit log.</p>
+      {% include "partials/field.html" with field=grant_form.email %}
+      {% include "partials/field.html" with field=grant_form.plan %}
+      {% include "partials/field.html" with field=grant_form.notes %}
+      <button class="btn btn-primary" type="submit">Grant plan</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

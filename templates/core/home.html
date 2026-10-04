@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+{% load static bph %}
+{% block title %}{{ site.site_name }} - Houses, Flats, PG &amp; Plots for Rent and Sale in Bangarpet{% endblock %}
+{% block content %}
+
+{# ---------- Hero with glass search panel ---------- #}
+<section class="hero" aria-labelledby="hero-title">
+  <img class="hero-skyline" src="{% static 'img/skyline.svg' %}" alt="" aria-hidden="true">
+  <div class="container position-relative">
+    <div class="row align-items-center g-4 g-lg-5">
+      <div class="col-lg-6">
+        <span class="section-eyebrow" style="background:rgba(255,214,0,.14);border-color:rgba(255,214,0,.35);color:#FFD600"><i class="bi bi-geo-alt-fill"></i> Bangarpet &middot; Kolar district</span>
+        <h1 id="hero-title" class="mb-3">Find your next home in <span class="accent">Bangarpet</span>.</h1>
+        <p class="lead mb-4">Rent or buy houses, apartments, PG rooms, shops and plots. Talk directly to owners and verified brokers, schedule visits and track every enquiry in one place.</p>
+        <div class="hero-points">
+          <span><i class="bi bi-shield-check"></i> Every listing reviewed before it goes live</span>
+          <span><i class="bi bi-patch-check"></i> Verified owner &amp; broker badges</span>
+          <span><i class="bi bi-chat-dots"></i> Direct WhatsApp &amp; call</span>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <form class="glass search-panel" method="get" action="{% url 'properties:search' %}" role="search" aria-label="Search properties">
+          <ul class="nav nav-pills mb-3 gap-1" role="tablist">
+            <li class="nav-item"><label class="nav-link active mb-0" role="tab"><input class="visually-hidden" type="radio" name="purpose" value="" checked> All</label></li>
+            <li class="nav-item"><label class="nav-link mb-0" role="tab"><input class="visually-hidden" type="radio" name="purpose" value="rent"> Rent</label></li>
+            <li class="nav-item"><label class="nav-link mb-0" role="tab"><input class="visually-hidden" type="radio" name="purpose" value="sale"> Buy</label></li>
+          </ul>
+          <div class="row g-2">
+            <div class="col-md-6">
+              <label class="form-label" for="{{ search_form.location.id_for_label }}">Location</label>
+              {{ search_form.location }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="{{ search_form.category.id_for_label }}">Property type</label>
+              {{ search_form.category }}
+            </div>
+            <div class="col-6">
+              <label class="form-label" for="hero-min">Min price (&#8377;)</label>
+              <input class="form-control" id="hero-min" type="number" name="min_price" min="0" inputmode="numeric" placeholder="No min">
+            </div>
+            <div class="col-6">
+              <label class="form-label" for="hero-max">Max price (&#8377;)</label>
+              <input class="form-control" id="hero-max" type="number" name="max_price" min="0" inputmode="numeric" placeholder="No max">
+            </div>
+            <div class="col-12 mt-3">
+              <button class="btn btn-accent btn-lg w-100" type="submit"><i class="bi bi-search me-2"></i>Search properties</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ---------- Quick categories ---------- #}
+<div class="container">
+  <nav class="quick-cats" aria-label="Browse by category">
+    <a class="quick-cat" href="{% url 'properties:category' 'houses' %}?purpose=rent"><i class="bi bi-house-door"></i>Houses for rent</a>
+    <a class="quick-cat" href="{% url 'properties:category' 'apartments' %}"><i class="bi bi-building"></i>Apartments</a>
+    <a class="quick-cat" href="{% url 'properties:pg_rooms' %}"><i class="bi bi-door-open"></i>PG &amp; rooms</a>
+    <a class="quick-cat" href="{% url 'properties:commercial' %}"><i class="bi bi-shop"></i>Commercial</a>
+    <a class="quick-cat" href="{% url 'properties:buy' %}"><i class="bi bi-key"></i>For sale</a>
+    <a class="quick-cat" href="{% url 'properties:category' 'plots' %}"><i class="bi bi-bounding-box"></i>Plots</a>
+  </nav>
+</div>
+
+{# ---------- Admin-controlled promotional banners ---------- #}
+{% if banners_top %}
+<section class="section-sm pb-0" aria-label="Promotions">
+  <div class="container">
+    <div class="row g-3">
+      {% for banner in banners_top %}
+      <div class="col-lg">{% include "partials/banner.html" %}</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ---------- Featured ---------- #}
+{% if featured %}
+<section class="section" aria-labelledby="featured-title">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
+      <div>
+        <span class="section-eyebrow"><i class="bi bi-star-fill"></i> Featured</span>
+        <h2 id="featured-title" class="section-title">Featured properties</h2>
+        <p class="section-lead mb-0">Handpicked listings promoted by their owners and brokers.</p>
+      </div>
+      <a class="btn btn-soft" href="{% url 'properties:search' %}">View all <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="row g-4">
+      {% for prop in featured %}<div class="col-sm-6 col-lg-4">{% include "partials/property_card.html" %}</div>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ---------- Recently added ---------- #}
+<section class="section {% if featured %}pt-0{% endif %}" aria-labelledby="recent-title">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
+      <div>
+        <span class="section-eyebrow"><i class="bi bi-clock-history"></i> Just listed</span>
+        <h2 id="recent-title" class="section-title">Recently added</h2>
+        <p class="section-lead mb-0">The newest approved listings in and around Bangarpet.</p>
+      </div>
+      {% if recent %}<a class="btn btn-soft" href="{% url 'properties:search' %}?sort=newest">See all new listings <i class="bi bi-arrow-right"></i></a>{% endif %}
+    </div>
+    {% if recent %}
+      <div class="row g-4">
+        {% for prop in recent %}<div class="col-sm-6 col-lg-3">{% include "partials/property_card.html" %}</div>{% endfor %}
+      </div>
+    {% else %}
+      {% url 'accounts:register' as reg_url %}
+      {% include "partials/empty_state.html" with icon="buildings" title="Listings are on their way" text="We're onboarding owners and brokers in Bangarpet. Be among the first to list your property - it's free to start." action_url=reg_url|add:"?type=owner" action_label="List your property" %}
+    {% endif %}
+  </div>
+</section>
+
+{# ---------- Virtual tour previews ---------- #}
+{% if tours %}
+<section class="section pt-0" aria-labelledby="tours-title">
+  <div class="container">
+    <span class="section-eyebrow"><i class="bi bi-camera-reels"></i> Virtual tours</span>
+    <h2 id="tours-title" class="section-title">Walk through before you visit</h2>
+    <p class="section-lead mb-4">Listings with video walkthroughs shared by their owners.</p>
+    <div class="row g-4">
+      {% for prop in tours %}
+      <div class="col-md-4">
+        <a class="tour-card" href="{{ prop.get_absolute_url }}#tour" aria-label="Watch the video tour of {{ prop.title }}">
+          {% with img=prop.primary_image %}{% if img %}<img src="{{ img.thumb_url }}" alt="" loading="lazy">{% else %}<img src="{% static 'img/property-placeholder.svg' %}" alt="" loading="lazy">{% endif %}{% endwith %}
+          <span class="play"><span><i class="bi bi-play-fill"></i></span></span>
+          <span class="caption"><span class="glass-chip">{{ prop.title|truncatechars:48 }}</span></span>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ---------- Popular areas ---------- #}
+{% if areas %}
+<section class="section pt-0" aria-labelledby="areas-title">
+  <div class="container">
+    <span class="section-eyebrow"><i class="bi bi-pin-map"></i> Explore</span>
+    <h2 id="areas-title" class="section-title">Popular areas in Bangarpet</h2>
+    <p class="section-lead mb-4">Browse listings by neighbourhood.</p>
+    <div class="row g-3">
+      {% for area in areas %}
+      <div class="col-sm-6 col-lg-4">
+        <a class="area-card" href="{% url 'properties:search' %}?location={{ area.slug }}">
+          <span class="d-flex align-items-center gap-3"><span class="ic"><i class="bi bi-geo-alt"></i></span><span>{{ area.name }}{% if area.parent %}<span class="d-block count">{{ area.parent.name }}</span>{% endif %}</span></span>
+          <span class="count">{% if area.listing_count %}{{ area.listing_count }} listing{{ area.listing_count|pluralize }}{% else %}Explore{% endif %} <i class="bi bi-chevron-right"></i></span>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ---------- How it works ---------- #}
+<section class="section bg-white border-top border-bottom" aria-labelledby="how-title">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="section-eyebrow"><i class="bi bi-lightning-charge"></i> Simple &amp; transparent</span>
+      <h2 id="how-title" class="section-title">How Bangarpet Property Hub works</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3"><div class="step-card"><span class="num">01</span><div class="ic"><i class="bi bi-search"></i></div><h3 class="h5">Search</h3><p class="text-muted mb-0">Filter by area, budget, bedrooms, furnishing and more. Save searches and favourites.</p></div></div>
+      <div class="col-md-6 col-lg-3"><div class="step-card"><span class="num">02</span><div class="ic"><i class="bi bi-chat-text"></i></div><h3 class="h5">Enquire</h3><p class="text-muted mb-0">Message the owner or broker, call, or chat on WhatsApp - whatever they prefer.</p></div></div>
+      <div class="col-md-6 col-lg-3"><div class="step-card"><span class="num">03</span><div class="ic"><i class="bi bi-calendar-check"></i></div><h3 class="h5">Visit</h3><p class="text-muted mb-0">Request a visit slot. You'll be notified when it's confirmed.</p></div></div>
+      <div class="col-md-6 col-lg-3"><div class="step-card"><span class="num">04</span><div class="ic"><i class="bi bi-house-check"></i></div><h3 class="h5">Move in</h3><p class="text-muted mb-0">Verify documents, agree terms directly with the owner and move in with confidence.</p></div></div>
+    </div>
+  </div>
+</section>
+
+{% if banners_middle %}
+<section class="section-sm" aria-label="Promotions">
+  <div class="container"><div class="row g-3">{% for banner in banners_middle %}<div class="col-lg">{% include "partials/banner.html" %}</div>{% endfor %}</div></div>
+</section>
+{% endif %}
+
+{# ---------- List your property CTA ---------- #}
+<section class="section" aria-labelledby="cta-title">
+  <div class="container">
+    <div class="cta-band">
+      <div class="row align-items-center g-4 position-relative" style="z-index:1">
+        <div class="col-lg-8">
+          <h2 id="cta-title" class="mb-2">Own a property in Bangarpet? List it for free.</h2>
+          <p class="mb-0" style="color:rgba(255,255,255,.82)">Reach tenants and buyers searching in your area. Manage enquiries and visits from one dashboard. Upgrade only when you need more listings.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          {% if user.is_authenticated and user.is_partner %}
+            <a class="btn btn-accent btn-lg" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-lg me-1"></i>Add a listing</a>
+          {% else %}
+            <a class="btn btn-accent btn-lg" href="{% url 'accounts:register' %}?type=owner"><i class="bi bi-plus-lg me-1"></i>List your property</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ---------- Owner & broker registration ---------- #}
+<section class="section pt-0" aria-labelledby="partners-title">
+  <div class="container">
+    <div class="text-center mb-4">
+      <span class="section-eyebrow"><i class="bi bi-people"></i> For property professionals</span>
+      <h2 id="partners-title" class="section-title">Grow with Bangarpet Property Hub</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="partner-card">
+          <h3 class="h5"><i class="bi bi-house-heart me-2"></i>Property owners</h3>
+          <ul class="list-unstyled mb-4">
+            <li class="mb-2"><i class="bi bi-check2-circle tick me-2"></i>Free listing to get started</li>
+            <li class="mb-2"><i class="bi bi-check2-circle tick me-2"></i>Choose who sees your phone number</li>
+            <li class="mb-2"><i class="bi bi-check2-circle tick me-2"></i>Schedule visits and track enquiries</li>
+            <li><i class="bi bi-check2-circle tick me-2"></i>Get a verified owner badge</li>
+          </ul>
+          <a class="btn btn-primary" href="{% url 'accounts:register' %}?type=owner">Register as owner</a>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="partner-card">
+          <h3 class="h5"><i class="bi bi-briefcase me-2"></i>Brokers &amp; agents</h3>
+          <ul class="list-unstyled mb-4">
+            <li class="mb-2"><i class="bi bi-check2-circle tick me-2"></i>Manage up to 50 listings on the Broker plan</li>
+            <li class="mb-2"><i class="bi bi-check2-circle tick me-2"></i>Advanced enquiry management and export</li>
+            <li class="mb-2"><i class="bi bi-check2-circle tick me-2"></i>Listing performance statistics</li>
+            <li><i class="bi bi-check2-circle tick me-2"></i>Public agency profile with verified badge</li>
+          </ul>
+          <a class="btn btn-primary" href="{% url 'accounts:register' %}?type=broker">Register as broker</a>
+          <a class="btn btn-link" href="{% url 'subscriptions:pricing' %}">See plans</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{# ---------- Verified agents (only real, verified brokers) ---------- #}
+{% if agents %}
+<section class="section pt-0" aria-labelledby="agents-title">
+  <div class="container">
+    <span class="section-eyebrow"><i class="bi bi-patch-check"></i> Verified partners</span>
+    <h2 id="agents-title" class="section-title mb-4">Verified brokers in Bangarpet</h2>
+    <div class="row g-4">
+      {% for agent in agents %}
+      <div class="col-sm-6 col-lg-3">
+        <a class="agent-card d-block text-decoration-none" href="{% url 'properties:partner_profile' agent.pk %}">
+          {% if agent.profile.avatar %}<img class="avatar avatar-lg mb-3" src="{{ agent.profile.avatar.url }}" alt="" loading="lazy">{% else %}<span class="avatar avatar-lg mb-3">{{ agent|initials }}</span>{% endif %}
+          <h3 class="h6 mb-1">{{ agent.display_name }}</h3>
+          <div class="small text-muted mb-2">{{ agent.full_name }}</div>
+          <span class="badge badge-verified"><i class="bi bi-patch-check-fill"></i> Verified broker</span>
+          <div class="small text-muted mt-2">{{ agent.active_listings }} active listing{{ agent.active_listings|pluralize }}</div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ---------- FAQ + contact ---------- #}
+<section class="section bg-white border-top" aria-labelledby="faq-title">
+  <div class="container">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-7">
+        <span class="section-eyebrow"><i class="bi bi-question-circle"></i> FAQ</span>
+        <h2 id="faq-title" class="section-title mb-4">Frequently asked questions</h2>
+        <div class="accordion faq" id="faqAccordion">
+          {% for q, a in faqs %}
+          <div class="accordion-item">
+            <h3 class="accordion-header"><button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ forloop.counter }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}">{{ q }}</button></h3>
+            <div id="faq{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#faqAccordion"><div class="accordion-body text-muted">{{ a }}</div></div>
+          </div>
+          {% endfor %}
+        </div>
+        <a href="{% url 'core:faq' %}" class="btn btn-link px-0 mt-2">All questions <i class="bi bi-arrow-right"></i></a>
+      </div>
+      <div class="col-lg-5" id="contact">
+        <span class="section-eyebrow"><i class="bi bi-envelope"></i> Contact</span>
+        <h2 class="section-title mb-3">Talk to our team</h2>
+        <p class="text-muted">Questions about listing, plans or a property? Send us a message.</p>
+        <form method="post" action="{% url 'core:contact' %}" class="surface p-4" data-once novalidate>
+          {% csrf_token %}{{ contact_form.website }}
+          <div class="row g-3">
+            <div class="col-sm-6">{% include "partials/field.html" with field=contact_form.name wrapper_class="" %}</div>
+            <div class="col-sm-6">{% include "partials/field.html" with field=contact_form.phone wrapper_class="" %}</div>
+            <div class="col-12">{% include "partials/field.html" with field=contact_form.email wrapper_class="" %}</div>
+            <div class="col-12">{% include "partials/field.html" with field=contact_form.subject wrapper_class="" %}</div>
+            <div class="col-12">{% include "partials/field.html" with field=contact_form.message wrapper_class="" %}</div>
+          </div>
+          <button class="btn btn-primary w-100 mt-3" type="submit">Send message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

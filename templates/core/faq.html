@@ -1,0 +1,18 @@
+{% extends "core/page_base.html" %}
+{% block title %}FAQ - {{ site.site_name }}{% endblock %}
+{% block crumb %}FAQ{% endblock %}
+{% block page_heading %}Frequently asked questions{% endblock %}
+{% block structured_data %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{% for q, a in faqs %}{"@type":"Question","name":"{{ q|escapejs }}","acceptedAnswer":{"@type":"Answer","text":"{{ a|escapejs }}"}}{% if not forloop.last %},{% endif %}{% endfor %}]}</script>
+{% endblock %}
+{% block page_body %}
+<div class="accordion faq mx-auto" id="faqAll" style="max-width:860px">
+  {% for q, a in faqs %}
+  <div class="accordion-item">
+    <h2 class="accordion-header"><button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#f{{ forloop.counter }}">{{ q }}</button></h2>
+    <div id="f{{ forloop.counter }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#faqAll"><div class="accordion-body text-muted">{{ a }}</div></div>
+  </div>
+  {% endfor %}
+</div>
+<p class="text-center mt-4">Still have a question? <a href="{% url 'core:contact' %}">Contact us</a>.</p>
+{% endblock %}

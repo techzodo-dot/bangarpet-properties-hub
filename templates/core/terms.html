@@ -1,0 +1,25 @@
+{% extends "core/page_base.html" %}
+{% block title %}Terms of use - {{ site.site_name }}{% endblock %}
+{% block crumb %}Terms of use{% endblock %}
+{% block page_heading %}Terms of use{% endblock %}
+{% block page_body %}
+<div class="legal-doc mx-auto surface p-4 p-md-5" style="max-width:860px">
+  <div class="alert alert-warning rounded-4">This is a starting template. Have it reviewed by a qualified lawyer before launch.</div>
+  <h2>1. The service</h2>
+  <p>{{ site.site_name }} is an online marketplace where property owners and brokers advertise properties and tenants and buyers discover them. We are not a party to any rental or sale agreement between users and do not act as a broker for any transaction.</p>
+  <h2>2. Accounts</h2>
+  <p>You must provide accurate information and keep your password confidential. You are responsible for activity on your account. We may suspend accounts that violate these terms.</p>
+  <h2>3. Listings</h2>
+  <p>Owners and brokers must be authorised to advertise the property and must provide accurate details and genuine photos. Listings are reviewed before publication and may be rejected or removed under our <a href="{% url 'core:listing_policy' %}">listing policy</a>.</p>
+  <h2>4. Verification</h2>
+  <p>A "Verified" badge indicates that we reviewed documents submitted by the owner or broker. It is not a guarantee of title, ownership, condition or legality of any property. Users must carry out their own due diligence.</p>
+  <h2>5. Plans and payments</h2>
+  <p>Paid plans are billed in advance for the period shown at purchase. Plans are activated after the payment is verified. Prices, limits and features may change for future purchases. Refunds, if any, are handled according to the refund terms communicated at purchase and applicable law.</p>
+  <h2>6. Prohibited use</h2>
+  <p>You must not post fraudulent, misleading, duplicate or offensive content, harvest contact details, demand advance payments before visits, or attempt to interfere with the security of the service.</p>
+  <h2>7. Liability</h2>
+  <p>The service is provided "as is". To the extent permitted by law, we are not liable for losses arising from transactions between users or from reliance on listing content.</p>
+  <h2>8. Governing law</h2>
+  <p>These terms are governed by the laws of India. Courts in Karnataka shall have jurisdiction, subject to applicable law.</p>
+</div>
+{% endblock %}

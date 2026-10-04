@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Contact about {{ prop.reference }} - {{ site.site_name }}{% endblock %}
+{% block robots %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+<div class="container py-5" style="max-width:760px">
+  <a href="{{ prop.get_absolute_url }}" class="small"><i class="bi bi-arrow-left"></i> Back to {{ prop.title }}</a>
+  <h1 class="h3 mt-2 mb-4">Contact about {{ prop.reference }}</h1>
+  <div class="surface p-4">{% include "enquiries/_form.html" %}</div>
+</div>
+{% endblock %}

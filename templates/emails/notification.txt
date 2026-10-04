@@ -1,0 +1,9 @@
+Hello {{ recipient.get_short_name }},
+
+{{ notification.body }}
+{% if link %}
+View details: {{ link }}
+{% endif %}
+You are receiving this because of your notification preferences on Bangarpet Property Hub. Manage them at {{ settings_link }}
+
+- Bangarpet Property Hub

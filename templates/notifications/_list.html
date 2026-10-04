@@ -1,0 +1,30 @@
+{% load humanize %}
+<div class="page-head">
+  <h1>Notifications</h1>
+  <div class="d-flex gap-2">
+    <a class="btn btn-sm {% if request.GET.filter == 'unread' %}btn-primary{% else %}btn-soft{% endif %}" href="?filter=unread">Unread</a>
+    <a class="btn btn-sm {% if request.GET.filter != 'unread' %}btn-primary{% else %}btn-soft{% endif %}" href="?">All</a>
+    <form method="post" action="{% url 'notifications:mark_all_read' %}">{% csrf_token %}<button class="btn btn-sm btn-soft" type="submit">Mark all read</button></form>
+  </div>
+</div>
+{% if page_obj.object_list %}
+<div class="surface">
+  <ul class="list-group list-group-flush rounded-4">
+  {% for n in page_obj.object_list %}
+    <li class="list-group-item p-3 {% if not n.is_read %}bg-soft{% endif %}">
+      <form method="post" action="{% url 'notifications:open' n.pk %}" class="d-flex justify-content-between gap-3">
+        {% csrf_token %}
+        <button class="btn p-0 text-start border-0 bg-transparent min-w-0" type="submit">
+          <div class="fw-semibold text-navy">{% if not n.is_read %}<span class="badge bg-danger me-1">New</span>{% endif %}{{ n.title }}</div>
+          <div class="small">{{ n.body }}</div>
+        </button>
+        <span class="small text-muted text-nowrap">{{ n.created_at|naturaltime }}</span>
+      </form>
+    </li>
+  {% endfor %}
+  </ul>
+</div>
+{% include "partials/pagination.html" %}
+{% else %}
+  {% include "partials/empty_state.html" with icon="bell" title="No notifications" text="Updates about your enquiries, visits, listings and payments will appear here." %}
+{% endif %}

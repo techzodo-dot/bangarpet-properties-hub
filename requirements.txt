@@ -1,0 +1,10 @@
+# Bangarpet Property Hub - Python dependencies
+Django>=5.2,<5.3
+Pillow>=11.0
+python-dotenv>=1.0
+dj-database-url>=2.2
+whitenoise>=6.7
+gunicorn>=23.0
+requests>=2.32
+# For PostgreSQL in production, also install:
+# psycopg[binary]>=3.2

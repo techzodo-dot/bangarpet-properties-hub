@@ -1,0 +1,43 @@
+{% load static %}<!doctype html>
+<html lang="en-IN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{% block title %}{{ site.site_name }} - Houses, Apartments, PG &amp; Plots in Bangarpet{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Find houses, apartments, PG rooms, shops and plots for rent or sale in Bangarpet, Kolar district. Connect directly with verified owners and brokers.{% endblock %}">
+  {% block robots %}<meta name="robots" content="index, follow">{% endblock %}
+  <link rel="canonical" href="{% block canonical %}{{ SITE_URL }}{{ request.path }}{% endblock %}">
+  <meta name="theme-color" content="#172B4D">
+  <meta property="og:site_name" content="{{ site.site_name }}">
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}{{ site.site_name }} - {{ site.tagline }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}Property marketplace for Bangarpet, Karnataka. Find. Rent. Buy. Manage.{% endblock %}">
+  <meta property="og:url" content="{{ SITE_URL }}{{ request.path }}">
+  <meta property="og:image" content="{% block og_image %}{{ SITE_URL }}{% static 'img/og-default.jpg' %}{% endblock %}">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
+  <link rel="preload" href="{% static 'vendor/fonts/inter-latin-400-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{% static 'vendor/fonts/montserrat-latin-800-normal.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendor/bootstrap-icons/bootstrap-icons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block extra_head %}{% endblock %}
+  {% block structured_data %}
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"RealEstateAgent","name":"{{ site.site_name|escapejs }}","url":"{{ SITE_URL }}/","logo":"{{ SITE_URL }}{% static 'img/og-default.jpg' %}","areaServed":"Bangarpet, Kolar, Karnataka, India"{% if site.support_phone %},"telephone":"{{ site.support_phone|escapejs }}"{% endif %}}</script>
+  {% endblock %}
+</head>
+<body class="{% block body_class %}has-tabbar{% endblock %}">
+  <a class="skip-link" href="#main">Skip to content</a>
+  {% block header %}{% include "partials/header.html" %}{% endblock %}
+  {% block messages %}{% include "partials/messages.html" %}{% endblock %}
+  <main id="main" tabindex="-1">
+    {% block content %}{% endblock %}
+  </main>
+  {% block footer %}{% include "partials/footer.html" %}{% endblock %}
+  {% block tabbar %}{% include "partials/mobile_tabbar.html" %}{% endblock %}
+  <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}" defer></script>
+  <script src="{% static 'js/main.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

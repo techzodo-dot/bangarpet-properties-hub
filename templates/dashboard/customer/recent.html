@@ -1,0 +1,10 @@
+{% extends "dashboard/customer_base.html" %}
+{% block title %}Recently viewed - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Recently viewed</h1></div>
+{% if items %}
+<div class="row g-3">{% for item in items %}{% with prop=item.property %}{% if prop.is_public %}<div class="col-sm-6 col-xl-4">{% include "partials/property_card.html" %}</div>{% endif %}{% endwith %}{% endfor %}</div>
+{% else %}
+  {% include "partials/empty_state.html" with icon="clock-history" title="Nothing viewed yet" text="Properties you open will appear here." %}
+{% endif %}
+{% endblock %}

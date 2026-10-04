@@ -1,0 +1,15 @@
+{% extends base_template %}
+{% load bph %}
+{% block title %}Pay by UPI / bank transfer - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Pay by UPI / bank transfer</h1></div>
+<div class="surface p-4" style="max-width:640px">
+  <p>Plan: <strong>{{ plan.name }}</strong> &middot; Amount: <strong>{{ plan.effective_price|inr }}</strong></p>
+  {% if site.manual_payment_instructions %}<div class="bg-soft rounded-4 p-3 mb-3 prose small">{{ site.manual_payment_instructions }}</div>{% endif %}
+  <form method="post" data-once novalidate>{% csrf_token %}
+    {% include "partials/field.html" with field=form.manual_reference %}
+    <button class="btn btn-primary" type="submit">Submit for verification</button>
+    <a class="btn btn-link" href="{% url 'dashboard:partner_subscription' %}">Cancel</a>
+  </form>
+</div>
+{% endblock %}

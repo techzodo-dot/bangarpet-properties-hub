@@ -1,0 +1,63 @@
+{% extends "dashboard/partner_base.html" %}
+{% load bph %}
+{% block title %}Profile &amp; verification - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Profile &amp; verification</h1></div>
+<form method="post" enctype="multipart/form-data" class="surface p-4 mb-4" data-once novalidate>
+  {% csrf_token %}<input type="hidden" name="section" value="profile">
+  <h2 class="h5 mb-3">Contact details</h2>
+  <div class="row g-3">
+    <div class="col-md-6">{% include "partials/field.html" with field=account_form.full_name wrapper_class="" %}</div>
+    <div class="col-md-6"><label class="form-label">Email</label><input class="form-control" value="{{ user.email }}" disabled>{% if user.email_verified %}<div class="form-text text-verified"><i class="bi bi-check-circle"></i> Verified</div>{% endif %}</div>
+    <div class="col-md-6">{% include "partials/field.html" with field=account_form.phone wrapper_class="" %}</div>
+    <div class="col-md-6">{% include "partials/field.html" with field=profile_form.whatsapp_number wrapper_class="" %}</div>
+    <div class="col-md-6">{% include "partials/field.html" with field=profile_form.city wrapper_class="" %}</div>
+    <div class="col-md-6">{% include "partials/field.html" with field=profile_form.preferred_contact wrapper_class="" %}</div>
+    <div class="col-12">{% include "partials/field.html" with field=profile_form.avatar wrapper_class="" %}</div>
+    <div class="col-12">{% include "partials/field.html" with field=profile_form.about wrapper_class="" %}</div>
+  </div>
+  <h2 class="h5 mt-4 mb-3">{% if user.role == 'broker' %}Business details{% else %}Owner details{% endif %}</h2>
+  <div class="row g-3">
+    {% for field in business_form %}<div class="{% if field.name == 'office_address' or field.name == 'address' %}col-12{% else %}col-md-6{% endif %}">{% include "partials/field.html" with wrapper_class="" %}</div>{% endfor %}
+  </div>
+  <button class="btn btn-primary mt-3" type="submit">Save profile</button>
+</form>
+
+<div class="surface p-4" id="verification">
+  <div class="d-flex flex-wrap justify-content-between gap-2 mb-3">
+    <h2 class="h5 mb-0">Verification</h2>
+    <span class="badge badge-status status-{{ partner_profile.verification_status }}">{{ partner_profile.get_verification_status_display }}</span>
+  </div>
+  {% if partner_profile.verification_status == 'verified' %}
+    <p class="text-verified mb-2"><i class="bi bi-patch-check-fill"></i> Verified on {{ partner_profile.verified_at|date:"d M Y" }}{% if partner_profile.verification_expires_at %} &middot; valid until {{ partner_profile.verification_expires_at|date:"d M Y" }}{% endif %}.</p>
+  {% elif partner_profile.verification_status == 'rejected' %}
+    <div class="alert alert-danger rounded-4">Not approved: {{ partner_profile.verification_note }}</div>
+  {% endif %}
+  <p class="small text-muted">Upload a government ID{% if user.role == 'owner' %} and, if possible, an ownership document (tax receipt, khata) or an authorisation letter{% else %} and a business document (trade licence, GST certificate or RERA registration){% endif %}. Documents are stored privately, are visible only to you and our verification team, and are deleted according to our retention policy after a decision. Verification confirms identity; it does not certify property title.</p>
+  <form method="post" enctype="multipart/form-data" class="row g-3 align-items-end mb-4" data-once novalidate>
+    {% csrf_token %}<input type="hidden" name="section" value="verification">
+    <div class="col-md-4">{% include "partials/field.html" with field=doc_form.doc_type wrapper_class="" %}</div>
+    <div class="col-md-4">{% include "partials/field.html" with field=doc_form.file wrapper_class="" %}</div>
+    <div class="col-md-4">{% include "partials/field.html" with field=doc_form.note wrapper_class="" %}</div>
+    <div class="col-12"><button class="btn btn-primary" type="submit"><i class="bi bi-upload me-1"></i>Upload document</button></div>
+  </form>
+  {% if documents %}
+  <div class="table-card"><div class="table-responsive"><table class="table">
+    <thead><tr><th>Document</th><th>Uploaded</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for d in documents %}
+    <tr>
+      <td>{{ d.get_doc_type_display }}<div class="small text-muted">{{ d.original_name }}</div></td>
+      <td class="small">{{ d.created_at|date:"d M Y" }}</td>
+      <td>{% status_badge d %}{% if d.review_note %}<div class="small text-muted">{{ d.review_note }}</div>{% endif %}</td>
+      <td class="text-end text-nowrap">
+        {% if d.file %}<a class="btn btn-sm btn-soft" href="{% url 'accounts:verification_document' d.pk %}" target="_blank" rel="noopener">View</a>{% else %}<span class="small text-muted">Deleted per retention policy</span>{% endif %}
+        {% if d.status == 'pending' %}<form class="d-inline" method="post" action="{% url 'dashboard:partner_document_delete' d.pk %}" data-confirm="Withdraw and delete this document?">{% csrf_token %}<button class="btn btn-sm btn-outline-danger" type="submit">Withdraw</button></form>{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table></div></div>
+  {% endif %}
+</div>
+{% endblock %}

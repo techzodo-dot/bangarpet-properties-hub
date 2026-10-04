@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="bg-navy py-5" style="background:var(--bph-navy)">
+  <div class="container">
+    <nav aria-label="breadcrumb"><ol class="breadcrumb mb-2"><li class="breadcrumb-item"><a class="text-white-50" href="{% url 'core:home' %}">Home</a></li><li class="breadcrumb-item active text-white" aria-current="page">{% block crumb %}{% endblock %}</li></ol></nav>
+    <h1 class="text-white mb-0">{% block page_heading %}{% endblock %}</h1>
+    {% block page_sub %}{% endblock %}
+  </div>
+</section>
+<div class="container py-5">{% block page_body %}{% endblock %}</div>
+{% endblock %}

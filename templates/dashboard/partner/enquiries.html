@@ -1,0 +1,37 @@
+{% extends "dashboard/partner_base.html" %}
+{% load bph %}
+{% block title %}Enquiries - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head">
+  <h1>Enquiries</h1>
+  {% if plan.has_advanced_enquiry_tools %}<a class="btn btn-soft" href="?{% query_replace export='csv' %}"><i class="bi bi-download me-1"></i>Export CSV</a>{% endif %}
+</div>
+<form method="get" class="surface p-3 mb-3">
+  <div class="row g-2 align-items-end">
+    <div class="col-md-4"><label class="form-label small" for="eq">Search</label><input id="eq" class="form-control" type="search" name="q" value="{{ q }}" placeholder="Name, phone or property ID"></div>
+    <div class="col-md-3"><label class="form-label small" for="es">Status</label><select id="es" class="form-select" name="status"><option value="">All</option><option value="open" {% if status == 'open' %}selected{% endif %}>Open</option>{% for v, l in statuses %}<option value="{{ v }}" {% if status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+    <div class="col-md-3"><label class="form-label small" for="ep">Property</label><select id="ep" class="form-select" name="property"><option value="">All listings</option>{% for p in properties %}<option value="{{ p.pk }}" {% if property_id == p.pk|stringformat:"d" %}selected{% endif %}>{{ p.reference }} - {{ p.title|truncatechars:30 }}</option>{% endfor %}</select></div>
+    <div class="col-md-2 d-grid"><button class="btn btn-primary" type="submit">Filter</button></div>
+  </div>
+</form>
+{% if page_obj.object_list %}
+<div class="table-card"><div class="table-responsive"><table class="table">
+  <thead><tr><th>Customer</th><th>Property</th><th>Received</th><th>Prefers</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for e in page_obj.object_list %}
+  <tr class="{% if e.status == 'new' %}fw-semibold{% endif %}">
+    <td>{{ e.contact_name }}<div class="small text-muted fw-normal">{{ e.contact_phone }}</div></td>
+    <td><span class="small">{{ e.property.reference }}</span><div class="small text-muted fw-normal text-truncate" style="max-width:220px">{{ e.property.title }}</div></td>
+    <td class="small text-nowrap">{{ e.created_at|date:"d M Y, h:i A" }}</td>
+    <td class="small">{{ e.get_preferred_contact_display }}</td>
+    <td>{% status_badge e %}</td>
+    <td class="text-end"><a class="btn btn-sm btn-soft" href="{% url 'dashboard:partner_enquiry_detail' e.pk %}">Open</a></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table></div></div>
+{% include "partials/pagination.html" %}
+{% else %}
+  {% include "partials/empty_state.html" with icon="chat-left-text" title="No enquiries found" text="Enquiries from interested tenants and buyers will appear here." %}
+{% endif %}
+{% endblock %}

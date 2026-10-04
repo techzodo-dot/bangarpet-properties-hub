@@ -1,0 +1,29 @@
+{% extends "dashboard/partner_base.html" %}
+{% load bph %}
+{% block title %}Subscription - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Subscription</h1></div>
+<div class="surface p-4 mb-4 d-flex flex-wrap justify-content-between gap-3 align-items-center">
+  <div>
+    <div class="small text-muted text-uppercase fw-semibold">Current plan</div>
+    <div class="h4 mb-1">{{ plan.name|default:"Free" }}</div>
+    <div class="text-muted small">{% if current %}Active until {{ current.ends_at|date:"d M Y" }} ({{ current.days_remaining }} days left){% else %}Free plan - no expiry{% endif %}</div>
+  </div>
+  <div class="text-end">
+    <div class="small text-muted">Active listing slots</div>
+    <div class="h4 mb-0">{{ used_slots }} / {{ plan.listing_limit|default:1 }}</div>
+  </div>
+</div>
+<div class="row g-4">
+  {% for p in plans %}
+  <div class="col-md-6 col-xxl-3">{% with plan=p is_current=False %}{% if current and current.plan_id == p.pk %}{% include "partials/plan_card.html" with is_current=True show_actions=True %}{% elif not current and p.is_default %}{% include "partials/plan_card.html" with is_current=True show_actions=True %}{% else %}{% include "partials/plan_card.html" with show_actions=True %}{% endif %}{% endwith %}</div>
+  {% endfor %}
+</div>
+<p class="small text-muted mt-3"><i class="bi bi-shield-lock me-1"></i>Payments are processed by Razorpay. Your plan activates only after the payment is verified on our server. Buying the same plan again extends it; choosing a different plan starts it immediately.</p>
+{% if history %}
+<h2 class="h5 mt-4">Plan history</h2>
+<div class="table-card"><div class="table-responsive"><table class="table"><thead><tr><th>Plan</th><th>Status</th><th>From</th><th>Until</th><th>Amount</th></tr></thead><tbody>
+{% for s in history %}<tr><td>{{ s.plan.name }}</td><td>{% status_badge s %}</td><td class="small">{{ s.starts_at|date:"d M Y" }}</td><td class="small">{{ s.ends_at|date:"d M Y" }}</td><td>{{ s.amount_paid|inr }}</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endif %}
+{% endblock %}

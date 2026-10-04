@@ -1,0 +1,21 @@
+{% extends "core/page_base.html" %}
+{% load bph %}
+{% block title %}Pricing for owners and brokers - {{ site.site_name }}{% endblock %}
+{% block meta_description %}Simple plans to list properties on Bangarpet Property Hub. Start free; upgrade for more listings, priority visibility and performance statistics.{% endblock %}
+{% block crumb %}Pricing{% endblock %}
+{% block page_heading %}Plans for owners &amp; brokers{% endblock %}
+{% block page_sub %}<p class="text-white-50 mt-2 mb-0">Start free. Upgrade when you need more listings. Searching and enquiring is always free for tenants and buyers.</p>{% endblock %}
+{% block page_body %}
+<div class="row g-4">
+  {% for plan in plans %}
+  <div class="col-md-6 col-xl-3">
+    {% if forloop.counter == 3 %}{% include "partials/plan_card.html" with highlight=True %}{% else %}{% include "partials/plan_card.html" %}{% endif %}
+  </div>
+  {% endfor %}
+</div>
+<div class="text-center mt-4">
+  {% if user.is_authenticated and user.is_partner %}<a class="btn btn-primary btn-lg" href="{% url 'dashboard:partner_subscription' %}">Manage my plan</a>
+  {% else %}<a class="btn btn-accent btn-lg" href="{% url 'accounts:register' %}?type=owner">Get started free</a>{% endif %}
+  <p class="small text-muted mt-3">Prices in Indian Rupees. Payments are processed securely by Razorpay. "Priority visibility" moves your listings higher in the default sort order; it is not a guarantee of placement.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% if field.is_hidden %}{{ field }}{% else %}
+<div class="{{ wrapper_class|default:'mb-3' }}">
+  {% if field.widget_type == 'checkbox' %}
+    <div class="form-check">
+      {{ field }}
+      <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    </div>
+  {% else %}
+    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="required-mark" aria-hidden="true">*</span>{% endif %}</label>
+    {% if field.widget_type == 'radioselect' %}
+      <div class="choice-tiles" role="radiogroup">{% for radio in field %}<label for="{{ radio.id_for_label }}">{{ radio.tag }} <span>{{ radio.choice_label }}</span></label>{% endfor %}</div>
+    {% elif field.widget_type == 'checkboxselectmultiple' %}
+      <div class="amenity-grid">{% for cb in field %}<label for="{{ cb.id_for_label }}">{{ cb.tag }} <span>{{ cb.choice_label }}</span></label>{% endfor %}</div>
+    {% else %}
+      {% if prefix_text %}<div class="input-group"><span class="input-group-text">{{ prefix_text }}</span>{{ field }}</div>{% else %}{{ field }}{% endif %}
+    {% endif %}
+  {% endif %}
+  {% if field.help_text %}<div class="form-text">{{ field.help_text|safe }}</div>{% endif %}
+  {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+</div>
+{% endif %}

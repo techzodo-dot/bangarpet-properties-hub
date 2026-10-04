@@ -1,0 +1,31 @@
+{% extends "dashboard/customer_base.html" %}
+{% load bph %}
+{% block title %}Property visits - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Property visits</h1></div>
+<h2 class="h6 text-muted text-uppercase">Upcoming &amp; pending</h2>
+{% for v in upcoming %}
+<div class="surface p-3 mb-3 d-flex flex-wrap justify-content-between gap-3 align-items-center">
+  <div class="min-w-0">
+    <a class="fw-bold text-navy" href="{{ v.property.get_absolute_url }}">{{ v.property.title }}</a>
+    <div class="small text-muted">{{ v.property.location_label }}</div>
+    <div class="small mt-1">{% if v.status == 'scheduled' %}<i class="bi bi-calendar-check text-verified"></i> Confirmed for <strong>{{ v.scheduled_at|date:"D, d M Y \a\t h:i A" }}</strong>{% if v.partner_note %}<br><i class="bi bi-info-circle"></i> {{ v.partner_note }}{% endif %}{% else %}<i class="bi bi-hourglass-split"></i> Requested for {{ v.preferred_date|date:"D, d M Y" }} ({{ v.get_preferred_slot_display }}) - waiting for confirmation{% endif %}</div>
+  </div>
+  <div class="d-flex gap-2 align-items-center">
+    {% status_badge v %}
+    {% if v.status == 'requested' %}
+    <form method="post" action="{% url 'dashboard:customer_visit_cancel' v.pk %}" data-confirm="Cancel this visit request?">{% csrf_token %}<button class="btn btn-sm btn-outline-danger" type="submit">Cancel request</button></form>
+    {% endif %}
+  </div>
+</div>
+{% empty %}
+<div class="text-muted mb-4">No upcoming visits. Use "Request a visit" on any listing to schedule one.</div>
+{% endfor %}
+{% if past %}
+<h2 class="h6 text-muted text-uppercase mt-4">Past visits</h2>
+<div class="table-card"><div class="table-responsive"><table class="table">
+  <thead><tr><th>Property</th><th>Date</th><th>Status</th></tr></thead>
+  <tbody>{% for v in past %}<tr><td><a href="{{ v.property.get_absolute_url }}">{{ v.property.title|truncatechars:50 }}</a></td><td>{% if v.scheduled_at %}{{ v.scheduled_at|date:"d M Y" }}{% else %}{{ v.preferred_date|date:"d M Y" }}{% endif %}</td><td>{% status_badge v %}</td></tr>{% endfor %}</tbody>
+</table></div></div>
+{% endif %}
+{% endblock %}

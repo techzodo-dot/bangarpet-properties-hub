@@ -1,0 +1,4 @@
+{% load static %}<a class="brand{% if extra_class %} {{ extra_class }}{% endif %}" href="{% url 'core:home' %}" aria-label="{{ site.site_name }} home">
+  {% if site.logo %}<img src="{{ site.logo.url }}" alt="" width="56" height="42">{% else %}<img src="{% static 'img/logo-mark.svg' %}" alt="" width="56" height="42">{% endif %}
+  <span class="brand-text"><span class="brand-name">Bangarpet</span><span class="brand-sub">Property Hub</span></span>
+</a>

@@ -1,0 +1,43 @@
+{% extends "dashboard/partner_base.html" %}
+{% load bph %}
+{% block title %}Property visits - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Property visits</h1></div>
+<h2 class="h6 text-muted text-uppercase">Requests awaiting confirmation ({{ requested|length }})</h2>
+{% for v in requested %}
+<div class="surface p-3 mb-3">
+  <div class="d-flex flex-wrap justify-content-between gap-2">
+    <div><strong>{{ v.enquiry.contact_name }}</strong> <span class="small text-muted">&middot; {{ v.enquiry.contact_phone }}</span><div class="small">{{ v.property.reference }} - {{ v.property.title|truncatechars:50 }}</div><div class="small text-muted">Prefers {{ v.preferred_date|date:"D, d M Y" }}, {{ v.get_preferred_slot_display }}{% if v.customer_note %} &middot; "{{ v.customer_note }}"{% endif %}</div></div>
+    {% status_badge v %}
+  </div>
+  <form method="post" action="{% url 'dashboard:partner_visit_action' v.pk 'schedule' %}" class="row g-2 mt-2 align-items-end" data-once>
+    {% csrf_token %}
+    <div class="col-sm-3"><label class="form-label small">Date</label><input class="form-control" type="date" name="visit-scheduled_date" value="{{ v.preferred_date|date:'Y-m-d' }}" required></div>
+    <div class="col-sm-2"><label class="form-label small">Time</label><input class="form-control" type="time" name="visit-scheduled_time" value="{% if v.preferred_slot == 'morning' %}10:00{% elif v.preferred_slot == 'afternoon' %}14:00{% else %}17:00{% endif %}" required></div>
+    <div class="col-sm-4"><label class="form-label small">Note (optional)</label><input class="form-control" name="visit-partner_note" maxlength="500" placeholder="Meeting point / instructions"></div>
+    <div class="col-sm-3 d-flex gap-2"><button class="btn btn-primary flex-fill" type="submit">Confirm</button></div>
+  </form>
+  <form method="post" action="{% url 'dashboard:partner_visit_action' v.pk 'cancel' %}" class="mt-2" data-confirm="Decline this visit request?">{% csrf_token %}<button class="btn btn-sm btn-link text-danger px-0" type="submit">Decline request</button></form>
+</div>
+{% empty %}<p class="text-muted">No pending visit requests.</p>{% endfor %}
+
+<h2 class="h6 text-muted text-uppercase mt-4">Scheduled ({{ scheduled|length }})</h2>
+{% for v in scheduled %}
+<div class="surface p-3 mb-2 d-flex flex-wrap justify-content-between align-items-center gap-2">
+  <div><strong>{{ v.scheduled_at|date:"D, d M Y \a\t h:i A" }}</strong><div class="small">{{ v.enquiry.contact_name }} ({{ v.enquiry.contact_phone }}) &middot; {{ v.property.reference }}</div></div>
+  <div class="d-flex gap-2">
+    <form method="post" action="{% url 'dashboard:partner_visit_action' v.pk 'complete' %}">{% csrf_token %}<button class="btn btn-sm btn-soft" type="submit">Completed</button></form>
+    <form method="post" action="{% url 'dashboard:partner_visit_action' v.pk 'no_show' %}">{% csrf_token %}<button class="btn btn-sm btn-soft" type="submit">No-show</button></form>
+    <a class="btn btn-sm btn-soft" href="{% url 'dashboard:partner_enquiry_detail' v.enquiry_id %}">Reschedule</a>
+    <form method="post" action="{% url 'dashboard:partner_visit_action' v.pk 'cancel' %}" data-confirm="Cancel this visit? The customer will be notified.">{% csrf_token %}<button class="btn btn-sm btn-outline-danger" type="submit">Cancel</button></form>
+  </div>
+</div>
+{% empty %}<p class="text-muted">No scheduled visits.</p>{% endfor %}
+
+{% if past %}
+<h2 class="h6 text-muted text-uppercase mt-4">History</h2>
+<div class="table-card"><div class="table-responsive"><table class="table"><thead><tr><th>Customer</th><th>Property</th><th>Date</th><th>Status</th></tr></thead><tbody>
+{% for v in past %}<tr><td>{{ v.enquiry.contact_name }}</td><td>{{ v.property.reference }}</td><td class="small">{% if v.scheduled_at %}{{ v.scheduled_at|date:"d M Y" }}{% else %}{{ v.preferred_date|date:"d M Y" }}{% endif %}</td><td>{% status_badge v %}</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endif %}
+{% endblock %}

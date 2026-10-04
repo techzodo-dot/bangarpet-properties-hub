@@ -1,0 +1,52 @@
+{% load static %}
+<footer class="site-footer" role="contentinfo">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        {% include "partials/brand.html" with extra_class="footer-brand mb-3" %}
+        <p class="mb-3">{{ site.tagline }} A local property marketplace connecting tenants, buyers, owners and brokers in Bangarpet and nearby towns of Kolar district.</p>
+        <div class="social">
+          {% if site.facebook_url %}<a href="{{ site.facebook_url }}" rel="noopener" target="_blank" aria-label="Facebook"><i class="bi bi-facebook"></i></a>{% endif %}
+          {% if site.instagram_url %}<a href="{{ site.instagram_url }}" rel="noopener" target="_blank" aria-label="Instagram"><i class="bi bi-instagram"></i></a>{% endif %}
+          {% if site.youtube_url %}<a href="{{ site.youtube_url }}" rel="noopener" target="_blank" aria-label="YouTube"><i class="bi bi-youtube"></i></a>{% endif %}
+          {% if site.x_url %}<a href="{{ site.x_url }}" rel="noopener" target="_blank" aria-label="X"><i class="bi bi-twitter-x"></i></a>{% endif %}
+          {% if site.linkedin_url %}<a href="{{ site.linkedin_url }}" rel="noopener" target="_blank" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>{% endif %}
+          {% if site.whatsapp_digits %}<a href="https://wa.me/{{ site.whatsapp_digits }}" rel="noopener" target="_blank" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>{% endif %}
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6>Explore</h6>
+        <ul class="list-unstyled footer-links">
+          <li><a href="{% url 'properties:rent' %}">Properties for rent</a></li>
+          <li><a href="{% url 'properties:buy' %}">Properties for sale</a></li>
+          <li><a href="{% url 'properties:pg_rooms' %}">PG &amp; rooms</a></li>
+          <li><a href="{% url 'properties:commercial' %}">Commercial</a></li>
+          <li><a href="{% url 'properties:category' 'plots' %}">Plots</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <h6>Company</h6>
+        <ul class="list-unstyled footer-links">
+          <li><a href="{% url 'core:about' %}">About us</a></li>
+          <li><a href="{% url 'core:contact' %}">Contact</a></li>
+          <li><a href="{% url 'core:faq' %}">FAQ</a></li>
+          <li><a href="{% url 'subscriptions:pricing' %}">Pricing for owners</a></li>
+          <li><a href="{% url 'accounts:register' %}?type=broker">For brokers</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <h6>Contact</h6>
+        <ul class="list-unstyled footer-links">
+          {% if site.office_address %}<li><i class="bi bi-geo-alt me-2"></i>{{ site.office_address|linebreaksbr }}</li>{% else %}<li><i class="bi bi-geo-alt me-2"></i>Bangarpet, Kolar district, Karnataka</li>{% endif %}
+          {% if site.support_phone %}<li><i class="bi bi-telephone me-2"></i><a href="tel:{{ site.support_phone }}">{{ site.support_phone }}</a></li>{% endif %}
+          {% if site.contact_email %}<li><i class="bi bi-envelope me-2"></i><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></li>{% endif %}
+        </ul>
+        <p class="small mb-0">Safety tip: never pay a token amount or deposit before visiting a property and verifying the owner's documents.</p>
+      </div>
+    </div>
+    <div class="legal d-flex flex-column flex-md-row justify-content-between gap-2">
+      <span>&copy; {% now "Y" %} {{ site.site_name }}. All rights reserved.</span>
+      <span><a href="{% url 'core:privacy' %}">Privacy policy</a> &middot; <a href="{% url 'core:terms' %}">Terms of use</a> &middot; <a href="{% url 'core:listing_policy' %}">Listing policy</a></span>
+    </div>
+  </div>
+</footer>

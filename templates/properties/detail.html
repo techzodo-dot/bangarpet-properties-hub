@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% load static bph humanize %}
+{% block title %}{{ prop.title }} - {% if prop.purpose == 'rent' %}{{ prop.price|inr }}/month{% else %}{{ prop.price|inr_short }}{% endif %} | {{ prop.location_label }} | {{ site.site_name }}{% endblock %}
+{% block meta_description %}{{ prop.category.name }} {{ prop.get_purpose_display|lower }} in {{ prop.location_label }}{% if prop.bedrooms %}, {{ prop.bedrooms }} bedroom{{ prop.bedrooms|pluralize }}{% endif %}{% if prop.built_up_area %}, {{ prop.built_up_area }} sq.ft{% endif %}. {{ prop.description|truncatechars:120 }}{% endblock %}
+{% block robots %}{% if prop.is_public %}<meta name="robots" content="index, follow">{% else %}<meta name="robots" content="noindex, nofollow">{% endif %}{% endblock %}
+{% block canonical %}{{ SITE_URL }}{{ prop.get_absolute_url }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ prop.title }}{% endblock %}
+{% block og_description %}{{ prop.description|truncatechars:160 }}{% endblock %}
+{% block og_image %}{% with img=prop.primary_image %}{% if img %}{{ SITE_URL }}{{ img.image.url }}{% else %}{{ SITE_URL }}{% static 'img/og-default.jpg' %}{% endif %}{% endwith %}{% endblock %}
+{% block structured_data %}
+{% if prop.is_public %}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"RealEstateListing","name":"{{ prop.title|escapejs }}","url":"{{ SITE_URL }}{{ prop.get_absolute_url }}","datePosted":"{{ prop.published_at|date:'c' }}","description":"{{ prop.description|truncatechars:300|escapejs }}",{% with img=prop.primary_image %}{% if img %}"image":"{{ SITE_URL }}{{ img.image.url }}",{% endif %}{% endwith %}"offers":{"@type":"Offer","price":"{{ prop.price|default:0 }}","priceCurrency":"INR","availability":"https://schema.org/InStock","businessFunction":"{% if prop.purpose == 'rent' %}http://purl.org/goodrelations/v1#LeaseOut{% else %}http://purl.org/goodrelations/v1#Sell{% endif %}"},"contentLocation":{"@type":"Place","address":{"@type":"PostalAddress","addressLocality":"{{ prop.town.name|default:'Bangarpet'|escapejs }}","addressRegion":"Karnataka","addressCountry":"IN"{% if prop.pin_code %},"postalCode":"{{ prop.pin_code }}"{% endif %}}}}</script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% if not prop.is_public %}
+<div class="demo-ribbon">Preview - this listing is <strong>{{ prop.get_status_display|lower }}</strong> and is not visible to the public.{% if is_owner %} <a href="{% url 'dashboard:partner_property_manage' prop.pk %}">Manage listing</a>{% endif %}</div>
+{% elif prop.is_demo %}
+<div class="demo-ribbon">Demo listing - sample data for testing only.</div>
+{% endif %}
+
+<div class="container py-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{% if prop.purpose == 'rent' %}{% url 'properties:rent' %}{% else %}{% url 'properties:buy' %}{% endif %}">{{ prop.get_purpose_display }}</a></li>
+      <li class="breadcrumb-item"><a href="{{ prop.category.get_absolute_url }}">{{ prop.category.name }}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ prop.reference }}</li>
+    </ol>
+  </nav>
+
+  {# ---------- Gallery ---------- #}
+  {% if images %}
+  <div class="gallery-grid count-{% if images|length >= 3 %}3{% else %}{{ images|length }}{% endif %} mb-4">
+    {% for img in images|slice:":3" %}
+      <button type="button" class="g-item" data-gallery-index="{{ forloop.counter0 }}" aria-label="Open photo {{ forloop.counter }} of {{ images|length }} in full screen">
+        <img src="{% if forloop.first %}{{ img.image.url }}{% else %}{{ img.thumb_url }}{% endif %}" alt="{{ img.alt_text }}" {% if not forloop.first %}loading="lazy"{% endif %} width="{{ img.width|default:1200 }}" height="{{ img.height|default:900 }}">
+        {% if forloop.last and images|length > 3 %}<span class="more-overlay">+{{ images|length|add:"-3" }} photos</span>{% endif %}
+      </button>
+    {% endfor %}
+  </div>
+  <div class="modal fade gallery-modal" id="galleryModal" tabindex="-1" aria-label="Photo gallery" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-header border-0"><span class="text-white small">{{ prop.title }}</span><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close gallery"></button></div>
+        <div class="modal-body d-flex align-items-center">
+          <div id="galleryCarousel" class="carousel slide w-100" data-bs-interval="false">
+            <div class="carousel-inner">
+              {% for img in images %}<div class="carousel-item {% if forloop.first %}active{% endif %}"><img src="{{ img.image.url }}" alt="{{ img.alt_text }}" loading="lazy"><p class="text-center text-white-50 small mt-2">{{ forloop.counter }} / {{ images|length }}{% if img.caption %} - {{ img.caption }}{% endif %}</p></div>{% endfor %}
+            </div>
+            {% if images|length > 1 %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#galleryCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span><span class="visually-hidden">Previous</span></button>
+            <button class="carousel-control-next" type="button" data-bs-target="#galleryCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span><span class="visually-hidden">Next</span></button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="surface mb-4 overflow-hidden" style="max-height:340px"><img src="{% static 'img/property-placeholder.svg' %}" alt="" class="w-100" style="object-fit:cover;max-height:340px"></div>
+  {% endif %}
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      {# ---------- Title & price ---------- #}
+      <div class="surface p-4 mb-4">
+        <div class="d-flex flex-wrap gap-2 mb-2">
+          <span class="badge badge-soft">{{ prop.get_purpose_display }}</span>
+          <span class="badge badge-soft">{{ prop.category.name }}</span>
+          {% if prop.is_owner_verified %}<span class="badge badge-verified"><i class="bi bi-patch-check-fill"></i> Verified {% if prop.listed_by_broker %}broker{% else %}owner{% endif %}</span>{% endif %}
+          {% if prop.is_featured %}<span class="badge badge-featured"><i class="bi bi-star-fill"></i> Featured</span>{% endif %}
+          {% if not prop.is_public %}{% status_badge prop %}{% endif %}
+        </div>
+        <h1 class="h2 mb-1">{{ prop.title }}</h1>
+        <p class="text-muted mb-3"><i class="bi bi-geo-alt"></i> {{ prop.public_address|default:"Bangarpet" }}{% if prop.locality and prop.area %} &middot; {{ prop.locality }}{% endif %}</p>
+        <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 price-block">
+          <div>
+            {% if prop.purpose == 'rent' %}
+              <div class="price">{{ prop.monthly_rent|inr }}<span class="fs-6 fw-normal text-muted"> /month</span></div>
+              <div class="text-muted small">{% if prop.security_deposit %}Deposit {{ prop.security_deposit|inr }}{% endif %}{% if prop.maintenance_charge %} &middot; Maintenance {{ prop.maintenance_charge|inr }}/month{% endif %}{% if prop.is_negotiable %} &middot; Negotiable{% endif %}</div>
+            {% else %}
+              <div class="price">{{ prop.sale_price|inr }}</div>
+              <div class="text-muted small">{{ prop.sale_price|inr_short }}{% if prop.built_up_area and prop.sale_price %} &middot; approx. {% widthratio prop.sale_price prop.built_up_area 1 as per_sqft %}&#8377;{{ per_sqft|intcomma }}/sq.ft{% endif %}{% if prop.maintenance_charge %} &middot; Maintenance {{ prop.maintenance_charge|inr }}/month{% endif %}{% if prop.is_negotiable %} &middot; Negotiable{% endif %}</div>
+            {% endif %}
+          </div>
+          <div class="d-flex gap-2">
+            {% if prop.is_public %}{% include "partials/fav_button.html" with btn_class="btn btn-soft" with_label=True %}{% endif %}
+            <button type="button" class="btn btn-soft" data-share="{{ absolute_url }}" data-title="{{ prop.title }}"><i class="bi bi-share"></i> Share</button>
+          </div>
+        </div>
+        <div class="small text-muted mt-3">Property ID <strong>{{ prop.reference }}</strong>{% if prop.published_at %} &middot; Posted {{ prop.published_at|naturalday:"d M Y" }}{% endif %} &middot; {{ prop.view_count }} view{{ prop.view_count|pluralize }}</div>
+      </div>
+
+      {# ---------- Key facts ---------- #}
+      <section class="mb-4" aria-labelledby="facts-title">
+        <h2 id="facts-title" class="h5 mb-3">Key details</h2>
+        <div class="fact-grid">
+          {% if prop.bedrooms is not None %}<div class="fact"><div class="k">{% if prop.category.slug == 'pg-rooms' %}Rooms{% else %}Bedrooms{% endif %}</div><div class="v">{{ prop.bedrooms }}</div></div>{% endif %}
+          {% if prop.bathrooms is not None %}<div class="fact"><div class="k">Bathrooms</div><div class="v">{{ prop.bathrooms }}</div></div>{% endif %}
+          {% if prop.balconies is not None %}<div class="fact"><div class="k">Balconies</div><div class="v">{{ prop.balconies }}</div></div>{% endif %}
+          {% if prop.built_up_area %}<div class="fact"><div class="k">Built-up area</div><div class="v">{{ prop.built_up_area|intcomma }} sq.ft</div></div>{% endif %}
+          {% if prop.land_area %}<div class="fact"><div class="k">Land area</div><div class="v">{{ prop.land_area|floatformat:"-2" }} {{ prop.get_land_area_unit_display }}</div></div>{% endif %}
+          {% if prop.furnishing %}<div class="fact"><div class="k">Furnishing</div><div class="v">{{ prop.get_furnishing_display }}</div></div>{% endif %}
+          {% if prop.parking %}<div class="fact"><div class="k">Parking</div><div class="v">{{ prop.get_parking_display }}</div></div>{% endif %}
+          {% if prop.floor_number is not None %}<div class="fact"><div class="k">Floor</div><div class="v">{% if prop.floor_number == 0 %}Ground{% else %}{{ prop.floor_number }}{% endif %}{% if prop.total_floors %} of {{ prop.total_floors }}{% endif %}</div></div>{% endif %}
+          {% if prop.property_age_years is not None %}<div class="fact"><div class="k">Property age</div><div class="v">{% if prop.property_age_years == 0 %}New{% else %}{{ prop.property_age_years }} yr{{ prop.property_age_years|pluralize }}{% endif %}</div></div>{% endif %}
+          <div class="fact"><div class="k">Availability</div><div class="v">{% if prop.availability == 'from_date' and prop.available_from %}From {{ prop.available_from|date:"d M Y" }}{% else %}{{ prop.get_availability_display }}{% endif %}</div></div>
+        </div>
+      </section>
+
+      {% if prop.amenities.all %}
+      <section class="surface p-4 mb-4" aria-labelledby="amenities-title">
+        <h2 id="amenities-title" class="h5 mb-3">Amenities</h2>
+        <div class="row g-2">{% for a in prop.amenities.all %}<div class="col-sm-6 col-md-4"><i class="bi bi-{{ a.icon }} text-navy me-2"></i>{{ a.name }}</div>{% endfor %}</div>
+      </section>
+      {% endif %}
+
+      <section class="surface p-4 mb-4" aria-labelledby="desc-title">
+        <h2 id="desc-title" class="h5 mb-3">About this property</h2>
+        <div class="prose">{{ prop.description }}</div>
+      </section>
+
+      {% if prop.youtube_embed_url %}
+      <section class="mb-4" id="tour" aria-labelledby="tour-title">
+        <h2 id="tour-title" class="h5 mb-3"><i class="bi bi-camera-reels me-1"></i> Video tour</h2>
+        <div class="video-frame"><iframe src="{{ prop.youtube_embed_url }}" title="Video tour of {{ prop.title }}" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+      </section>
+      {% endif %}
+
+      <section class="surface p-4 mb-4" aria-labelledby="loc-title">
+        <h2 id="loc-title" class="h5 mb-3">Location</h2>
+        <p class="mb-3"><i class="bi bi-geo-alt text-navy"></i> {{ prop.public_address|default:"Bangarpet" }}{% if not prop.show_exact_address %} <span class="text-muted small">(exact address shared by the owner on request)</span>{% endif %}</p>
+        {% if map_coords %}
+          {% if GOOGLE_MAPS_API_KEY %}
+            <div id="detail-map" class="map-embed" data-lat="{{ map_coords.0 }}" data-lng="{{ map_coords.1 }}" data-exact="{% if prop.show_exact_address %}1{% else %}0{% endif %}" role="region" aria-label="Map"></div>
+          {% endif %}
+          <a class="btn btn-soft btn-sm mt-2" href="https://www.google.com/maps/search/?api=1&amp;query={{ map_coords.0 }},{{ map_coords.1 }}" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right me-1"></i>Open in Google Maps</a>
+        {% else %}
+          <a class="btn btn-soft btn-sm" href="https://www.google.com/maps/search/?api=1&amp;query={{ prop.location_label|urlencode }}%2C%20Karnataka" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right me-1"></i>View area on Google Maps</a>
+        {% endif %}
+      </section>
+
+      <div class="alert alert-warning rounded-4 small"><i class="bi bi-shield-exclamation me-1"></i><strong>Stay safe:</strong> never pay a token or deposit before visiting the property and checking the owner's documents. {% if prop.is_owner_verified %}The verified badge confirms identity documents were reviewed by our team; it is not a legal check of property title.{% endif %}</div>
+
+      {% if prop.is_public and user.is_authenticated and not is_owner %}
+        <button class="btn btn-link text-danger px-0" type="button" data-bs-toggle="collapse" data-bs-target="#reportBox" aria-expanded="false"><i class="bi bi-flag"></i> Report this listing</button>
+        <div class="collapse" id="reportBox">
+          <form method="post" action="{% url 'properties:report' prop.pk %}" class="surface p-3 mt-2" data-once>
+            {% csrf_token %}
+            {% include "partials/field.html" with field=report_form.reason %}
+            {% include "partials/field.html" with field=report_form.details %}
+            <button class="btn btn-outline-danger btn-sm" type="submit">Submit report</button>
+          </form>
+        </div>
+      {% elif prop.is_public and not user.is_authenticated %}
+        <a class="btn btn-link text-danger px-0" href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}"><i class="bi bi-flag"></i> Sign in to report this listing</a>
+      {% endif %}
+    </div>
+
+    {# ---------- Contact card ---------- #}
+    <aside class="col-lg-4">
+      <div class="surface p-4 contact-card">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          {% if prop.owner.profile.avatar %}<img class="avatar" src="{{ prop.owner.profile.avatar.url }}" alt="">{% else %}<span class="avatar">{{ prop.owner|initials }}</span>{% endif %}
+          <div class="min-w-0">
+            <div class="fw-bold text-navy text-truncate">{{ prop.contact_name|default:prop.owner.display_name }}</div>
+            <div class="small text-muted">{% if prop.listed_by_broker %}Broker &middot; {{ prop.owner.display_name }}{% else %}Property owner{% endif %}</div>
+            {% if prop.is_owner_verified %}<span class="badge badge-verified mt-1"><i class="bi bi-patch-check-fill"></i> Verified</span>{% endif %}
+          </div>
+        </div>
+        {% if owner_listing_count > 1 %}<a class="small d-block mb-3" href="{% url 'properties:partner_profile' prop.owner_id %}">View {{ owner_listing_count }} listings by this {% if prop.listed_by_broker %}broker{% else %}owner{% endif %}</a>{% endif %}
+
+        {% if is_owner %}
+          <a class="btn btn-primary w-100 mb-2" href="{% url 'dashboard:partner_property_manage' prop.pk %}"><i class="bi bi-gear me-1"></i>Manage this listing</a>
+        {% elif prop.is_public %}
+          <div class="d-grid gap-2">
+            {% if can_see_phone and prop.contact_phone and prop.contact_visibility != 'hidden' %}
+              <a class="btn btn-primary" href="tel:{{ prop.contact_phone }}"><i class="bi bi-telephone me-1"></i>Call {{ prop.contact_phone }}</a>
+            {% elif prop.contact_visibility == 'registered' and not user.is_authenticated %}
+              <a class="btn btn-primary" href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}"><i class="bi bi-telephone me-1"></i>Sign in to view phone number</a>
+            {% endif %}
+            {% if prop.whatsapp_number and can_see_phone and prop.contact_visibility != 'hidden' %}
+              <a class="btn btn-whatsapp" target="_blank" rel="noopener" href="https://wa.me/{{ prop.whatsapp_number|cut:'+' }}?text={{ 'Hi, I am interested in your property '|urlencode }}{{ prop.reference|urlencode }}{{ ' on Bangarpet Property Hub: '|urlencode }}{{ absolute_url|urlencode }}"><i class="bi bi-whatsapp me-1"></i>WhatsApp enquiry</a>
+            {% elif prop.whatsapp_number and not user.is_authenticated and prop.contact_visibility == 'registered' %}
+              <a class="btn btn-whatsapp" href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}"><i class="bi bi-whatsapp me-1"></i>Sign in for WhatsApp</a>
+            {% endif %}
+            {% if existing_enquiry %}
+              <div class="alert alert-info small mb-0 rounded-4">You have an open enquiry ({{ existing_enquiry.get_status_display }}). <a href="{% url 'dashboard:customer_enquiries' %}">Track it</a>.</div>
+              {% if existing_enquiry.status != 'visit_requested' and existing_enquiry.status != 'visit_scheduled' %}
+                <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#enquiryModal" data-visit="1"><i class="bi bi-calendar-plus me-1"></i>Request a visit</button>
+              {% endif %}
+            {% elif enquiry_form %}
+              <button class="btn btn-accent" type="button" data-bs-toggle="modal" data-bs-target="#enquiryModal"><i class="bi bi-chat-text me-1"></i>Contact {% if prop.listed_by_broker %}broker{% else %}owner{% endif %}</button>
+              <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#enquiryModal" data-visit="1"><i class="bi bi-calendar-plus me-1"></i>Request a visit</button>
+            {% elif not user.is_authenticated %}
+              <a class="btn btn-accent" href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}"><i class="bi bi-chat-text me-1"></i>Sign in to send an enquiry</a>
+              <a class="btn btn-outline-primary" href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}"><i class="bi bi-calendar-plus me-1"></i>Sign in to request a visit</a>
+            {% endif %}
+          </div>
+          <p class="small text-muted mt-3 mb-0">Preferred contact: {{ prop.get_preferred_contact_display }}</p>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+
+  {% if similar %}
+  <section class="mt-5" aria-labelledby="similar-title">
+    <h2 id="similar-title" class="h4 mb-3">Similar properties</h2>
+    <div class="row g-4">{% for prop in similar %}<div class="col-sm-6 col-lg-3">{% include "partials/property_card.html" %}</div>{% endfor %}</div>
+  </section>
+  {% endif %}
+</div>
+
+{% if enquiry_form %}
+<div class="modal fade" id="enquiryModal" tabindex="-1" aria-labelledby="enquiryLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+    <div class="modal-content rounded-4">
+      <div class="modal-header"><h2 class="modal-title h5" id="enquiryLabel">Contact about {{ prop.reference }}</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+      <div class="modal-body">{% include "enquiries/_form.html" with form=enquiry_form %}</div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block tabbar %}
+{% if prop.is_public and not is_owner %}
+<nav class="mobile-tabbar detail-actions" aria-label="Contact actions">
+  {% if can_see_phone and prop.contact_phone and prop.contact_visibility != 'hidden' %}<a class="btn btn-primary btn-sm" href="tel:{{ prop.contact_phone }}"><i class="bi bi-telephone"></i> Call</a>{% endif %}
+  {% if prop.whatsapp_number and can_see_phone and prop.contact_visibility != 'hidden' %}<a class="btn btn-whatsapp btn-sm" target="_blank" rel="noopener" href="https://wa.me/{{ prop.whatsapp_number|cut:'+' }}?text={{ 'Hi, I am interested in your property '|urlencode }}{{ prop.reference|urlencode }}"><i class="bi bi-whatsapp"></i> WhatsApp</a>{% endif %}
+  {% if enquiry_form and not existing_enquiry %}<button class="btn btn-accent btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#enquiryModal"><i class="bi bi-chat-text"></i> Enquire</button>
+  {% elif not user.is_authenticated %}<a class="btn btn-accent btn-sm" href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}"><i class="bi bi-box-arrow-in-right"></i> Sign in to contact</a>{% endif %}
+</nav>
+{% else %}{% include "partials/mobile_tabbar.html" %}{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% if map_coords and GOOGLE_MAPS_API_KEY %}
+<script src="{% static 'js/map.js' %}" defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY|urlencode }}&callback=bphInitDetailMap&loading=async" defer></script>
+{% endif %}
+{% endblock %}

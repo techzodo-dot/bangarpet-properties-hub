@@ -1,0 +1,28 @@
+{% extends "dashboard/partner_base.html" %}
+{% load bph %}
+{% block title %}Payments &amp; invoices - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Payments &amp; invoices</h1></div>
+{% if page_obj.object_list %}
+<div class="table-card"><div class="table-responsive"><table class="table">
+  <thead><tr><th>Date</th><th>Plan</th><th>Amount</th><th>Method</th><th>Status</th><th>Reference</th><th></th></tr></thead>
+  <tbody>
+  {% for p in page_obj.object_list %}
+  <tr>
+    <td class="small text-nowrap">{{ p.created_at|date:"d M Y, h:i A" }}</td>
+    <td>{{ p.plan.name }}</td>
+    <td>{{ p.amount|inr }}</td>
+    <td class="small">{{ p.get_gateway_display }}</td>
+    <td>{% status_badge p %}{% if p.failure_reason and p.status != 'paid' %}<div class="small text-muted">{{ p.failure_reason }}</div>{% endif %}</td>
+    <td class="small text-muted">{{ p.gateway_payment_id|default:p.manual_reference|default:"-" }}</td>
+    <td class="text-end">{% if p.status == 'paid' %}<a class="btn btn-sm btn-soft" href="{% url 'payments:receipt' p.uid %}"><i class="bi bi-receipt me-1"></i>Receipt</a>{% elif p.status == 'created' and p.gateway_order_id %}<a class="btn btn-sm btn-primary" href="{% url 'payments:pay' p.uid %}">Complete payment</a>{% endif %}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table></div></div>
+{% include "partials/pagination.html" %}
+{% else %}
+  {% url 'dashboard:partner_subscription' as sub_url %}
+  {% include "partials/empty_state.html" with icon="receipt" title="No payments yet" text="Your payment history and receipts will appear here." action_url=sub_url action_label="View plans" %}
+{% endif %}
+{% endblock %}

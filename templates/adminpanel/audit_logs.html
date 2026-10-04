@@ -1,0 +1,17 @@
+{% extends "adminpanel/base.html" %}
+{% block title %}Audit logs - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Audit logs</h1></div>
+<form method="get" class="surface p-3 mb-3"><div class="row g-2 align-items-end">
+  <div class="col-md-3"><label class="form-label small" for="aa">Action</label><select id="aa" class="form-select" name="action"><option value="">All actions</option>{% for p in action_prefixes %}<option value="{{ p }}" {% if action == p %}selected{% endif %}>{{ p }}.*</option>{% endfor %}</select></div>
+  <div class="col-md-3"><label class="form-label small" for="au">Actor email</label><input id="au" class="form-control" name="actor" value="{{ actor }}"></div>
+  <div class="col-md-4"><label class="form-label small" for="at">Target</label><input id="at" class="form-control" name="target" value="{{ target }}" placeholder="Name, ID or reference"></div>
+  <div class="col-md-2 d-grid"><button class="btn btn-primary">Filter</button></div>
+</div></form>
+<div class="table-card"><div class="table-responsive"><table class="table table-sm">
+  <thead><tr><th>When</th><th>Actor</th><th>Action</th><th>Target</th><th>Details</th><th>IP</th></tr></thead>
+  <tbody>{% for a in page_obj.object_list %}<tr><td class="small text-nowrap">{{ a.created_at|date:"d M Y H:i:s" }}</td><td class="small">{{ a.actor.email|default:"system" }}</td><td><code>{{ a.action }}</code></td><td class="small">{{ a.target_repr|truncatechars:50 }}</td><td class="small text-muted">{% for k, v in a.details.items %}{{ k }}={{ v|truncatechars:40 }} {% endfor %}</td><td class="small text-muted">{{ a.ip_address|default:"" }}</td></tr>
+  {% empty %}<tr><td colspan="6" class="text-center text-muted p-4">No log entries.</td></tr>{% endfor %}</tbody>
+</table></div></div>
+{% include "partials/pagination.html" %}
+{% endblock %}

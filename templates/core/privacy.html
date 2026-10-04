@@ -1,0 +1,36 @@
+{% extends "core/page_base.html" %}
+{% block title %}Privacy policy - {{ site.site_name }}{% endblock %}
+{% block crumb %}Privacy policy{% endblock %}
+{% block page_heading %}Privacy policy{% endblock %}
+{% block page_body %}
+<div class="legal-doc mx-auto surface p-4 p-md-5" style="max-width:860px">
+  <div class="alert alert-warning rounded-4">This is a starting template. Have it reviewed by a qualified lawyer (including for the Digital Personal Data Protection Act, 2023) before launch.</div>
+  <p>This policy explains how {{ site.site_name }} ("we", "us") collects and uses personal data when you use our website.</p>
+  <h2>Data we collect</h2>
+  <ul>
+    <li><strong>Account data:</strong> name, email address, mobile number, password (stored only as a secure hash), role and profile details you provide.</li>
+    <li><strong>Listing data:</strong> property details, photos, location and contact preferences submitted by owners and brokers.</li>
+    <li><strong>Enquiry data:</strong> messages, contact details and visit requests exchanged between users.</li>
+    <li><strong>Verification documents:</strong> identity, ownership or business documents uploaded by owners and brokers for verification.</li>
+    <li><strong>Payment data:</strong> plan, amount and payment reference IDs. Card and bank details are handled by Razorpay; we never receive or store them.</li>
+    <li><strong>Technical data:</strong> IP address, browser information and security logs used to protect the service.</li>
+  </ul>
+  <h2>How we use data</h2>
+  <ul>
+    <li>To operate accounts, publish listings and deliver enquiries and visit requests.</li>
+    <li>To review listings and verify owners and brokers.</li>
+    <li>To send service notifications by email, WhatsApp or in-app, according to your preferences.</li>
+    <li>To prevent fraud and abuse, and to comply with legal obligations.</li>
+  </ul>
+  <h2>Sharing</h2>
+  <p>When you send an enquiry, your name, contact details and message are shared with the owner or broker of that listing. Owners choose whether their phone number is shown publicly, to signed-in users only, or not at all. We use service providers for email, WhatsApp messaging and payments. We do not sell personal data.</p>
+  <h2>Verification documents</h2>
+  <p>Verification documents are stored privately, are never shown publicly and can be accessed only by you and authorised administrators. Access by administrators is logged. Documents are deleted after a review decision according to our retention schedule ({{ retention_days|default:"180" }} days after acceptance, 30 days after rejection), unless the law requires us to keep them longer. You may withdraw a pending document at any time.</p>
+  <h2>Your choices and rights</h2>
+  <p>You can update your profile and notification preferences from your dashboard, and you may request access to, correction of or deletion of your personal data by contacting us{% if site.contact_email %} at <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>{% endif %}.</p>
+  <h2>Security</h2>
+  <p>We use HTTPS, hashed passwords, access controls and audit logging. No method of transmission or storage is completely secure, but we work to protect your data.</p>
+  <h2>Contact</h2>
+  <p>For privacy questions, contact us through the <a href="{% url 'core:contact' %}">contact page</a>.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "dashboard/customer_base.html" %}
+{% block title %}Notification settings - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Notification settings</h1></div>
+<form method="post" class="surface p-4" style="max-width:640px" data-once>
+  {% csrf_token %}
+  <p class="text-muted">In-app notifications are always on. Choose additional channels:</p>
+  {% include "partials/field.html" with field=form.notify_email %}
+  {% include "partials/field.html" with field=form.notify_whatsapp %}
+  <p class="small text-muted ms-4 mt-n2">WhatsApp messages are sent to {% if user.profile.whatsapp_number %}{{ user.profile.whatsapp_number }}{% else %}your mobile number {{ user.phone }}{% endif %} when the service is enabled.</p>
+  {% include "partials/field.html" with field=form.notify_marketing %}
+  <button class="btn btn-primary" type="submit">Save preferences</button>
+</form>
+{% endblock %}
