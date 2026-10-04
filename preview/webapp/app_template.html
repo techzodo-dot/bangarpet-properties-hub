@@ -2,34 +2,40 @@
 <meta name="description" content="Interactive demo of Bangarpet Property Hub: search, property pages with photo tours, enquiries, visits and listing a property.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
-/* Layout: sticky glass header; full-bleed navy bands alternate with off-white content; 1200px reading container.
-   Single light theme by choice (the brand is navy on white), every colour set explicitly. */
+/* "Ink & Gold": deep ink surfaces, gold accents, Cormorant Garamond display type, Manrope text.
+   One dark theme by design (matches the public Django site); every colour is set explicitly. */
 :root {
-  color-scheme: light;
-  --navy: #172B4D; --navy-900: #0d1b33; --navy-700: #22396a; --navy-50: #eef2f8;
-  --yellow: #FFD600; --yellow-600: #e6c000; --yellow-50: #fff9d6;
-  --bg: #F7F8FA; --surface: #ffffff; --text: #1f2633; --muted: #5f6b7a; --border: #e3e7ee;
-  --green: #138a3e; --green-50: #e7f6ec; --red: #c62828; --red-50: #fdecec; --amber-50: #fff6e0; --amber: #8a5a00;
-  --on-navy: #ffffff; --on-navy-muted: rgba(255,255,255,.72);
-  --display: "Montserrat", "Segoe UI", system-ui, sans-serif;
-  --body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-  --r-sm: 10px; --r: 16px; --r-lg: 24px;
-  --sh-sm: 0 1px 2px rgba(23,43,77,.06), 0 1px 3px rgba(23,43,77,.06);
-  --sh: 0 4px 16px rgba(23,43,77,.08);
-  --sh-lg: 0 18px 40px rgba(23,43,77,.14);
-  --header-h: 68px;
+  color-scheme: dark;
+  --ink-950: #050a14; --ink-900: #0a1222; --ink-850: #0d1729; --ink-800: #111d35; --ink-750: #15233f; --ink-700: #1b2c4f;
+  --gold: #E3B63C; --gold-300: #F2D27E; --gold-600: #C99A1F; --gold-soft: rgba(227,182,60,.14);
+  --bg: var(--ink-900); --surface: var(--ink-800); --surface-2: var(--ink-750);
+  --text: #dfe4ee; --heading: #f6f3ec; --muted: #98a3b8;
+  --border: rgba(255,255,255,.09); --border-strong: rgba(255,255,255,.18); --chip: rgba(255,255,255,.06);
+  --ok: #5fd28f; --ok-bg: rgba(95,210,143,.12); --ok-border: rgba(95,210,143,.32);
+  --warn: #f3cf73; --warn-bg: rgba(243,207,115,.12); --warn-border: rgba(243,207,115,.32);
+  --bad: #ff8a8a; --bad-bg: rgba(255,138,138,.12); --bad-border: rgba(255,138,138,.32);
+  --display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --body: "Manrope", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --r-sm: 10px; --r: 16px; --r-lg: 22px; --r-xl: 28px;
+  --sh: 0 10px 30px rgba(0,0,0,.35); --sh-lg: 0 30px 70px rgba(0,0,0,.5);
+  --header-h: 72px;
+  --ease: cubic-bezier(.2,.7,.2,1);
+  /* aliases kept for inline styles in older views */
+  --navy: var(--heading); --navy-50: var(--chip); --red: var(--bad); --red-50: var(--bad-bg); --yellow: var(--gold); --amber-50: var(--warn-bg);
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 400 15px/1.6 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-h1, h2, h3, h4 { font-family: var(--display); color: var(--navy); letter-spacing: -.01em; line-height: 1.2; margin: 0; text-wrap: balance; }
-p { margin: 0; }
-a { color: #1d4ed8; text-underline-offset: 3px; }
-button { font: inherit; cursor: pointer; }
+h1, h2, h3 { font-family: var(--display); font-weight: 600; color: var(--heading); letter-spacing: -.005em; line-height: 1.08; margin: 0; text-wrap: balance; }
+h4 { font-family: var(--body); color: var(--heading); margin: 0; }
+p { margin: 0; text-wrap: pretty; }
+a { color: var(--gold-300); text-underline-offset: 3px; }
+button { font: inherit; cursor: pointer; color: inherit; }
 img { max-width: 100%; display: block; }
-:focus-visible { outline: 3px solid rgba(255,214,0,.95); outline-offset: 2px; }
+::selection { background: rgba(227,182,60,.35); }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
 .wrap { width: 100%; max-width: 1232px; margin-inline: auto; padding-inline: 16px; }
 .muted { color: var(--muted); }
@@ -41,420 +47,461 @@ img { max-width: 100%; display: block; }
 /*__ICON_CSS__*/
 
 /* Buttons */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; padding: .62rem 1.1rem; border-radius: 12px; border: 1px solid transparent; font-weight: 600; font-size: .95rem; text-decoration: none; line-height: 1.2; transition: background .15s, border-color .15s, transform .1s, color .15s; white-space: nowrap; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; padding: .66rem 1.3rem; border-radius: 999px; border: 1px solid transparent; font-weight: 700; font-size: .93rem; letter-spacing: .01em; text-decoration: none; line-height: 1.2; transition: background .2s, border-color .2s, transform .15s, color .2s; white-space: nowrap; color: var(--heading); background: none; }
 .btn:active { transform: translateY(1px); }
-.btn-primary { background: var(--navy); color: #fff; }
-.btn-primary:hover { background: var(--navy-700); }
-.btn-accent { background: var(--yellow); color: var(--navy); }
-.btn-accent:hover { background: var(--yellow-600); }
-.btn-soft { background: var(--navy-50); color: var(--navy); }
-.btn-soft:hover { background: #e1e8f3; }
-.btn-outline { background: var(--surface); color: var(--navy); border-color: var(--navy); }
-.btn-outline:hover { background: var(--navy); color: #fff; }
-.btn-danger { background: var(--surface); color: var(--red); border-color: #f0b8b8; }
-.btn-danger:hover { background: var(--red-50); }
-.btn-glass { background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-.btn-glass:hover { background: #fff; color: var(--navy); }
-.btn-lg { padding: .82rem 1.4rem; font-size: 1.02rem; border-radius: 14px; }
-.btn-sm { padding: .38rem .75rem; font-size: .85rem; border-radius: 9px; }
+.btn-primary, .btn-accent { background: var(--gold); color: var(--ink-900); }
+.btn-primary:hover, .btn-accent:hover { background: var(--gold-300); }
+.btn-accent { box-shadow: 0 8px 24px rgba(227,182,60,.22); }
+.btn-soft { background: var(--chip); color: var(--heading); border-color: var(--border); }
+.btn-soft:hover { background: rgba(255,255,255,.1); border-color: var(--border-strong); }
+.btn-outline { background: transparent; color: var(--heading); border-color: var(--border-strong); }
+.btn-outline:hover { background: var(--heading); color: var(--ink-900); border-color: var(--heading); }
+.btn-danger { background: transparent; color: var(--bad); border-color: var(--bad-border); }
+.btn-danger:hover { background: var(--bad-bg); }
+.btn-glass { background: rgba(255,255,255,.08); color: #fff; border-color: rgba(255,255,255,.28); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.btn-glass:hover { background: #fff; color: var(--ink-900); }
+.btn-lg { padding: .85rem 1.65rem; font-size: 1rem; }
+.btn-sm { padding: .4rem .85rem; font-size: .84rem; }
 .btn-block { width: 100%; }
 .btn[disabled] { opacity: .55; cursor: not-allowed; }
-.icon-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); color: var(--navy); display: inline-grid; place-items: center; font-size: 1.1rem; }
-.icon-btn:hover { background: var(--navy-50); }
+.icon-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border-strong); background: rgba(255,255,255,.04); color: #fff; display: inline-grid; place-items: center; font-size: 1.15rem; }
+.icon-btn:hover { background: rgba(255,255,255,.1); }
 
 /* Forms */
-.field { display: grid; gap: .35rem; min-width: 0; }
-.field > label, .label { font-weight: 600; font-size: .86rem; color: var(--navy); }
-.req { color: var(--red); }
-.input, .select, .textarea { width: 100%; min-height: 46px; padding: .62rem .85rem; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); font: inherit; }
-.textarea { min-height: 110px; resize: vertical; }
-.input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(23,43,77,.14); }
-.input.invalid, .select.invalid, .textarea.invalid { border-color: var(--red); }
-.err { color: var(--red); font-size: .82rem; }
+.field { display: grid; gap: .4rem; min-width: 0; }
+.field > label, .label { font-weight: 800; font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.req { color: var(--gold); }
+.input, .select, .textarea { width: 100%; min-height: 48px; padding: .7rem .95rem; border: 1px solid rgba(255,255,255,.14); border-radius: 12px; background: rgba(255,255,255,.04); color: var(--text); font: inherit; }
+.select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23f2d27e'%3e%3cpath d='M1.6 4.6a.5.5 0 0 1 .7 0L8 10.3l5.6-5.7a.5.5 0 0 1 .8.8l-6 6a.5.5 0 0 1-.8 0l-6-6a.5.5 0 0 1 0-.8z'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right .95rem center; background-size: 11px; padding-right: 2.3rem; }
+.select option { color: #111; background: #fff; }
+.input::placeholder, .textarea::placeholder { color: var(--muted); opacity: .8; }
+.textarea { min-height: 120px; resize: vertical; }
+.input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(227,182,60,.2); background-color: rgba(255,255,255,.06); }
+.input[readonly] { opacity: .7; }
+.input.invalid, .select.invalid, .textarea.invalid { border-color: var(--bad); }
+.err { color: var(--bad); font-size: .82rem; }
 .hint { color: var(--muted); font-size: .82rem; }
-.check { display: flex; align-items: flex-start; gap: .55rem; font-size: .92rem; cursor: pointer; }
-.check input { margin-top: .25rem; accent-color: var(--navy); width: 17px; height: 17px; }
+.check { display: flex; align-items: flex-start; gap: .6rem; font-size: .92rem; cursor: pointer; }
+.check input { margin-top: .25rem; accent-color: var(--gold); width: 17px; height: 17px; flex: none; }
 .form-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .form-grid .full { grid-column: 1 / -1; }
 @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
 .tiles { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
-.tile { display: flex; align-items: center; gap: .55rem; padding: .7rem .85rem; border: 1.5px solid var(--border); border-radius: 12px; background: var(--surface); cursor: pointer; font-weight: 500; font-size: .92rem; }
-.tile input { accent-color: var(--navy); }
-.tile:has(input:checked) { border-color: var(--navy); background: var(--navy-50); }
+.tile { display: flex; align-items: center; gap: .55rem; padding: .75rem .9rem; border: 1px solid var(--border-strong); border-radius: 12px; background: rgba(255,255,255,.03); cursor: pointer; font-weight: 600; font-size: .92rem; }
+.tile input { accent-color: var(--gold); }
+.tile:hover { border-color: var(--gold); }
+.tile:has(input:checked) { border-color: var(--gold); background: var(--gold-soft); }
 .tile.disabled { opacity: .45; cursor: not-allowed; }
 
-/* Badges & chips */
-.badge { display: inline-flex; align-items: center; gap: .3rem; padding: .25rem .6rem; border-radius: 999px; font-size: .76rem; font-weight: 600; border: 1px solid transparent; white-space: nowrap; }
-.b-soft { background: var(--navy-50); color: var(--navy); }
-.b-verified { background: var(--green-50); color: var(--green); border-color: #bfe5cc; }
-.b-featured { background: var(--yellow); color: var(--navy); }
-.b-pending { background: var(--amber-50); color: var(--amber); border-color: #f3d48b; }
-.b-cancel { background: var(--red-50); color: var(--red); border-color: #f3c0c0; }
-.b-ok { background: var(--green-50); color: var(--green); border-color: #bfe5cc; }
-.glass-chip { display: inline-flex; align-items: center; gap: .3rem; padding: .28rem .65rem; border-radius: 999px; font-size: .74rem; font-weight: 700; color: #fff; background: rgba(13,27,51,.45); border: 1px solid rgba(255,255,255,.35); backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%); }
-.glass-chip.yellow { color: var(--navy); background: rgba(255,214,0,.9); border-color: rgba(255,240,160,.9); }
-.glass-chip.light { color: var(--navy); background: rgba(255,255,255,.75); }
-.eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--navy); background: var(--yellow-50); border: 1px solid #f5e48a; padding: .3rem .7rem; border-radius: 999px; }
-.eyebrow.dark { background: rgba(255,214,0,.12); border-color: rgba(255,214,0,.35); color: var(--yellow); }
+/* Badges, chips, eyebrows */
+.badge { display: inline-flex; align-items: center; gap: .3rem; padding: .3rem .7rem; border-radius: 999px; font-size: .74rem; font-weight: 700; letter-spacing: .02em; border: 1px solid transparent; white-space: nowrap; }
+.b-soft { background: var(--chip); color: var(--heading); border-color: var(--border); }
+.b-verified, .b-ok { background: var(--ok-bg); color: var(--ok); border-color: var(--ok-border); }
+.b-featured { background: var(--gold); color: var(--ink-900); }
+.b-pending { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-border); }
+.b-cancel { background: var(--bad-bg); color: var(--bad); border-color: var(--bad-border); }
+.glass-chip { display: inline-flex; align-items: center; gap: .35rem; padding: .32rem .7rem; border-radius: 999px; font-size: .72rem; font-weight: 700; letter-spacing: .04em; color: #fff; background: rgba(5,10,20,.45); border: 1px solid rgba(255,255,255,.22); backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%); }
+.glass-chip.yellow { color: var(--ink-900); background: rgba(227,182,60,.95); border-color: rgba(242,210,126,.9); }
+.glass-chip.light { color: var(--ink-900); background: rgba(255,255,255,.88); }
+.eyebrow { display: inline-flex; align-items: center; gap: .6rem; font-size: .72rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase; color: var(--gold-300); }
+.eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; opacity: .7; }
 
 /* Header */
-.demo-bar { background: var(--yellow); color: var(--navy); font-size: .82rem; font-weight: 600; text-align: center; padding: .4rem 16px; }
+.demo-bar { background: var(--ink-950); color: var(--gold-300); font-size: .78rem; font-weight: 600; letter-spacing: .02em; text-align: center; padding: .45rem 16px; border-bottom: 1px solid rgba(227,182,60,.2); }
 @media (max-width: 560px) { .hide-sm { display: none; } }
-.site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: rgba(255,255,255,.95); border-bottom: 1px solid var(--border); }
-@supports (backdrop-filter: blur(1px)) { .site-header { background: rgba(255,255,255,.86); backdrop-filter: saturate(180%) blur(12px); -webkit-backdrop-filter: saturate(180%) blur(12px); } }
+.site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: rgba(5,10,20,.95); border-bottom: 1px solid rgba(255,255,255,.07); }
+@supports (backdrop-filter: blur(1px)) { @media (min-width: 1024px) { .site-header { background: rgba(5,10,20,.78); backdrop-filter: saturate(160%) blur(16px); -webkit-backdrop-filter: saturate(160%) blur(16px); } } }
 .header-row { height: var(--header-h); display: flex; align-items: center; gap: 1rem; }
-.brand { display: inline-flex; align-items: center; gap: .55rem; text-decoration: none; background: none; border: 0; padding: 0; }
+.brand { display: inline-flex; align-items: center; gap: .65rem; text-decoration: none; background: none; border: 0; padding: 0; }
 .brand svg { width: 50px; height: 40px; }
-.brand-name { display: block; font-family: var(--display); font-weight: 800; color: var(--navy); font-size: 1rem; letter-spacing: .03em; line-height: 1.05; text-transform: uppercase; text-align: left; }
-.brand-sub { display: block; font-family: var(--display); font-weight: 700; color: #c9a800; font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; text-align: left; }
-.nav { display: flex; gap: .15rem; margin-left: auto; }
-.nav button { background: none; border: 0; padding: .5rem .8rem; border-radius: 10px; font-weight: 600; color: var(--text); }
-.nav button:hover, .nav button.active { background: var(--navy-50); color: var(--navy); }
+.brand-name { display: block; font-family: var(--body); font-weight: 800; color: #fff; font-size: .95rem; letter-spacing: .14em; line-height: 1.05; text-transform: uppercase; text-align: left; }
+.brand-sub { display: block; font-family: var(--body); font-weight: 700; color: var(--gold); font-size: .6rem; letter-spacing: .32em; text-transform: uppercase; text-align: left; }
+.nav { display: flex; gap: .1rem; margin-left: auto; }
+.nav button { position: relative; background: none; border: 0; padding: .5rem .9rem; font-weight: 600; font-size: .9rem; color: rgba(255,255,255,.78); }
+.nav button:hover, .nav button.active { color: #fff; }
+.nav button.active::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 4px; height: 4px; border-radius: 50%; background: var(--gold); transform: translateX(-50%); }
 .header-actions { display: flex; align-items: center; gap: .5rem; margin-left: auto; }
-.count-dot { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--red); color: #fff; font-size: .7rem; font-weight: 700; display: inline-grid; place-items: center; line-height: 1; }
+[hidden] { display: none !important; }
+.count-dot { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--gold); color: var(--ink-900); font-size: .68rem; font-weight: 800; display: inline-grid; place-items: center; line-height: 1; }
 .menu-btn { display: none; }
-@media (max-width: 1023px) {
-  .nav, .header-actions .hide-md { display: none; }
-  .menu-btn { display: inline-grid; margin-left: auto; }
-}
-.drawer-backdrop { position: fixed; inset: 0; background: rgba(13,27,51,.45); z-index: 80; }
-.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(320px, 86vw); background: var(--surface); z-index: 81; padding: calc(1rem + env(safe-area-inset-top, 0px)) 1.25rem 1rem; display: flex; flex-direction: column; gap: .3rem; box-shadow: var(--sh-lg); overflow-y: auto; }
-.drawer button.link { text-align: left; background: none; border: 0; padding: .75rem .5rem; border-radius: 10px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: .6rem; }
-.drawer button.link:hover { background: var(--navy-50); }
-
+@media (max-width: 1023px) { .nav, .header-actions .hide-md { display: none; } .menu-btn { display: inline-grid; margin-left: auto; } }
+.drawer-backdrop { position: fixed; inset: 0; background: rgba(3,6,12,.7); z-index: 80; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(330px, 86vw); background: var(--ink-950); border-left: 1px solid var(--border); z-index: 81; padding: calc(1rem + env(safe-area-inset-top, 0px)) 1.25rem 1rem; display: flex; flex-direction: column; gap: 0; box-shadow: var(--sh-lg); overflow-y: auto; }
+.drawer .dtitle { font-family: var(--display); font-size: 1.7rem; color: #fff; font-weight: 600; }
+.drawer button.link { text-align: left; background: none; border: 0; border-bottom: 1px solid var(--border); padding: .9rem .25rem; font-weight: 600; font-size: 1.02rem; color: rgba(255,255,255,.85); display: flex; align-items: center; gap: .7rem; }
+.drawer button.link .bi { color: var(--gold-300); }
+.drawer button.link:hover { color: #fff; }
 .tabbar { display: none; }
 @media (max-width: 1023px) {
-  .tabbar { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; background: rgba(255,255,255,.97); border-top: 1px solid var(--border); padding: .3rem .25rem calc(.3rem + env(safe-area-inset-bottom, 0px)); }
-  .tabbar button { flex: 1; background: none; border: 0; display: flex; flex-direction: column; align-items: center; gap: 1px; font-size: .68rem; font-weight: 600; color: var(--muted); min-height: 50px; justify-content: center; position: relative; }
-  .tabbar button.active { color: var(--navy); }
-  .tabbar .bi { font-size: 1.22rem; }
+  .tabbar { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; background: rgba(5,10,20,.97); border-top: 1px solid rgba(255,255,255,.08); padding: .3rem .25rem calc(.3rem + env(safe-area-inset-bottom, 0px)); }
+  .tabbar button { flex: 1; background: none; border: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .68rem; font-weight: 700; letter-spacing: .02em; color: rgba(255,255,255,.55); min-height: 50px; justify-content: center; position: relative; }
+  .tabbar button.active { color: var(--gold); }
+  .tabbar .bi { font-size: 1.25rem; }
   .tabbar .count-dot { position: absolute; top: 2px; left: calc(50% + 6px); }
   main { padding-bottom: 76px; }
 }
 
 /* Sections */
-.section { padding-block: 4rem; }
-.section-sm { padding-block: 2.5rem; }
-.sec-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1.6rem; }
-.sec-head > div { display: grid; gap: .5rem; max-width: 680px; }
-.sec-title { font-size: clamp(1.45rem, 2.6vw, 2.05rem); }
+.section { padding-block: 5.5rem; }
+.section-sm { padding-block: 3rem; }
+@media (max-width: 640px) { .section { padding-block: 4rem; } }
+.sec-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem 2rem; margin-bottom: 2rem; }
+.sec-head > div { display: grid; gap: .9rem; max-width: 680px; }
+.sec-title { font-size: clamp(2rem, 3.6vw, 3rem); }
 .lead { color: var(--muted); }
-.band { background: var(--navy); color: var(--on-navy-muted); position: relative; overflow: hidden; }
-.band h1, .band h2, .band h3 { color: #fff; }
-.white-band { background: var(--surface); border-block: 1px solid var(--border); }
-.orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; opacity: .6; mix-blend-mode: screen; }
-.orb-a { width: 460px; height: 460px; right: -120px; top: -140px; background: rgba(255,196,0,.3); }
-.orb-b { width: 520px; height: 520px; left: -200px; bottom: -260px; background: rgba(86,128,214,.45); }
-.orb-c { width: 560px; height: 560px; right: 5%; top: 20%; background: rgba(90,140,230,.4); }
+.alt { background: var(--ink-850); border-block: 1px solid var(--border); }
 
 /* Hero */
-.hero { padding-block: 4.5rem 6.5rem; }
-.hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; align-items: center; }
-@media (max-width: 1023px) { .hero-grid { grid-template-columns: 1fr; } .hero-show { display: none; } .hero { padding-block: 3rem 5rem; } }
-.kicker { display: inline-flex; align-items: center; gap: .45rem; color: rgba(255,255,255,.85); font-size: .8rem; font-weight: 600; letter-spacing: .04em; padding: .35rem .8rem; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06); }
-.kicker .bi { color: var(--yellow); }
-.hero h1 { font-size: clamp(2rem, 4.4vw, 3.35rem); font-weight: 800; margin-block: 1rem; }
-.hero h1 em { font-style: normal; color: var(--yellow); }
-.hero .lead { color: rgba(255,255,255,.8); font-size: 1.06rem; max-width: 34rem; margin-bottom: 1.6rem; }
-.glass { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.24); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); box-shadow: 0 20px 50px rgba(5,12,28,.28); }
-.search-panel { border-radius: var(--r-lg); padding: 1.2rem; display: grid; gap: .8rem; }
-.search-panel .label { color: rgba(255,255,255,.85); font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; }
-.search-panel .input, .search-panel .select { border-color: transparent; background: rgba(255,255,255,.97); }
-.seg { display: inline-flex; gap: .25rem; }
-.seg label { cursor: pointer; padding: .42rem 1rem; border-radius: 10px; font-weight: 600; color: rgba(255,255,255,.85); }
+.hero { position: relative; isolation: isolate; min-height: min(86vh, 760px); display: flex; align-items: flex-end; padding: 7rem 0 3.5rem; color: #fff; overflow: hidden; background: var(--ink-950); }
+.hero-media { position: absolute; inset: 0; z-index: -2; }
+.hero-media img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); animation: drift 18s var(--ease) forwards; }
+@keyframes drift { to { transform: scale(1); } }
+.hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5,10,20,.55) 0%, rgba(5,10,20,.25) 35%, rgba(5,10,20,.82) 78%, var(--ink-900) 100%), linear-gradient(90deg, rgba(5,10,20,.75) 0%, rgba(5,10,20,0) 65%); }
+.kicker { display: inline-flex; align-items: center; gap: .6rem; font-size: .74rem; font-weight: 800; letter-spacing: .24em; text-transform: uppercase; color: var(--gold-300); }
+.kicker::before { content: ""; width: 32px; height: 1px; background: currentColor; }
+.hero h1 { color: #fff; font-size: clamp(2.7rem, 6.4vw, 5.4rem); line-height: .98; margin: 1.1rem 0 1.25rem; max-width: 13ch; }
+.hero h1 em { font-style: italic; color: var(--gold-300); }
+.hero .lead { color: rgba(255,255,255,.8); font-size: 1.08rem; max-width: 34rem; margin-bottom: 2rem; }
+.hero-credit { position: absolute; right: 1.25rem; bottom: 1.25rem; z-index: 1; display: none; }
+@media (min-width: 1024px) { .hero-credit { display: block; } }
+.hero-credit button { border: 0; padding: .4rem .8rem; }
+.glass { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); box-shadow: 0 24px 60px rgba(0,0,0,.35); }
+.seg { display: inline-flex; gap: .25rem; padding: .25rem; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); margin-bottom: .9rem; }
+.seg label { position: relative; cursor: pointer; padding: .38rem 1.05rem; border-radius: 999px; font-weight: 700; font-size: .85rem; color: rgba(255,255,255,.78); }
 .seg input { position: absolute; opacity: 0; pointer-events: none; }
-.seg label:has(input:checked) { background: var(--yellow); color: var(--navy); }
-.seg label:has(input:focus-visible) { outline: 3px solid rgba(255,214,0,.9); }
-.sp-grid { display: grid; gap: .6rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.hero-show { position: relative; display: block; border-radius: 28px; aspect-ratio: 5 / 4; padding: 0; border: 0; background: none; text-align: left; box-shadow: 0 40px 80px rgba(3,10,25,.45); }
-.hero-show img { width: 100%; height: 100%; object-fit: cover; border-radius: 28px; border: 1px solid rgba(255,255,255,.18); }
-.float { position: absolute; display: inline-flex; align-items: center; gap: .45rem; color: #fff; padding: .7rem 1rem; border-radius: 16px; background: rgba(13,27,51,.42); border: 1px solid rgba(255,255,255,.28); backdrop-filter: blur(16px) saturate(160%); -webkit-backdrop-filter: blur(16px) saturate(160%); box-shadow: 0 16px 36px rgba(3,10,25,.3); font-weight: 600; font-size: .88rem; transition: transform .3s; }
-.hero-show:hover .float { transform: translateY(-3px); }
-.float-price { left: -24px; bottom: 34px; flex-direction: column; align-items: flex-start; gap: .1rem; width: 270px; padding: 1rem 1.1rem; }
-.float-price strong { font-family: var(--display); font-size: 1.45rem; color: var(--yellow); }
-.float-price strong small { font-size: .78rem; color: #fff; font-weight: 500; }
-.float-price .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
-.float-check { right: -14px; top: 28px; }
-.float-check .bi { color: var(--yellow); }
-.float-verified { right: 26px; bottom: -16px; background: rgba(19,138,62,.82); }
-
-.trust-bar { position: relative; z-index: 3; margin-top: -3.2rem; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--surface); border: 1px solid var(--border); border-radius: 22px; box-shadow: var(--sh-lg); }
-.tb { display: flex; gap: .8rem; align-items: center; padding: 1.2rem 1.3rem; min-width: 0; }
-.tb + .tb { border-left: 1px solid var(--border); }
-.tb strong { display: block; color: var(--navy); font-family: var(--display); font-size: .96rem; }
-.tb span.d { display: block; color: var(--muted); font-size: .8rem; line-height: 1.4; }
-.tb-ic { flex: none; width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--yellow-50); color: var(--navy); font-size: 1.2rem; }
-@media (max-width: 1023px) { .trust-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tb:nth-child(3) { border-left: 0; } .tb:nth-child(n+3) { border-top: 1px solid var(--border); } }
-@media (max-width: 560px) { .trust-bar { grid-template-columns: 1fr; margin-top: -2.5rem; } .tb + .tb { border-left: 0; border-top: 1px solid var(--border); } .tb { padding: .85rem 1.1rem; } }
-
-.cats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .9rem; }
-@media (max-width: 1023px) { .cats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-@media (max-width: 480px) { .cats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; } }
-.cat { display: flex; flex-direction: column; align-items: center; gap: .45rem; padding: 1.1rem .5rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--sh-sm); color: var(--navy); font-weight: 600; font-size: .9rem; transition: transform .18s, box-shadow .18s; }
-.cat .bi { font-size: 1.5rem; width: 52px; height: 52px; display: grid; place-items: center; border-radius: 14px; background: var(--yellow-50); }
-.cat:hover { transform: translateY(-3px); box-shadow: var(--sh-lg); }
+.seg label:has(input:checked) { background: #fff; color: var(--ink-900); }
+.seg label:has(input:focus-visible) { outline: 2px solid var(--gold); }
+.lux-search { border-radius: 22px; padding: .6rem; display: grid; gap: .5rem; grid-template-columns: 1.25fr 1.1fr 1fr auto; align-items: stretch; max-width: 980px; }
+.ls { position: relative; display: flex; flex-direction: column; justify-content: center; padding: .4rem .9rem; border-radius: 14px; min-width: 0; transition: background .2s; }
+.ls:hover, .ls:focus-within { background: rgba(255,255,255,.07); }
+.ls + .ls::before { content: ""; position: absolute; left: -.25rem; top: 22%; bottom: 22%; width: 1px; background: rgba(255,255,255,.14); }
+.ls label { font-size: .64rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.6); }
+.ls select, .ls input { appearance: none; -webkit-appearance: none; background: transparent; border: 0; color: #fff; font-weight: 600; font-size: .98rem; padding: .1rem 0; width: 100%; outline: none; font-family: inherit; }
+.ls select { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23f2d27e'%3e%3cpath d='M1.6 4.6a.5.5 0 0 1 .7 0L8 10.3l5.6-5.7a.5.5 0 0 1 .8.8l-6 6a.5.5 0 0 1-.8 0l-6-6a.5.5 0 0 1 0-.8z'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right center; background-size: 11px; padding-right: 1.3rem; cursor: pointer; }
+.ls select option { color: #111; }
+.ls input::placeholder { color: rgba(255,255,255,.5); }
+.ls-budget { display: flex; gap: .4rem; align-items: center; }
+.ls-budget span { color: rgba(255,255,255,.4); }
+.lux-search .btn { border-radius: 16px; padding-inline: 1.6rem; }
+@media (max-width: 1023px) { .lux-search { grid-template-columns: 1fr 1fr; padding: .75rem; } .ls { background: rgba(255,255,255,.06); } .ls + .ls::before { display: none; } .lux-search .btn { grid-column: 1 / -1; padding-block: .85rem; } }
+@media (max-width: 560px) { .lux-search { grid-template-columns: 1fr; } }
+.trustline { display: flex; flex-wrap: wrap; gap: .6rem 1.75rem; margin-top: 1.6rem; font-size: .88rem; color: rgba(255,255,255,.78); }
+.trustline span { display: inline-flex; align-items: center; gap: .45rem; }
+.trustline .bi { color: var(--gold-300); }
 
 /* Property cards */
-.cards { display: grid; gap: 1.4rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
-.cards.cols-3 { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
-.pcard { position: relative; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; box-shadow: var(--sh-sm); transition: transform .2s, box-shadow .2s; min-width: 0; }
-.pcard:hover { transform: translateY(-4px); box-shadow: var(--sh-lg); }
-.pcard .media { position: relative; aspect-ratio: 4 / 3; background: var(--navy-50); overflow: hidden; }
-.pcard .media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
-.pcard:hover .media img { transform: scale(1.04); }
-.chips-top { position: absolute; top: .7rem; left: .7rem; right: 3.4rem; display: flex; flex-wrap: wrap; gap: .3rem; z-index: 2; }
-.price-glass { position: absolute; left: .7rem; bottom: .7rem; padding: .4rem .75rem; border-radius: 12px; color: #fff; background: rgba(13,27,51,.5); border: 1px solid rgba(255,255,255,.3); backdrop-filter: blur(12px) saturate(150%); -webkit-backdrop-filter: blur(12px) saturate(150%); font-family: var(--display); font-weight: 700; font-size: 1.02rem; }
-.price-glass small { font-family: var(--body); font-weight: 500; font-size: .7rem; opacity: .85; }
-.fav { position: absolute; top: .6rem; right: .6rem; z-index: 3; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.7); background: rgba(255,255,255,.85); color: var(--navy); display: grid; place-items: center; font-size: 1.05rem; transition: transform .15s; }
-.fav:hover { transform: scale(1.08); }
-.fav.on { color: var(--red); }
-.pcard .body { padding: 1rem 1.05rem 1.05rem; display: flex; flex-direction: column; gap: .35rem; flex: 1; }
-.pcard .title { font-family: var(--display); font-size: 1rem; font-weight: 700; color: var(--navy); line-height: 1.3; margin: 0; }
-.pcard .title button { all: unset; cursor: pointer; }
-.pcard .title button::after { content: ""; position: absolute; inset: 0; z-index: 1; }
-.pcard .title button:focus-visible { outline: 3px solid rgba(255,214,0,.95); }
+.cards { display: grid; gap: 1.4rem; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); }
+.pcard { position: relative; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; transition: transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s; min-width: 0; height: 100%; }
+.pcard:hover { transform: translateY(-4px); box-shadow: var(--sh-lg); border-color: var(--border-strong); }
+.pcard .media { position: relative; aspect-ratio: 4 / 3; background: var(--surface-2); overflow: hidden; }
+.pcard .media img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+.pcard:hover .media img { transform: scale(1.05); }
+.pcard .media::after { content: ""; position: absolute; inset: 55% 0 0 0; background: linear-gradient(transparent, rgba(5,10,20,.6)); pointer-events: none; }
+.chips-top { position: absolute; top: .8rem; left: .8rem; right: 3.8rem; display: flex; flex-wrap: wrap; gap: .35rem; z-index: 2; }
+.price-glass { position: absolute; left: 1rem; bottom: .85rem; z-index: 2; color: #fff; font-weight: 800; font-size: 1.15rem; letter-spacing: -.01em; text-shadow: 0 2px 12px rgba(0,0,0,.4); }
+.price-glass small { font-weight: 600; font-size: .74rem; opacity: .85; }
+.fav { position: absolute; top: .7rem; right: .7rem; z-index: 3; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: rgba(5,10,20,.35); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #fff; display: grid; place-items: center; font-size: 1.02rem; transition: transform .2s, background .2s; }
+.fav:hover { transform: scale(1.08); background: rgba(5,10,20,.55); }
+.fav.on { color: var(--gold-300); }
+.btn.on .bi-heart-fill { color: var(--gold-300); }
+.pcard .body { padding: 1.1rem 1.2rem 1.15rem; display: flex; flex-direction: column; gap: .4rem; flex: 1; }
+.pcard .title { font-family: var(--display); font-size: 1.32rem; font-weight: 600; color: var(--heading); line-height: 1.15; margin: 0; }
+.pcard .title button, .fc-title button { all: unset; cursor: pointer; }
+.pcard .title button::after, .fc-title button::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.pcard .title button:focus-visible, .fc-title button:focus-visible { outline: 2px solid var(--gold); }
 .loc { color: var(--muted); font-size: .86rem; }
-.specs { display: flex; flex-wrap: wrap; gap: .3rem .85rem; font-size: .84rem; padding-top: .55rem; margin-top: auto; border-top: 1px dashed var(--border); }
-.specs .bi { color: var(--navy); opacity: .7; }
+.specs { display: flex; flex-wrap: wrap; gap: .3rem 1rem; font-size: .84rem; padding-top: .7rem; margin-top: auto; border-top: 1px solid var(--border); }
+.specs .bi { color: var(--gold-300); }
 .meta-foot { display: flex; justify-content: space-between; align-items: center; gap: .5rem; font-size: .76rem; color: var(--muted); }
+.ver { color: var(--ok); font-weight: 600; }
 .list-view .pcard { flex-direction: row; }
-.list-view .pcard .media { flex: 0 0 290px; aspect-ratio: auto; min-height: 200px; }
+.list-view .pcard .media { flex: 0 0 320px; aspect-ratio: auto; min-height: 220px; }
 @media (max-width: 720px) { .list-view .pcard { flex-direction: column; } .list-view .pcard .media { flex: none; aspect-ratio: 4 / 3; min-height: 0; } }
 .list-view { grid-template-columns: 1fr !important; }
 
-/* Glass cards (featured on navy) */
-.gcard { position: relative; display: flex; flex-direction: column; border-radius: 22px; overflow: hidden; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(18px) saturate(150%); -webkit-backdrop-filter: blur(18px) saturate(150%); box-shadow: 0 24px 50px rgba(3,10,25,.35); transition: transform .25s, border-color .25s, background .25s; min-width: 0; }
-.gcard:hover { transform: translateY(-6px); border-color: rgba(255,214,0,.55); background: rgba(255,255,255,.12); }
-.gcard .media { position: relative; aspect-ratio: 16 / 11; overflow: hidden; }
-.gcard .media img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
-.gcard:hover .media img { transform: scale(1.05); }
-.gcard .gbody { padding: 1.1rem 1.2rem 1.15rem; display: flex; flex-direction: column; gap: .4rem; flex: 1; }
-.gprice { font-family: var(--display); font-weight: 800; font-size: 1.3rem; color: var(--yellow); }
-.gprice small { font-family: var(--body); font-size: .76rem; font-weight: 500; color: rgba(255,255,255,.7); }
-.gtitle { font-family: var(--display); font-size: 1.02rem; font-weight: 700; line-height: 1.3; color: #fff; }
-.gtitle button { all: unset; cursor: pointer; }
-.gtitle button::after { content: ""; position: absolute; inset: 0; z-index: 1; }
-.gloc { font-size: .86rem; color: rgba(255,255,255,.7); }
-.gspecs { display: flex; flex-wrap: wrap; gap: .3rem 1rem; font-size: .83rem; color: rgba(255,255,255,.88); }
-.gspecs .bi { color: var(--yellow); }
-.gfoot { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: .75rem; border-top: 1px solid rgba(255,255,255,.14); font-size: .8rem; }
-.gver { color: #7ee2a2; font-weight: 600; }
-.gcta { font-weight: 700; color: var(--yellow); transition: transform .2s; }
-.gcard:hover .gcta { transform: translateX(4px); }
-@media (max-width: 560px) {
-  .swipe { display: flex !important; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: .5rem; scrollbar-width: none; }
-  .swipe::-webkit-scrollbar { display: none; }
-  .swipe > * { flex: 0 0 86%; scroll-snap-align: start; }
-}
+/* Editorial collection */
+.collection { display: grid; gap: 1.25rem; grid-template-columns: 1.35fr 1fr; grid-template-rows: auto auto; }
+.collection > :first-child { grid-row: span 2; }
+.collection.c1 { grid-template-columns: 1fr; } .collection.c2 { grid-template-columns: 1fr 1fr; }
+.collection.c1 > :first-child, .collection.c2 > :first-child { grid-row: auto; }
+@media (max-width: 1023px) { .collection, .collection.c2 { grid-template-columns: 1fr; } .collection > :first-child { grid-row: auto; } }
+.fcard { position: relative; display: block; border-radius: var(--r-xl); overflow: hidden; min-height: 300px; height: 100%; background: var(--ink-800); color: #fff; isolation: isolate; }
+.collection > :first-child.fcard { min-height: 560px; }
+@media (max-width: 1023px) { .collection > :first-child.fcard, .fcard { min-height: 380px; } }
+.fcard > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: transform 1s var(--ease); }
+.fcard:hover > img { transform: scale(1.04); }
+.fcard::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5,10,20,.1) 30%, rgba(5,10,20,.88) 100%); }
+.fcard .chips-top { top: 1rem; left: 1rem; right: 4rem; }
+.fc-body { position: absolute; left: 0; right: 0; bottom: 0; padding: 1.5rem; display: grid; gap: .35rem; }
+.fc-price { font-weight: 800; color: var(--gold-300); font-size: 1.15rem; }
+.fc-price small { color: rgba(255,255,255,.7); font-weight: 600; font-size: .78rem; }
+.fc-title { font-family: var(--display); font-size: clamp(1.5rem, 2.3vw, 2.1rem); line-height: 1.08; color: #fff; margin: 0; }
+.fc-meta { display: flex; flex-wrap: wrap; gap: .3rem 1.1rem; color: rgba(255,255,255,.78); font-size: .86rem; }
+.fc-meta .bi { color: var(--gold-300); }
+
+/* Horizontal scroller */
+.row-scroll { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(280px, 1fr); gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: .75rem; scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+.row-scroll > * { scroll-snap-align: start; }
+@media (min-width: 1200px) { .row-scroll { grid-auto-columns: calc((100% - 3.75rem) / 4); } }
+@media (max-width: 560px) { .row-scroll { grid-auto-columns: 84%; } }
+
+/* Browse */
+.browse { display: grid; gap: 2.5rem; grid-template-columns: 1fr 1fr; }
+@media (max-width: 767px) { .browse { grid-template-columns: 1fr; gap: 2rem; } }
+.browse h3 { font-size: 1.6rem; margin: 1rem 0; }
+.chips { display: flex; flex-wrap: wrap; gap: .6rem; }
+.chip-link { display: inline-flex; align-items: center; gap: .45rem; padding: .55rem 1rem; border-radius: 999px; border: 1px solid var(--border-strong); background: transparent; color: var(--text); font-weight: 600; font-size: .9rem; transition: border-color .2s, background .2s; }
+.chip-link:hover { border-color: var(--gold); color: var(--heading); background: var(--gold-soft); }
+.chip-link .c { color: var(--muted); font-weight: 500; font-size: .8rem; }
+.type-list { display: grid; }
+.type-list button { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem .25rem; border: 0; border-bottom: 1px solid var(--border); background: none; color: var(--heading); font-weight: 600; text-align: left; transition: padding .25s var(--ease), color .2s; }
+.type-list button:hover { padding-left: .75rem; color: var(--gold-300); }
+.type-list .ti { display: inline-flex; align-items: center; gap: .8rem; }
+.type-list .ti .bi { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--border-strong); color: var(--gold-300); }
+.type-list .go { display: inline-flex; align-items: center; gap: 1rem; color: var(--muted); font-weight: 500; font-size: .85rem; }
 
 /* Virtual tour */
-.tour-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1.4rem; }
+.tour-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1.6rem; }
 @media (max-width: 900px) { .tour-grid { grid-template-columns: 1fr; } }
-.stage { position: relative; min-height: 460px; border-radius: 24px; overflow: hidden; background: #0b1222; box-shadow: var(--sh-lg); }
-.slide { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity .9s; }
+.stage { position: relative; min-height: 480px; border-radius: var(--r-xl); overflow: hidden; background: #000; box-shadow: var(--sh-lg); }
+.slide { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity 1s; }
 .slide.on { opacity: 1; }
 .slide img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.02); }
 .slide.on img { animation: pan 5200ms ease-out forwards; }
 .stage.paused .slide.on img, .stage.paused .bars .on i { animation-play-state: paused; }
-@keyframes pan { from { transform: scale(1.02); } to { transform: scale(1.12) translate(-1.5%, -1%); } }
-.stage::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,12,28,.45), transparent 25%, transparent 55%, rgba(5,12,28,.6)); pointer-events: none; }
-.bars { position: absolute; z-index: 3; top: 14px; left: 16px; right: 16px; display: flex; gap: 6px; }
-.bars span { flex: 1; height: 4px; border-radius: 4px; background: rgba(255,255,255,.3); overflow: hidden; }
-.bars i { display: block; height: 100%; width: 0; background: var(--yellow); }
+@keyframes pan { from { transform: scale(1.02); } to { transform: scale(1.1) translate(-1.5%, -1%); } }
+.stage::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,10,20,.5), transparent 26%, transparent 55%, rgba(5,10,20,.7)); pointer-events: none; }
+.bars { position: absolute; z-index: 3; top: 16px; left: 18px; right: 18px; display: flex; gap: 6px; }
+.bars span { flex: 1; height: 3px; border-radius: 3px; background: rgba(255,255,255,.28); overflow: hidden; }
+.bars i { display: block; height: 100%; width: 0; background: var(--gold); }
 .bars .done i { width: 100%; }
 .bars .on i { animation: bar 4000ms linear forwards; }
 @keyframes bar { to { width: 100%; } }
-.stage-top { position: absolute; z-index: 3; top: 32px; left: 16px; right: 16px; display: flex; justify-content: space-between; }
-.stage-ctl { position: absolute; z-index: 3; right: 16px; bottom: 16px; display: flex; gap: .5rem; }
-.tbtn { width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(255,255,255,.4); color: #fff; font-size: 1.15rem; display: grid; place-items: center; background: rgba(13,27,51,.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: background .2s, transform .2s; }
-.tbtn:hover { background: var(--yellow); color: var(--navy); transform: scale(1.06); }
-.panel { color: #fff; background: rgba(13,27,51,.45); border: 1px solid rgba(255,255,255,.25); backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%); border-radius: 18px; }
-.stage-info { position: absolute; z-index: 3; left: 16px; bottom: 16px; max-width: min(420px, calc(100% - 190px)); padding: 1rem 1.1rem; display: grid; gap: .2rem; }
-.stage-info strong { color: var(--yellow); font-family: var(--display); font-size: 1.15rem; }
-@media (max-width: 560px) { .stage { min-height: 380px; } .stage-info { right: 16px; max-width: none; bottom: 76px; } }
-.rooms { display: grid; gap: .5rem; list-style: none; margin: 0 0 1rem; padding: 0; }
-.room { width: 100%; display: flex; gap: .75rem; align-items: center; text-align: left; padding: .45rem; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); }
-.room img { width: 64px; height: 48px; object-fit: cover; border-radius: 10px; flex: none; }
-.room strong { display: block; color: var(--navy); font-size: .92rem; }
+.stage-top { position: absolute; z-index: 3; top: 34px; left: 18px; right: 18px; display: flex; justify-content: space-between; }
+.stage-ctl { position: absolute; z-index: 3; right: 18px; bottom: 18px; display: flex; gap: .5rem; }
+.tbtn { width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); color: #fff; font-size: 1.15rem; display: grid; place-items: center; background: rgba(5,10,20,.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: background .2s, color .2s; }
+.tbtn:hover { background: var(--gold); color: var(--ink-900); border-color: var(--gold); }
+.panel { color: #fff; background: rgba(5,10,20,.45); border: 1px solid rgba(255,255,255,.2); backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%); border-radius: 18px; }
+.stage-info { position: absolute; z-index: 3; left: 18px; bottom: 18px; max-width: min(430px, calc(100% - 200px)); padding: 1.05rem 1.2rem; display: grid; gap: .2rem; }
+.stage-info .t { font-family: var(--display); font-size: 1.45rem; font-weight: 600; line-height: 1.1; }
+.stage-info strong { color: var(--gold-300); font-size: 1.15rem; }
+@media (max-width: 560px) { .stage { min-height: 380px; } .stage-info { right: 18px; max-width: none; bottom: 78px; } }
+.rooms-title { font-size: .72rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin-bottom: .9rem; font-family: var(--body); }
+.rooms { display: grid; gap: .5rem; list-style: none; margin: 0 0 1.2rem; padding: 0; }
+.room { width: 100%; display: flex; gap: .8rem; align-items: center; text-align: left; padding: .5rem; border-radius: 14px; border: 1px solid var(--border); background: transparent; transition: border-color .2s, background .2s; }
+.room img { width: 70px; height: 52px; object-fit: cover; border-radius: 10px; flex: none; }
+.room strong { display: block; color: var(--heading); font-size: .92rem; }
 .room small { color: var(--muted); font-size: .76rem; }
-.room.on { border-color: var(--navy); background: var(--navy-50); box-shadow: inset 3px 0 0 var(--yellow); }
+.room:hover { border-color: var(--border-strong); }
+.room.on { border-color: var(--gold); background: var(--gold-soft); }
 
 /* Surfaces */
-.surface { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--sh-sm); }
-.pad { padding: 1.4rem; }
+.surface { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); }
+.pad { padding: 1.5rem; }
 .stack { display: grid; gap: 1rem; }
 .row { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
 .between { justify-content: space-between; }
 
-.area-grid { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
-.area { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: 1rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); color: var(--navy); font-weight: 600; text-align: left; transition: border-color .15s, box-shadow .15s, transform .15s; }
-.area:hover { border-color: var(--navy); box-shadow: var(--sh); transform: translateY(-2px); }
-.area .ic { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--navy-50); flex: none; }
-.area .c { font-size: .8rem; color: var(--muted); font-weight: 500; }
+/* Trust + agents */
+.pillars { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--border); }
+@media (max-width: 767px) { .pillars { grid-template-columns: 1fr; } }
+.pillar { padding: 1.8rem 1.6rem 1.6rem 0; display: grid; gap: .5rem; align-content: start; }
+.pillar + .pillar { padding-left: 1.6rem; border-left: 1px solid var(--border); }
+@media (max-width: 767px) { .pillar + .pillar { padding-left: 0; border-left: 0; border-top: 1px solid var(--border); } .pillar { padding-right: 0; } }
+.pillar > .bi { font-size: 1.5rem; color: var(--gold-300); margin-bottom: .4rem; }
+.pillar h3 { font-size: 1.45rem; }
+.pillar p { color: var(--muted); font-size: .92rem; }
+.agents { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
+.agent { display: flex; gap: 1rem; align-items: center; padding: 1.15rem; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--border); min-width: 0; }
+.agent .av { position: relative; flex: none; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: var(--ink-700); color: var(--gold-300); font-family: var(--display); font-weight: 700; font-size: 1.5rem; border: 1px solid rgba(227,182,60,.5); }
+.agent .av .bi { position: absolute; right: -2px; bottom: 0; font-size: 1.05rem; color: var(--ok); background: var(--surface); border-radius: 50%; line-height: 1; }
+.agent h3 { font-family: var(--body); font-size: 1rem; font-weight: 700; }
+.agent .stats { display: flex; flex-wrap: wrap; gap: .2rem .9rem; font-size: .8rem; color: var(--muted); margin: .25rem 0 .55rem; }
+.agent .stats b { color: var(--heading); }
+.join { display: flex; align-items: center; gap: 1rem; padding: 1.15rem; border-radius: var(--r-lg); border: 1px dashed var(--border-strong); background: none; color: var(--muted); text-align: left; }
+.join:hover { border-color: var(--gold); color: var(--text); }
+.join .ic { flex: none; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-size: 1.4rem; border: 1px solid var(--border-strong); color: var(--gold-300); }
+.join strong { color: var(--heading); display: block; }
+.join .go { color: var(--gold-300); font-weight: 700; font-size: .88rem; }
 
-.agents { display: grid; gap: 1.4rem; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
-.agent { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 1.2rem 1.3rem; border-radius: 22px; background: var(--surface); border: 1px solid var(--border); overflow: hidden; transition: transform .25s, box-shadow .25s; }
-.agent:hover { transform: translateY(-5px); box-shadow: var(--sh-lg); }
-.agent .cover { align-self: stretch; height: 84px; margin-inline: -1.2rem; background: radial-gradient(240px 120px at 80% 0%, rgba(255,214,0,.45), transparent 70%), var(--navy); }
-.agent .av { position: relative; margin-top: -46px; margin-bottom: .7rem; width: 92px; height: 92px; border-radius: 50%; display: grid; place-items: center; background: var(--navy-700); color: var(--yellow); font-family: var(--display); font-weight: 800; font-size: 1.55rem; border: 4px solid #fff; box-shadow: 0 0 0 2px var(--yellow), var(--sh); }
-.agent .av .bi { position: absolute; right: 0; bottom: 2px; font-size: 1.2rem; color: var(--green); background: #fff; border-radius: 50%; line-height: 1; }
-.stats3 { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; margin: 1rem 0; padding: .7rem 0; border-block: 1px solid var(--border); }
-.stats3 div + div { border-left: 1px solid var(--border); }
-.stats3 b { display: block; font-family: var(--display); font-weight: 800; color: var(--navy); font-size: 1.08rem; }
-.stats3 span { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
-.join { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; text-align: center; padding: 1.5rem; border-radius: 22px; border: 2px dashed #cfd6e2; background: var(--bg); color: var(--muted); min-height: 300px; }
-.join:hover { border-color: var(--navy); background: var(--navy-50); }
-.join .ic { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-size: 1.55rem; background: var(--surface); color: var(--navy); border: 1px solid var(--border); }
-.join strong { color: var(--navy); font-family: var(--display); }
+/* CTA */
+.cta { position: relative; overflow: hidden; border-radius: var(--r-xl); background: var(--ink-950); color: rgba(255,255,255,.75); padding: 3.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; border: 1px solid rgba(255,255,255,.08); isolation: isolate; }
+.cta::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(600px 300px at 90% 10%, rgba(227,182,60,.22), transparent 70%); }
+.cta h2 { font-size: clamp(1.9rem, 3.4vw, 2.8rem); }
+@media (max-width: 560px) { .cta { padding: 2rem 1.4rem; } }
 
-.pillars { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-@media (max-width: 640px) { .pillars { grid-template-columns: 1fr; } }
-.pillar { padding: 1.3rem; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); display: grid; gap: .45rem; align-content: start; }
-.pillar .ic { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: var(--navy); color: var(--yellow); font-size: 1.2rem; }
-.pillar p { color: var(--muted); font-size: .9rem; }
-.two-col { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 2.5rem; align-items: center; }
-@media (max-width: 900px) { .two-col { grid-template-columns: 1fr; gap: 1.5rem; } }
-
-.steps { display: grid; gap: 1.2rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-@media (max-width: 1023px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
-.step { position: relative; padding: 1.5rem 1.3rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); display: grid; gap: .5rem; align-content: start; }
-.step .n { position: absolute; top: 1rem; right: 1.2rem; font-family: var(--display); font-weight: 800; font-size: 2.1rem; color: var(--navy-50); }
-.step .ic { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; background: var(--yellow); color: var(--navy); font-size: 1.35rem; }
-.step p { color: var(--muted); font-size: .92rem; }
-
-.cta { position: relative; overflow: hidden; border-radius: var(--r-lg); background: var(--navy); color: var(--on-navy-muted); padding: 2.6rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; }
-.cta::after { content: ""; position: absolute; right: -80px; top: -80px; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle, rgba(255,214,0,.28), transparent 70%); pointer-events: none; }
-.cta > * { position: relative; z-index: 1; }
-.cta h2 { color: #fff; font-size: clamp(1.35rem, 2.6vw, 1.85rem); }
-@media (max-width: 560px) { .cta { padding: 1.6rem; } }
-
-.faq { display: grid; gap: .6rem; }
-.faq details { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); overflow: hidden; }
-.faq summary { cursor: pointer; padding: 1rem 1.15rem; font-weight: 600; color: var(--navy); list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
+/* FAQ & contact */
+.two-col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; align-items: start; }
+@media (max-width: 900px) { .two-col { grid-template-columns: 1fr; gap: 2.5rem; } }
+.faq { display: grid; }
+.faq details { border-bottom: 1px solid var(--border); }
+.faq summary { cursor: pointer; padding: 1.15rem 0; font-weight: 600; font-size: 1.02rem; color: var(--heading); list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
 .faq summary::-webkit-details-marker { display: none; }
-.faq summary::after { content: "+"; font-size: 1.3rem; line-height: 1; color: var(--navy); }
-.faq details[open] summary { background: var(--navy-50); }
+.faq summary::after { content: "+"; font-size: 1.3rem; line-height: 1; color: var(--gold-300); }
+.faq details[open] summary { color: var(--gold-300); }
 .faq details[open] summary::after { content: "\2212"; }
-.faq details p { padding: .9rem 1.15rem 1.1rem; color: var(--muted); }
+.faq details p { padding: 0 0 1.2rem; color: var(--muted); }
+.glass-form { padding: 2.2rem; border-radius: var(--r-xl); background: rgba(255,255,255,.04); border: 1px solid var(--border-strong); display: grid; gap: 1rem; }
+@media (max-width: 560px) { .glass-form { padding: 1.3rem; } }
 
-.cpoints { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; gap: 1rem; }
-.cpoints li { display: flex; gap: .85rem; align-items: flex-start; }
-.cpoints small { display: block; color: rgba(255,255,255,.55); font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; }
-.cpoints span.v { color: #fff; font-weight: 500; }
-.cp-ic { flex: none; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; color: var(--yellow); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); }
-.glass-form { padding: 2rem; border-radius: 26px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); box-shadow: 0 30px 60px rgba(3,10,25,.35); display: grid; gap: 1rem; }
-.glass-form .field > label { color: rgba(255,255,255,.88); }
-.glass-form .input, .glass-form .textarea { border-color: transparent; }
-.glass-form .err { color: #ffb4b4; }
-@media (max-width: 560px) { .glass-form { padding: 1.2rem; } }
+/* Footer */
+footer { background: var(--ink-950); color: rgba(255,255,255,.62); padding-block: 4.5rem 1.75rem; border-top: 1px solid rgba(255,255,255,.06); }
+.foot-grid { display: grid; gap: 2.5rem; grid-template-columns: 2fr 1fr 1fr 1.4fr; }
+@media (max-width: 900px) { .foot-grid { grid-template-columns: 1fr 1fr; } .foot-grid > :first-child { grid-column: 1 / -1; } }
+footer h4 { color: #fff; font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 1.1rem; }
+footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; }
+footer button.fl { background: none; border: 0; padding: 0; color: rgba(255,255,255,.72); text-align: left; }
+footer button.fl:hover { color: var(--gold-300); }
+.statement { font-family: var(--display); font-size: 1.55rem; line-height: 1.25; color: #f6f3ec; max-width: 26rem; }
+.legal { border-top: 1px solid rgba(255,255,255,.08); margin-top: 3rem; padding-top: 1.4rem; font-size: .84rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; }
 
-footer { background: var(--navy-900); color: rgba(255,255,255,.75); padding-block: 3rem 1.5rem; }
-.foot-grid { display: grid; gap: 2rem; grid-template-columns: 2fr 1fr 1fr 1.5fr; }
-@media (max-width: 900px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
-footer h4 { color: #fff; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .8rem; }
-footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
-footer button.fl { background: none; border: 0; padding: 0; color: rgba(255,255,255,.75); text-align: left; }
-footer button.fl:hover { color: var(--yellow); }
-footer .brand-name { color: #fff; }
-footer .brand-sub { color: var(--yellow); }
-.legal { border-top: 1px solid rgba(255,255,255,.1); margin-top: 2rem; padding-top: 1.2rem; font-size: .82rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; }
+/* Page heads */
+.page-head { padding-block: 2.2rem 1.4rem; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; }
+.page-head h1 { font-size: clamp(2rem, 4vw, 3rem); }
+.crumbs { font-size: .84rem; color: var(--muted); display: flex; gap: .45rem; flex-wrap: wrap; }
+.crumbs button { background: none; border: 0; padding: 0; color: var(--muted); font-size: inherit; }
+.crumbs button:hover { color: var(--heading); }
+.head-band { background: var(--ink-950); border-bottom: 1px solid var(--border); }
 
-/* Search page */
-.page-head { padding-block: 1.6rem 1rem; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; }
-.crumbs { font-size: .82rem; color: var(--muted); display: flex; gap: .4rem; flex-wrap: wrap; }
-.crumbs button { background: none; border: 0; padding: 0; color: #1d4ed8; text-decoration: underline; text-underline-offset: 3px; font-size: inherit; }
-.search-layout { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 1.6rem; padding-bottom: 3rem; align-items: start; }
-.filters { position: sticky; top: calc(var(--header-h) + 1rem); padding: 1.2rem; gap: .9rem; display: grid; }
-@media (max-width: 1023px) { .search-layout { grid-template-columns: 1fr; } .filters { position: static; } .filters:not(.open) { display: none; } }
-.filters h3 { font-size: 1rem; }
-.toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: 1rem; }
-.toggle { display: inline-flex; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface); }
-.toggle button { border: 0; background: none; padding: .45rem .7rem; color: var(--muted); }
-.toggle button.on { background: var(--navy); color: #fff; }
-.chip { display: inline-flex; align-items: center; gap: .35rem; padding: .3rem .65rem; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-size: .8rem; font-weight: 500; color: var(--text); }
-.chip:hover { border-color: var(--red); color: var(--red); }
-.empty { text-align: center; padding: 3rem 1.5rem; background: var(--surface); border: 1px dashed #cfd6e2; border-radius: var(--r); display: grid; gap: .6rem; justify-items: center; }
-.empty .bi { font-size: 2.3rem; color: #9aa8bf; }
+/* Search */
+.sbar { position: sticky; top: var(--header-h); z-index: 40; background: rgba(10,18,34,.95); border-bottom: 1px solid var(--border); padding: .7rem 0; }
+@media (min-width: 1024px) { .sbar { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); } }
+.sb-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; align-items: center; }
+.sb-row .input, .sb-row .select { min-height: 44px; border-radius: 999px; font-weight: 600; font-size: .88rem; }
+.sb-row .select { width: auto; max-width: 190px; }
+.sb-q { position: relative; min-width: 0; }
+.sb-q .input { padding-left: 2.6rem; }
+.sb-q .bi { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.sb-chips { position: relative; min-width: 0; grid-column: 1 / -1; order: 3; display: flex; gap: .5rem; align-items: center; overflow-x: auto; scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); mask-image: linear-gradient(90deg, #000 88%, transparent); padding-right: 2rem; }
+.sb-chips::-webkit-scrollbar { display: none; }
+.sb-chips > * { flex: none; }
+.sb-seg { display: inline-flex; padding: .2rem; border-radius: 999px; border: 1px solid var(--border-strong); min-height: 44px; align-items: center; }
+.sb-seg label { position: relative; cursor: pointer; padding: .42rem .9rem; border-radius: 999px; font-weight: 700; font-size: .84rem; color: var(--muted); }
+.sb-seg input { position: absolute; opacity: 0; pointer-events: none; }
+.sb-seg label:has(input:checked) { background: var(--gold); color: var(--ink-900); }
+.sb-budget { display: flex; gap: .35rem; }
+.sb-budget .input { width: 104px; }
+.sb-row .btn { min-height: 44px; padding-block: 0; }
+.sb-go .lbl { display: none; }
+@media (min-width: 1200px) { .sb-row { display: flex; } .sb-q { flex: 1 1 auto; min-width: 200px; } .sb-chips { order: 0; overflow: visible; padding: 0; -webkit-mask-image: none; mask-image: none; } .sb-go .lbl { display: inline; } }
+.more { display: none; padding: 1.25rem 0 .5rem; }
+.more.open { display: block; }
+.more-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); align-items: end; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; padding: 1.4rem 0 1rem; }
+.toolbar .count { font-family: var(--display); font-size: 1.6rem; color: var(--heading); }
+.toolbar .select { width: auto; min-height: 40px; border-radius: 999px; font-weight: 600; font-size: .88rem; }
+.toggle { display: inline-flex; padding: .2rem; border-radius: 999px; border: 1px solid var(--border-strong); }
+.toggle button { border: 0; background: none; padding: .35rem .75rem; border-radius: 999px; color: var(--muted); }
+.toggle button.on { background: var(--chip); color: var(--heading); }
+.chip { display: inline-flex; align-items: center; gap: .35rem; padding: .35rem .75rem; border-radius: 999px; background: var(--chip); border: 1px solid var(--border); font-size: .82rem; font-weight: 600; color: var(--text); }
+.chip:hover { border-color: var(--bad); color: var(--bad); }
+.empty { text-align: center; padding: 3.5rem 1.5rem; background: var(--surface); border: 1px dashed var(--border-strong); border-radius: var(--r-lg); display: grid; gap: .7rem; justify-items: center; }
+.empty .bi { font-size: 2.2rem; color: var(--gold-300); }
+.empty h3 { font-size: 1.7rem; }
 
 /* Property page */
-.gallery { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 210px 210px; gap: .5rem; border-radius: var(--r-lg); overflow: hidden; }
-.gallery button { position: relative; padding: 0; border: 0; overflow: hidden; background: var(--navy-50); cursor: zoom-in; }
-.gallery button:first-child { grid-row: span 2; }
-.gallery img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
-.gallery button:hover img { transform: scale(1.03); }
-.gallery .more { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(13,27,51,.55); color: #fff; font-weight: 700; }
-.gallery.one { grid-template-columns: 1fr; grid-template-rows: 420px; }
-.gallery.one button:first-child { grid-row: auto; }
-@media (max-width: 720px) { .gallery, .gallery.one { grid-template-columns: 1fr; grid-template-rows: 260px; } .gallery button:not(:first-child) { display: none; } .gallery button:first-child { grid-row: auto; } }
-.detail { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1.6rem; padding-block: 1.6rem 3rem; align-items: start; }
-@media (max-width: 1023px) { .detail { grid-template-columns: 1fr; } }
-.facts { display: grid; gap: .7rem; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-.fact { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: .75rem .9rem; }
-.fact .k { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
-.fact .v { font-weight: 700; color: var(--navy); }
-.big-price { font-family: var(--display); font-size: 2rem; font-weight: 800; color: var(--navy); }
+.dhead { display: grid; gap: .75rem; padding: 1.25rem 0 1.5rem; }
+.dhead h1 { font-size: clamp(2.1rem, 4.4vw, 3.4rem); }
+.mosaic { display: grid; gap: .5rem; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 250px 250px; border-radius: var(--r-xl); overflow: hidden; position: relative; }
+.mosaic > button { position: relative; padding: 0; border: 0; overflow: hidden; background: var(--surface-2); cursor: zoom-in; }
+.mosaic > button:first-child { grid-row: span 2; }
+.mosaic img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ease); }
+.mosaic > button:hover img { transform: scale(1.04); }
+.mosaic.m1 { grid-template-columns: 1fr; grid-template-rows: 500px; } .mosaic.m1 > button:first-child { grid-row: auto; }
+.mosaic.m2, .mosaic.m3 { grid-template-columns: 2fr 1fr; }
+.mosaic.m2 > button:nth-child(2) { grid-row: span 2; }
+.mosaic.m4 > button:nth-child(4) { grid-column: span 2; }
+.mosaic .all { position: absolute; right: 1rem; bottom: 1rem; z-index: 2; cursor: pointer; padding: .5rem .9rem; font-size: .8rem; border: 0; }
+@media (max-width: 767px) { .mosaic, .mosaic.m1, .mosaic.m2, .mosaic.m3 { grid-template-columns: 1fr; grid-template-rows: 300px; border-radius: var(--r-lg); } .mosaic > button:not(:first-child):not(.all) { display: none; } .mosaic > button:first-child { grid-row: auto; } }
+.dtabs { position: sticky; top: var(--header-h); z-index: 30; background: rgba(10,18,34,.95); border-bottom: 1px solid var(--border); margin: 1.5rem 0 2rem; }
+@media (min-width: 1024px) { .dtabs { backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); } }
+.dtabs nav { display: flex; gap: .25rem; overflow-x: auto; scrollbar-width: none; }
+.dtabs nav::-webkit-scrollbar { display: none; }
+.dtabs button { flex: none; padding: 1rem .9rem; color: var(--muted); font-weight: 700; font-size: .88rem; background: none; border: 0; border-bottom: 2px solid transparent; }
+.dtabs button:hover { color: var(--heading); border-bottom-color: var(--gold); }
+.detail { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 3rem; padding-bottom: 3rem; align-items: start; }
+@media (max-width: 1023px) { .detail { grid-template-columns: 1fr; gap: 2rem; } }
+.dsec { padding-bottom: 2.5rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); scroll-margin-top: calc(var(--header-h) + 70px); display: grid; gap: 1.1rem; }
+.dsec h2 { font-size: 1.9rem; }
+.big-price { font-size: 1.9rem; font-weight: 800; color: var(--heading); letter-spacing: -.02em; }
 .big-price small { font-size: .95rem; font-weight: 500; color: var(--muted); }
-.contact-card { position: sticky; top: calc(var(--header-h) + 1rem); }
-.avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--navy); color: var(--yellow); display: grid; place-items: center; font-family: var(--display); font-weight: 800; flex: none; }
-.note { background: var(--amber-50); border: 1px solid #f3d48b; color: #6b4600; border-radius: 14px; padding: .85rem 1rem; font-size: .88rem; }
-.prose { white-space: pre-line; line-height: 1.7; }
-.amen { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
-.amen div { display: flex; gap: .5rem; align-items: center; }
-.amen .bi { color: var(--navy); }
+.fact-row { display: flex; flex-wrap: wrap; border-block: 1px solid var(--border); }
+.fact-row .fr { flex: 1 1 140px; padding: 1.1rem 1.2rem 1.1rem 0; display: flex; gap: .75rem; align-items: center; }
+.fact-row .fr + .fr { padding-left: 1.2rem; border-left: 1px solid var(--border); }
+.fact-row .bi { font-size: 1.3rem; color: var(--gold-300); }
+.fact-row .k, .fact .k { display: block; font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 800; }
+.fact-row .v, .fact .v { display: block; color: var(--heading); font-weight: 700; }
+@media (max-width: 560px) { .fact-row { display: grid; grid-template-columns: 1fr 1fr; } .fact-row .fr { padding: .95rem .75rem .95rem 0; align-items: flex-start; } .fact-row .fr + .fr { border-left: 0; padding-left: 0; } .fact-row .fr:nth-child(even) { border-left: 1px solid var(--border); padding-left: 1rem; } .fact-row .fr:nth-child(n+3) { border-top: 1px solid var(--border); } }
+.facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); border-top: 1px solid var(--border); }
+.fact { padding: .95rem 0; border-bottom: 1px solid var(--border); }
+.contact-card { position: sticky; top: calc(var(--header-h) + 72px); border-radius: var(--r-xl); padding: 1.6rem; background: var(--surface); border: 1px solid var(--border-strong); box-shadow: var(--sh); display: grid; gap: .8rem; }
+.cc-price { font-weight: 800; font-size: 1.7rem; color: var(--heading); letter-spacing: -.02em; }
+.cc-price small { font-size: .85rem; font-weight: 600; color: var(--muted); }
+.hair { height: 1px; background: var(--border); border: 0; margin: .2rem 0; width: 100%; }
+.avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--ink-700); color: var(--gold-300); display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 1.25rem; flex: none; border: 1px solid rgba(227,182,60,.45); }
+.note { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--text); border-radius: 14px; padding: 1rem 1.15rem; font-size: .9rem; }
+.note > .bi:first-child { color: var(--warn); }
+.prose { white-space: pre-line; line-height: 1.75; }
+.amen { display: grid; gap: .8rem 1.5rem; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.amen div { display: flex; gap: .65rem; align-items: center; }
+.amen .bi { color: var(--gold-300); font-size: 1.1rem; }
 
 /* Lightbox / modal / toast */
-.overlay { position: fixed; inset: 0; z-index: 100; background: rgba(8,14,28,.62); display: grid; place-items: center; padding: 16px; }
-.modal { width: min(640px, 100%); max-height: calc(100% - 32px); overflow-y: auto; background: var(--surface); border-radius: 20px; box-shadow: var(--sh-lg); }
-.modal-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.1rem 1.3rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--surface); z-index: 1; }
-.modal-head h2 { font-size: 1.1rem; }
-.modal-body { padding: 1.3rem; display: grid; gap: 1rem; }
-.lightbox { position: fixed; inset: 0; z-index: 110; background: #070c18; display: grid; grid-template-rows: auto 1fr auto; color: #fff; }
+.overlay { position: fixed; inset: 0; z-index: 100; background: rgba(3,6,12,.72); display: grid; place-items: center; padding: 16px; }
+.modal { width: min(640px, 100%); max-height: calc(100% - 32px); overflow-y: auto; background: var(--ink-850); color: var(--text); border: 1px solid var(--border-strong); border-radius: var(--r-lg); box-shadow: var(--sh-lg); }
+.modal-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.2rem 1.4rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--ink-850); z-index: 1; }
+.modal-head h2 { font-size: 1.6rem; }
+.modal-body { padding: 1.4rem; display: grid; gap: 1rem; }
+.lightbox { position: fixed; inset: 0; z-index: 110; background: #03060c; display: grid; grid-template-rows: auto 1fr auto; color: #fff; }
 .lightbox .lb-top { display: flex; justify-content: space-between; align-items: center; padding: calc(.8rem + env(safe-area-inset-top, 0px)) 1rem .8rem; gap: 1rem; }
 .lightbox .lb-img { display: grid; place-items: center; min-height: 0; padding: 0 1rem; position: relative; }
 .lightbox .lb-img img { max-height: 100%; max-width: 100%; object-fit: contain; border-radius: 10px; }
 .lightbox .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); }
 .lightbox .lb-prev { left: 1rem; } .lightbox .lb-next { right: 1rem; }
 .lightbox .lb-cap { text-align: center; padding: .8rem 1rem calc(1rem + env(safe-area-inset-bottom, 0px)); color: rgba(255,255,255,.7); font-size: .9rem; }
-.toast { position: fixed; left: 50%; bottom: calc(90px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 200; background: var(--navy); color: #fff; padding: .8rem 1.1rem; border-radius: 12px; box-shadow: var(--sh-lg); font-weight: 500; max-width: calc(100% - 32px); display: flex; gap: .55rem; align-items: center; }
-.toast .bi { color: var(--yellow); }
+.toast { position: fixed; left: 50%; bottom: calc(90px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 200; background: #fff; color: var(--ink-900); padding: .85rem 1.2rem; border-radius: 999px; box-shadow: var(--sh-lg); font-weight: 600; max-width: calc(100% - 32px); display: flex; gap: .55rem; align-items: center; }
+.toast .bi { color: var(--gold-600); }
 
 /* Activity & wizard */
-.tabs { display: flex; gap: .35rem; overflow-x: auto; padding-bottom: .25rem; margin-bottom: 1.2rem; }
-.tabs button { flex: none; border: 1px solid var(--border); background: var(--surface); color: var(--text); padding: .55rem .9rem; border-radius: 12px; font-weight: 600; display: inline-flex; gap: .45rem; align-items: center; }
-.tabs button.on { background: var(--navy); color: #fff; border-color: var(--navy); }
-.tabs .n { background: var(--navy-50); color: var(--navy); border-radius: 999px; padding: 0 .45rem; font-size: .75rem; }
-.tabs button.on .n { background: var(--yellow); }
+.tabs { display: flex; gap: .4rem; overflow-x: auto; padding-bottom: .25rem; margin-bottom: 1.4rem; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button { flex: none; border: 1px solid var(--border-strong); background: transparent; color: var(--muted); padding: .55rem 1rem; border-radius: 999px; font-weight: 700; display: inline-flex; gap: .45rem; align-items: center; }
+.tabs button.on { background: var(--gold); color: var(--ink-900); border-color: var(--gold); }
+.tabs .n { background: var(--chip); color: var(--heading); border-radius: 999px; padding: 0 .45rem; font-size: .75rem; }
+.tabs button.on .n { background: rgba(10,18,34,.15); color: var(--ink-900); }
 .item { display: flex; gap: 1rem; padding: 1rem; align-items: flex-start; }
 .item img { width: 120px; height: 90px; object-fit: cover; border-radius: 12px; flex: none; }
 @media (max-width: 560px) { .item { flex-direction: column; } .item img { width: 100%; height: 160px; } }
+.item .ttl { all: unset; cursor: pointer; color: var(--heading); font-weight: 700; }
 .timeline { list-style: none; padding: 0; margin: .4rem 0 0; display: grid; gap: .25rem; font-size: .84rem; color: var(--muted); }
-.wsteps { display: flex; gap: .35rem; overflow-x: auto; padding-bottom: .3rem; margin-bottom: 1.2rem; scrollbar-width: none; }
+.wsteps { display: flex; gap: .4rem; overflow-x: auto; padding-bottom: .3rem; margin-bottom: 1.4rem; scrollbar-width: none; }
 .wsteps::-webkit-scrollbar { display: none; }
-.wsteps button { flex: 1 0 auto; display: flex; align-items: center; gap: .5rem; padding: .55rem .8rem; border-radius: 12px; background: var(--surface); border: 1px solid var(--border); font-size: .84rem; font-weight: 600; color: var(--muted); }
-.wsteps .n { width: 24px; height: 24px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--navy-50); color: var(--navy); font-size: .76rem; line-height: 1; }
-.wsteps .done .n { background: var(--green); color: #fff; }
-.wsteps .cur { border-color: var(--navy); color: var(--navy); background: var(--navy-50); }
-.wsteps .cur .n { background: var(--navy); color: var(--yellow); }
+.wsteps button { flex: 1 0 auto; display: flex; align-items: center; gap: .55rem; padding: .6rem .9rem; border-radius: 999px; background: transparent; border: 1px solid var(--border); font-size: .84rem; font-weight: 700; color: var(--muted); }
+.wsteps .n { width: 24px; height: 24px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--chip); color: var(--heading); font-size: .75rem; line-height: 1; }
+.wsteps .done .n { background: var(--ok); color: var(--ink-900); }
+.wsteps .cur { border-color: var(--gold); color: var(--heading); }
+.wsteps .cur .n { background: var(--gold); color: var(--ink-900); }
 .wsteps button:disabled { cursor: default; }
-.drop { border: 2px dashed #c3ccda; border-radius: var(--r); padding: 1.8rem; text-align: center; background: #fbfcfe; display: grid; gap: .4rem; justify-items: center; cursor: pointer; }
-.drop:hover, .drop.drag { border-color: var(--navy); background: var(--navy-50); }
+.drop { border: 1.5px dashed var(--border-strong); border-radius: var(--r-lg); padding: 2.2rem; text-align: center; background: rgba(255,255,255,.02); display: grid; gap: .4rem; justify-items: center; cursor: pointer; }
+.drop > .bi { font-size: 1.8rem; color: var(--gold-300); }
+.drop:hover, .drop.drag { border-color: var(--gold); background: var(--gold-soft); }
 .thumbs { display: grid; gap: .7rem; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-.thumb { position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 4 / 3; border: 1px solid var(--border); background: var(--navy-50); }
+.thumb { position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 4 / 3; border: 1px solid var(--border); background: var(--surface-2); }
 .thumb img { width: 100%; height: 100%; object-fit: cover; }
-.thumb .acts { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: flex-end; gap: .3rem; padding: .35rem; background: linear-gradient(transparent, rgba(0,0,0,.55)); }
-.thumb .acts button { width: 32px; height: 32px; border-radius: 8px; border: 0; background: rgba(255,255,255,.92); color: var(--navy); display: grid; place-items: center; }
+.thumb .acts { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: flex-end; gap: .3rem; padding: .35rem; background: linear-gradient(transparent, rgba(0,0,0,.6)); }
+.thumb .acts button { width: 32px; height: 32px; border-radius: 50%; border: 0; background: rgba(255,255,255,.92); color: var(--ink-900); display: grid; place-items: center; }
 .thumb .cover { position: absolute; top: .4rem; left: .4rem; }
 .plans { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
-.plan { display: flex; flex-direction: column; gap: .7rem; padding: 1.4rem; }
-.plan.hl { border: 2px solid var(--navy); }
-.plan ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; font-size: .9rem; flex: 1; }
-.plan li { display: flex; gap: .5rem; }
-.plan li .bi { color: var(--green); }
-.plan .p { font-family: var(--display); font-weight: 800; font-size: 1.9rem; color: var(--navy); }
+.plan { display: flex; flex-direction: column; gap: .9rem; padding: 1.8rem; border-radius: var(--r-xl); }
+.plan.hl { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold), var(--sh-lg); }
+.plan h2 { font-family: var(--body); font-size: 1.05rem; font-weight: 700; }
+.plan ul { list-style: none; margin: 0; padding: .9rem 0 0; border-top: 1px solid var(--border); display: grid; gap: .55rem; font-size: .93rem; flex: 1; }
+.plan li { display: flex; gap: .55rem; }
+.plan li .bi { color: var(--ok); }
+.plan .p { font-family: var(--display); font-size: 2.8rem; line-height: 1; color: var(--heading); }
 </style>
 
-<div class="demo-bar" role="note">Interactive demo with [DEMO] listings<span class="hide-sm">. What you save or send stays in this browser only.</span></div>
+<div class="demo-bar" role="note">Interactive demo &middot; [DEMO] listings<span class="hide-sm"> &middot; what you save or send stays in this browser</span></div>
 <header class="site-header" id="top">
   <div class="wrap header-row">
     <button class="brand" data-go="home" aria-label="Bangarpet Property Hub home">__LOGO_SVG__<span><span class="brand-name">Bangarpet</span><span class="brand-sub">Property Hub</span></span></button>
@@ -463,12 +510,12 @@ footer .brand-sub { color: var(--yellow); }
       <button data-search='{"purpose":"sale"}'>Buy</button>
       <button data-search='{"category":"pg-rooms"}'>PG &amp; Rooms</button>
       <button data-search='{"category":"commercial"}'>Commercial</button>
-      <button data-search='{}'>All properties</button>
+      <button data-go="pricing">For owners</button>
     </nav>
     <div class="header-actions">
-      <button class="btn btn-soft hide-md" data-go="activity" data-tab="saved"><i class="bi bi-heart"></i> Saved <span class="count-dot" data-fav-count hidden></span></button>
-      <button class="btn btn-primary hide-md" data-go="activity"><i class="bi bi-person-circle"></i> My activity</button>
-      <button class="btn btn-accent hide-md" data-go="list"><i class="bi bi-plus-lg"></i> List property</button>
+      <button class="icon-btn hide-md" data-go="activity" data-tab="saved" aria-label="Saved homes" style="position:relative"><i class="bi bi-heart"></i><span class="count-dot" data-fav-count hidden style="position:absolute;top:-4px;right:-4px"></span></button>
+      <button class="btn hide-md" data-go="activity" style="color:rgba(255,255,255,.85)"><i class="bi bi-person"></i> My activity</button>
+      <button class="btn btn-accent hide-md" data-go="list">List your property</button>
       <button class="icon-btn menu-btn" data-action="menu" aria-label="Open menu"><i class="bi bi-list"></i></button>
     </div>
   </div>
@@ -479,13 +526,13 @@ footer .brand-sub { color: var(--yellow); }
 <footer>
   <div class="wrap">
     <div class="foot-grid">
-      <div class="stack" style="gap:.8rem">
+      <div class="stack" style="gap:1.4rem">
         <button class="brand" data-go="home">__LOGO_SVG__<span><span class="brand-name">Bangarpet</span><span class="brand-sub">Property Hub</span></span></button>
-        <p>Find. Rent. Buy. Manage. A local property marketplace connecting tenants, buyers, owners and brokers in Bangarpet and nearby towns of Kolar district.</p>
+        <p class="statement">Homes, rooms, shops and land in Bangarpet &mdash; listed by people you can actually meet.</p>
       </div>
       <div><h4>Explore</h4><ul>
-        <li><button class="fl" data-search='{"purpose":"rent"}'>Properties for rent</button></li>
-        <li><button class="fl" data-search='{"purpose":"sale"}'>Properties for sale</button></li>
+        <li><button class="fl" data-search='{"purpose":"rent"}'>For rent</button></li>
+        <li><button class="fl" data-search='{"purpose":"sale"}'>For sale</button></li>
         <li><button class="fl" data-search='{"category":"pg-rooms"}'>PG &amp; rooms</button></li>
         <li><button class="fl" data-search='{"category":"plots"}'>Plots</button></li>
       </ul></div>
@@ -494,7 +541,7 @@ footer .brand-sub { color: var(--yellow); }
         <li><button class="fl" data-go="pricing">Plans &amp; pricing</button></li>
         <li><button class="fl" data-go="activity">My activity</button></li>
       </ul></div>
-      <div><h4>Stay safe</h4><p class="small">Never pay a token amount or deposit before visiting a property and checking the owner's documents. The "Verified" badge is an identity check, not a check of legal title.</p></div>
+      <div><h4>Stay safe</h4><p class="small">Never pay a token or deposit before visiting the property and checking the owner's documents. "Verified" is an identity check, not a check of legal title.</p></div>
     </div>
     <div class="legal"><span>&copy; Bangarpet Property Hub &middot; Bangarpet, Kolar district, Karnataka</span><span>Built by: TECHZODO TECHNOLOGY</span></div>
   </div>
@@ -629,23 +676,23 @@ function card(p) {
       <h3 class="title"><button data-open="${p.id}">${esc(p.title)}</button></h3>
       <div class="loc">${icon("geo-alt")} ${esc(locLabel(p))}</div>
       <div class="specs">${specs(p)}</div>
-      <div class="meta-foot"><span>${p.verified ? `<span class="badge b-verified">${icon("patch-check-fill")} Verified ${p.listedBy}</span>` : `${p.listedBy === "broker" ? "Broker" : "Owner"} listing`}</span><span>${ago(p.daysAgo)}</span></div>
+      <div class="meta-foot"><span>${p.verified ? `<span class="ver">${icon("patch-check-fill")} Verified ${p.listedBy}</span>` : `${p.listedBy === "broker" ? "Broker" : "Owner"} listing`}</span><span>${ago(p.daysAgo)}</span></div>
     </div>
   </article>`;
 }
-function gcard(p) {
+function fcard(p) {
   const img = p.images[0];
-  return `<article class="gcard">
-    <div class="media">${img ? `<img src="${img.thumb}" alt="${esc(img.caption || p.title)}" loading="lazy">` : ""}
-      <div class="chips-top"><span class="glass-chip">${p.purpose === "rent" ? "For rent" : "For sale"}</span>${p.featured ? `<span class="glass-chip yellow">${icon("star-fill")} Featured</span>` : ""}</div>
-      ${favBtn(p)}
-    </div>
-    <div class="gbody">
-      <div class="gprice">${p.purpose === "rent" ? `${inr(p.price)}<small> / month</small>` : inrShort(p.price)}</div>
-      <h3 class="gtitle"><button data-open="${p.id}">${esc(p.title)}</button></h3>
-      <div class="gloc">${icon("geo-alt")} ${esc(locLabel(p))}</div>
-      <div class="gspecs">${specs(p, "g")}</div>
-      <div class="gfoot">${p.verified ? `<span class="gver">${icon("patch-check-fill")} Verified ${p.listedBy}</span>` : `<span style="opacity:.75">${icon("shield-check")} Reviewed listing</span>`}<span class="gcta">View ${icon("arrow-right")}</span></div>
+  const meta = [`<span>${icon("geo-alt")} ${esc(locLabel(p))}</span>`];
+  if (p.beds) meta.push(`<span>${p.beds} ${p.category === "pg-rooms" ? "room" + (p.beds > 1 ? "s" : "") : "BHK"}</span>`);
+  if (p.sqft) meta.push(`<span>${p.sqft} sq.ft</span>`); else if (p.land) meta.push(`<span>${p.land} ${esc(p.landUnit)}</span>`);
+  if (p.verified) meta.push(`<span>${icon("patch-check-fill")} Verified ${p.listedBy}</span>`);
+  return `<article class="fcard">${img ? `<img src="${img.full}" alt="${esc(img.caption || p.title)}" loading="lazy">` : ""}
+    <div class="chips-top"><span class="glass-chip">${p.purpose === "rent" ? "For rent" : "For sale"}</span>${p.featured ? `<span class="glass-chip yellow">${icon("star-fill")} Featured</span>` : ""}</div>
+    ${favBtn(p)}
+    <div class="fc-body">
+      <div class="fc-price">${p.purpose === "rent" ? `${inr(p.price)}<small> / month</small>` : inrShort(p.price)}</div>
+      <h3 class="fc-title"><button data-open="${p.id}">${esc(p.title)}</button></h3>
+      <div class="fc-meta">${meta.join("")}</div>
     </div>
   </article>`;
 }
@@ -655,173 +702,131 @@ function optionList(items, selected, placeholder) {
 }
 const locOptions = () => DATA.locations.map((l) => ({ value: l.slug, label: l.name }));
 const catOptions = () => DATA.categories.map((c) => ({ value: c.slug, label: c.name }));
+const initials = (name) => esc((name || "?").split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase());
 
 /* ============================================================ HOME */
 function viewHome() {
   const featured = LIST.filter((p) => p.featured);
-  const hero = featured.find((p) => p.images.length) || LIST[0];
+  const hero = featured.find((p) => p.images.length) || LIST.find((p) => p.images.length);
   const tour = LIST.find((p) => p.images.length >= 3 && p.featured) || LIST.find((p) => p.images.length >= 2);
   const recent = LIST.slice().sort((a, b) => a.daysAgo - b.daysAgo).slice(0, 8);
   const verified = DATA.agents.length;
+  const top = featured.slice(0, 3);
   return `
-  <section class="band hero" aria-labelledby="hero-title">
-    <span class="orb orb-a"></span><span class="orb orb-b"></span>
-    <div class="wrap hero-grid">
-      <div>
-        <span class="kicker">${icon("geo-alt-fill")} Bangarpet &middot; Kolar district &middot; Karnataka</span>
-        <h1 id="hero-title">Homes you can <em>trust</em>, in the town you know.</h1>
-        <p class="lead">Every listing is reviewed before it goes live. Talk directly to owners and verified brokers, walk through photo tours, and schedule visits in one place.</p>
-        <form class="glass search-panel" data-form="hero-search" aria-label="Search properties">
-          <div class="seg" role="radiogroup" aria-label="Rent or buy">
-            <label><input type="radio" name="purpose" value="" checked> All</label>
-            <label><input type="radio" name="purpose" value="rent"> Rent</label>
-            <label><input type="radio" name="purpose" value="sale"> Buy</label>
-          </div>
-          <div class="sp-grid">
-            <div class="field"><label class="label" for="h-loc">Location</label><select class="select" id="h-loc" name="location">${optionList(locOptions(), "", "All locations")}</select></div>
-            <div class="field"><label class="label" for="h-cat">Property type</label><select class="select" id="h-cat" name="category">${optionList(catOptions(), "", "All property types")}</select></div>
-            <div class="field"><label class="label" for="h-min">Min price (&#8377;)</label><input class="input" id="h-min" name="min" type="number" min="0" inputmode="numeric" placeholder="No min"></div>
-            <div class="field"><label class="label" for="h-max">Max price (&#8377;)</label><input class="input" id="h-max" name="max" type="number" min="0" inputmode="numeric" placeholder="No max"></div>
-          </div>
-          <button class="btn btn-accent btn-lg btn-block" type="submit">${icon("search")} Search properties</button>
-        </form>
+  <section class="hero" aria-labelledby="hero-title">
+    ${hero ? `<div class="hero-media" aria-hidden="true"><img src="${hero.images[0].full}" alt=""></div>` : ""}
+    <div class="wrap">
+      <span class="kicker">Bangarpet &middot; Kolar district</span>
+      <h1 id="hero-title">Homes you can <em>trust</em>, in the town you know.</h1>
+      <p class="lead">Reviewed listings, verified owners and brokers, and visits you can book in a tap.</p>
+      <form data-form="hero-search" aria-label="Search properties">
+        <div class="seg" role="radiogroup" aria-label="Rent or buy">
+          <label><input type="radio" name="purpose" value="" checked> All</label>
+          <label><input type="radio" name="purpose" value="rent"> Rent</label>
+          <label><input type="radio" name="purpose" value="sale"> Buy</label>
+        </div>
+        <div class="lux-search glass">
+          <div class="ls"><label for="h-loc">Location</label><select id="h-loc" name="location">${optionList(locOptions(), "", "All locations")}</select></div>
+          <div class="ls"><label for="h-cat">Property type</label><select id="h-cat" name="category">${optionList(catOptions(), "", "All property types")}</select></div>
+          <div class="ls"><label for="h-min">Budget (&#8377;)</label><div class="ls-budget"><input id="h-min" name="min" type="number" min="0" inputmode="numeric" placeholder="Min" aria-label="Minimum price"><span>&ndash;</span><input id="h-max" name="max" type="number" min="0" inputmode="numeric" placeholder="Max" aria-label="Maximum price"></div></div>
+          <button class="btn btn-accent btn-lg" type="submit">${icon("search")} Search</button>
+        </div>
+      </form>
+      <div class="trustline">
+        <span>${icon("shield-check")}Every listing reviewed</span>
+        <span>${icon("house-door")}<span class="tnum">${LIST.length}</span>&nbsp;live listings</span>
+        <span>${icon("patch-check")}<span class="tnum">${verified}</span>&nbsp;verified partner${verified === 1 ? "" : "s"}</span>
+        <span class="hide-sm">${icon("lock")}Owners control their privacy</span>
       </div>
-      ${hero ? `<button class="hero-show" data-open="${hero.id}" aria-label="View ${esc(hero.title)}">
-        <img src="${hero.images[0].full}" alt="${esc(hero.images[0].caption || hero.title)}">
-        <span class="float float-price"><span class="small" style="opacity:.75">${hero.featured ? "Featured &middot; " : ""}${hero.purpose === "rent" ? "For rent" : "For sale"}</span>
-          <strong>${hero.purpose === "rent" ? `${inr(hero.price)}<small>/month</small>` : inrShort(hero.price)}</strong>
-          <span class="small t">${esc(hero.title)}</span><span class="small" style="opacity:.75">${icon("geo-alt")} ${esc(locLabel(hero))}</span></span>
-        <span class="float float-check">${icon("shield-check")} Reviewed before publishing</span>
-        ${hero.verified ? `<span class="float float-verified">${icon("patch-check-fill")} Verified ${hero.listedBy}</span>` : ""}
-      </button>` : ""}
     </div>
+    ${hero ? `<div class="hero-credit"><button class="glass-chip" data-open="${hero.id}">Pictured: ${esc(hero.title.length > 38 ? hero.title.slice(0, 37) + "…" : hero.title)} ${icon("arrow-up-right")}</button></div>` : ""}
   </section>
 
-  <div class="wrap">
-    <div class="trust-bar" role="list">
-      <div class="tb" role="listitem"><span class="tb-ic">${icon("shield-check")}</span><div><strong>Every listing reviewed</strong><span class="d">Checked before it goes live</span></div></div>
-      <div class="tb" role="listitem"><span class="tb-ic">${icon("house-door")}</span><div><strong class="tnum">${LIST.length} live listings</strong><span class="d">Houses, flats, PG, shops &amp; plots</span></div></div>
-      <div class="tb" role="listitem"><span class="tb-ic">${icon("patch-check")}</span><div><strong class="tnum">${verified} verified partner${verified === 1 ? "" : "s"}</strong><span class="d">ID-checked owners &amp; brokers</span></div></div>
-      <div class="tb" role="listitem"><span class="tb-ic">${icon("lock")}</span><div><strong>Privacy protected</strong><span class="d">Owners choose who sees their number</span></div></div>
-    </div>
-  </div>
+  ${top.length ? `<section class="section" aria-labelledby="feat-title"><div class="wrap">
+    <div class="sec-head"><div><span class="eyebrow">The collection</span><h2 class="sec-title" id="feat-title">Featured properties</h2></div>
+      <button class="btn btn-outline" data-search='{}'>View all listings ${icon("arrow-right")}</button></div>
+    <div class="collection c${top.length}">${top.map(fcard).join("")}</div>
+  </div></section>` : ""}
 
-  <section class="section-sm"><div class="wrap"><nav class="cats" aria-label="Browse by category">
-    <button class="cat" data-search='{"category":"houses","purpose":"rent"}'>${icon("house-door")}Houses for rent</button>
-    <button class="cat" data-search='{"category":"apartments"}'>${icon("building")}Apartments</button>
-    <button class="cat" data-search='{"category":"pg-rooms"}'>${icon("door-open")}PG &amp; rooms</button>
-    <button class="cat" data-search='{"category":"commercial"}'>${icon("shop")}Commercial</button>
-    <button class="cat" data-search='{"purpose":"sale"}'>${icon("key")}For sale</button>
-    <button class="cat" data-search='{"category":"plots"}'>${icon("bounding-box")}Plots</button>
-  </nav></div></section>
-
-  ${featured.length ? `<section class="band section" aria-labelledby="feat-title"><span class="orb orb-c"></span>
-    <div class="wrap" style="position:relative">
-      <div class="sec-head"><div><span class="eyebrow dark">${icon("gem")} Featured collection</span><h2 class="sec-title" id="feat-title">Featured properties</h2><p style="color:rgba(255,255,255,.65)">Handpicked, reviewed listings promoted by their owners and brokers.</p></div>
-        <button class="btn btn-glass" data-search='{}'>Explore all listings ${icon("arrow-right")}</button></div>
-      <div class="cards cols-3 swipe">${featured.map(gcard).join("")}</div>
-    </div></section>` : ""}
-
-  ${tour ? `<section class="section" aria-labelledby="tour-title"><div class="wrap">
-    <div class="sec-head" style="justify-content:center;text-align:center"><div style="justify-items:center"><span class="eyebrow">${icon("badge-vr")} Virtual tour</span><h2 class="sec-title" id="tour-title">Walk through before you visit</h2><p class="lead">Step room by room through a listing from home. Shortlist with confidence and visit only the places that fit.</p></div></div>
+  ${tour ? `<section class="section alt" aria-labelledby="tour-title"><div class="wrap">
+    <div class="sec-head"><div><span class="eyebrow">Virtual tour</span><h2 class="sec-title" id="tour-title">Walk through before you visit</h2></div><p class="lead" style="max-width:26rem">Step room by room from home, then visit only the places that fit.</p></div>
     <div class="tour-grid">
       <div class="stage" id="stage" tabindex="0" aria-roledescription="carousel" aria-label="Photo tour of ${esc(tour.title)}">
         ${tour.images.map((im, i) => `<figure class="slide${i ? "" : " on"}" data-cap="${esc(im.caption || "Photo " + (i + 1))}" aria-hidden="${i ? "true" : "false"}"><img src="${im.full}" alt="${esc(im.caption || tour.title)}"></figure>`).join("")}
         <div class="bars" aria-hidden="true">${tour.images.map((_, i) => `<span class="${i ? "" : "on"}"><i></i></span>`).join("")}</div>
-        <div class="stage-top"><span class="glass-chip">${icon("badge-vr")} <span id="tour-label">${esc(tour.images[0].caption || "Photo 1")}</span></span><span class="glass-chip light"><span id="tour-count">1</span> / ${tour.images.length}</span></div>
+        <div class="stage-top"><span class="glass-chip">${icon("badge-vr")} <span id="tour-label">${esc(tour.images[0].caption || "Photo 1")}</span></span><span class="glass-chip"><span id="tour-count">1</span> / ${tour.images.length}</span></div>
         <div class="stage-ctl">
           <button class="tbtn" data-tour="prev" aria-label="Previous room">${icon("chevron-left")}</button>
           <button class="tbtn" data-tour="toggle" aria-label="Pause tour">${icon("pause-fill")}</button>
           <button class="tbtn" data-tour="next" aria-label="Next room">${icon("chevron-right")}</button>
         </div>
-        <div class="stage-info panel"><span class="small" style="opacity:.75;text-transform:uppercase;font-weight:600;letter-spacing:.04em">${esc(tour.categoryName)} &middot; ${tour.purpose === "rent" ? "For rent" : "For sale"}</span>
-          <span style="font-family:var(--display);font-weight:700;font-size:1.05rem">${esc(tour.title)}</span><span class="small" style="opacity:.75">${icon("geo-alt")} ${esc(locLabel(tour))}</span>
+        <div class="stage-info panel"><span class="small" style="opacity:.75;text-transform:uppercase;font-weight:700;letter-spacing:.12em">${esc(tour.categoryName)} &middot; ${tour.purpose === "rent" ? "For rent" : "For sale"}</span>
+          <span class="t">${esc(tour.title)}</span><span class="small" style="opacity:.75">${icon("geo-alt")} ${esc(locLabel(tour))}</span>
           <strong>${tour.purpose === "rent" ? `${inr(tour.price)}<small style="font-weight:500;color:#fff">/mo</small>` : inrShort(tour.price)}</strong></div>
       </div>
-      <div class="surface pad" style="display:flex;flex-direction:column">
-        <h3 class="small muted" style="text-transform:uppercase;letter-spacing:.07em;margin-bottom:.8rem;font-family:var(--body)">Rooms in this tour</h3>
+      <div style="display:flex;flex-direction:column">
+        <h3 class="rooms-title">Rooms in this tour</h3>
         <ol class="rooms">${tour.images.map((im, i) => `<li><button class="room${i ? "" : " on"}" data-tour-goto="${i}"><img src="${im.thumb}" alt=""><span><strong>${esc(im.caption || "Photo " + (i + 1))}</strong><small>Step ${i + 1} of ${tour.images.length}</small></span></button></li>`).join("")}</ol>
         <div class="stack" style="margin-top:auto;gap:.5rem">
-          <button class="btn btn-primary btn-block" data-open="${tour.id}">${icon("arrows-fullscreen")} Open full tour &amp; details</button>
+          <button class="btn btn-primary btn-block" data-open="${tour.id}">Open full tour &amp; details</button>
           <button class="btn btn-soft btn-block" data-enquire="${tour.id}" data-visit="1">${icon("calendar-plus")} Request a visit</button>
         </div>
       </div>
     </div>
   </div></section>` : ""}
 
-  <section class="section" style="padding-top:${tour ? "0" : "4rem"}"><div class="wrap">
-    <div class="sec-head"><div><span class="eyebrow">${icon("clock-history")} Just listed</span><h2 class="sec-title">Recently added</h2><p class="lead">The newest approved listings in and around Bangarpet.</p></div>
-      <button class="btn btn-soft" data-search='{"sort":"newest"}'>See all new listings ${icon("arrow-right")}</button></div>
-    <div class="cards">${recent.map(card).join("")}</div>
+  <section class="section"><div class="wrap">
+    <div class="sec-head"><div><span class="eyebrow">Just listed</span><h2 class="sec-title">New in Bangarpet</h2></div>
+      <button class="btn btn-outline" data-search='{"sort":"newest"}'>See all new ${icon("arrow-right")}</button></div>
+    <div class="row-scroll" tabindex="0" aria-label="Newest listings, scroll for more">${recent.map(card).join("")}</div>
   </div></section>
 
-  <section class="section" style="padding-top:0"><div class="wrap">
-    <div class="sec-head"><div><span class="eyebrow">${icon("pin-map")} Explore</span><h2 class="sec-title">Popular areas in Bangarpet</h2></div></div>
-    <div class="area-grid">${DATA.areas.map((a) => `<button class="area" data-search='${esc(JSON.stringify({ location: a.slug }))}'><span class="row" style="gap:.8rem;flex-wrap:nowrap"><span class="ic">${icon("geo-alt")}</span><span>${esc(a.name)}${a.parent ? `<span class="c" style="display:block">${esc(a.parent)}</span>` : ""}</span></span><span class="c">${a.count ? `${a.count} listing${a.count === 1 ? "" : "s"}` : "Explore"} ${icon("chevron-right")}</span></button>`).join("")}</div>
+  <section class="section" style="padding-top:0"><div class="wrap browse">
+    <div><span class="eyebrow">By type</span><h3>What are you looking for?</h3>
+      <nav class="type-list" aria-label="Property types">${DATA.categories.map((c) => { const n = LIST.filter((p) => p.category === c.slug).length; return `<button data-search='${esc(JSON.stringify({ category: c.slug }))}'><span class="ti">${icon(c.icon || "house")}${esc(c.name)}</span><span class="go">${n || ""} ${icon("arrow-up-right")}</span></button>`; }).join("")}</nav></div>
+    <div><span class="eyebrow">By area</span><h3>Neighbourhoods &amp; nearby towns</h3>
+      <div class="chips">${DATA.areas.map((a) => `<button class="chip-link" data-search='${esc(JSON.stringify({ location: a.slug }))}'>${esc(a.name)}${a.count ? ` <span class="c">${a.count}</span>` : ""}</button>`).join("")}</div>
+      <div class="row" style="margin-top:1.5rem"><button class="btn btn-soft btn-sm" data-search='{"purpose":"rent"}'>Everything for rent</button><button class="btn btn-soft btn-sm" data-search='{"purpose":"sale"}'>Everything for sale</button></div></div>
   </div></section>
 
-  <section class="section white-band"><div class="wrap">
-    <div class="sec-head"><div><span class="eyebrow">${icon("person-badge")} Verified agents</span><h2 class="sec-title">Local experts you can rely on</h2><p class="lead">Brokers shown here submitted identity and business documents that our team reviewed.</p></div></div>
+  <section class="section alt" aria-labelledby="trust-title"><div class="wrap">
+    <div class="sec-head"><div><span class="eyebrow">Built on trust</span><h2 class="sec-title" id="trust-title">Checked before you ever see it</h2></div></div>
+    <div class="pillars" style="margin-bottom:3rem">
+      <div class="pillar">${icon("clipboard2-check")}<h3>Reviewed listings</h3><p>Photos, prices and details are checked before publishing, and again whenever key details change.</p></div>
+      <div class="pillar">${icon("person-check")}<h3>Verified partners</h3><p>Owners and brokers can submit ID and business documents, stored privately for our verification team only.</p></div>
+      <div class="pillar">${icon("eye-slash")}<h3>Your privacy</h3><p>Owners decide who sees their number and exact address. Suspicious listings can be reported in one tap.</p></div>
+    </div>
+    <div class="row between" style="margin-bottom:1rem"><h3 style="font-family:var(--body);font-size:1.1rem;font-weight:700">Verified local agents</h3><button class="btn btn-sm" style="padding:0;color:var(--gold-300)" data-go="list">Join as a broker ${icon("arrow-right")}</button></div>
     <div class="agents">
-      ${DATA.agents.map((a) => `<article class="agent"><div class="cover"></div><div class="av">${esc(a.name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase())}${icon("patch-check-fill")}</div>
-        <h3 style="font-size:1rem">${esc(a.name)}</h3><div class="small muted">${esc(a.agency)}</div><span class="badge b-verified" style="margin-top:.5rem">${icon("patch-check-fill")} Verified broker</span>
-        <div class="stats3"><div><b class="tnum">${a.listings}</b><span>Listings</span></div><div><b class="tnum">${a.years ? a.years + "+" : "&ndash;"}</b><span>Years</span></div><div><b class="tnum">${a.joined}</b><span>Joined</span></div></div>
-        <button class="btn btn-primary btn-sm btn-block" data-search='{"listedBy":"broker"}'>View listings</button></article>`).join("")}
-      <button class="join" data-go="list"><span class="ic">${icon("person-plus")}</span><strong>Your profile here</strong><span class="small">Brokers in Bangarpet can register, submit documents and earn a verified profile.</span><span style="color:var(--navy);font-weight:700">Get started ${icon("arrow-right")}</span></button>
+      ${DATA.agents.map((a) => `<article class="agent"><div class="av">${initials(a.name)}${icon("patch-check-fill")}</div>
+        <div style="min-width:0;flex:1"><h3>${esc(a.name)}</h3><div class="small muted">${esc(a.agency)}</div>
+        <div class="stats"><span><b class="tnum">${a.listings}</b> live listing${a.listings === 1 ? "" : "s"}</span>${a.years ? `<span><b>${a.years}+</b> years</span>` : ""}<span>Since <b>${a.joined}</b></span></div>
+        <button class="btn btn-soft btn-sm" data-search='{"listedBy":"broker"}'>View listings</button></div></article>`).join("")}
+      ${DATA.agents.length % 2 ? `<button class="join" data-go="list"><span class="ic">${icon("person-plus")}</span><span><strong>Your profile here</strong>Brokers in Bangarpet can register, submit documents and earn a verified profile. <span class="go" style="display:block;margin-top:.3rem">Become a verified agent ${icon("arrow-right")}</span></span></button>` : ""}
     </div>
-  </div></section>
-
-  <section class="section"><div class="wrap two-col">
-    <div class="stack"><span class="eyebrow" style="justify-self:start">${icon("shield-lock")} Built on trust</span><h2 class="sec-title">How we keep every search safe</h2><p class="lead">Property decisions are big decisions. We put checks in place so you can focus on finding the right home.</p><p class="small muted">${icon("info-circle")} The "Verified" badge means identity documents were reviewed by our team. It is not a legal check of property title, so always verify ownership documents before paying.</p></div>
-    <div class="pillars">
-      <div class="pillar"><span class="ic">${icon("clipboard2-check")}</span><h3 style="font-size:1rem">Manual listing review</h3><p>Photos, prices and details are checked before a listing is published, and again when key details change.</p></div>
-      <div class="pillar"><span class="ic">${icon("person-check")}</span><h3 style="font-size:1rem">Verified owners &amp; brokers</h3><p>Partners submit ID and business documents, stored privately and seen only by our verification team.</p></div>
-      <div class="pillar"><span class="ic">${icon("eye-slash")}</span><h3 style="font-size:1rem">Privacy controls</h3><p>Owners decide who sees their phone number. Exact addresses stay hidden unless they choose to share them.</p></div>
-      <div class="pillar"><span class="ic">${icon("flag")}</span><h3 style="font-size:1rem">Report &amp; act fast</h3><p>Anything suspicious can be reported in one tap. Our team reviews every report and removes policy violations.</p></div>
-    </div>
-  </div></section>
-
-  <section class="section white-band"><div class="wrap">
-    <div class="sec-head" style="justify-content:center;text-align:center"><div style="justify-items:center"><span class="eyebrow">${icon("lightning-charge")} Simple &amp; transparent</span><h2 class="sec-title">From search to keys in four steps</h2></div></div>
-    <div class="steps">
-      <div class="step"><span class="n">1</span><span class="ic">${icon("search")}</span><h3 style="font-size:1.05rem">Search</h3><p>Filter by area, budget, bedrooms and more. Save the homes you like.</p></div>
-      <div class="step"><span class="n">2</span><span class="ic">${icon("badge-vr")}</span><h3 style="font-size:1.05rem">Tour</h3><p>Walk through photo tours to shortlist without wasted trips.</p></div>
-      <div class="step"><span class="n">3</span><span class="ic">${icon("calendar-check")}</span><h3 style="font-size:1.05rem">Visit</h3><p>Request a time slot. You're notified when the owner confirms.</p></div>
-      <div class="step"><span class="n">4</span><span class="ic">${icon("house-check")}</span><h3 style="font-size:1.05rem">Move in</h3><p>Check documents, agree terms directly with the owner and move in.</p></div>
-    </div>
+    <p class="small muted" style="margin-top:1.5rem">${icon("info-circle")} "Verified" means our team reviewed identity documents. It is not a legal check of property title, so always verify ownership documents before paying.</p>
   </div></section>
 
   <section class="section"><div class="wrap"><div class="cta">
-    <div class="stack" style="max-width:640px;gap:.6rem"><span class="eyebrow dark" style="justify-self:start">${icon("stars")} For owners &amp; brokers</span><h2>List your property where Bangarpet is searching.</h2><p>Start free with one listing. Manage enquiries and visits from one dashboard, and upgrade only when you need more.</p></div>
-    <div class="row"><button class="btn btn-accent btn-lg" data-go="list">${icon("plus-lg")} List your property</button><button class="btn btn-glass btn-lg" data-go="pricing">See plans</button></div>
+    <div class="stack" style="max-width:640px;gap:.8rem"><span class="kicker">For owners &amp; brokers</span><h2>List where Bangarpet is searching.</h2><p>Start free with one listing. Manage enquiries and visits from one dashboard and upgrade only when you need more.</p></div>
+    <div class="row"><button class="btn btn-accent btn-lg" data-go="list">List your property</button><button class="btn btn-glass btn-lg" data-go="pricing">See plans</button></div>
   </div></div></section>
 
-  <section class="section" style="padding-top:0"><div class="wrap two-col" style="align-items:start">
-    <div class="stack"><span class="eyebrow" style="justify-self:start">${icon("question-circle")} FAQ</span><h2 class="sec-title">Questions, answered</h2><p class="lead">Searching, listing and staying safe.</p></div>
-    <div class="faq">${DATA.faqs.map((f, i) => `<details${i ? "" : " open"}><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("")}</div>
-  </div></section>
-
-  <section class="band section" id="contact" aria-labelledby="contact-title"><span class="orb orb-a"></span><span class="orb orb-b"></span>
-    <div class="wrap two-col" style="position:relative">
-      <div><span class="eyebrow dark">${icon("chat-heart")} Talk to us</span><h2 class="sec-title" id="contact-title" style="margin-top:.8rem">A real team, right here in Kolar district</h2>
-        <p style="margin-top:.8rem">Questions about a listing, verification, plans or a report? Send a message and our team will get back to you.</p>
-        <ul class="cpoints">
-          <li><span class="cp-ic">${icon("geo-alt")}</span><div><small>Office</small><span class="v">Bangarpet, Kolar district, Karnataka</span></div></li>
-          <li><span class="cp-ic">${icon("shield-lock")}</span><div><small>Privacy</small><span class="v">Your details are used only to respond to you.</span></div></li>
-          <li><span class="cp-ic">${icon("clock")}</span><div><small>Messages in this demo</small><span class="v">${S.messages.length ? `${S.messages.length} saved in this browser` : "Saved in this browser only"}</span></div></li>
-        </ul></div>
-      <form class="glass-form" data-form="contact" novalidate>
-        <h3 style="font-size:1.1rem">Send a message</h3>
-        <div class="form-grid">
-          <div class="field"><label for="c-name">Name <span class="req">*</span></label><input class="input" id="c-name" name="name" autocomplete="name" required></div>
-          <div class="field"><label for="c-phone">Mobile number</label><input class="input" id="c-phone" name="phone" inputmode="tel" placeholder="10-digit mobile number"></div>
-          <div class="field full"><label for="c-email">Email <span class="req">*</span></label><input class="input" id="c-email" name="email" type="email" autocomplete="email" required></div>
-          <div class="field full"><label for="c-msg">Message <span class="req">*</span></label><textarea class="textarea" id="c-msg" name="message" required></textarea></div>
-        </div>
-        <div class="row between"><span class="small" style="color:rgba(255,255,255,.6)">${icon("lock")} Demo: saved in this browser</span><button class="btn btn-accent btn-lg" type="submit">Send message ${icon("send")}</button></div>
-      </form>
-    </div>
-  </section>`;
+  <section class="section" id="contact" style="padding-top:0" aria-labelledby="contact-title"><div class="wrap two-col">
+    <div><span class="eyebrow">Questions</span><h2 class="sec-title" style="margin:1rem 0">Good to know</h2>
+      <div class="faq">${DATA.faqs.slice(0, 5).map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("")}</div></div>
+    <form class="glass-form" data-form="contact" novalidate>
+      <span class="eyebrow">Talk to us</span><h2 id="contact-title" style="font-size:clamp(2rem,3.4vw,2.6rem)">A real team in Kolar district</h2>
+      <p class="small muted">Questions about a listing, verification, plans or a report? ${S.messages.length ? `${S.messages.length} message${S.messages.length === 1 ? "" : "s"} saved in this browser.` : "Messages in this demo stay in this browser."}</p>
+      <div class="form-grid">
+        <div class="field"><label for="c-name">Name <span class="req">*</span></label><input class="input" id="c-name" name="name" autocomplete="name" required></div>
+        <div class="field"><label for="c-phone">Mobile number</label><input class="input" id="c-phone" name="phone" inputmode="tel" placeholder="10-digit mobile number"></div>
+        <div class="field full"><label for="c-email">Email <span class="req">*</span></label><input class="input" id="c-email" name="email" type="email" autocomplete="email" required></div>
+        <div class="field full"><label for="c-msg">Message <span class="req">*</span></label><textarea class="textarea" id="c-msg" name="message" required></textarea></div>
+      </div>
+      <div class="row between"><span class="small muted">${icon("lock")} Used only to reply to you</span><button class="btn btn-accent" type="submit">Send message ${icon("arrow-right")}</button></div>
+    </form>
+  </div></section>`;
 }
 
 /* ------------------------------------------------------------ tour */
@@ -895,40 +900,42 @@ function viewSearch() {
   const view = f.view || "grid";
   const title = f.category ? `${catName(f.category)} in Bangarpet` : f.purpose === "rent" ? "Properties for rent in Bangarpet" : f.purpose === "sale" ? "Properties for sale in Bangarpet" : "All properties in Bangarpet";
   const active = Object.keys(FILTER_LABELS).filter((k) => f[k]);
-  const sel = (name, opts, ph) => `<select class="select" id="f-${name}" name="${name}">${optionList(opts, f[name] || "", ph)}</select>`;
-  return `<div class="wrap">
-    <div class="page-head"><div class="stack" style="gap:.3rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><span>Search</span></div><h1 style="font-size:1.6rem">${esc(title)}</h1></div>
-      <button class="btn btn-soft" data-action="toggle-filters" style="display:none" id="filters-btn">${icon("sliders")} Filters${active.length ? ` (${active.length})` : ""}</button></div>
-    <div class="search-layout">
-      <form class="surface filters" id="filters" data-form="filters" aria-label="Filters">
-        <h3>Filters</h3>
-        <div class="field"><label for="f-q">Keyword</label><input class="input" id="f-q" name="q" value="${esc(f.q || "")}" placeholder="Area, landmark or ID"></div>
-        <div class="field"><label for="f-purpose">Rent or buy</label>${sel("purpose", [{ value: "rent", label: "Rent" }, { value: "sale", label: "Buy" }], "Rent or buy")}</div>
-        <div class="field"><label for="f-location">Location</label>${sel("location", locOptions(), "All locations")}</div>
-        <div class="field"><label for="f-category">Property type</label>${sel("category", catOptions(), "All types")}</div>
-        <div class="form-grid" style="gap:.6rem"><div class="field"><label for="f-min">Min &#8377;</label><input class="input" id="f-min" name="min" type="number" min="0" value="${esc(f.min || "")}"></div><div class="field"><label for="f-max">Max &#8377;</label><input class="input" id="f-max" name="max" type="number" min="0" value="${esc(f.max || "")}"></div></div>
-        <div class="field"><label for="f-beds">Bedrooms</label>${sel("beds", [1, 2, 3, 4].map((n) => ({ value: n, label: n + "+" })), "Any")}</div>
-        <div class="field"><label for="f-furnishing">Furnishing</label>${sel("furnishing", [{ value: "unfurnished", label: "Unfurnished" }, { value: "semi", label: "Semi-furnished" }, { value: "fully", label: "Fully furnished" }], "Any")}</div>
-        <div class="field"><label for="f-listedBy">Listed by</label>${sel("listedBy", [{ value: "owner", label: "Owners" }, { value: "broker", label: "Brokers" }], "Anyone")}</div>
-        <label class="check"><input type="checkbox" name="parking" ${f.parking ? "checked" : ""}> Parking available</label>
-        <label class="check"><input type="checkbox" name="verified" ${f.verified ? "checked" : ""}> Verified owners/brokers only</label>
-        <button class="btn btn-primary btn-block" type="submit">${icon("search")} Apply filters</button>
-        <button class="btn btn-soft btn-block" type="button" data-search='{}'>Clear filters</button>
-      </form>
-      <div style="min-width:0">
-        <div class="toolbar">
-          <div><strong class="tnum">${results.length}</strong> propert${results.length === 1 ? "y" : "ies"} found</div>
-          <div class="row">
-            <label class="small muted" for="sort">Sort by</label>
-            <select class="select" id="sort" data-action="sort" style="width:auto;min-height:40px">${optionList(SORTS.map(([v, l]) => ({ value: v, label: l })), f.sort || "recommended")}</select>
-            <div class="toggle" role="group" aria-label="View"><button class="${view === "grid" ? "on" : ""}" data-view="grid" aria-label="Grid view">${icon("grid-3x3-gap")}</button><button class="${view === "list" ? "on" : ""}" data-view="list" aria-label="List view">${icon("list-ul")}</button></div>
-          </div>
-        </div>
-        ${active.length ? `<div class="row" style="margin-bottom:1rem">${active.map((k) => `<button class="chip" data-unfilter="${k}" aria-label="Remove ${FILTER_LABELS[k]} filter">${FILTER_LABELS[k]}: ${esc(filterValueLabel(k, f[k]))} ${icon("x")}</button>`).join("")}<button class="chip" data-search='{}'>Clear all</button></div>` : ""}
-        ${results.length ? `<div class="cards ${view === "list" ? "list-view" : ""}">${results.map(card).join("")}</div>`
-          : `<div class="empty">${icon("search")}<h3>No properties match these filters</h3><p class="muted">Try a wider budget, a nearby area, or fewer filters.</p><button class="btn btn-primary" data-search='{}'>Clear filters</button></div>`}
+  const more = ["beds", "furnishing", "listedBy", "parking", "verified"].filter((k) => f[k]).length;
+  const sel = (name, opts, ph) => `<select class="select" id="f-${name}" name="${name}" aria-label="${esc(ph)}">${optionList(opts, f[name] || "", ph)}</select>`;
+  const radio = (v, l) => `<label><input type="radio" name="purpose" value="${v}" ${(f.purpose || "") === v ? "checked" : ""}> ${l}</label>`;
+  return `<div class="head-band"><div class="wrap page-head"><div class="stack" style="gap:.4rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><span>Search</span></div><h1>${esc(title)}</h1></div></div></div>
+  <form data-form="filters" aria-label="Search filters">
+    <div class="sbar"><div class="wrap"><div class="sb-row">
+      <div class="sb-q">${icon("search")}<label class="vh" for="f-q">Keyword</label><input class="input" id="f-q" name="q" value="${esc(f.q || "")}" placeholder="Area, landmark or property ID"></div>
+      <div class="sb-chips">
+        <div class="sb-seg" role="radiogroup" aria-label="Rent or buy">${radio("", "All")}${radio("rent", "Rent")}${radio("sale", "Buy")}</div>
+        ${sel("location", locOptions(), "All locations")}
+        ${sel("category", catOptions(), "All property types")}
+        <div class="sb-budget"><input class="input" name="min" type="number" min="0" inputmode="numeric" value="${esc(f.min || "")}" placeholder="&#8377; Min" aria-label="Minimum price"><input class="input" name="max" type="number" min="0" inputmode="numeric" value="${esc(f.max || "")}" placeholder="&#8377; Max" aria-label="Maximum price"></div>
+        <button class="btn btn-soft" type="button" data-action="toggle-filters" aria-controls="filters">${icon("sliders")} Filters${more ? ` <span class="count-dot">${more}</span>` : ""}</button>
+      </div>
+      <button class="btn btn-accent sb-go" type="submit">${icon("search")}<span class="lbl">Search</span></button>
+    </div></div></div>
+    <div class="wrap"><div class="more${more ? " open" : ""}" id="filters"><div class="more-grid">
+      <div class="field"><label for="f-beds">Bedrooms</label>${sel("beds", [1, 2, 3, 4].map((n) => ({ value: n, label: n + "+" })), "Any")}</div>
+      <div class="field"><label for="f-furnishing">Furnishing</label>${sel("furnishing", [{ value: "unfurnished", label: "Unfurnished" }, { value: "semi", label: "Semi-furnished" }, { value: "fully", label: "Fully furnished" }], "Any")}</div>
+      <div class="field"><label for="f-listedBy">Listed by</label>${sel("listedBy", [{ value: "owner", label: "Owners" }, { value: "broker", label: "Brokers" }], "Anyone")}</div>
+      <div class="stack" style="gap:.5rem;padding-bottom:.4rem"><label class="check"><input type="checkbox" name="parking" ${f.parking ? "checked" : ""}> Parking available</label><label class="check"><input type="checkbox" name="verified" ${f.verified ? "checked" : ""}> Verified owners/brokers only</label></div>
+      <div class="row"><button class="btn btn-primary" type="submit">Show results</button><button class="btn btn-soft" type="button" data-search='{}'>Clear all</button></div>
+    </div></div></div>
+  </form>
+  <div class="wrap" style="padding-bottom:3rem">
+    <div class="toolbar">
+      <div class="count"><span class="tnum">${results.length}</span> propert${results.length === 1 ? "y" : "ies"}</div>
+      <div class="row" style="flex-wrap:nowrap">
+        <label class="vh" for="sort">Sort by</label>
+        <select class="select" id="sort" data-action="sort">${optionList(SORTS.map(([v, l]) => ({ value: v, label: l })), f.sort || "recommended")}</select>
+        <div class="toggle" role="group" aria-label="View"><button class="${view === "grid" ? "on" : ""}" data-view="grid" aria-label="Grid view">${icon("grid-3x3-gap")}</button><button class="${view === "list" ? "on" : ""}" data-view="list" aria-label="List view">${icon("list-ul")}</button></div>
       </div>
     </div>
+    ${active.length ? `<div class="row" style="margin-bottom:1.4rem">${active.map((k) => `<button class="chip" data-unfilter="${k}" aria-label="Remove ${FILTER_LABELS[k]} filter">${FILTER_LABELS[k]}: ${esc(filterValueLabel(k, f[k]))} ${icon("x")}</button>`).join("")}<button class="chip" data-search='{}'>Clear all</button></div>` : ""}
+    ${results.length ? `<div class="cards ${view === "list" ? "list-view" : ""}">${results.map(card).join("")}</div>`
+      : `<div class="empty">${icon("search")}<h3>No properties match these filters</h3><p class="muted">Try a wider budget, a nearby area, or fewer filters.</p><button class="btn btn-primary" data-search='{}'>Clear filters</button></div>`}
   </div>`;
 }
 
@@ -940,7 +947,7 @@ function viewProperty() {
   const imgs = p.images;
   const similar = LIST.filter((x) => x.id !== p.id && x.category === p.category).concat(LIST.filter((x) => x.id !== p.id && x.category !== p.category && x.purpose === p.purpose)).slice(0, 4);
   const enq = S.enquiries.find((e) => e.listingId === p.id && e.status !== "Cancelled");
-  const facts = [];
+  const facts = [["Type", p.categoryName]];
   if (p.beds != null) facts.push([p.category === "pg-rooms" ? "Rooms" : "Bedrooms", p.beds]);
   if (p.baths != null) facts.push(["Bathrooms", p.baths]);
   if (p.sqft) facts.push(["Built-up area", p.sqft + " sq.ft"]);
@@ -948,43 +955,59 @@ function viewProperty() {
   if (p.furnishing) facts.push(["Furnishing", p.furnishing]);
   if (p.parking) facts.push(["Parking", p.parking]);
   facts.push(["Availability", p.availability || "Ready to move"]);
-  return `${mine ? `<div class="demo-bar" style="background:var(--amber-50);color:#6b4600">Preview of your listing. Status: <strong>Pending review</strong>. It is not visible to the public yet.</div>` : ""}
+  facts.push(["Listed by", (p.listedBy === "broker" ? "Broker" : "Owner") + (p.verified ? " · Verified" : "")]);
+  const quick = [];
+  if (p.beds != null) quick.push(["door-closed", p.category === "pg-rooms" ? "Rooms" : "Bedrooms", p.beds + (p.category === "pg-rooms" ? "" : " BHK")]);
+  if (p.baths != null) quick.push(["droplet", "Baths", p.baths]);
+  if (p.sqft) quick.push(["arrows-angle-expand", "Built-up", p.sqft + " sq.ft"]); else if (p.land) quick.push(["bounding-box", "Land", p.land + " " + p.landUnit]);
+  quick.push(["calendar-check", "Available", p.availability || "Ready to move"]);
+  const priceSub = p.purpose === "rent" ? [p.deposit ? "Deposit " + inr(p.deposit) : "", p.maintenance ? "Maintenance " + inr(p.maintenance) + "/month" : "", p.negotiable ? "Negotiable" : ""].filter(Boolean).join(" &middot; ")
+    : [inrShort(p.price), p.sqft ? `approx. ${inr(Math.round(p.price / p.sqft))}/sq.ft` : "", p.negotiable ? "Negotiable" : ""].filter(Boolean).join(" &middot; ");
+  const shown = imgs.slice(0, 5);
+  const tabs = [["p-overview", "Overview"], ["p-details", "Details"]].concat(p.amenities.length ? [["p-amenities", "Amenities"]] : [], [["p-location", "Location"]], !mine && similar.length ? [["p-similar", "Similar"]] : []);
+  return `${mine ? `<div class="demo-bar">Preview of your listing. Status: <strong>Pending review</strong>. It is not visible to the public yet.</div>` : ""}
   <div class="wrap">
-    <div class="page-head" style="padding-bottom:.8rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><button data-search='${esc(JSON.stringify({ purpose: p.purpose }))}'>${p.purpose === "rent" ? "For rent" : "For sale"}</button><span>/</span><button data-search='${esc(JSON.stringify({ category: p.category }))}'>${esc(p.categoryName)}</button><span>/</span><span>${esc(p.ref)}</span></div></div>
-    ${imgs.length ? `<div class="gallery${imgs.length === 1 ? " one" : ""}">${imgs.slice(0, 3).map((im, i) => `<button data-lightbox="${i}" aria-label="Open photo ${i + 1} of ${imgs.length}"><img src="${i ? im.thumb : im.full}" alt="${esc(im.caption || p.title)}">${i === 2 && imgs.length > 3 ? `<span class="more">+${imgs.length - 3} photos</span>` : ""}</button>`).join("")}</div>`
+    <div class="crumbs" style="padding-top:1.4rem"><button data-go="home">Home</button><span>/</span><button data-search='${esc(JSON.stringify({ purpose: p.purpose }))}'>${p.purpose === "rent" ? "For rent" : "For sale"}</button><span>/</span><button data-search='${esc(JSON.stringify({ category: p.category }))}'>${esc(p.categoryName)}</button><span>/</span><span>${esc(p.ref)}</span></div>
+    <header class="dhead">
+      <div class="row"><span class="badge b-soft">${p.purpose === "rent" ? "For rent" : "For sale"}</span><span class="badge b-soft">${esc(p.categoryName)}</span>${p.featured ? `<span class="badge b-featured">${icon("star-fill")} Featured</span>` : ""}${mine ? `<span class="badge b-pending">Pending review</span>` : ""}</div>
+      <div class="row between" style="align-items:flex-end;gap:1rem">
+        <div style="min-width:0"><h1>${esc(p.title)}</h1><p class="muted" style="margin-top:.5rem">${icon("geo-alt")} ${esc(locLabel(p))}${p.locality && p.area ? " &middot; " + esc(p.locality) : ""}</p></div>
+        ${mine ? "" : `<div class="row">${favBtn(p, "btn btn-soft")}<button class="btn btn-soft" data-copy="${esc(p.title + " (" + p.ref + ")")}">${icon("share")} Share</button></div>`}
+      </div>
+    </header>
+    ${shown.length ? `<div class="mosaic m${shown.length}">${shown.map((im, i) => `<button data-lightbox="${i}" aria-label="Open photo ${i + 1} of ${imgs.length}"><img src="${i ? im.thumb : im.full}" alt="${esc(im.caption || p.title)}"></button>`).join("")}${imgs.length > 1 ? `<button class="glass-chip light all" data-lightbox="0">${icon("grid-3x3-gap")} View all ${imgs.length} photos</button>` : ""}</div>`
       : `<div class="empty">${icon("image")}<p class="muted">No photos yet</p></div>`}
+  </div>
+  <div class="dtabs"><div class="wrap"><nav aria-label="Sections">${tabs.map(([id, l]) => `<button data-jump="${id}">${l}</button>`).join("")}</nav></div></div>
+  <div class="wrap">
     <div class="detail">
-      <div class="stack" style="gap:1.4rem;min-width:0">
-        <div class="surface pad stack" style="gap:.6rem">
-          <div class="row"><span class="badge b-soft">${p.purpose === "rent" ? "For rent" : "For sale"}</span><span class="badge b-soft">${esc(p.categoryName)}</span>${p.verified ? `<span class="badge b-verified">${icon("patch-check-fill")} Verified ${p.listedBy}</span>` : ""}${p.featured ? `<span class="badge b-featured">${icon("star-fill")} Featured</span>` : ""}${mine ? `<span class="badge b-pending">Pending review</span>` : ""}</div>
-          <h1 style="font-size:clamp(1.4rem,3vw,1.9rem)">${esc(p.title)}</h1>
-          <p class="muted">${icon("geo-alt")} ${esc(locLabel(p))}${p.locality && p.area ? " &middot; " + esc(p.locality) : ""}</p>
-          <div class="row between" style="align-items:flex-end">
-            <div><div class="big-price tnum">${p.purpose === "rent" ? `${inr(p.price)}<small> /month</small>` : inr(p.price)}</div>
-              <div class="small muted">${p.purpose === "rent" ? [p.deposit ? "Deposit " + inr(p.deposit) : "", p.maintenance ? "Maintenance " + inr(p.maintenance) + "/month" : "", p.negotiable ? "Negotiable" : ""].filter(Boolean).join(" &middot; ") : [inrShort(p.price), p.sqft ? `approx. ${inr(Math.round(p.price / p.sqft))}/sq.ft` : "", p.negotiable ? "Negotiable" : ""].filter(Boolean).join(" &middot; ")}</div></div>
-            ${mine ? "" : `<div class="row">${favBtn(p, "btn btn-soft")}<button class="btn btn-soft" data-copy="${esc(p.title + " (" + p.ref + ")")}">${icon("share")} Share</button></div>`}
-          </div>
-          <div class="small muted">Property ID <strong>${esc(p.ref)}</strong> &middot; ${mine ? "Submitted today" : "Posted " + ago(p.daysAgo).toLowerCase()} &middot; <span class="tnum">${p.views || 0}</span> views</div>
-        </div>
-        <section class="stack" aria-label="Key details"><h2 style="font-size:1.15rem">Key details</h2><div class="facts">${facts.map(([k, v]) => `<div class="fact"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join("")}</div></section>
-        ${p.amenities.length ? `<section class="surface pad stack"><h2 style="font-size:1.15rem">Amenities</h2><div class="amen">${p.amenities.map((a) => `<div>${icon(a.icon || "check2-circle")} ${esc(a.name)}</div>`).join("")}</div></section>` : ""}
-        <section class="surface pad stack"><h2 style="font-size:1.15rem">About this property</h2><div class="prose">${esc(p.description)}</div></section>
-        <section class="surface pad stack"><h2 style="font-size:1.15rem">Location</h2><p>${icon("geo-alt")} ${esc(locLabel(p))} <span class="small muted">(exact address shared by the owner on request)</span></p>
+      <div style="min-width:0">
+        <section class="dsec" id="p-overview" aria-label="Overview">
+          <div><div class="big-price tnum">${p.purpose === "rent" ? `${inr(p.price)}<small> / month</small>` : inr(p.price)}</div><div class="small muted">${priceSub}</div></div>
+          <div class="fact-row">${quick.map(([ic, k, v]) => `<div class="fr">${icon(ic)}<div><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div></div>`).join("")}</div>
+          <div class="prose">${esc(p.description)}</div>
+          <div class="small muted">Property ID <strong style="color:var(--heading)">${esc(p.ref)}</strong> &middot; ${mine ? "Submitted today" : "Posted " + ago(p.daysAgo).toLowerCase()} &middot; <span class="tnum">${p.views || 0}</span> views</div>
+        </section>
+        <section class="dsec" id="p-details"><h2>Property details</h2><div class="facts">${facts.map(([k, v]) => `<div class="fact"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div>`).join("")}</div></section>
+        ${p.amenities.length ? `<section class="dsec" id="p-amenities"><h2>Amenities</h2><div class="amen">${p.amenities.map((a) => `<div>${icon(a.icon || "check2-circle")} ${esc(a.name)}</div>`).join("")}</div></section>` : ""}
+        <section class="dsec" id="p-location" style="border-bottom:0"><h2>Location</h2><p>${icon("geo-alt")} ${esc(locLabel(p))} <span class="small muted">(exact address shared by the owner on request)</span></p>
           ${p.lat ? `<a class="btn btn-soft btn-sm" style="justify-self:start" href="https://www.google.com/maps/search/?api=1&query=${p.lat.toFixed(2)},${p.lng.toFixed(2)}" target="_blank" rel="noopener">${icon("box-arrow-up-right")} View area on Google Maps</a>` : ""}</section>
         <div class="note">${icon("shield-exclamation")} <strong>Stay safe:</strong> never pay a token or deposit before visiting the property and checking the owner's documents.</div>
-        ${mine ? "" : `<button class="btn btn-danger btn-sm" style="justify-self:start" data-report="${p.id}">${icon("flag")} Report this listing</button>`}
+        ${mine ? "" : `<button class="btn btn-sm" style="padding:.8rem 0;color:var(--bad)" data-report="${p.id}">${icon("flag")} Report this listing</button>`}
       </div>
-      <aside class="surface pad contact-card stack">
-        <div class="row" style="flex-wrap:nowrap;gap:.8rem"><span class="avatar">${esc((p.ownerName || "?").split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase())}</span>
-          <div style="min-width:0"><div style="font-weight:700;color:var(--navy)">${esc(p.ownerName)}</div><div class="small muted">${p.listedBy === "broker" ? "Real estate broker" : "Property owner"}</div>${p.verified ? `<span class="badge b-verified" style="margin-top:.3rem">${icon("patch-check-fill")} Verified</span>` : ""}</div></div>
+      <aside class="contact-card">
+        <div class="cc-price tnum">${p.purpose === "rent" ? `${inr(p.price)}<small> / month</small>` : inrShort(p.price)}</div>
+        <hr class="hair">
+        <div class="row" style="flex-wrap:nowrap;gap:.9rem"><span class="avatar">${initials(p.ownerName)}</span>
+          <div style="min-width:0"><div style="font-weight:700;color:var(--heading)">${esc(p.ownerName)}</div><div class="small muted">${p.listedBy === "broker" ? "Real estate broker" : "Property owner"}</div>${p.verified ? `<div class="small ver" style="margin-top:.2rem">${icon("patch-check-fill")} Verified ${p.listedBy}</div>` : ""}</div></div>
         ${mine ? `<p class="small muted">This is your listing. In the full app you'd manage enquiries and visits from your dashboard.</p><button class="btn btn-primary btn-block" data-go="activity" data-tab="listings">Back to my listings</button>` : `
-        ${enq ? `<div class="note" style="background:var(--navy-50);border-color:#cfd9ea;color:var(--navy)">${icon("chat-text")} You sent an enquiry (${esc(enq.status)}). <button class="btn btn-sm btn-soft" data-go="activity" data-tab="enquiries" style="margin-top:.4rem">Track it</button></div>` : ""}
-        <button class="btn btn-accent btn-block" data-enquire="${p.id}">${icon("chat-text")} ${enq ? "Send another message" : `Contact ${p.listedBy}`}</button>
-        <button class="btn btn-outline btn-block" data-enquire="${p.id}" data-visit="1">${icon("calendar-plus")} Request a visit</button>
+        ${enq ? `<div class="note" style="background:var(--chip);border-color:var(--border)">${icon("chat-text")} You sent an enquiry (${esc(enq.status)}). <button class="btn btn-sm btn-soft" data-go="activity" data-tab="enquiries" style="margin-top:.5rem">Track it</button></div>` : ""}
+        <button class="btn btn-accent btn-block" data-enquire="${p.id}" data-visit="1">${icon("calendar-plus")} Request a visit</button>
+        <button class="btn btn-outline btn-block" data-enquire="${p.id}">${icon("chat-text")} ${enq ? "Send another message" : `Contact ${p.listedBy}`}</button>
         <p class="small muted">${icon("telephone")} Phone and WhatsApp numbers are hidden in this demo. In the full app, owners choose who can see them.</p>`}
       </aside>
     </div>
-    ${!mine && similar.length ? `<section style="padding-bottom:3rem" class="stack"><h2 style="font-size:1.3rem">Similar properties</h2><div class="cards">${similar.map(card).join("")}</div></section>` : ""}
+    ${!mine && similar.length ? `<section style="padding-bottom:3rem" id="p-similar" class="stack"><span class="eyebrow">You may also like</span><h2 class="sec-title">Similar properties</h2><div class="row-scroll">${similar.map(card).join("")}</div></section>` : ""}
   </div>`;
 }
 
@@ -1076,7 +1099,7 @@ function viewActivity() {
       : empty("buildings", "You haven't listed a property", "List a house, flat, PG, shop or plot in a few short steps.", `<button class="btn btn-accent" data-go="list">${icon("plus-lg")} List your property</button>`);
   }
   return `<div class="wrap" style="padding-bottom:3rem">
-    <div class="page-head"><div class="stack" style="gap:.3rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><span>My activity</span></div><h1 style="font-size:1.6rem">My activity</h1><p class="small muted">Everything you do in this demo is stored only in this browser.</p></div>
+    <div class="page-head"><div class="stack" style="gap:.3rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><span>My activity</span></div><h1>My activity</h1><p class="small muted">Everything you do in this demo is stored only in this browser.</p></div>
       ${S.enquiries.length + S.visits.length + S.favs.length + S.listings.length ? `<button class="btn btn-danger btn-sm" data-action="reset-demo">${icon("arrow-counterclockwise")} Reset demo data</button>` : ""}</div>
     <div class="tabs" role="tablist">${tabs.map(([k, l, n, ic]) => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? "on" : ""}" data-go="activity" data-tab="${k}">${icon(ic)} ${l} <span class="n tnum">${n}</span></button>`).join("")}</div>
     ${body}
@@ -1147,7 +1170,7 @@ Listings are reviewed before publishing and may be removed if they violate these
       <label class="check"><input type="checkbox" id="w-accept" ${d.accept ? "checked" : ""}> I confirm the details are accurate, I am authorised to list this property, and I accept the listing policy.</label>${errs("accept")}`;
   }
   return `<div class="wrap" style="padding-bottom:3rem;max-width:960px">
-    <div class="page-head"><div class="stack" style="gap:.3rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><span>List your property</span></div><h1 style="font-size:1.6rem">List your property</h1><p class="small muted">Step ${step + 1} of 7 &middot; ${WSTEPS[step]}</p></div>
+    <div class="page-head"><div class="stack" style="gap:.3rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><span>List your property</span></div><h1>List your property</h1><p class="small muted">Step ${step + 1} of 7 &middot; ${WSTEPS[step]}</p></div>
       <button class="btn btn-soft btn-sm" data-action="wizard-reset">${icon("arrow-counterclockwise")} Start over</button></div>
     <nav class="wsteps" aria-label="Steps">${WSTEPS.map((s, i) => `<button type="button" data-wstep="${i}" class="${i === step ? "cur" : i < d.done ? "done" : ""}" ${i <= d.done ? "" : "disabled"} ${i === step ? 'aria-current="step"' : ""}><span class="n">${i < d.done && i !== step ? icon("check") : i + 1}</span>${s}</button>`).join("")}</nav>
     <form class="surface pad stack" data-form="wizard" novalidate>${body}
@@ -1225,14 +1248,14 @@ async function addPhotos(files) {
 /* ============================================================ PRICING */
 function viewPricing() {
   return `<div class="wrap" style="padding-bottom:3rem">
-    <div class="page-head"><div class="stack" style="gap:.3rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><span>Pricing</span></div><h1 style="font-size:1.6rem">Plans for owners &amp; brokers</h1><p class="muted">Start free. Upgrade when you need more listings. Searching and enquiring is always free.</p></div></div>
+    <div class="page-head"><div class="stack" style="gap:.3rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><span>Pricing</span></div><h1>Plans for owners &amp; brokers</h1><p class="muted">Start free. Upgrade when you need more listings. Searching and enquiring is always free.</p></div></div>
     <div class="plans">${DATA.plans.map((pl, i) => `<div class="surface plan${i === 2 ? " hl" : ""}">
-      <div class="row between"><h2 style="font-size:1.15rem">${esc(pl.name)}</h2>${i === 2 ? `<span class="badge b-featured">Popular</span>` : ""}</div>
+      <div class="row between"><h2 style="font-size:1.15rem">${esc(pl.name)}</h2>${i === 2 ? `<span class="badge b-featured">Most chosen</span>` : ""}</div>
       <p class="small muted">${esc(pl.description)}</p>
       <div><span class="p tnum">${pl.price ? inr(pl.price) : "Free"}</span>${pl.price ? `<span class="muted"> / ${pl.days} days</span>` : ""}</div>
-      <ul>${pl.features.concat([`Listings stay live ${pl.duration} days`]).map((f) => `<li>${icon("check2-circle")}<span>${esc(f)}</span></li>`).join("")}</ul>
+      <ul>${pl.features.concat([`Listings stay live ${pl.duration} days`]).map((f) => `<li>${icon("check2")}<span>${esc(f)}</span></li>`).join("")}</ul>
       ${pl.roles === "broker" ? `<span class="small muted">For registered brokers</span>` : ""}
-      <button class="btn ${pl.price ? "btn-primary" : "btn-soft"} btn-block" data-plan="${esc(pl.name)}">${pl.price ? "Choose " + esc(pl.name) : "Start free"}</button></div>`).join("")}</div>
+      <button class="btn ${i === 2 ? "btn-accent" : "btn-soft"} btn-block" data-plan="${esc(pl.name)}">${pl.price ? "Choose " + esc(pl.name) : "Start free"}</button></div>`).join("")}</div>
     <p class="small muted" style="margin-top:1rem">${icon("shield-lock")} In the full app, paid plans are bought through Razorpay and activate only after the payment is verified on the server.</p>
   </div>`;
 }
@@ -1245,6 +1268,7 @@ document.addEventListener("click", (e) => {
   if (ds.action === "backdrop" && e.target === t) return closeLayer();
   if (ds.action === "close") return closeLayer();
   if (ds.action === "menu") return openMenu();
+  if (ds.jump) { const el = document.getElementById(ds.jump); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
   if (ds.search !== undefined) { e.preventDefault(); return go("search", JSON.parse(ds.search || "{}")); }
   if (ds.go) { e.preventDefault(); if (ds.go === "list" && !draft) draft = newDraft(); return go(ds.go, ds.tab ? { tab: ds.tab } : {}); }
   if (ds.open) return go("property", { id: Number(ds.open) });
@@ -1375,17 +1399,16 @@ document.addEventListener("keydown", (e) => {
 
 function openMenu() {
   $("#layer").innerHTML = `<div class="drawer-backdrop" data-action="close"></div><nav class="drawer" aria-label="Menu">
-    <div class="row between" style="margin-bottom:.5rem"><strong style="color:var(--navy)">Menu</strong><button class="icon-btn" data-action="close" aria-label="Close menu">${icon("x-lg")}</button></div>
+    <div class="row between" style="margin-bottom:.75rem"><span class="dtitle">Menu</span><button class="icon-btn" data-action="close" aria-label="Close menu">${icon("x-lg")}</button></div>
     <button class="link" data-search='{"purpose":"rent"}'>${icon("key")} Rent</button>
     <button class="link" data-search='{"purpose":"sale"}'>${icon("house-door")} Buy</button>
     <button class="link" data-search='{"category":"pg-rooms"}'>${icon("door-open")} PG &amp; Rooms</button>
     <button class="link" data-search='{"category":"commercial"}'>${icon("shop")} Commercial</button>
     <button class="link" data-search='{}'>${icon("search")} All properties</button>
-    <hr style="border:0;border-top:1px solid var(--border);width:100%">
     <button class="link" data-go="activity" data-tab="saved">${icon("heart")} Saved homes</button>
     <button class="link" data-go="activity">${icon("person-circle")} My activity</button>
     <button class="link" data-go="pricing">${icon("stars")} Plans &amp; pricing</button>
-    <button class="btn btn-accent btn-block" data-go="list" style="margin-top:.5rem">${icon("plus-lg")} List property</button></nav>`;
+    <button class="btn btn-accent btn-block" data-go="list" style="margin-top:1.25rem">List your property</button></nav>`;
   const c = $('#layer [data-action="close"].icon-btn'); if (c) c.focus();
 }
 
