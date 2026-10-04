@@ -1,5 +1,5 @@
 {% with path=request.path %}
-<header class="site-header" data-bs-theme="dark">
+<header class="site-header">
   <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
     <div class="container">
       {% include "partials/brand.html" %}
@@ -9,7 +9,7 @@
       <div class="offcanvas offcanvas-end" tabindex="-1" id="mainNav" aria-labelledby="mainNavLabel">
         <div class="offcanvas-header">
           <span class="offcanvas-title mb-0" id="mainNavLabel">Menu</span>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body align-items-lg-center">
           <ul class="navbar-nav mx-lg-auto gap-lg-1">

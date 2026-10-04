@@ -1,5 +1,5 @@
 {% load static %}
-<footer class="site-footer" role="contentinfo" data-bs-theme="dark">
+<footer class="site-footer" role="contentinfo">
   <div class="container">
     <div class="row g-4 g-lg-5">
       <div class="col-lg-5">
@@ -41,7 +41,7 @@
           {% if site.support_phone %}<li><a href="tel:{{ site.support_phone }}">{{ site.support_phone }}</a></li>{% endif %}
           {% if site.contact_email %}<li><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></li>{% endif %}
         </ul>
-        <p class="small mb-0"><i class="bi bi-shield-check me-1 text-gold"></i>Never pay a token or deposit before visiting the property and checking the owner's documents.</p>
+        <p class="small mb-0"><i class="bi bi-shield-check me-1" style="color:var(--yellow)"></i>Never pay a token or deposit before visiting the property and checking the owner's documents.</p>
       </div>
     </div>
     <div class="legal d-flex flex-column flex-md-row justify-content-between gap-2">

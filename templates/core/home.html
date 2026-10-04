@@ -4,88 +4,132 @@
 {% block content %}
 
 {# ======================= HERO ======================= #}
-{% with hero_img=hero_property.primary_image %}
-<section class="lux-hero{% if not hero_img %} no-photo{% endif %}" aria-labelledby="hero-title">
-  {% if hero_img %}<div class="lux-hero-media" aria-hidden="true"><img src="{{ hero_img.image.url }}" alt="" width="{{ hero_img.width|default:1600 }}" height="{{ hero_img.height|default:1000 }}" fetchpriority="high"></div>{% endif %}
+<section class="home-hero" aria-labelledby="hero-title">
   <div class="container">
-    <span class="lux-kicker">Bangarpet &middot; Kolar district</span>
-    <h1 id="hero-title">Homes you can <em>trust</em>, in the town you know.</h1>
-    <p class="lead">Reviewed listings, verified owners and brokers, and visits you can book in a tap.</p>
+    <div class="row g-4 g-lg-5 align-items-center">
+      <div class="col-lg-6">
+        <span class="hero-kicker"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Bangarpet &middot; Kolar district &middot; Karnataka</span>
+        <h1 id="hero-title">Find a <span class="hl">home</span> you can trust in Bangarpet</h1>
+        <p class="lead">Houses, flats, PG rooms, shops and plots &mdash; every listing reviewed by our team. Talk directly to owners and verified brokers.</p>
 
-    <form method="get" action="{% url 'properties:search' %}" role="search" aria-label="Search properties">
-      <div class="purpose-toggle" role="radiogroup" aria-label="Rent or buy">
-        <label><input type="radio" name="purpose" value="" checked> All</label>
-        <label><input type="radio" name="purpose" value="rent"> Rent</label>
-        <label><input type="radio" name="purpose" value="sale"> Buy</label>
-      </div>
-      <div class="lux-search glass">
-        <div class="ls-field">
-          <label for="{{ search_form.location.id_for_label }}">Location</label>
-          {{ search_form.location }}
-        </div>
-        <div class="ls-field">
-          <label for="{{ search_form.category.id_for_label }}">Property type</label>
-          {{ search_form.category }}
-        </div>
-        <div class="ls-field ls-budget-field">
-          <label for="hero-min">Budget (&#8377;)</label>
-          <div class="ls-budget">
-            <input id="hero-min" type="number" name="min_price" min="0" inputmode="numeric" placeholder="Min" aria-label="Minimum price">
-            <span>&ndash;</span>
-            <input id="hero-max" type="number" name="max_price" min="0" inputmode="numeric" placeholder="Max" aria-label="Maximum price">
+        <form method="get" action="{% url 'properties:search' %}" role="search" aria-label="Search properties">
+          <div class="purpose-tabs" role="radiogroup" aria-label="Rent or buy">
+            <label><input type="radio" name="purpose" value="" checked> All</label>
+            <label><input type="radio" name="purpose" value="rent"> Rent</label>
+            <label><input type="radio" name="purpose" value="sale"> Buy</label>
           </div>
-        </div>
-        <button class="btn btn-accent btn-lg" type="submit"><i class="bi bi-search me-2"></i>Search</button>
-      </div>
-    </form>
+          <div class="hero-search">
+            <div class="hs-field">
+              <label for="{{ search_form.location.id_for_label }}">Location</label>
+              {{ search_form.location }}
+            </div>
+            <div class="hs-field">
+              <label for="{{ search_form.category.id_for_label }}">Property type</label>
+              {{ search_form.category }}
+            </div>
+            <div class="hs-field hs-budget-field">
+              <label for="hero-min">Budget (&#8377;)</label>
+              <div class="hs-budget">
+                <input id="hero-min" type="number" name="min_price" min="0" inputmode="numeric" placeholder="Min" aria-label="Minimum price">
+                <span aria-hidden="true">&ndash;</span>
+                <input id="hero-max" type="number" name="max_price" min="0" inputmode="numeric" placeholder="Max" aria-label="Maximum price">
+              </div>
+            </div>
+            <button class="btn btn-accent btn-lg" type="submit"><i class="bi bi-search me-2" aria-hidden="true"></i>Search</button>
+          </div>
+        </form>
 
-    <div class="trustline">
-      <span><i class="bi bi-shield-check"></i>Every listing reviewed</span>
-      <span><i class="bi bi-house-door"></i>{% if stats.live %}{{ stats.live }} live listing{{ stats.live|pluralize }}{% else %}Fresh listings{% endif %}</span>
-      <span><i class="bi bi-patch-check"></i>{% if stats.verified_partners %}{{ stats.verified_partners }} verified partner{{ stats.verified_partners|pluralize }}{% else %}Verified partners{% endif %}</span>
-      <span class="d-none d-md-inline-flex"><i class="bi bi-lock"></i>Owners control their privacy</span>
+        <div class="hero-points">
+          <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i>Free for tenants &amp; buyers</span>
+          <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i>Direct owner contact</span>
+          <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i>Book visits online</span>
+        </div>
+      </div>
+      <div class="col-lg-6 d-none d-md-block">
+        {% with hero_img=hero_property.primary_image %}
+        {% if hero_img %}
+        <a class="hero-photo" href="{{ hero_property.get_absolute_url }}" aria-label="View {{ hero_property.title }}">
+          <img src="{{ hero_img.image.url }}" alt="{{ hero_img.alt_text }}" width="{{ hero_img.width|default:1200 }}" height="{{ hero_img.height|default:900 }}" fetchpriority="high">
+          <span class="hero-float check"><span class="ic ok"><i class="bi bi-shield-check" aria-hidden="true"></i></span><span><strong>Reviewed listing</strong><small>Checked before publishing</small></span></span>
+          <span class="hero-float price"><span class="ic"><i class="bi bi-house-door" aria-hidden="true"></i></span><span class="min-w-0"><strong>{% if hero_property.purpose == 'rent' %}{{ hero_property.price|inr }} / month{% else %}{{ hero_property.price|inr_short }}{% endif %}</strong><small class="text-truncate d-block">{{ hero_property.title|truncatechars:44 }}</small></span></span>
+        </a>
+        {% else %}
+        <div class="hero-photo d-grid" style="place-items:center"><img src="{% static 'img/skyline.svg' %}" alt="" style="width:80%;height:auto;opacity:.6"></div>
+        {% endif %}
+        {% endwith %}
+      </div>
     </div>
   </div>
-  {% if hero_img %}
-  <div class="lux-hero-credit"><a class="glass-chip" href="{{ hero_property.get_absolute_url }}">Pictured: {{ hero_property.title|truncatechars:38 }} <i class="bi bi-arrow-up-right"></i></a></div>
-  {% endif %}
 </section>
-{% endwith %}
+
+{# ======================= VALUE STRIP (real numbers only) ======================= #}
+<section class="section-sm" aria-label="Why people use Bangarpet Property Hub">
+  <div class="container">
+    <div class="stat-strip">
+      <div class="stat-tile"><span class="ic"><i class="bi bi-shield-check" aria-hidden="true"></i></span><div><strong>Every listing reviewed</strong><span>Checked by our team before it goes live</span></div></div>
+      <div class="stat-tile"><span class="ic"><i class="bi bi-house-door" aria-hidden="true"></i></span><div>{% if stats.live %}<strong>{{ stats.live }} live listing{{ stats.live|pluralize }}</strong>{% else %}<strong>Fresh listings</strong>{% endif %}<span>Houses, flats, PG, shops &amp; plots</span></div></div>
+      <div class="stat-tile"><span class="ic"><i class="bi bi-patch-check" aria-hidden="true"></i></span><div>{% if stats.verified_partners %}<strong>{{ stats.verified_partners }} verified partner{{ stats.verified_partners|pluralize }}</strong>{% else %}<strong>Verified partners</strong>{% endif %}<span>ID-checked owners &amp; brokers</span></div></div>
+      <div class="stat-tile"><span class="ic"><i class="bi bi-lock" aria-hidden="true"></i></span><div><strong>Privacy protected</strong><span>Owners choose who sees their number</span></div></div>
+    </div>
+  </div>
+</section>
+
+{# ======================= BROWSE BY TYPE ======================= #}
+<section class="section pt-2" aria-labelledby="types-title">
+  <div class="container">
+    <div class="sec-head">
+      <div>
+        <span class="section-eyebrow"><i class="bi bi-grid" aria-hidden="true"></i> Browse</span>
+        <h2 id="types-title" class="section-title mb-0">What are you looking for?</h2>
+      </div>
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-soft" href="{% url 'properties:rent' %}">For rent</a>
+        <a class="btn btn-soft" href="{% url 'properties:buy' %}">For sale</a>
+      </div>
+    </div>
+    <nav class="cat-grid" aria-label="Property types">
+      {% for cat in categories %}
+      <a class="cat-tile" href="{{ cat.get_absolute_url }}"><span class="ic"><i class="bi bi-{{ cat.icon }}" aria-hidden="true"></i></span><strong>{{ cat.name }}</strong><span>{% if cat.live_count %}{{ cat.live_count }} listing{{ cat.live_count|pluralize }}{% else %}Explore{% endif %}</span></a>
+      {% endfor %}
+    </nav>
+  </div>
+</section>
 
 {% if banners_top %}
-<section class="section-sm pb-0" aria-label="Promotions">
+<section class="section-sm pt-0" aria-label="Promotions">
   <div class="container"><div class="row g-3">{% for banner in banners_top %}<div class="col-lg">{% include "partials/banner.html" %}</div>{% endfor %}</div></div>
 </section>
 {% endif %}
 
-{# ======================= FEATURED COLLECTION ======================= #}
+{# ======================= FEATURED ======================= #}
 {% if featured %}
-<section class="section" aria-labelledby="featured-title">
+<section class="section section-white" aria-labelledby="featured-title">
   <div class="container">
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4 mb-lg-5">
+    <div class="sec-head">
       <div>
-        <span class="section-eyebrow">The collection</span>
-        <h2 id="featured-title" class="section-title mb-0">Featured properties</h2>
+        <span class="section-eyebrow"><i class="bi bi-star-fill" aria-hidden="true"></i> Featured</span>
+        <h2 id="featured-title" class="section-title mb-1">Featured properties</h2>
+        <p class="section-lead mb-0">Hand-picked, reviewed listings promoted by their owners and brokers.</p>
       </div>
-      <a class="btn btn-outline-primary" href="{% url 'properties:search' %}">View all listings <i class="bi bi-arrow-right ms-1"></i></a>
+      <a class="btn btn-outline-primary" href="{% url 'properties:search' %}">View all listings <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>
     </div>
-    <div class="collection count-{% if featured|length >= 3 %}3{% else %}{{ featured|length }}{% endif %}">
-      {% for prop in featured|slice:":3" %}<div>{% include "partials/feature_card.html" %}</div>{% endfor %}
+    <div class="row g-4">
+      {% for prop in featured %}<div class="col-sm-6 col-lg-4">{% include "partials/property_card.html" %}</div>{% endfor %}
     </div>
   </div>
 </section>
 {% endif %}
 
-{# ======================= VIRTUAL TOUR PREVIEW ======================= #}
+{# ======================= VIRTUAL TOUR ======================= #}
 {% if tour and tour_images %}
-<section class="section section-alt" aria-labelledby="tour-title">
+<section class="section" aria-labelledby="tour-title">
   <div class="container">
-    <div class="row g-4 g-lg-5 align-items-end mb-4">
-      <div class="col-lg-7">
-        <span class="section-eyebrow">Virtual tour</span>
-        <h2 id="tour-title" class="section-title mb-0">Walk through before you visit</h2>
+    <div class="sec-head">
+      <div>
+        <span class="section-eyebrow"><i class="bi bi-badge-vr" aria-hidden="true"></i> Virtual tour</span>
+        <h2 id="tour-title" class="section-title mb-1">Walk through before you visit</h2>
+        <p class="section-lead mb-0">Step room by room from home, then visit only the places that fit.</p>
       </div>
-      <div class="col-lg-5"><p class="section-lead mb-0">Step room by room from home, then visit only the places that fit.</p></div>
     </div>
     <div class="row g-4 align-items-stretch">
       <div class="col-lg-8">
@@ -97,7 +141,7 @@
           {% endfor %}
           <div class="tour-progress" aria-hidden="true">{% for img in tour_images %}<span class="{% if forloop.first %}is-active{% endif %}"><i></i></span>{% endfor %}</div>
           <div class="tour-topbar">
-            <span class="glass-chip"><i class="bi bi-badge-vr"></i> <span data-tour-label>{% if tour_images.0.caption %}{{ tour_images.0.caption }}{% else %}Photo 1{% endif %}</span></span>
+            <span class="glass-chip"><i class="bi bi-badge-vr" aria-hidden="true"></i> <span data-tour-label>{% if tour_images.0.caption %}{{ tour_images.0.caption }}{% else %}Photo 1{% endif %}</span></span>
             <span class="glass-chip"><span data-tour-count>1</span> / {{ tour_images|length }}</span>
           </div>
           <div class="tour-controls">
@@ -106,27 +150,29 @@
             <button type="button" class="tour-btn" data-tour-next aria-label="Next room"><i class="bi bi-chevron-right"></i></button>
           </div>
           <div class="tour-info glass-panel">
-            <div class="small text-uppercase fw-semibold opacity-75" style="letter-spacing:.12em">{{ tour.category.name }} &middot; {{ tour.get_purpose_display }}</div>
-            <div class="h5 mb-1 text-white">{{ tour.title|truncatechars:56 }}</div>
-            <div class="small opacity-75 mb-1"><i class="bi bi-geo-alt"></i> {{ tour.location_label }}</div>
-            <strong class="fs-5">{% if tour.purpose == 'rent' %}{{ tour.price|inr }}<small class="fw-normal">/mo</small>{% else %}{{ tour.price|inr_short }}{% endif %}</strong>
+            <div class="small fw-semibold meta">{{ tour.category.name }} &middot; {{ tour.get_purpose_display }}</div>
+            <div class="h5 mb-1">{{ tour.title|truncatechars:56 }}</div>
+            <div class="small meta mb-1"><i class="bi bi-geo-alt" aria-hidden="true"></i> {{ tour.location_label }}</div>
+            <strong class="fs-5">{% if tour.purpose == 'rent' %}{{ tour.price|inr }}<small class="fw-normal meta">/mo</small>{% else %}{{ tour.price|inr_short }}{% endif %}</strong>
           </div>
         </div>
       </div>
-      <div class="col-lg-4 d-flex flex-column">
-        <h3 class="h6 text-uppercase text-muted mb-3" style="letter-spacing:.16em;font-size:.72rem">Rooms in this tour</h3>
-        <ol class="tour-rooms list-unstyled mb-4">
-          {% for img in tour_images %}
-          <li><button type="button" class="tour-room{% if forloop.first %} is-active{% endif %}" data-tour-goto="{{ forloop.counter0 }}">
-            <img src="{{ img.thumb_url }}" alt="" loading="lazy"><span><strong>{% if img.caption %}{{ img.caption }}{% else %}Photo {{ forloop.counter }}{% endif %}</strong><small>Step {{ forloop.counter }} of {{ tour_images|length }}</small></span>
-          </button></li>
-          {% endfor %}
-        </ol>
-        <div class="mt-auto d-grid gap-2">
-          <a class="btn btn-primary" href="{{ tour.get_absolute_url }}">Open full tour &amp; details</a>
-          {% if tour.youtube_embed_url %}
-            <button class="btn btn-soft" type="button" data-bs-toggle="modal" data-bs-target="#videoTourModal"><i class="bi bi-play-circle me-1"></i>Watch video walkthrough</button>
-          {% endif %}
+      <div class="col-lg-4">
+        <div class="surface p-3 p-lg-4 h-100 d-flex flex-column">
+          <h3 class="h6 mb-3">Rooms in this tour</h3>
+          <ol class="tour-rooms list-unstyled mb-4">
+            {% for img in tour_images %}
+            <li><button type="button" class="tour-room{% if forloop.first %} is-active{% endif %}" data-tour-goto="{{ forloop.counter0 }}">
+              <img src="{{ img.thumb_url }}" alt="" loading="lazy"><span><strong>{% if img.caption %}{{ img.caption }}{% else %}Photo {{ forloop.counter }}{% endif %}</strong><small>Step {{ forloop.counter }} of {{ tour_images|length }}</small></span>
+            </button></li>
+            {% endfor %}
+          </ol>
+          <div class="mt-auto d-grid gap-2">
+            <a class="btn btn-primary" href="{{ tour.get_absolute_url }}">Open full tour &amp; details</a>
+            {% if tour.youtube_embed_url %}
+              <button class="btn btn-soft" type="button" data-bs-toggle="modal" data-bs-target="#videoTourModal"><i class="bi bi-play-circle me-1" aria-hidden="true"></i>Watch video walkthrough</button>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
@@ -142,19 +188,17 @@
 {% endif %}
 
 {# ======================= NEW LISTINGS ======================= #}
-<section class="section" aria-labelledby="recent-title">
+<section class="section {% if tour and tour_images %}pt-0{% else %}section-white{% endif %}" aria-labelledby="recent-title">
   <div class="container">
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div class="sec-head">
       <div>
-        <span class="section-eyebrow">Just listed</span>
+        <span class="section-eyebrow"><i class="bi bi-clock-history" aria-hidden="true"></i> Just listed</span>
         <h2 id="recent-title" class="section-title mb-0">New in Bangarpet</h2>
       </div>
-      {% if recent %}<a class="btn btn-outline-primary" href="{% url 'properties:search' %}?sort=newest">See all new <i class="bi bi-arrow-right ms-1"></i></a>{% endif %}
+      {% if recent %}<a class="btn btn-outline-primary" href="{% url 'properties:search' %}?sort=newest">See all new listings <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>{% endif %}
     </div>
     {% if recent %}
-      <div class="row-scroll" tabindex="0" aria-label="Newest listings, scroll for more">
-        {% for prop in recent %}<div>{% include "partials/property_card.html" %}</div>{% endfor %}
-      </div>
+      <div class="row g-4">{% for prop in recent %}<div class="col-sm-6 col-lg-3{% if forloop.counter > 4 %} d-none d-sm-block{% endif %}">{% include "partials/property_card.html" %}</div>{% endfor %}</div>
     {% else %}
       {% url 'accounts:register' as reg_url %}
       {% include "partials/empty_state.html" with icon="buildings" title="Listings are on their way" text="We're onboarding owners and brokers in Bangarpet. Be among the first to list your property - it's free to start." action_url=reg_url|add:"?type=owner" action_label="List your property" %}
@@ -162,83 +206,68 @@
   </div>
 </section>
 
-{# ======================= BROWSE ======================= #}
-<section class="section pt-0" aria-labelledby="browse-title">
+{# ======================= AREAS ======================= #}
+{% if areas %}
+<section class="section section-white" aria-labelledby="areas-title">
   <div class="container">
-    <h2 id="browse-title" class="visually-hidden">Browse properties</h2>
-    <div class="browse">
+    <div class="sec-head">
       <div>
-        <span class="section-eyebrow">By type</span>
-        <h3>What are you looking for?</h3>
-        <nav class="type-list" aria-label="Property types">
-          {% for cat in categories %}
-          <a href="{{ cat.get_absolute_url }}"><span class="ti"><i class="bi bi-{{ cat.icon }}"></i>{{ cat.name }}</span><span class="d-inline-flex align-items-center gap-3"><span class="small text-muted fw-normal">{% if cat.live_count %}{{ cat.live_count }}{% endif %}</span><i class="bi bi-arrow-up-right"></i></span></a>
-          {% endfor %}
-        </nav>
+        <span class="section-eyebrow"><i class="bi bi-pin-map" aria-hidden="true"></i> Explore</span>
+        <h2 id="areas-title" class="section-title mb-0">Popular areas</h2>
       </div>
-      <div>
-        <span class="section-eyebrow">By area</span>
-        <h3>Neighbourhoods &amp; nearby towns</h3>
-        {% if areas %}
-        <div class="chips">
-          {% for area in areas %}
-          <a class="chip-link" href="{% url 'properties:search' %}?location={{ area.slug }}">{{ area.name }}{% if area.listing_count %} <span class="count">{{ area.listing_count }}</span>{% endif %}</a>
-          {% endfor %}
-        </div>
-        {% endif %}
-        <div class="d-flex flex-wrap gap-2 mt-4">
-          <a class="btn btn-soft btn-sm" href="{% url 'properties:rent' %}">Everything for rent</a>
-          <a class="btn btn-soft btn-sm" href="{% url 'properties:buy' %}">Everything for sale</a>
-        </div>
+    </div>
+    <div class="row g-3">
+      {% for area in areas %}
+      <div class="col-sm-6 col-lg-4">
+        <a class="area-card" href="{% url 'properties:search' %}?location={{ area.slug }}">
+          <span class="d-flex align-items-center gap-3"><span class="ic"><i class="bi bi-geo-alt" aria-hidden="true"></i></span><span>{{ area.name }}{% if area.parent %}<span class="d-block count">{{ area.parent.name }}</span>{% endif %}</span></span>
+          <span class="count">{% if area.listing_count %}{{ area.listing_count }} listing{{ area.listing_count|pluralize }}{% else %}Explore{% endif %} <i class="bi bi-chevron-right" aria-hidden="true"></i></span>
+        </a>
       </div>
+      {% endfor %}
     </div>
   </div>
 </section>
+{% endif %}
 
-{# ======================= TRUST + VERIFIED AGENTS ======================= #}
-<section class="section section-alt" aria-labelledby="trust-title">
+{# ======================= VERIFIED AGENTS ======================= #}
+<section class="section" aria-labelledby="agents-title">
   <div class="container">
-    <div class="row g-4 mb-4">
-      <div class="col-lg-7">
-        <span class="section-eyebrow">Built on trust</span>
-        <h2 id="trust-title" class="section-title mb-0">Checked before you ever see it</h2>
+    <div class="sec-head">
+      <div>
+        <span class="section-eyebrow"><i class="bi bi-person-badge" aria-hidden="true"></i> Verified agents</span>
+        <h2 id="agents-title" class="section-title mb-1">Local experts you can rely on</h2>
+        <p class="section-lead mb-0">Brokers shown here submitted identity and business documents that our team reviewed.</p>
       </div>
+      <a class="btn btn-soft" href="{% url 'accounts:register' %}?type=broker">Join as a broker <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>
     </div>
-    <div class="pillars mb-5">
-      <div class="pillar"><i class="bi bi-clipboard2-check"></i><h3>Reviewed listings</h3><p>Photos, prices and details are checked before publishing, and again whenever key details change.</p></div>
-      <div class="pillar"><i class="bi bi-person-check"></i><h3>Verified partners</h3><p>Owners and brokers can submit ID and business documents, stored privately for our verification team only.</p></div>
-      <div class="pillar"><i class="bi bi-eye-slash"></i><h3>Your privacy</h3><p>Owners decide who sees their number and exact address. Suspicious listings can be reported in one tap.</p></div>
-    </div>
-
-    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
-      <h3 class="h5 mb-0">Verified local agents</h3>
-      <a class="small fw-bold text-decoration-none" href="{% url 'accounts:register' %}?type=broker">Join as a broker <i class="bi bi-arrow-right"></i></a>
-    </div>
-    <div class="row g-3">
+    <div class="row g-4">
       {% for agent in agents %}
-      <div class="col-md-6">
-        <article class="agent-premium">
-          <div class="ap-avatar">{% if agent.profile.avatar %}<img src="{{ agent.profile.avatar.url }}" alt="">{% else %}<span>{{ agent|initials }}</span>{% endif %}<i class="bi bi-patch-check-fill" aria-hidden="true"></i></div>
-          <div class="ap-body">
-            <h3>{{ agent.full_name }} <span class="badge badge-verified ms-1 align-middle"><i class="bi bi-patch-check-fill" aria-hidden="true"></i> Verified broker</span></h3>
-            <div class="small text-muted text-truncate">{{ agent.broker_profile.agency_name }}{% if agent.broker_profile.rera_number %} &middot; RERA {{ agent.broker_profile.rera_number }}{% endif %}</div>
-            <div class="ap-stats">
-              <span><b>{{ agent.active_listings }}</b> live listing{{ agent.active_listings|pluralize }}</span>
-              {% if agent.broker_profile.years_of_experience %}<span><b>{{ agent.broker_profile.years_of_experience }}+</b> years</span>{% endif %}
-              <span>Since <b>{{ agent.date_joined|date:"Y" }}</b></span>
-            </div>
-            <div class="d-flex flex-wrap gap-2">
-              <a class="btn btn-soft btn-sm" href="{% url 'properties:partner_profile' agent.pk %}">View profile</a>
-              {% if agent.broker_profile.business_phone %}<a class="btn btn-whatsapp btn-sm" href="https://wa.me/{{ agent.broker_profile.business_phone|cut:'+' }}" target="_blank" rel="noopener"><i class="bi bi-whatsapp me-1"></i>WhatsApp</a>{% endif %}
-            </div>
+      <div class="col-sm-6 col-lg-3">
+        <article class="agent-card">
+          <div class="av">{% if agent.profile.avatar %}<img src="{{ agent.profile.avatar.url }}" alt="">{% else %}<span>{{ agent|initials }}</span>{% endif %}</div>
+          <h3>{{ agent.full_name }}</h3>
+          <div class="agency">{{ agent.broker_profile.agency_name }}</div>
+          <span class="badge badge-verified mt-2"><i class="bi bi-patch-check-fill" aria-hidden="true"></i> Verified broker</span>
+          <div class="agent-stats">
+            <div><b>{{ agent.active_listings }}</b><span>Listings</span></div>
+            <div><b>{% if agent.broker_profile.years_of_experience %}{{ agent.broker_profile.years_of_experience }}+{% else %}&ndash;{% endif %}</b><span>Years</span></div>
+            <div><b>{{ agent.date_joined|date:"Y" }}</b><span>Joined</span></div>
+          </div>
+          {% if agent.broker_profile.rera_number %}<div class="small text-muted mb-2">RERA {{ agent.broker_profile.rera_number }}</div>{% endif %}
+          <div class="d-grid gap-2 w-100 mt-auto">
+            <a class="btn btn-primary btn-sm" href="{% url 'properties:partner_profile' agent.pk %}">View profile &amp; listings</a>
+            {% if agent.broker_profile.business_phone %}<a class="btn btn-whatsapp btn-sm" href="https://wa.me/{{ agent.broker_profile.business_phone|cut:'+' }}" target="_blank" rel="noopener"><i class="bi bi-whatsapp me-1" aria-hidden="true"></i>WhatsApp</a>{% endif %}
           </div>
         </article>
       </div>
-      {% if forloop.last and not forloop.counter|divisibleby:2 %}
-      <div class="col-md-6">
+      {% if forloop.last and forloop.counter < 4 %}
+      <div class="col-sm-6 col-lg-3">
         <a class="agent-join" href="{% url 'accounts:register' %}?type=broker">
-          <span class="aj-ic"><i class="bi bi-person-plus"></i></span>
-          <span><strong>Your profile here</strong>Brokers in Bangarpet can register, submit documents and earn a verified profile. <span class="aj-link d-block mt-1">Become a verified agent <i class="bi bi-arrow-right"></i></span></span>
+          <span class="aj-ic"><i class="bi bi-person-plus" aria-hidden="true"></i></span>
+          <strong>Your profile here</strong>
+          <span class="small">Brokers in Bangarpet can register, submit documents and earn a verified profile.</span>
+          <span class="aj-link">Become a verified agent <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
         </a>
       </div>
       {% endif %}
@@ -246,13 +275,41 @@
       <div class="col-12">
         <div class="agent-empty">
           <span class="aj-ic"><i class="bi bi-person-badge" aria-hidden="true"></i></span>
-          <div class="flex-grow-1"><h3 class="h6 mb-1">Verified agents will appear here</h3><p class="mb-0 small">Are you a broker in Bangarpet? Register, submit your documents and get a verified profile.</p></div>
-          <a class="btn btn-soft btn-sm" href="{% url 'accounts:register' %}?type=broker">Register as broker</a>
+          <div class="flex-grow-1"><h3 class="h6 mb-1">Verified agents will appear here</h3><p class="text-muted mb-0 small">Are you a broker in Bangarpet? Register, submit your documents and get a verified profile.</p></div>
+          <a class="btn btn-primary" href="{% url 'accounts:register' %}?type=broker">Register as broker</a>
         </div>
       </div>
       {% endfor %}
     </div>
-    <p class="small text-muted mt-4 mb-0"><i class="bi bi-info-circle me-1"></i>"Verified" means our team reviewed identity documents. It is not a legal check of property title &mdash; always verify ownership documents before paying.</p>
+  </div>
+</section>
+
+{# ======================= TRUST + HOW IT WORKS ======================= #}
+<section class="section section-white" aria-labelledby="trust-title">
+  <div class="container">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-5">
+        <span class="section-eyebrow"><i class="bi bi-shield-lock" aria-hidden="true"></i> Built on trust</span>
+        <h2 id="trust-title" class="section-title">How we keep every search safe</h2>
+        <p class="section-lead">Property decisions are big decisions. We put checks in place so you can focus on finding the right home.</p>
+        <div class="trust-list mt-4">
+          <div class="trust-item"><span class="ic"><i class="bi bi-clipboard2-check" aria-hidden="true"></i></span><div><h3>Manual listing review</h3><p>Photos, prices and details are checked before publishing, and again when key details change.</p></div></div>
+          <div class="trust-item"><span class="ic"><i class="bi bi-person-check" aria-hidden="true"></i></span><div><h3>Verified owners &amp; brokers</h3><p>ID and business documents are stored privately and seen only by our verification team.</p></div></div>
+          <div class="trust-item"><span class="ic"><i class="bi bi-flag" aria-hidden="true"></i></span><div><h3>Report &amp; act fast</h3><p>Anything suspicious can be reported in one tap. We review every report.</p></div></div>
+        </div>
+        <p class="small text-muted mt-3 mb-0"><i class="bi bi-info-circle me-1" aria-hidden="true"></i>"Verified" means identity documents were reviewed by our team. It is not a legal check of property title.</p>
+      </div>
+      <div class="col-lg-7">
+        <span class="section-eyebrow"><i class="bi bi-lightning-charge" aria-hidden="true"></i> Simple &amp; transparent</span>
+        <h2 class="section-title">From search to keys in four steps</h2>
+        <div class="row g-3 mt-2">
+          <div class="col-sm-6"><div class="step-card"><span class="num">01</span><div class="ic"><i class="bi bi-search" aria-hidden="true"></i></div><h3>Search</h3><p class="text-muted mb-0">Filter by area, budget and bedrooms. Save searches and get alerts.</p></div></div>
+          <div class="col-sm-6"><div class="step-card"><span class="num">02</span><div class="ic"><i class="bi bi-badge-vr" aria-hidden="true"></i></div><h3>Tour</h3><p class="text-muted mb-0">Walk through photo and video tours to shortlist without wasted trips.</p></div></div>
+          <div class="col-sm-6"><div class="step-card"><span class="num">03</span><div class="ic"><i class="bi bi-calendar-check" aria-hidden="true"></i></div><h3>Visit</h3><p class="text-muted mb-0">Request a time slot. You're notified as soon as the owner confirms.</p></div></div>
+          <div class="col-sm-6"><div class="step-card"><span class="num">04</span><div class="ic"><i class="bi bi-house-check" aria-hidden="true"></i></div><h3>Move in</h3><p class="text-muted mb-0">Check documents, agree terms directly with the owner and move in.</p></div></div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -268,15 +325,15 @@
     <div class="cta-band">
       <div class="row align-items-center g-4">
         <div class="col-lg-7">
-          <span class="lux-kicker">For owners &amp; brokers</span>
-          <h2 id="cta-title" class="mt-3 mb-2">List where Bangarpet is searching.</h2>
+          <span class="section-eyebrow eyebrow-dark"><i class="bi bi-stars" aria-hidden="true"></i> For owners &amp; brokers</span>
+          <h2 id="cta-title" class="mb-2">List your property where Bangarpet is searching.</h2>
           <p class="mb-0">Start free with one listing. Manage enquiries and visits from one dashboard and upgrade only when you need more.</p>
         </div>
         <div class="col-lg-5 d-flex flex-wrap gap-2 justify-content-lg-end">
           {% if user.is_authenticated and user.is_partner %}
-            <a class="btn btn-accent btn-lg" href="{% url 'dashboard:partner_property_add' %}">Add a listing</a>
+            <a class="btn btn-accent btn-lg" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add a listing</a>
           {% else %}
-            <a class="btn btn-accent btn-lg" href="{% url 'accounts:register' %}?type=owner">List your property</a>
+            <a class="btn btn-accent btn-lg" href="{% url 'accounts:register' %}?type=owner"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>List your property</a>
           {% endif %}
           <a class="btn btn-glass btn-lg" href="{% url 'subscriptions:pricing' %}">See plans</a>
         </div>
@@ -290,34 +347,34 @@
   <div class="container">
     <div class="row g-4 g-lg-5">
       <div class="col-lg-6">
-        <span class="section-eyebrow">Questions</span>
-        <h2 class="section-title mb-3">Good to know</h2>
+        <span class="section-eyebrow"><i class="bi bi-question-circle" aria-hidden="true"></i> FAQ</span>
+        <h2 class="section-title mb-3">Questions, answered</h2>
         <div class="accordion faq" id="faqAccordion">
-          {% for q, a in faqs|slice:":4" %}
+          {% for q, a in faqs|slice:":5" %}
           <div class="accordion-item">
             <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ forloop.counter }}" aria-expanded="false">{{ q }}</button></h3>
             <div id="faq{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">{{ a }}</div></div>
           </div>
           {% endfor %}
         </div>
-        <a href="{% url 'core:faq' %}" class="d-inline-block mt-3 small fw-bold text-decoration-none">All questions <i class="bi bi-arrow-right"></i></a>
+        <a href="{% url 'core:faq' %}" class="d-inline-block mt-2 fw-bold">All questions <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
       </div>
       <div class="col-lg-6">
-        <form method="post" action="{% url 'core:contact' %}" class="glass-form" data-once novalidate>
+        <form method="post" action="{% url 'core:contact' %}" class="form-card" data-once novalidate>
           {% csrf_token %}{{ contact_form.website }}<input type="hidden" name="source" value="home">
-          <span class="section-eyebrow">Talk to us</span>
-          <h2 id="contact-title" class="h1 mb-2">A real team in Kolar district</h2>
-          <p class="text-muted small mb-4">
-            {% if site.support_phone %}<a href="tel:{{ site.support_phone }}" class="me-3 text-nowrap"><i class="bi bi-telephone me-1"></i>{{ site.support_phone }}</a>{% endif %}
-            {% if site.whatsapp_digits %}<a href="https://wa.me/{{ site.whatsapp_digits }}" target="_blank" rel="noopener" class="me-3 text-nowrap"><i class="bi bi-whatsapp me-1"></i>WhatsApp</a>{% endif %}
-            {% if site.contact_email %}<a href="mailto:{{ site.contact_email }}" class="text-nowrap"><i class="bi bi-envelope me-1"></i>{{ site.contact_email }}</a>{% endif %}
-            {% if not site.support_phone and not site.contact_email %}Send a message and a member of our team will get back to you.{% endif %}
-          </p>
+          <span class="section-eyebrow"><i class="bi bi-chat-heart" aria-hidden="true"></i> Talk to us</span>
+          <h2 id="contact-title" class="section-title mb-2">A real team in Kolar district</h2>
+          <ul class="contact-points list-unstyled my-3">
+            {% if site.support_phone %}<li><span class="cp-ic"><i class="bi bi-telephone" aria-hidden="true"></i></span><div><small>Call us</small><a href="tel:{{ site.support_phone }}">{{ site.support_phone }}</a></div></li>{% endif %}
+            {% if site.whatsapp_digits %}<li><span class="cp-ic"><i class="bi bi-whatsapp" aria-hidden="true"></i></span><div><small>WhatsApp</small><a href="https://wa.me/{{ site.whatsapp_digits }}" target="_blank" rel="noopener">Chat with support</a></div></li>{% endif %}
+            {% if site.contact_email %}<li><span class="cp-ic"><i class="bi bi-envelope" aria-hidden="true"></i></span><div><small>Email</small><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></div></li>{% endif %}
+            {% if not site.support_phone and not site.contact_email %}<li><span class="cp-ic"><i class="bi bi-geo-alt" aria-hidden="true"></i></span><div><small>Office</small><span>{% if site.office_address %}{{ site.office_address|linebreaksbr }}{% else %}Bangarpet, Kolar district, Karnataka{% endif %}</span></div></li>{% endif %}
+          </ul>
           {% if contact_sent %}
-          <div class="alert alert-success d-flex gap-2 align-items-start" role="status" tabindex="-1" data-autofocus><i class="bi bi-check-circle-fill mt-1"></i><div><strong>Message received.</strong> Thank you &mdash; a member of our team will reply soon. You can send another below.</div></div>
+          <div class="alert alert-success d-flex gap-2 align-items-start" role="status" tabindex="-1" data-autofocus><i class="bi bi-check-circle-fill mt-1" aria-hidden="true"></i><div><strong>Message received.</strong> Thank you &mdash; a member of our team will reply soon. You can send another below.</div></div>
           {% endif %}
           {% if user.is_authenticated and user.is_platform_admin and not site.support_phone and not site.contact_email %}
-          <div class="small mb-3 p-2 rounded-3" style="background:var(--gold-soft);color:var(--gold-300)"><i class="bi bi-gear me-1"></i>Admin: add a support phone, WhatsApp and email in <a class="text-reset" href="{% url 'adminpanel:settings' %}">Management &rarr; Settings</a> to show them here.</div>
+          <div class="alert alert-warning small py-2"><i class="bi bi-gear me-1" aria-hidden="true"></i>Admin: add a support phone, WhatsApp and email in <a href="{% url 'adminpanel:settings' %}">Management &rarr; Settings</a> to show them here.</div>
           {% endif %}
           <div class="row g-3">
             <div class="col-sm-6">{% include "partials/field.html" with field=contact_form.name wrapper_class="" %}</div>
@@ -327,8 +384,8 @@
             <div class="col-12">{% include "partials/field.html" with field=contact_form.message wrapper_class="" %}</div>
           </div>
           <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mt-4">
-            <span class="small text-muted"><i class="bi bi-lock me-1"></i>Used only to reply to you</span>
-            <button class="btn btn-accent" type="submit">Send message <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i><span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
+            <span class="small text-muted"><i class="bi bi-lock me-1" aria-hidden="true"></i>Used only to reply to you</span>
+            <button class="btn btn-accent btn-lg" type="submit">Send message <i class="bi bi-send ms-1" aria-hidden="true"></i><span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
           </div>
         </form>
       </div>
