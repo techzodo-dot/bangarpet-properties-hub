@@ -16,3 +16,4 @@ backups/
 downloads/
 preview/
 node_modules/
+.claude/
