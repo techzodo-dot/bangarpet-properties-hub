@@ -21,6 +21,8 @@ from PIL import Image, ImageDraw
 from accounts.models import BrokerProfile, OwnerProfile, Role, User, VerificationStatus
 from properties.models import Amenity, Category, Location, Property
 from properties.services import add_images
+from subscriptions.models import SubscriptionPlan
+from subscriptions.services import activate_subscription, current_subscription
 
 DEMO_DOMAIN = "demo.bph.local"
 DEMO_PASSWORD = "DemoPass#2024"
@@ -117,6 +119,11 @@ class Command(BaseCommand):
             agency_name="Demo Realty (sample agency)", verification_status=VerificationStatus.VERIFIED, verified_at=now
         )
         OwnerProfile.objects.filter(user=owner).update(verification_status=VerificationStatus.NOT_SUBMITTED)
+        # Give demo partners enough listing slots for the sample listings (marked as a demo grant).
+        for partner, slug in ((owner, "pro"), (broker, "broker")):
+            plan = SubscriptionPlan.objects.filter(slug=slug, is_active=True).first()
+            if plan and not current_subscription(partner):
+                activate_subscription(partner, plan, notes="Demo data grant")
         if Property.objects.filter(is_demo=True).exists():
             self.stdout.write("Demo listings already exist. Use --clear first to recreate them.")
         else:
