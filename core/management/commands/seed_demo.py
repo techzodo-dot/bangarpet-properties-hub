@@ -189,6 +189,14 @@ def _room(d, w, h, rnd, kind):
     d.line([(0, floor_y), (w, floor_y)], fill=(160, 130, 100), width=4)
 
 
+CAPTIONS = {
+    "houses": ["Front elevation", "Living room", "Kitchen"],
+    "apartments": ["Building exterior", "Living room", "Bedroom"],
+    "pg-rooms": ["Room", "Building", "Shared kitchen"],
+    "commercial": ["Shop front", "Interior"],
+    "plots": ["Plot boundary", "Approach view"],
+}
+
 SCENES = {
     "houses": [_house, lambda d, w, h, r: _room(d, w, h, r, "living"), lambda d, w, h, r: _room(d, w, h, r, "kitchen")],
     "apartments": [_apartment, lambda d, w, h, r: _room(d, w, h, r, "living"), lambda d, w, h, r: _room(d, w, h, r, "bedroom")],
@@ -290,7 +298,10 @@ class Command(BaseCommand):
         prop.save()
         prop.amenities.set(Amenity.objects.filter(name__in=amenity_names))
         scenes = SCENES.get(cat, SCENES["houses"])
-        add_images(prop, [demo_image(cat, n, seed=i * 10 + n) for n in range(len(scenes))])
+        images = add_images(prop, [demo_image(cat, n, seed=i * 10 + n) for n in range(len(scenes))])
+        for img, caption in zip(images, CAPTIONS.get(cat, [])):
+            img.caption = caption
+            img.save(update_fields=["caption"])
         return prop
 
     def seed(self):

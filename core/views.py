@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from django.db.models import Count, Q
+from django.db.models import Case, Count, F, IntegerField, Q, Value, When
 from django.http import HttpResponse, HttpResponseServerError
 from django.shortcuts import redirect, render
 from django.template import loader
@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_GET
 
-from accounts.models import Role, VerificationStatus
+from accounts.models import BrokerProfile, OwnerProfile, Role, VerificationStatus
 from core import ratelimit
 from core.faq import FAQS
 from core.forms import ContactForm
@@ -37,7 +37,18 @@ def home(request):
         .select_related("parent")
         .order_by("kind", "display_order")[:9]
     )
-    tours = public.exclude(video_url="").with_card_data().order_by("-published_at")[:3]
+
+    # Virtual tour preview: a live listing with several photos (video tours first, then featured).
+    tour_candidates = (
+        public.annotate(photo_count=Count("images"))
+        .filter(photo_count__gte=2)
+        .annotate(has_video=Case(When(video_url="", then=Value(0)), default=Value(1), output_field=IntegerField()))
+        .order_by("-has_video", F("featured_until").desc(nulls_last=True), "-published_at")
+    )
+    tour_list = list(tour_candidates.with_card_data()[:4])
+    tour = tour_list[0] if tour_list else None
+    hero_property = featured[0] if featured and featured[0].primary_image else (tour or (recent[0] if recent else None))
+
     User = get_user_model()
     agents = (
         User.objects.filter(role=Role.BROKER, is_active=True, broker_profile__verification_status=VerificationStatus.VERIFIED)
@@ -45,20 +56,31 @@ def home(request):
         .annotate(active_listings=Count("properties", filter=Q(properties__in=public)))
         .order_by("-active_listings")[:4]
     )
+    verified_partners = (
+        OwnerProfile.objects.filter(verification_status=VerificationStatus.VERIFIED, user__is_active=True).count()
+        + BrokerProfile.objects.filter(verification_status=VerificationStatus.VERIFIED, user__is_active=True).count()
+    )
     context = {
         "search_form": PropertySearchForm(),
         "categories": Category.objects.filter(is_active=True),
         "featured": featured,
         "recent": recent,
         "areas": areas,
-        "tours": tours,
+        "tour": tour,
+        "tour_images": list(tour.images.all()[:8]) if tour else [],
+        "more_tours": tour_list[1:],
+        "hero_property": hero_property,
         "agents": agents,
         "banners_top": Banner.objects.live().filter(placement=Banner.Placement.HOME_TOP)[:3],
         "banners_middle": Banner.objects.live().filter(placement=Banner.Placement.HOME_MIDDLE)[:2],
         "faqs": FAQS[:6],
         "favourite_ids": favourite_ids(request.user),
         "contact_form": ContactForm(),
-        "active_count": public.count(),
+        "stats": {
+            "live": public.count(),
+            "verified_partners": verified_partners,
+            "localities": public.values("area").exclude(area=None).distinct().count(),
+        },
     }
     return render(request, "core/home.html", context)
 

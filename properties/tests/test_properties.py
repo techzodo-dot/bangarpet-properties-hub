@@ -356,3 +356,29 @@ class SeoTests(TestCase):
         prop = make_property(title="Real listing on home")
         cache.clear()
         self.assertContains(self.client.get("/"), prop.title)
+
+
+class LandingPageTests(TestCase):
+    def test_sections_render_from_real_data(self):
+        cache.clear()
+        broker = make_user(Role.BROKER)
+        broker.broker_profile.verification_status = "verified"
+        broker.broker_profile.agency_name = "Kolar Homes Realty"
+        broker.broker_profile.save()
+        prop = make_property(owner=broker, title="Featured tour listing", featured_until=timezone.now() + timedelta(days=3))
+        from properties.services import add_images
+
+        add_images(prop, [image_file("a.jpg"), image_file("b.jpg")])
+        resp = self.client.get("/")
+        self.assertContains(resp, "glass-card")              # featured glass cards
+        self.assertContains(resp, "data-tour")               # virtual tour preview
+        self.assertContains(resp, "Kolar Homes Realty")      # verified agent profile
+        self.assertContains(resp, "1 live listing")          # trust bar uses real counts
+        self.assertContains(resp, "1 verified partner")
+        self.assertContains(resp, 'action="/contact/"')      # contact form
+
+    def test_empty_site_shows_no_fake_numbers_or_agents(self):
+        resp = self.client.get("/")
+        self.assertNotContains(resp, "data-tour")
+        self.assertContains(resp, "Verified agents will appear here")
+        self.assertContains(resp, "Fresh listings")
