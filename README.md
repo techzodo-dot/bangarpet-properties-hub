@@ -9,6 +9,21 @@ assets (Bootstrap, icons, Chart.js, fonts) are vendored, so the site works witho
 
 ---
 
+## Run the demo on your computer (one command)
+
+Requires **Python 3.10+** ([download](https://www.python.org/downloads/); on Windows tick "Add python.exe to PATH").
+
+| System | Command |
+|---|---|
+| Windows | double-click **`run_demo.bat`** (or run it in a terminal) |
+| macOS / Linux | `./run_demo.sh` |
+
+The script creates a virtual environment, installs dependencies, sets up the SQLite database, loads the
+[DEMO] data and starts the site at **http://127.0.0.1:8000/** (admin panel at `/management/`). Sign in
+with `admin@demo.bph.local`, `owner@demo.bph.local`, `broker@demo.bph.local` or
+`customer@demo.bph.local` — password `DemoPass#2024`. Run it again any time; existing data is kept.
+Use another port with `PORT=8080 ./run_demo.sh`.
+
 ## Quick start (development)
 
 ```bash
