@@ -23,7 +23,13 @@ def current_plan(user):
     return sub.plan if sub else default_plan()
 
 
+ADMIN_LISTING_LIMIT = 10_000  # platform admins are not limited by plans
+ADMIN_LISTING_DAYS = 90
+
+
 def listing_limit(user):
+    if user.is_platform_admin:
+        return ADMIN_LISTING_LIMIT
     plan = current_plan(user)
     return plan.listing_limit if plan else 1
 
@@ -46,6 +52,8 @@ def can_occupy_slot(user, prop=None):
 
 def listing_terms(user):
     """(duration_days, priority) applied when a listing is approved or renewed."""
+    if user.is_platform_admin:
+        return ADMIN_LISTING_DAYS, 0
     plan = current_plan(user)
     if plan is None:
         return 30, 0

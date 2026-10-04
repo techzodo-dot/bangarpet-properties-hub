@@ -60,4 +60,6 @@ def role_required(roles):
 
 member_required = role_required((Role.CUSTOMER, Role.OWNER, Role.BROKER))
 partner_required = role_required(PARTNER_ROLES)
+# Owners, brokers and platform admins can create and manage their own listings.
+lister_required = role_required((*PARTNER_ROLES, Role.ADMIN))
 admin_required = role_required("admin")

@@ -2,7 +2,7 @@
 {% load bph %}
 {% block title %}{% if approvals %}Approvals{% else %}Listings{% endif %} - Management{% endblock %}
 {% block dash_content %}
-<div class="page-head"><h1>{% if approvals %}Approval queue{% else %}All listings{% endif %}</h1><span class="text-muted small">{{ page_obj.paginator.count }} result{{ page_obj.paginator.count|pluralize }}</span></div>
+<div class="page-head"><div><h1>{% if approvals %}Approval queue{% else %}All listings{% endif %}</h1><span class="text-muted small">{{ page_obj.paginator.count }} result{{ page_obj.paginator.count|pluralize }}</span></div>{% if not approvals %}<a class="btn btn-accent" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-lg me-1"></i>Add property</a>{% endif %}</div>
 <form method="get" class="surface p-3 mb-3"><div class="row g-2 align-items-end">
   <div class="col-md-4"><label class="form-label small" for="pq">Search</label><input id="pq" class="form-control" type="search" name="q" value="{{ q }}" placeholder="Title, ID, owner email"></div>
   {% if not approvals %}<div class="col-md-2"><label class="form-label small" for="ps">Status</label><select id="ps" class="form-select" name="status"><option value="">Any (excl. drafts)</option>{% for v, l in statuses %}{% if v != 'deleted' %}<option value="{{ v }}" {% if status == v %}selected{% endif %}>{{ l }}</option>{% endif %}{% endfor %}</select></div>{% endif %}

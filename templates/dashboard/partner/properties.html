@@ -3,7 +3,7 @@
 {% block title %}My listings - {{ site.site_name }}{% endblock %}
 {% block dash_content %}
 <div class="page-head">
-  <div><h1>My listings</h1><p class="small text-muted mb-0">{{ used_slots }} of {{ limit }} active listing slots used. <a href="{% url 'dashboard:partner_subscription' %}">Need more?</a></p></div>
+  <div><h1>My listings</h1><p class="small text-muted mb-0">{% if user.is_platform_admin %}Listings added by the admin team go live immediately, with no plan limits.{% else %}{{ used_slots }} of {{ limit }} active listing slots used. <a href="{% url 'dashboard:partner_subscription' %}">Need more?</a>{% endif %}</p></div>
   <a class="btn btn-accent" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-lg me-1"></i>Add property</a>
 </div>
 <div class="d-flex flex-wrap gap-2 mb-3 align-items-center">

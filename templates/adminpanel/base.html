@@ -17,9 +17,12 @@
     </div>
     <nav class="nav flex-column">
       <a class="nav-link {% if active == 'dashboard' %}active{% endif %}" href="{% url 'adminpanel:dashboard' %}"><i class="bi bi-speedometer2"></i>Dashboard</a>
+      <span class="side-label">Admin listings</span>
+      <a class="nav-link {% if active == 'add' %}active{% endif %}" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-square"></i>Add property</a>
+      <a class="nav-link {% if active == 'properties' and request.resolver_match.app_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard:partner_properties' %}"><i class="bi bi-house-gear"></i>My listings</a>
       <span class="side-label">Moderation</span>
       <a class="nav-link {% if active == 'approvals' %}active{% endif %}" href="{% url 'adminpanel:approvals' %}"><i class="bi bi-check2-square"></i>Approvals</a>
-      <a class="nav-link {% if active == 'properties' %}active{% endif %}" href="{% url 'adminpanel:properties' %}"><i class="bi bi-buildings"></i>All listings</a>
+      <a class="nav-link {% if active == 'properties' and request.resolver_match.app_name == 'adminpanel' %}active{% endif %}" href="{% url 'adminpanel:properties' %}"><i class="bi bi-buildings"></i>All listings</a>
       <a class="nav-link {% if active == 'reports' %}active{% endif %}" href="{% url 'adminpanel:reports' %}"><i class="bi bi-flag"></i>Reports</a>
       <a class="nav-link {% if active == 'verifications' %}active{% endif %}" href="{% url 'adminpanel:verifications' %}"><i class="bi bi-patch-check"></i>Verifications</a>
       <span class="side-label">People</span>

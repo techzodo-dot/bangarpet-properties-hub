@@ -18,7 +18,7 @@ from accounts.models import BrokerProfile, OwnerProfile, Role, UserProfile, Veri
 from core import ratelimit
 from core.audit import log_action
 from core.models import Advertisement, PlatformSetting
-from core.permissions import partner_required
+from core.permissions import lister_required, partner_required
 from enquiries.forms import EnquiryStatusForm, PartnerNoteForm, ScheduleVisitForm
 from enquiries.models import Enquiry, EnquiryStatusChange, PropertyVisit
 from enquiries.services import EnquiryError, cancel_visit, change_enquiry_status, complete_visit, schedule_visit
@@ -96,7 +96,7 @@ def overview(request):
 # ---------------------------------------------------------------------------
 # Listings
 # ---------------------------------------------------------------------------
-@partner_required
+@lister_required
 def property_list(request):
     qs = (
         Property.objects.owned_by(request.user)
@@ -136,7 +136,7 @@ def _wizard_context(prop, step, **extra):
     return _ctx("add" if not prop or prop.status == Property.Status.DRAFT else "properties", **ctx)
 
 
-@partner_required
+@lister_required
 def property_add(request):
     user = request.user
     form = BasicsForm(request.POST or None, initial={"purpose": request.GET.get("purpose", "rent")})
@@ -162,7 +162,7 @@ def property_add(request):
     ))
 
 
-@partner_required
+@lister_required
 def property_step(request, pk, step):
     if step not in range(1, 8):
         raise Http404
@@ -249,7 +249,7 @@ def _photos_step(request, prop):
     ))
 
 
-@partner_required
+@lister_required
 @require_POST
 def image_action(request, pk, image_pk, action):
     prop = _own_property(request.user, pk, editable=True)
@@ -287,7 +287,7 @@ def _review_step(request, prop):
                     return redirect("dashboard:partner_properties")
                 locked.policy_accepted_at = now
                 locked.submitted_at = now
-                if PlatformSetting.load().require_listing_approval:
+                if PlatformSetting.load().require_listing_approval and not request.user.is_platform_admin:
                     locked.status = Property.Status.PENDING
                 else:
                     duration, priority = subs.listing_terms(request.user)
@@ -307,7 +307,7 @@ def _review_step(request, prop):
     ))
 
 
-@partner_required
+@lister_required
 @require_POST
 def property_action(request, pk, action):
     prop = _own_property(request.user, pk)
@@ -394,7 +394,7 @@ def _duplicate(prop):
     return new
 
 
-@partner_required
+@lister_required
 def property_manage(request, pk):
     prop = _own_property(request.user, pk)
     plan = subs.current_plan(request.user)
@@ -415,7 +415,7 @@ def property_manage(request, pk):
 # ---------------------------------------------------------------------------
 # Enquiries & visits
 # ---------------------------------------------------------------------------
-@partner_required
+@lister_required
 def enquiry_list(request):
     qs = Enquiry.objects.filter(partner=request.user).select_related("property", "customer").order_by("-created_at")
     status = request.GET.get("status")
@@ -460,7 +460,7 @@ def _csv_safe(value):
     return "'" + value if value[:1] in ("=", "+", "-", "@") else value
 
 
-@partner_required
+@lister_required
 def enquiry_detail(request, pk):
     enquiry = get_object_or_404(Enquiry.objects.select_related("property", "customer"), pk=pk, partner=request.user)
     status_form = EnquiryStatusForm(prefix="status")
@@ -488,7 +488,7 @@ def enquiry_detail(request, pk):
     ))
 
 
-@partner_required
+@lister_required
 def visit_list(request):
     qs = PropertyVisit.objects.filter(partner=request.user).select_related("property", "customer", "enquiry").order_by("preferred_date")
     active = [v for v in qs if v.is_active]
@@ -500,7 +500,7 @@ def visit_list(request):
     ))
 
 
-@partner_required
+@lister_required
 @require_POST
 def visit_action(request, pk, action):
     visit = get_object_or_404(PropertyVisit.objects.select_related("property", "enquiry", "customer"), pk=pk, partner=request.user)

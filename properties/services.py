@@ -179,7 +179,9 @@ def record_changes(prop, before, user, extra_changes=None, extra_moderated=True)
     if not changes:
         return False
     moderated = bool(set(changes) & set(Property.MODERATED_FIELDS)) or bool(extra_changes and extra_moderated)
-    needs_review = moderated and prop.status in (Property.Status.ACTIVE, Property.Status.PAUSED)
+    # Edits by platform admins are trusted and stay live.
+    needs_review = (moderated and prop.status in (Property.Status.ACTIVE, Property.Status.PAUSED)
+                    and not getattr(user, "is_platform_admin", False))
     PropertyRevision.objects.create(property=prop, user=user, changes=changes, requires_moderation=needs_review)
     if needs_review:
         from core.models import PlatformSetting

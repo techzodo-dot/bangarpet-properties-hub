@@ -1,4 +1,4 @@
-{% extends "dashboard/dash_layout.html" %}
+{% extends user.is_platform_admin|yesno:"adminpanel/base.html,dashboard/dash_layout.html" %}
 {% block sidebar_links %}
 <a class="btn btn-accent w-100 mb-2 d-none d-lg-block" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-lg me-1"></i>Add property</a>
 <span class="side-label">Manage</span>

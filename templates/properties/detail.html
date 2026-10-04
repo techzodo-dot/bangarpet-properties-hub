@@ -200,7 +200,7 @@
             {% if prop.is_owner_verified %}<div class="small text-verified fw-semibold mt-1"><i class="bi bi-patch-check-fill"></i> Verified {% if prop.listed_by_broker %}broker{% else %}owner{% endif %}</div>{% endif %}
           </div>
         </div>
-        {% if owner_listing_count > 1 %}<a class="small d-block mb-3" href="{% url 'properties:partner_profile' prop.owner_id %}">View {{ owner_listing_count }} listings by this {% if prop.listed_by_broker %}broker{% else %}owner{% endif %}</a>{% endif %}
+        {% if owner_listing_count > 1 and not prop.owner.is_platform_admin %}<a class="small d-block mb-3" href="{% url 'properties:partner_profile' prop.owner_id %}">View {{ owner_listing_count }} listings by this {% if prop.listed_by_broker %}broker{% else %}owner{% endif %}</a>{% endif %}
 
         {% if is_owner %}
           <a class="btn btn-primary w-100 mb-2" href="{% url 'dashboard:partner_property_manage' prop.pk %}"><i class="bi bi-gear me-1"></i>Manage this listing</a>

@@ -2,7 +2,7 @@
 {% load bph static %}
 {% block title %}Dashboard - Management{% endblock %}
 {% block dash_content %}
-<div class="page-head"><h1>Platform overview</h1><span class="small text-muted">{% now "D, d M Y" %}</span></div>
+<div class="page-head"><div><h1>Platform overview</h1><span class="small text-muted">{% now "D, d M Y" %}</span></div><div class="d-flex flex-wrap gap-2"><a class="btn btn-soft" href="{% url 'dashboard:partner_properties' %}"><i class="bi bi-house-gear me-1"></i>My listings</a><a class="btn btn-accent" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-lg me-1"></i>Add property</a></div></div>
 <div class="row g-3 mb-4">
   <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:users' %}"><div class="stat-card"><span class="ic"><i class="bi bi-people"></i></span><div><div class="v">{{ metrics.users }}</div><div class="k">Registered users</div></div></div></a></div>
   <div class="col-6 col-xl-3"><a class="text-decoration-none" href="{% url 'adminpanel:users' %}?role=owner"><div class="stat-card"><span class="ic"><i class="bi bi-house-heart"></i></span><div><div class="v">{{ metrics.owners }}</div><div class="k">Active owners</div></div></div></a></div>
