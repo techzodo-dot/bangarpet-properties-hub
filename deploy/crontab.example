@@ -1,0 +1,7 @@
+# crontab -e  (as the app user). Adjust paths.
+# Hourly maintenance: listing/subscription expiry, reminders, saved-search alerts, document retention.
+17 * * * * cd /srv/bph/app && /srv/bph/venv/bin/python manage.py run_scheduled_tasks >> logs/cron.log 2>&1
+# Nightly backup at 02:30 IST (server time in UTC: 21:00)
+0 21 * * * /srv/bph/app/scripts/backup.sh >> /srv/bph/app/logs/backup.log 2>&1
+# Weekly expired-session cleanup
+40 3 * * 0 cd /srv/bph/app && /srv/bph/venv/bin/python manage.py clearsessions
