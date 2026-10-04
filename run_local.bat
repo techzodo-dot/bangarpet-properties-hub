@@ -1,7 +1,8 @@
 @echo off
-REM One-command local demo for Windows: double-click run_demo.bat (or run it in a terminal).
+REM Run the site locally on Windows: double-click run_local.bat (or run it in a terminal).
 REM Creates a virtual environment, installs dependencies, sets up the database,
-REM loads [DEMO] data and starts the site at http://127.0.0.1:8000/
+REM creates the admin login from ADMIN_USERNAME / ADMIN_PASSWORD in .env and
+REM starts the site at http://127.0.0.1:8000/
 setlocal
 cd /d "%~dp0"
 
@@ -32,14 +33,13 @@ if not exist ".env" (
 
 echo ==^> Setting up the database
 "%VPY%" manage.py migrate --verbosity 0 || goto :error
-echo ==^> Loading demo data
-"%VPY%" manage.py seed_demo || goto :error
+echo ==^> Creating / updating the admin login (ADMIN_USERNAME / ADMIN_PASSWORD in .env)
+"%VPY%" manage.py ensure_admin --keep-password --skip-if-missing || goto :error
 
 echo.
 echo ============================================================
-echo   Bangarpet Property Hub demo:  http://127.0.0.1:8000/
-echo   Admin panel:                  http://127.0.0.1:8000/management/
-echo   Password for all demo accounts: DemoPass#2024
+echo   Bangarpet Property Hub:  http://127.0.0.1:8000/
+echo   Admin panel:             http://127.0.0.1:8000/management/  (sign in with ADMIN_USERNAME)
 echo   Press Ctrl+C to stop.
 echo ============================================================
 start "" "http://127.0.0.1:8000/"

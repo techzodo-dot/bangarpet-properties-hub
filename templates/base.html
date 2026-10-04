@@ -1,5 +1,5 @@
 {% load static %}<!doctype html>
-<html lang="en-IN" data-bs-theme="{% block theme %}light{% endblock %}">
+<html lang="en-IN" data-bs-theme="{% block theme %}light{% endblock %}" data-sw="{% url 'core:service_worker' %}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -7,7 +7,12 @@
   <meta name="description" content="{% block meta_description %}Find houses, apartments, PG rooms, shops and plots for rent or sale in Bangarpet, Kolar district. Connect directly with verified owners and brokers.{% endblock %}">
   {% block robots %}<meta name="robots" content="index, follow">{% endblock %}
   <link rel="canonical" href="{% block canonical %}{{ SITE_URL }}{{ request.path }}{% endblock %}">
-  <meta name="theme-color" content="#172B4D">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="manifest" href="{% url 'core:manifest' %}">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Bangarpet">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta property="og:site_name" content="{{ site.site_name }}">
   <meta property="og:type" content="{% block og_type %}website{% endblock %}">
   <meta property="og:title" content="{% block og_title %}{{ site.site_name }} - {{ site.tagline }}{% endblock %}">

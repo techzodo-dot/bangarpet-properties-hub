@@ -149,6 +149,21 @@ def robots_txt(request):
     return HttpResponse("\n".join(lines) + "\n", content_type="text/plain")
 
 
+@require_GET
+def healthz(request):
+    """Liveness/readiness check for hosting platforms: confirms the database answers."""
+    from django.db import connection
+
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+    except Exception:
+        return HttpResponse("database unavailable", status=503, content_type="text/plain")
+    response = HttpResponse("ok", content_type="text/plain")
+    response["Cache-Control"] = "no-store"
+    return response
+
+
 def error_404(request, exception=None):
     return render(request, "errors/404.html", status=404)
 

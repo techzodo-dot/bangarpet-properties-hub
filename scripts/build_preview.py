@@ -1,7 +1,7 @@
 """Build preview/bangarpet-demo-preview.html: a single self-contained HTML snapshot of the
 homepage (CSS, fonts, icons, images and scripts inlined) that opens without a server.
 
-Usage: start the demo (./run_demo.sh), then in another terminal:
+Usage: start the site (./run_local.sh), then in another terminal:
     .venv/bin/python scripts/build_preview.py
 """
 import base64
@@ -75,7 +75,7 @@ html = re.sub(r'action="/[^"]*"', 'action="#"', html)
 banner = (
     '<div style="position:sticky;top:0;z-index:2000;background:#FFD600;color:#172B4D;font:600 14px/1.4 Inter,system-ui,sans-serif;'
     'text-align:center;padding:8px 12px">Static preview of the Bangarpet Property Hub homepage with [DEMO] data. '
-    'Links and forms are disabled here &mdash; run <code style="color:inherit">run_demo.bat</code> / <code style="color:inherit">./run_demo.sh</code> for the full working site.</div>'
+    'Links and forms are disabled here &mdash; run <code style="color:inherit">run_local.bat</code> / <code style="color:inherit">./run_local.sh</code> for the full working site.</div>'
 )
 html = html.replace('<a class="skip-link"', banner + '\n  <a class="skip-link"', 1)
 

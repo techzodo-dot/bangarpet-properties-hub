@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# One-command local demo for macOS / Linux:  ./run_demo.sh
+# Run the site locally on macOS / Linux:  ./run_local.sh
 # Creates a virtual environment, installs dependencies, sets up the database,
-# loads [DEMO] data and starts the site at http://127.0.0.1:8000/
+# creates the admin login from ADMIN_USERNAME / ADMIN_PASSWORD in .env and
+# starts the site at http://127.0.0.1:8000/
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -29,15 +30,14 @@ echo "==> Installing dependencies"
 
 echo "==> Setting up the database"
 "$VPY" manage.py migrate --verbosity 0
-echo "==> Loading demo data"
-"$VPY" manage.py seed_demo
+echo "==> Creating / updating the admin login (ADMIN_USERNAME / ADMIN_PASSWORD in .env)"
+"$VPY" manage.py ensure_admin --keep-password --skip-if-missing
 
 PORT="${PORT:-8000}"
 echo
 echo "============================================================"
-echo "  Bangarpet Property Hub demo:  http://127.0.0.1:${PORT}/"
-echo "  Admin panel:                  http://127.0.0.1:${PORT}/management/"
-echo "  Password for all demo accounts: DemoPass#2024"
+echo "  Bangarpet Property Hub:  http://127.0.0.1:${PORT}/"
+echo "  Admin panel:             http://127.0.0.1:${PORT}/management/  (sign in with ADMIN_USERNAME)"
 echo "  Press Ctrl+C to stop."
 echo "============================================================"
 exec "$VPY" manage.py runserver "127.0.0.1:${PORT}"

@@ -13,6 +13,7 @@
         </div>
         <div class="offcanvas-body align-items-lg-center">
           <ul class="navbar-nav mx-lg-auto gap-lg-1">
+            <li class="nav-item d-lg-none" data-install-app hidden><button type="button" class="nav-link w-100 text-start border-0 bg-transparent" data-install-button><i class="bi bi-phone me-2" aria-hidden="true"></i>Install the app</button></li>
             <li class="nav-item"><a class="nav-link {% if path == '/rent/' %}active{% endif %}" href="{% url 'properties:rent' %}">Rent</a></li>
             <li class="nav-item"><a class="nav-link {% if path == '/buy/' %}active{% endif %}" href="{% url 'properties:buy' %}">Buy</a></li>
             <li class="nav-item"><a class="nav-link {% if path == '/pg-rooms/' %}active{% endif %}" href="{% url 'properties:pg_rooms' %}">PG &amp; Rooms</a></li>

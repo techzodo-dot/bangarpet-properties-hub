@@ -1,0 +1,43 @@
+# Run the site with PostgreSQL on any server that has Docker:
+#   cp .env.example .env   (fill in SECRET_KEY, ALLOWED_HOSTS, SITE_URL, ADMIN_*, POSTGRES_PASSWORD ...)
+#   docker compose up -d --build
+# Put a TLS-terminating proxy (Caddy, Nginx, Traefik or your host's load balancer) in front of port 8000.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: bph
+      POSTGRES_USER: bph
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bph -d bph"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://bph:${POSTGRES_PASSWORD}@db:5432/bph
+      SERVE_MEDIA: "True"
+      FORWARDED_ALLOW_IPS: "*"
+    ports:
+      - "8000:8000"
+    volumes:
+      - media:/app/media
+      - private_media:/app/private_media
+      - logs:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  media:
+  private_media:
+  logs:

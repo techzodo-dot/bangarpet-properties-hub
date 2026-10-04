@@ -6,5 +6,5 @@ dj-database-url>=2.2
 whitenoise>=6.7
 gunicorn>=23.0
 requests>=2.32
-# For PostgreSQL in production, also install:
-# psycopg[binary]>=3.2
+# PostgreSQL driver (used when DATABASE_URL points to PostgreSQL; harmless with SQLite)
+psycopg[binary]>=3.2

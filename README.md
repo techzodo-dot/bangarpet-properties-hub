@@ -9,54 +9,55 @@ assets (Bootstrap, icons, Chart.js, fonts) are vendored, so the site works witho
 
 ---
 
-## Run the demo on your computer (one command)
+## Run it on your computer (one command)
 
 Requires **Python 3.10+** ([download](https://www.python.org/downloads/); on Windows tick "Add python.exe to PATH").
 
+1. Copy `.env.example` to `.env` and set `ADMIN_PASSWORD` (the admin username is `ADMIN_USERNAME`,
+   `bph@admin` by default).
+2. Start it:
+
 | System | Command |
 |---|---|
-| Windows | double-click **`run_demo.bat`** (or run it in a terminal) |
-| macOS / Linux | `./run_demo.sh` |
+| Windows | double-click **`run_local.bat`** (or run it in a terminal) |
+| macOS / Linux | `./run_local.sh` |
 
-The script creates a virtual environment, installs dependencies, sets up the SQLite database, loads the
-[DEMO] data and starts the site at **http://127.0.0.1:8000/** (admin panel at `/management/`). Sign in
-with `admin@demo.bph.local`, `owner@demo.bph.local`, `broker@demo.bph.local` or
-`customer@demo.bph.local` — password `DemoPass#2024`. Run it again any time; existing data is kept.
-Use another port with `PORT=8080 ./run_demo.sh`.
+The script creates a virtual environment, installs dependencies, sets up the SQLite database, creates the
+admin login from `.env` and starts the site at **http://127.0.0.1:8000/**. Sign in at `/login/` with the
+admin username and password, then open the management panel at **/management/**.
+Use another port with `PORT=8080 ./run_local.sh`. The site starts empty: owners and brokers register and
+add listings, and you approve them in the management panel.
 
 ## Quick start (development)
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env                 # defaults work for local development
+cp .env.example .env                 # set ADMIN_PASSWORD; other defaults work for local development
 python manage.py migrate             # creates tables + reference data (categories, Bangarpet locations, plans)
-python manage.py seed_demo           # OPTIONAL: [DEMO] accounts (incl. an admin), listings and activity
-python manage.py createsuperuser     # your own admin account (email + full name + password)
+python manage.py ensure_admin        # creates the admin login from ADMIN_USERNAME / ADMIN_PASSWORD
 python manage.py runserver
 ```
 
-Open http://127.0.0.1:8000/. The admin panel is at **/management/** (sign in with the superuser).
+`ensure_admin` is safe to run again: it updates the existing admin instead of creating a duplicate
+(`--keep-password` leaves a password changed in the panel untouched). Emails print to the console in
+development (no SMTP needed).
 
-`seed_demo` creates four demo accounts (password `DemoPass#2024` for all):
+## Deploying
 
-| Account | Role | Start at |
-|---|---|---|
-| `admin@demo.bph.local` | super admin | `/management/` |
-| `owner@demo.bph.local` | owner (Pro plan) | `/partner/dashboard/` |
-| `broker@demo.bph.local` | verified broker (Broker plan) | `/partner/dashboard/` |
-| `customer@demo.bph.local` | customer | `/dashboard/` |
+See **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)**. Ready-made setups are included for a Linux VPS
+(Gunicorn + Nginx), cPanel "Setup Python App", Render (`render.yaml`), Railway (`Procfile`) and Docker
+(`Dockerfile`, `docker-compose.yml`). Every option runs `scripts/release.sh`, which applies migrations,
+collects static files, creates the cache table and the admin login, and runs Django's deployment checks.
+`/healthz/` returns `ok` when the app and database are up.
 
-It also creates 10 live listings and 1 waiting for approval, plus sample activity: enquiries, a requested
-and a scheduled visit, saved homes, recently viewed properties, an open report and notifications.
-Every demo listing has a `[DEMO]` title prefix, a banner on its page and illustrations labelled
-"SAMPLE IMAGE · DEMO" - never real properties or photos.
+## Installable web app
 
-* `python manage.py seed_demo --reset` recreates the demo data from scratch.
-* `python manage.py seed_demo --clear` removes all demo accounts, listings, images and payments (real data is untouched).
-* The command refuses to run when `DEBUG=False` (use `--force` only on a staging copy).
-
-Emails print to the console in development (no SMTP needed).
+The site is a Progressive Web App: on Android/Chrome/Edge visitors get an **Install the app** option
+(also shown in the footer and mobile menu), and on iPhone they can use *Share → Add to Home Screen*.
+It opens full-screen with its own icon and shows a friendly offline page without a connection.
+The service worker (`/sw.js`) caches only static files (CSS, JS, fonts, icons); pages are always loaded
+fresh, so private dashboards are never stored on the device. Installation requires HTTPS.
 
 ## Running the tests
 
@@ -64,17 +65,17 @@ Emails print to the console in development (no SMTP needed).
 python manage.py test          # uses config.settings.test automatically (in-memory SQLite)
 ```
 
-106 tests cover registration/login/throttling, password reset, email verification, role permissions,
+The tests cover registration/login/throttling, password reset, email verification, role permissions,
 cross-user access protection, the listing wizard, image upload validation (type, size, dimensions,
 EXIF stripping), search filters/sorting/pagination, favourites, reports, enquiries and visit scheduling,
 moderation, user suspension, subscriptions and expiry, Razorpay checkout/signature verification/webhooks
-(idempotency, amount mismatch), manual payments, notifications, SEO (sitemap/robots) and the demo seeder.
+(idempotency, amount mismatch), manual payments, notifications, SEO (sitemap/robots), the admin login command and the installable-app files.
 
 ## Feature overview
 
 | Area | What works |
 |---|---|
-| Public site | Homepage with glass search panel, quick categories, featured & recent listings, video-tour previews, popular areas, verified brokers, how-it-works, CTA, partner sign-up, admin banners, FAQ, contact form. All listing sections come from the database (empty states when there is no data). |
+| Public site | Homepage with search, trust strip, property-type tiles, featured & new listings, virtual-tour preview, popular areas, verified brokers, trust and how-it-works, owner CTA, admin banners, FAQ and contact form. All listing sections come from the database (empty states when there is no data). |
 | Search | `/properties/`, `/rent/`, `/buy/`, `/pg-rooms/`, `/commercial/`, `/properties/<category>/` — location, type, purpose, price, bedrooms, bathrooms, furnishing, parking, area, amenities, verified, owner/broker, availability date; sort (recommended/newest/price); grid, list and map (Google Maps) views; pagination; save search; clear filters. |
 | Property page | `/property/<slug>/` — gallery with full-screen carousel, facts, amenities, description, video tour, privacy-aware location and map, owner/broker card with verified badge, call / WhatsApp / enquiry / visit request (respecting the owner's phone-visibility setting), save, share, report, similar listings, JSON-LD, OpenGraph, canonical. |
 | Customer dashboard | `/dashboard/` — overview, profile, enquiries with status history, visits (cancel pending), saved properties, saved searches (daily alerts), recently viewed, notification settings, password change. |
@@ -101,7 +102,8 @@ moderation/        reports and listing review decisions; moderation & verificati
 dashboard/         customer (/dashboard/) and owner/broker (/partner/) views
 adminpanel/        custom management panel (/management/)
 templates/ static/ design system (static/css/main.css), JS, vendored libraries, logo
-deploy/ scripts/   systemd, Nginx, cron examples; backup/restore scripts
+deploy/ scripts/   systemd, Nginx, cron examples; release, backup and restore scripts
+Dockerfile, docker-compose.yml, Procfile, render.yaml   hosting setups (see docs/DEPLOYMENT.md)
 docs/              DEPLOYMENT.md, SECURITY.md
 ```
 
@@ -149,10 +151,11 @@ saved-search alerts and purges verification documents past their retention date.
 4. **Management panel** — moderation, verification, banners/ads, configuration, audit logs.
 5. **Subscriptions, payments, notifications** — plans, Razorpay, manual payments, email/WhatsApp.
 6. **SEO, security, tests, performance, deployment** — sitemap/robots/JSON-LD, security headers,
-   rate limiting, 106 automated tests, query optimisation and caching, production settings and docs.
+   rate limiting, automated tests, query optimisation and caching, production settings and docs.
 
 ## Before launch
 
 Read **docs/DEPLOYMENT.md** and **docs/SECURITY.md**. Have the privacy policy, terms and listing policy
 reviewed by a lawyer, verify the seeded locality list with local knowledge (Management → Locations), set
-real contact details in Management → Settings, and test payments end-to-end in Razorpay test mode.
+real contact details in Management → Settings, change the admin password from the default you set,
+and test payments end-to-end in Razorpay test mode.

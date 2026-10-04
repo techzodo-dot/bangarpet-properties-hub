@@ -2,7 +2,8 @@
 import multiprocessing
 import os
 
-bind = os.environ.get("GUNICORN_BIND", "127.0.0.1:8000")
+# Platforms such as Render, Railway and Docker hosts pass the port in $PORT.
+bind = os.environ.get("GUNICORN_BIND") or (f"0.0.0.0:{os.environ['PORT']}" if os.environ.get("PORT") else "127.0.0.1:8000")
 # SQLite handles few concurrent writers; keep workers modest until you move to PostgreSQL.
 workers = int(os.environ.get("GUNICORN_WORKERS", min(3, multiprocessing.cpu_count() * 2 + 1)))
 threads = int(os.environ.get("GUNICORN_THREADS", 2))

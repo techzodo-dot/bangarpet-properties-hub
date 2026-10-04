@@ -17,8 +17,6 @@
 {% block content %}
 {% if not prop.is_public %}
 <div class="demo-ribbon">Preview - this listing is <strong>{{ prop.get_status_display|lower }}</strong> and is not visible to the public.{% if is_owner %} <a href="{% url 'dashboard:partner_property_manage' prop.pk %}">Manage listing</a>{% endif %}</div>
-{% elif prop.is_demo %}
-<div class="demo-ribbon">Demo listing - sample data for testing only.</div>
 {% endif %}
 
 <div class="container pt-4">

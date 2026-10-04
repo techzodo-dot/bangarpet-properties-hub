@@ -11,6 +11,13 @@ from .base import LOG_DIR, env, env_bool, env_int
 
 DEBUG = False
 
+# Hosting platforms that publish the app's public hostname in the environment.
+for _var in ("RENDER_EXTERNAL_HOSTNAME", "RAILWAY_PUBLIC_DOMAIN"):
+    _host = env(_var, "")
+    if _host and _host not in ALLOWED_HOSTS:  # noqa: F405
+        ALLOWED_HOSTS.append(_host)  # noqa: F405
+        CSRF_TRUSTED_ORIGINS.append(f"https://{_host}")  # noqa: F405
+
 if not SECRET_KEY or SECRET_KEY in {"change-me"} or len(SECRET_KEY) < 40:  # noqa: F405
     raise ImproperlyConfigured("Set a strong SECRET_KEY (40+ characters) in the environment.")
 if not ALLOWED_HOSTS:  # noqa: F405
@@ -18,6 +25,7 @@ if not ALLOWED_HOSTS:  # noqa: F405
 
 # HTTPS
 SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", True)
+SECURE_REDIRECT_EXEMPT = [r"^healthz/$"]  # platform health checks call plain HTTP internally
 if env_bool("USE_X_FORWARDED_PROTO", True):
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_HSTS_SECONDS = env_int("SECURE_HSTS_SECONDS", 31536000)

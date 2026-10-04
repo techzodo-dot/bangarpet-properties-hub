@@ -74,13 +74,17 @@ class RegistrationForm(BootstrapFormMixin, forms.Form):
 
 
 class LoginForm(BootstrapFormMixin, AuthenticationForm):
-    """Email + password login with throttling per account and per IP."""
+    """Email/username + password login with throttling per account and per IP."""
 
-    username = forms.EmailField(label="Email", widget=forms.EmailInput(attrs={"autofocus": True, "autocomplete": "email"}))
+    # A plain text field (not EmailField) so admin logins such as "bph@admin" are accepted.
+    username = forms.CharField(
+        label="Email or username", max_length=254,
+        widget=forms.TextInput(attrs={"autofocus": True, "autocomplete": "username", "autocapitalize": "none", "spellcheck": "false"}),
+    )
     remember_me = forms.BooleanField(required=False, initial=True, label="Keep me signed in")
 
     error_messages = {
-        "invalid_login": "Incorrect email or password.",
+        "invalid_login": "Incorrect email/username or password.",
         "inactive": "This account is not active. Contact support if you believe this is a mistake.",
         "throttled": "Too many failed sign-in attempts. Please wait 15 minutes and try again, or reset your password.",
     }
