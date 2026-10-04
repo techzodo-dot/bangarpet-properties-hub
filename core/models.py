@@ -193,3 +193,23 @@ class ContactMessage(TimeStampedModel):
 
     def __str__(self):
         return f"{self.subject} ({self.email})"
+
+
+class StoredFile(models.Model):
+    """A private file kept in the database (see core.storage.DatabaseStorage).
+
+    Used on hosts without a persistent disk (e.g. Vercel) for verification
+    documents, which must never be reachable at a public URL.
+    """
+
+    name = models.CharField(max_length=255, unique=True)
+    data = models.BinaryField()
+    size = models.PositiveIntegerField(default=0)
+    content_type = models.CharField(max_length=100, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.name

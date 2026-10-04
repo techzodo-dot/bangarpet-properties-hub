@@ -158,6 +158,8 @@ SERVE_MEDIA = env_bool("SERVE_MEDIA", False)
 
 # Verification documents live OUTSIDE MEDIA_ROOT and are never served directly.
 PRIVATE_MEDIA_ROOT = Path(env("PRIVATE_MEDIA_ROOT") or BASE_DIR / "private_media")
+# Dotted path of an alternative private storage class (e.g. core.storage.DatabaseStorage).
+PRIVATE_FILE_STORAGE = env("PRIVATE_FILE_STORAGE", "")
 
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},

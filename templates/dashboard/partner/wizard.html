@@ -35,8 +35,8 @@
   {# ---------- Photos ---------- #}
   <div class="surface p-4 mb-4">
     <h2 class="h5">Photos</h2>
-    <p class="text-muted small">Upload clear photos of the actual property: exterior, living room, bedrooms, kitchen and bathrooms. JPG, PNG or WEBP, up to 5 MB each, at least 300 &times; 200 px. We remove location metadata from photos automatically.</p>
-    <form method="post" enctype="multipart/form-data" data-once>
+    <p class="text-muted small">Upload clear photos of the actual property: exterior, living room, bedrooms, kitchen and bathrooms. JPG, PNG or WEBP, at least 300 &times; 200 px. Large photos are resized automatically and we remove location metadata.</p>
+    <form method="post" enctype="multipart/form-data" data-once data-batch-upload>
       {% csrf_token %}<input type="hidden" name="action" value="upload">
       <label class="upload-drop d-block" for="{{ upload_form.images.id_for_label }}">
         <i class="bi bi-cloud-arrow-up fs-1 text-navy"></i>

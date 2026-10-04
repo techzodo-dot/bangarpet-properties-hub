@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "django",
+  "buildCommand": "bash scripts/vercel_build.sh",
+  "regions": ["bom1"],
+  "functions": {
+    "config/wsgi.py": {
+      "maxDuration": 60
+    }
+  },
+  "crons": [
+    { "path": "/cron/scheduled-tasks/", "schedule": "30 0 * * *" }
+  ]
+}

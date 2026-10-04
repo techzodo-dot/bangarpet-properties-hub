@@ -9,6 +9,7 @@ Bangarpet Property Hub is a standard Django app, so it runs on most hosts. Pick 
 | **C. Render** (`render.yaml` included) | Push-to-deploy, managed database | PostgreSQL (managed) | Low |
 | **D. Railway** (`Procfile` included) | Push-to-deploy, simple pricing | PostgreSQL (plugin) | Low |
 | **E. Docker** (`Dockerfile`, `docker-compose.yml`) | Any server with Docker | PostgreSQL container | Low–medium |
+| **F. Vercel** (`vercel.json` included) | Serverless, free Hobby plan for testing | Neon PostgreSQL | Low |
 
 Whatever you choose, the steps are the same: **set environment variables → run `scripts/release.sh` →
 start Gunicorn → add HTTPS → add the hourly cron job.**
@@ -134,7 +135,40 @@ volumes for the database, photos, private documents and logs. Put a TLS proxy in
 (Caddy, Nginx, Traefik or your host's load balancer) and point your domain at it.
 Cron: `docker compose exec web python manage.py run_scheduled_tasks` hourly from the host's crontab.
 
-## 8. Installable web app (PWA)
+## 8. Option F — Vercel (serverless) + Neon + Vercel Blob
+
+Vercel runs Django as a serverless function. There is no persistent disk, so the app switches
+automatically (when the `VERCEL` variable is present) to:
+
+* **Neon PostgreSQL** for the database (`DATABASE_URL`, required),
+* **Vercel Blob** for public photos, avatars and banners (`BLOB_READ_WRITE_TOKEN`),
+* **the database** for private verification documents (never at a public URL),
+* WhiteNoise serving `static/` directly, with a per-deployment `?v=` cache buster,
+* logs on stdout only (Vercel → Project → Logs).
+
+Setup:
+
+1. Vercel → **Add New → Project** → import the GitHub repository. `vercel.json` sets the framework
+   (Django), the build command (`scripts/vercel_build.sh`), the region (Mumbai, `bom1`) and the cron job.
+2. Project → **Storage** → **Create Database → Neon** → connect it to the project (adds `DATABASE_URL`).
+3. Project → **Storage** → **Create → Blob** (public access) → connect it (adds `BLOB_READ_WRITE_TOKEN`).
+4. Project → **Settings → Environment Variables**:
+   `DJANGO_SETTINGS_MODULE=config.settings.production`, `SECRET_KEY`, `ADMIN_USERNAME=bph@admin`,
+   `ADMIN_PASSWORD` (mark it *Sensitive*) and `CRON_SECRET` (any long random string).
+   The `*.vercel.app` hostnames are added to `ALLOWED_HOSTS` automatically and `SITE_URL` defaults to
+   the production URL; add your own domain to `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS` and `SITE_URL`.
+5. Deploy. Each build runs migrations, creates the cache table and the admin login.
+
+Limits to know about:
+
+* **Hobby (free) plan is for non-commercial use.** Move to Pro before a public commercial launch.
+* Requests are limited to **4.5 MB**. Photos are resized in the browser (max 1920 px) and sent in
+  batches automatically; verification documents are limited to 4 MB.
+* Hobby cron jobs run **once a day** (`/cron/scheduled-tasks/` at 06:00 IST). Listing expiry and
+  alerts therefore run daily instead of hourly.
+* Backups: use Neon's point-in-time restore (Neon console); photos stay in the Blob store.
+
+## 9. Installable web app (PWA)
 
 Nothing extra to configure: once the site is on **HTTPS**, Chrome, Edge and Android offer
 *Install app*, and iPhone users can use *Share → Add to Home Screen*. The app name, icons and colours
@@ -142,7 +176,7 @@ come from `/manifest.webmanifest`; `/sw.js` caches static files and shows `/offl
 connection. Pages and dashboards are never cached on the device. After each deploy, returning visitors
 pick up the new version automatically.
 
-## 9. Static and media files
+## 10. Static and media files
 
 * Static files: `collectstatic` → `STATIC_ROOT` (default `staticfiles/`), served by WhiteNoise with
   compressed, fingerprinted filenames (or directly by Nginx).
@@ -153,7 +187,7 @@ pick up the new version automatically.
 * On platforms with temporary file systems (Render, Railway, Docker without volumes) media **must** live
   on a persistent disk/volume, or move public media to S3-compatible storage with `django-storages`.
 
-## 10. SQLite vs PostgreSQL
+## 11. SQLite vs PostgreSQL
 
 SQLite is fine for a small launch **on a VPS or cPanel with persistent disk** (one write at a time,
 keep Gunicorn workers ≤ 3, back up with `scripts/backup.sh`). Use PostgreSQL on Render, Railway and Docker,
@@ -169,7 +203,7 @@ python manage.py loaddata data.json
 
 The PostgreSQL driver (`psycopg`) is already in `requirements.txt`.
 
-## 11. Backups, logging and monitoring
+## 12. Backups, logging and monitoring
 
 * `scripts/backup.sh [dir]` – consistent SQLite (or `pg_dump`) backup plus media archives; keeps the last 14.
   Schedule nightly and copy backups off-server (they contain personal data – store them encrypted).
@@ -178,7 +212,7 @@ The PostgreSQL driver (`psycopg`) is already in `requirements.txt`.
   emails about server errors (needs SMTP).
 * Uptime monitoring: point any monitor (UptimeRobot, Better Stack…) at `https://<domain>/healthz/`.
 
-## 12. Go-live checklist
+## 13. Go-live checklist
 
 - [ ] Section 1 variables set, `DEBUG=False`, `scripts/release.sh` finished without errors
 - [ ] HTTPS working and HTTP redirects to HTTPS

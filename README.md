@@ -46,9 +46,10 @@ development (no SMTP needed).
 ## Deploying
 
 See **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)**. Ready-made setups are included for a Linux VPS
-(Gunicorn + Nginx), cPanel "Setup Python App", Render (`render.yaml`), Railway (`Procfile`) and Docker
-(`Dockerfile`, `docker-compose.yml`). Every option runs `scripts/release.sh`, which applies migrations,
-collects static files, creates the cache table and the admin login, and runs Django's deployment checks.
+(Gunicorn + Nginx), cPanel "Setup Python App", Render (`render.yaml`), Railway (`Procfile`), Docker
+(`Dockerfile`, `docker-compose.yml`) and Vercel (`vercel.json`, with Neon Postgres and Vercel Blob for photos).
+Every option runs `scripts/release.sh` (on Vercel `scripts/vercel_build.sh`), which applies migrations,
+creates the cache table and the admin login, and runs Django's deployment checks.
 `/healthz/` returns `ok` when the app and database are up.
 
 ## Installable web app
@@ -103,7 +104,7 @@ dashboard/         customer (/dashboard/) and owner/broker (/partner/) views
 adminpanel/        custom management panel (/management/)
 templates/ static/ design system (static/css/main.css), JS, vendored libraries, logo
 deploy/ scripts/   systemd, Nginx, cron examples; release, backup and restore scripts
-Dockerfile, docker-compose.yml, Procfile, render.yaml   hosting setups (see docs/DEPLOYMENT.md)
+Dockerfile, docker-compose.yml, Procfile, render.yaml, vercel.json   hosting setups (see docs/DEPLOYMENT.md)
 docs/              DEPLOYMENT.md, SECURITY.md
 ```
 

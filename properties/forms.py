@@ -298,7 +298,7 @@ class ImageUploadForm(BootstrapFormMixin, forms.Form):
     def __init__(self, *args, property_obj=None, **kwargs):
         self.property_obj = property_obj
         super().__init__(*args, **kwargs)
-        self.fields["images"].widget.attrs.update({"data-preview": "#upload-preview", "data-max-mb": settings.MAX_IMAGE_UPLOAD_MB})
+        self.fields["images"].widget.attrs.update({"data-preview": "#upload-preview", "data-max-mb": settings.MAX_IMAGE_UPLOAD_MB, "data-resize": "1"})
 
     def clean_images(self):
         files = self.cleaned_data["images"]

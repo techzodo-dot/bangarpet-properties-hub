@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.contrib.auth import authenticate, password_validation
 from django.contrib.auth.forms import (
     AuthenticationForm,
@@ -138,7 +139,7 @@ class ProfileForm(BootstrapFormMixin, forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ["avatar", "whatsapp_number", "city", "preferred_contact", "about"]
-        widgets = {"about": forms.Textarea(attrs={"rows": 3}), "avatar": forms.ClearableFileInput(attrs={"accept": "image/*"})}
+        widgets = {"about": forms.Textarea(attrs={"rows": 3}), "avatar": forms.ClearableFileInput(attrs={"accept": "image/*", "data-resize": "1"})}
 
 
 class NotificationPreferencesForm(BootstrapFormMixin, forms.ModelForm):
@@ -171,7 +172,7 @@ class VerificationDocumentForm(BootstrapFormMixin, forms.ModelForm):
         model = VerificationDocument
         fields = ["doc_type", "file", "note"]
         widgets = {"file": forms.ClearableFileInput(attrs={"accept": ".pdf,.jpg,.jpeg,.png"})}
-        help_texts = {"file": "PDF, JPG or PNG up to 5 MB. Mask Aadhaar numbers except the last 4 digits."}
+        help_texts = {"file": f"PDF, JPG or PNG up to {settings.MAX_DOCUMENT_UPLOAD_MB} MB. Mask Aadhaar numbers except the last 4 digits."}
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)

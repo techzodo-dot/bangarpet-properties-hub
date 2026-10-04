@@ -11,8 +11,25 @@ from .base import LOG_DIR, env, env_bool, env_int
 
 DEBUG = False
 
+# Vercel runs the app as a serverless function: read-only file system, no
+# persistent disk, a fresh process per instance. See docs/DEPLOYMENT.md.
+ON_VERCEL = bool(env("VERCEL", ""))
+
+if ON_VERCEL:
+    if not env("DATABASE_URL"):
+        raise ImproperlyConfigured(
+            "DATABASE_URL is not set. Add a Neon Postgres database to the Vercel project "
+            "(Storage -> Create Database -> Neon) and redeploy."
+        )
+    # Serverless instances come and go: don't hold connections open between requests.
+    DATABASES["default"]["CONN_MAX_AGE"] = 0  # noqa: F405
+    _prod_host = env("VERCEL_PROJECT_PRODUCTION_URL", "")
+    if _prod_host and not env("SITE_URL"):
+        SITE_URL = f"https://{_prod_host}"
+
 # Hosting platforms that publish the app's public hostname in the environment.
-for _var in ("RENDER_EXTERNAL_HOSTNAME", "RAILWAY_PUBLIC_DOMAIN"):
+for _var in ("RENDER_EXTERNAL_HOSTNAME", "RAILWAY_PUBLIC_DOMAIN",
+             "VERCEL_PROJECT_PRODUCTION_URL", "VERCEL_BRANCH_URL", "VERCEL_URL"):
     _host = env(_var, "")
     if _host and _host not in ALLOWED_HOSTS:  # noqa: F405
         ALLOWED_HOSTS.append(_host)  # noqa: F405
@@ -42,6 +59,28 @@ STORAGES = {
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
 
+if ON_VERCEL:
+    # Photos go to Vercel Blob (public CDN); verification documents stay in the database.
+    STORAGES = {
+        "default": {"BACKEND": "core.storage.VercelBlobStorage"},
+        "staticfiles": {"BACKEND": "core.storage.VersionedStaticFilesStorage"},
+    }
+    PRIVATE_FILE_STORAGE = "core.storage.DatabaseStorage"
+    # Static files are served straight from the source tree by WhiteNoise; a
+    # per-deployment ?v= query string busts browser caches after each deploy.
+    STATIC_ROOT = None
+    WHITENOISE_USE_FINDERS = True
+    WHITENOISE_AUTOREFRESH = False
+    WHITENOISE_MAX_AGE = 60 * 60 * 24
+    STATIC_VERSION = (env("VERCEL_DEPLOYMENT_ID") or env("VERCEL_GIT_COMMIT_SHA") or "1").replace("dpl_", "")[:10]
+
+    def WHITENOISE_ADD_HEADERS_FUNCTION(headers, path, url):  # noqa: N802
+        headers["CDN-Cache-Control"] = "public, max-age=86400"
+
+    # Vercel rejects request bodies over 4.5 MB. Photos are resized in the
+    # browser and sent in small batches; documents must stay under 4 MB.
+    MAX_DOCUMENT_UPLOAD_MB = 4
+
 # A database-backed cache is shared by all Gunicorn workers, which keeps rate
 # limits and login throttling consistent. Run `python manage.py createcachetable`.
 CACHES = {
@@ -51,23 +90,28 @@ CACHES = {
     }
 }
 
-LOG_DIR.mkdir(parents=True, exist_ok=True)
-LOGGING["handlers"]["file"] = {  # noqa: F405
-    "class": "logging.handlers.RotatingFileHandler",
-    "filename": str(LOG_DIR / "bph.log"),
-    "maxBytes": 5 * 1024 * 1024,
-    "backupCount": 5,
-    "formatter": "verbose",
-}
+# Log to stdout and a rotating file; on Vercel (read-only disk) stdout only,
+# which appears under the project's Logs tab.
+_log_handlers = ["console"]
+if not ON_VERCEL:
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    LOGGING["handlers"]["file"] = {  # noqa: F405
+        "class": "logging.handlers.RotatingFileHandler",
+        "filename": str(LOG_DIR / "bph.log"),
+        "maxBytes": 5 * 1024 * 1024,
+        "backupCount": 5,
+        "formatter": "verbose",
+    }
+    _log_handlers.append("file")
 LOGGING["handlers"]["mail_admins"] = {  # noqa: F405
     "class": "django.utils.log.AdminEmailHandler",
     "level": "ERROR",
 }
-LOGGING["root"]["handlers"] = ["console", "file"]  # noqa: F405
-LOGGING["loggers"]["django"]["handlers"] = ["console", "file"]  # noqa: F405
-LOGGING["loggers"]["bph"]["handlers"] = ["console", "file"]  # noqa: F405
+LOGGING["root"]["handlers"] = list(_log_handlers)  # noqa: F405
+LOGGING["loggers"]["django"]["handlers"] = list(_log_handlers)  # noqa: F405
+LOGGING["loggers"]["bph"]["handlers"] = list(_log_handlers)  # noqa: F405
 LOGGING["loggers"]["django.request"] = {  # noqa: F405
-    "handlers": ["console", "file", "mail_admins"],
+    "handlers": [*_log_handlers, "mail_admins"],
     "level": "ERROR",
     "propagate": False,
 }

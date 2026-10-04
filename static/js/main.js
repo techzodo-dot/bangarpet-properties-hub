@@ -101,10 +101,73 @@
     apply();
   });
 
+  // Shrink large photos in the browser before upload (max 1920 px, JPEG). Uploads
+  // get faster on mobile data and stay under the host's request size limit.
+  // The server still re-encodes and validates every image.
+  const RESIZE_MAX = 1920;
+  const RESIZE_SKIP_BYTES = 700 * 1024;
+  function loadImage(file) {
+    return new Promise(function (resolve, reject) {
+      const img = new Image();
+      img.onload = function () { resolve(img); };
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
+    });
+  }
+  function resizeImage(file) {
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return Promise.resolve(file);
+    return loadImage(file).then(function (img) {
+      URL.revokeObjectURL(img.src);
+      const w = img.naturalWidth, h = img.naturalHeight;
+      const scale = Math.min(1, RESIZE_MAX / Math.max(w, h));
+      if (scale === 1 && file.size <= RESIZE_SKIP_BYTES) return file;
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(w * scale);
+      canvas.height = Math.round(h * scale);
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      return new Promise(function (resolve) {
+        canvas.toBlob(function (blob) {
+          if (!blob || blob.size >= file.size) { resolve(file); return; }
+          const name = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+          resolve(new File([blob], name, { type: "image/jpeg", lastModified: Date.now() }));
+        }, "image/jpeg", 0.85);
+      });
+    }).catch(function () { return file; });
+  }
+  function resizeInput(input) {
+    if (typeof DataTransfer === "undefined" || !input.files.length) return Promise.resolve(true);
+    input.dataset.resizing = "1";
+    const token = (input._resizeToken || 0) + 1;
+    input._resizeToken = token;
+    const job = Promise.all(Array.from(input.files).map(resizeImage)).then(function (files) {
+      if (input._resizeToken !== token) return;  // a newer selection replaced this one
+      const dt = new DataTransfer();
+      files.forEach(function (f) { dt.items.add(f); });
+      input.files = dt.files;
+    }).catch(function () {}).then(function () {
+      const latest = input._resizeToken === token;
+      if (latest) { delete input.dataset.resizing; input._resizeJob = null; }
+      return latest;
+    });
+    input._resizeJob = job;
+    return job;
+  }
+
   // Image upload previews with client-side type/size checks (server validates again).
   document.addEventListener("change", function (event) {
     const input = event.target;
-    if (!input.matches("input[type=file][data-preview]")) return;
+    if (!input.matches("input[type=file]")) return;
+    if (input.matches("[data-resize]")) {
+      resizeInput(input).then(function (latest) { if (latest) renderPreview(input); });
+    } else {
+      renderPreview(input);
+    }
+  });
+  function renderPreview(input) {
+    if (!input.matches("[data-preview]")) return;
     const target = document.querySelector(input.getAttribute("data-preview"));
     const maxMb = parseFloat(input.getAttribute("data-max-mb") || "5");
     const errors = document.querySelector(input.getAttribute("data-errors") || "#upload-errors");
@@ -128,6 +191,55 @@
       problems.forEach(function (p) { const d = document.createElement("div"); d.textContent = p; errors.appendChild(d); });
       errors.hidden = problems.length === 0;
     }
+  }
+
+  // Before submitting, wait for any photo resizing that is still running.
+  // Forms marked data-batch-upload send many photos in several smaller
+  // requests (each under ~4 MB) and then reload the page to show the result.
+  const BATCH_BYTES = 4 * 1024 * 1024 - 200 * 1024;
+  document.addEventListener("submit", function (event) {
+    const form = event.target;
+    const inputs = Array.from(form.querySelectorAll("input[type=file][data-resize]"));
+    const pending = inputs.map(function (i) { return i._resizeJob; }).filter(Boolean);
+    if (pending.length) {
+      event.preventDefault();
+      form.dataset.submitted = "";
+      Promise.all(pending).then(function () { form.requestSubmit ? form.requestSubmit(event.submitter || undefined) : form.submit(); });
+      return;
+    }
+    if (!form.matches("[data-batch-upload]") || !window.fetch) return;
+    const input = inputs[0];
+    if (!input || !input.files.length) return;
+    const files = Array.from(input.files);
+    const total = files.reduce(function (sum, f) { return sum + f.size; }, 0);
+    if (total <= BATCH_BYTES) return;  // fits in one normal request
+    event.preventDefault();
+    const batches = [];
+    let current = [], size = 0;
+    files.forEach(function (f) {
+      if (current.length && size + f.size > BATCH_BYTES) { batches.push(current); current = []; size = 0; }
+      current.push(f); size += f.size;
+    });
+    if (current.length) batches.push(current);
+    const base = new FormData(form);
+    base.delete(input.name);
+    const errors = document.querySelector(input.getAttribute("data-errors") || "#upload-errors");
+    let chain = Promise.resolve();
+    batches.forEach(function (batch) {
+      chain = chain.then(function () {
+        const data = new FormData();
+        base.forEach(function (value, key) { data.append(key, value); });
+        batch.forEach(function (f) { data.append(input.name, f, f.name); });
+        return fetch(form.action || window.location.href, { method: "POST", body: data, credentials: "same-origin" })
+          .then(function (r) { if (!r.ok) throw new Error("Upload failed (" + r.status + ")"); });
+      });
+    });
+    chain.then(function () { window.location.reload(); }).catch(function (err) {
+      form.dataset.submitted = "";
+      const btn = form.querySelector("[type=submit]");
+      if (btn) btn.removeAttribute("aria-busy");
+      if (errors) { errors.textContent = (err && err.message) || "Upload failed. Please try fewer photos at a time."; errors.hidden = false; }
+    });
   });
 
   // Drag & drop onto upload zones.

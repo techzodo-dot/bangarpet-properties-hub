@@ -229,6 +229,12 @@ class PrivateDocumentStorage(FileSystemStorage):
 
 
 def private_storage():
+    """Storage for verification documents (configurable per host, never public)."""
+    backend = getattr(settings, "PRIVATE_FILE_STORAGE", "")
+    if backend:
+        from django.utils.module_loading import import_string
+
+        return import_string(backend)()
     return PrivateDocumentStorage()
 
 

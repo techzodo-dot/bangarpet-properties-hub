@@ -75,7 +75,7 @@ class BannerForm(BootstrapFormMixin, forms.ModelForm):
         model = Banner
         fields = ["title", "subtitle", "image", "alt_text", "link_url", "cta_label", "placement", "display_order",
                   "starts_at", "ends_at", "is_active"]
-        widgets = {"starts_at": DT_WIDGET, "ends_at": DT_WIDGET, "image": forms.ClearableFileInput(attrs={"accept": "image/*"})}
+        widgets = {"starts_at": DT_WIDGET, "ends_at": DT_WIDGET, "image": forms.ClearableFileInput(attrs={"accept": "image/*", "data-resize": "1"})}
 
     def clean(self):
         data = super().clean()

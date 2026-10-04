@@ -164,6 +164,30 @@ def healthz(request):
     return response
 
 
+@require_GET
+def cron_scheduled_tasks(request):
+    """Runs `run_scheduled_tasks` for hosts without crontab (Vercel Cron Jobs).
+
+    Vercel sends ``Authorization: Bearer $CRON_SECRET``; without a configured
+    secret the endpoint stays disabled.
+    """
+    import hmac
+    import io
+    import os
+
+    from django.core.management import call_command
+
+    secret = os.environ.get("CRON_SECRET", "")
+    supplied = request.headers.get("Authorization", "")
+    if not secret or not hmac.compare_digest(supplied.encode(), f"Bearer {secret}".encode()):
+        return HttpResponse("forbidden", status=403, content_type="text/plain")
+    out = io.StringIO()
+    call_command("run_scheduled_tasks", stdout=out, stderr=out)
+    response = HttpResponse(out.getvalue() or "done", content_type="text/plain")
+    response["Cache-Control"] = "no-store"
+    return response
+
+
 def error_404(request, exception=None):
     return render(request, "errors/404.html", status=404)
 

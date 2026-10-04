@@ -20,5 +20,6 @@ urlpatterns = [
     path("sw.js", pwa.service_worker, name="service_worker"),
     path("offline/", pwa.offline, name="offline"),
     path("healthz/", views.healthz, name="healthz"),
+    path("cron/scheduled-tasks/", views.cron_scheduled_tasks, name="cron_scheduled_tasks"),
     path("sitemap.xml", cache_page(60 * 30)(sitemap), {"sitemaps": SITEMAPS}, name="sitemap"),
 ]
