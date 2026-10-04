@@ -201,6 +201,14 @@
     if (sidebar) sidebar.classList.toggle("open");
   });
 
+  // Move focus to an in-page confirmation (e.g. "Message received") so it is announced.
+  // Wait for "load": the browser's #fragment jump would otherwise reset focus afterwards.
+  const confirmation = document.querySelector("[data-autofocus]");
+  if (confirmation) {
+    const focusIt = function () { confirmation.focus({ preventScroll: true }); };
+    if (document.readyState === "complete") focusIt(); else window.addEventListener("load", function () { setTimeout(focusIt, 0); });
+  }
+
   // On phones the dashboard nav is a horizontal strip: keep the active tab in view.
   const dashNav = document.querySelector(".dash-nav");
   const activeLink = dashNav && dashNav.querySelector(".nav-link.active");

@@ -382,3 +382,16 @@ class LandingPageTests(TestCase):
         self.assertNotContains(resp, "data-tour")
         self.assertContains(resp, "Verified agents will appear here")
         self.assertContains(resp, "Fresh listings")
+
+    def test_homepage_contact_form_returns_to_homepage_with_confirmation(self):
+        from core.models import ContactMessage
+
+        cache.clear()
+        data = {"name": "Asha", "email": "asha@example.com", "subject": "Visit timing", "message": "Can I visit on Sunday?", "source": "home"}
+        resp = self.client.post("/contact/", data)
+        self.assertRedirects(resp, "/?sent=1#contact", fetch_redirect_response=False)
+        self.assertEqual(ContactMessage.objects.count(), 1)
+        self.assertContains(self.client.get("/?sent=1"), "Message received.")
+        # The standalone contact page keeps its own redirect.
+        data.pop("source")
+        self.assertRedirects(self.client.post("/contact/", data), "/contact/", fetch_redirect_response=False)

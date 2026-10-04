@@ -112,6 +112,7 @@
 
 /* ---------- Base ---------- */
 html { scroll-behavior: smooth; }
+section[id] { scroll-margin-top: calc(var(--nav-h) + 1.5rem); }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
 body { background: var(--bg); color: var(--text); font-family: var(--font-body); -webkit-font-smoothing: antialiased; letter-spacing: .005em; }
 h1, h2, h3, .font-display { font-family: var(--font-display); font-weight: 600; color: var(--heading); letter-spacing: -.005em; line-height: 1.08; text-wrap: balance; }
@@ -318,12 +319,12 @@ img { max-width: 100%; }
 .lux-search .ls-field { position: relative; display: flex; flex-direction: column; justify-content: center; padding: .4rem .9rem; border-radius: 14px; transition: background .2s; min-width: 0; }
 .lux-search .ls-field:hover, .lux-search .ls-field:focus-within { background: rgba(255, 255, 255, .07); }
 .lux-search .ls-field + .ls-field::before { content: ""; position: absolute; left: -.25rem; top: 22%; bottom: 22%; width: 1px; background: rgba(255, 255, 255, .14); }
-.lux-search label { font-size: .66rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: rgba(255, 255, 255, .6); margin-bottom: .1rem; }
+.lux-search label { font-size: .68rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: rgba(255, 255, 255, .78); margin-bottom: .1rem; }
 .lux-search select, .lux-search input { appearance: none; -webkit-appearance: none; background: transparent; border: 0; color: #fff; font-weight: 600; font-size: .98rem; padding: .1rem 0; width: 100%; outline: none; min-height: 0; }
 .lux-search select option { color: #111; }
 .lux-search select { background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23f2d27e'%3e%3cpath d='M1.6 4.6a.5.5 0 0 1 .7 0L8 10.3l5.6-5.7a.5.5 0 0 1 .8.8l-6 6a.5.5 0 0 1-.8 0l-6-6a.5.5 0 0 1 0-.8z'/%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right center; background-size: 11px; padding-right: 1.3rem; cursor: pointer; }
 .lux-search .ls-budget { display: flex; gap: .4rem; align-items: center; }
-.lux-search .ls-budget input::placeholder { color: rgba(255, 255, 255, .5); }
+.lux-search .ls-budget input::placeholder { color: rgba(255, 255, 255, .68); }
 .lux-search .ls-budget span { color: rgba(255, 255, 255, .4); }
 .lux-search .btn { border-radius: 16px; padding-inline: 1.6rem; }
 @media (max-width: 991.98px) {
@@ -350,7 +351,7 @@ img { max-width: 100%; }
 .property-card:hover .media img { transform: scale(1.05); }
 .property-card .media::after { content: ""; position: absolute; inset: 55% 0 0 0; background: linear-gradient(transparent, rgba(5, 10, 20, .55)); pointer-events: none; }
 .property-card .chips-top { position: absolute; top: .8rem; left: .8rem; right: 3.8rem; display: flex; flex-wrap: wrap; gap: .35rem; z-index: 2; }
-.property-card .price-glass { position: absolute; left: 1rem; bottom: .85rem; z-index: 2; color: #fff; font-family: var(--font-body); font-weight: 800; font-size: 1.15rem; letter-spacing: -.01em; text-shadow: 0 2px 12px rgba(0, 0, 0, .4); }
+.property-card .price-glass { position: absolute; left: .8rem; bottom: .8rem; z-index: 2; color: #fff; font-family: var(--font-body); font-weight: 800; font-size: 1.08rem; letter-spacing: -.01em; padding: .38rem .8rem; border-radius: 12px; background: rgba(8, 14, 28, .5); border: 1px solid rgba(255, 255, 255, .22); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .15); backdrop-filter: blur(12px) saturate(150%); -webkit-backdrop-filter: blur(12px) saturate(150%); }
 .property-card .price-glass small { font-weight: 600; font-size: .74rem; opacity: .85; }
 .fav-btn { position: absolute; top: .7rem; right: .7rem; z-index: 3; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .35); background: rgba(5, 10, 20, .35); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #fff; display: grid; place-items: center; transition: transform .2s, background .2s; }
 .fav-btn:hover { transform: scale(1.08); background: rgba(5, 10, 20, .55); }
@@ -382,15 +383,27 @@ img { max-width: 100%; }
 @media (max-width: 991.98px) { .collection > :first-child .feature-card, .feature-card { min-height: 380px; } }
 .feature-card img.fc-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: transform 1s var(--ease); }
 .feature-card:hover img.fc-img { transform: scale(1.04); }
-.feature-card::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5, 10, 20, .1) 30%, rgba(5, 10, 20, .88) 100%); }
+.feature-card::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(5, 10, 20, .05) 40%, rgba(5, 10, 20, .55) 100%); }
 .feature-card .fc-top { position: absolute; top: 1rem; left: 1rem; right: 4rem; display: flex; gap: .4rem; flex-wrap: wrap; z-index: 2; }
-.feature-card .fc-body { position: absolute; left: 0; right: 0; bottom: 0; padding: 1.5rem; display: grid; gap: .35rem; }
+/* Glassmorphism panel: frosted, translucent ink with a 1px light edge and a top reflection.
+   The ink tint keeps white text above 4.5:1 even over bright photos. */
+.feature-card .fc-body {
+  position: absolute; left: 1rem; right: 1rem; bottom: 1rem; padding: 1.15rem 1.3rem 1.2rem; display: grid; gap: .35rem;
+  border-radius: 20px; background: linear-gradient(160deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .04) 45%), rgba(8, 14, 28, .5);
+  border: 1px solid rgba(255, 255, 255, .2); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 18px 40px rgba(0, 0, 0, .35);
+  backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%);
+  transition: transform .35s var(--ease), border-color .35s var(--ease);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .feature-card .fc-body { background: rgba(8, 14, 28, .86); } }
+.feature-card:hover .fc-body, .feature-card:focus-within .fc-body { transform: translateY(-3px); border-color: rgba(242, 210, 126, .55); }
+.feature-card:focus-within { outline: 2px solid var(--gold); outline-offset: 3px; }
+.feature-card .fc-title a:focus-visible { outline: none; }
 .feature-card .fc-price { font-weight: 800; color: var(--gold-300); font-size: 1.15rem; }
-.feature-card .fc-price small { color: rgba(255, 255, 255, .7); font-weight: 600; font-size: .78rem; }
-.feature-card .fc-title { font-family: var(--font-display); font-size: clamp(1.5rem, 2.3vw, 2.1rem); line-height: 1.08; color: #fff; margin: 0; }
+.feature-card .fc-price small { color: rgba(255, 255, 255, .78); font-weight: 600; font-size: .78rem; }
+.feature-card .fc-title { font-family: var(--font-display); font-size: clamp(1.45rem, 2.2vw, 2rem); line-height: 1.08; color: #fff; margin: 0; }
 .feature-card .fc-title a { color: inherit; text-decoration: none; }
 .feature-card .fc-title a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
-.feature-card .fc-meta { display: flex; flex-wrap: wrap; gap: .3rem 1.1rem; color: rgba(255, 255, 255, .78); font-size: .86rem; }
+.feature-card .fc-meta { display: flex; flex-wrap: wrap; gap: .3rem 1.1rem; color: rgba(255, 255, 255, .86); font-size: .86rem; }
 .feature-card .fc-meta i { color: var(--gold-300); }
 .feature-card .fav-btn { z-index: 3; }
 

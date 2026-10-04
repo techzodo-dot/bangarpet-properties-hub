@@ -218,9 +218,9 @@
       {% for agent in agents %}
       <div class="col-md-6">
         <article class="agent-premium">
-          <div class="ap-avatar">{% if agent.profile.avatar %}<img src="{{ agent.profile.avatar.url }}" alt="">{% else %}<span>{{ agent|initials }}</span>{% endif %}<i class="bi bi-patch-check-fill" title="Verified broker"></i></div>
+          <div class="ap-avatar">{% if agent.profile.avatar %}<img src="{{ agent.profile.avatar.url }}" alt="">{% else %}<span>{{ agent|initials }}</span>{% endif %}<i class="bi bi-patch-check-fill" aria-hidden="true"></i></div>
           <div class="ap-body">
-            <h3>{{ agent.full_name }}</h3>
+            <h3>{{ agent.full_name }} <span class="badge badge-verified ms-1 align-middle"><i class="bi bi-patch-check-fill" aria-hidden="true"></i> Verified broker</span></h3>
             <div class="small text-muted text-truncate">{{ agent.broker_profile.agency_name }}{% if agent.broker_profile.rera_number %} &middot; RERA {{ agent.broker_profile.rera_number }}{% endif %}</div>
             <div class="ap-stats">
               <span><b>{{ agent.active_listings }}</b> live listing{{ agent.active_listings|pluralize }}</span>
@@ -304,7 +304,7 @@
       </div>
       <div class="col-lg-6">
         <form method="post" action="{% url 'core:contact' %}" class="glass-form" data-once novalidate>
-          {% csrf_token %}{{ contact_form.website }}
+          {% csrf_token %}{{ contact_form.website }}<input type="hidden" name="source" value="home">
           <span class="section-eyebrow">Talk to us</span>
           <h2 id="contact-title" class="h1 mb-2">A real team in Kolar district</h2>
           <p class="text-muted small mb-4">
@@ -313,6 +313,9 @@
             {% if site.contact_email %}<a href="mailto:{{ site.contact_email }}" class="text-nowrap"><i class="bi bi-envelope me-1"></i>{{ site.contact_email }}</a>{% endif %}
             {% if not site.support_phone and not site.contact_email %}Send a message and a member of our team will get back to you.{% endif %}
           </p>
+          {% if contact_sent %}
+          <div class="alert alert-success d-flex gap-2 align-items-start" role="status" tabindex="-1" data-autofocus><i class="bi bi-check-circle-fill mt-1"></i><div><strong>Message received.</strong> Thank you &mdash; a member of our team will reply soon. You can send another below.</div></div>
+          {% endif %}
           {% if user.is_authenticated and user.is_platform_admin and not site.support_phone and not site.contact_email %}
           <div class="small mb-3 p-2 rounded-3" style="background:var(--gold-soft);color:var(--gold-300)"><i class="bi bi-gear me-1"></i>Admin: add a support phone, WhatsApp and email in <a class="text-reset" href="{% url 'adminpanel:settings' %}">Management &rarr; Settings</a> to show them here.</div>
           {% endif %}
@@ -325,7 +328,7 @@
           </div>
           <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mt-4">
             <span class="small text-muted"><i class="bi bi-lock me-1"></i>Used only to reply to you</span>
-            <button class="btn btn-accent" type="submit">Send message <i class="bi bi-arrow-right ms-1"></i></button>
+            <button class="btn btn-accent" type="submit">Send message <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i><span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
           </div>
         </form>
       </div>

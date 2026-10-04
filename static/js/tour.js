@@ -12,7 +12,10 @@
     const count = stage.querySelector("[data-tour-count]");
     const toggle = stage.querySelector("[data-tour-toggle]");
     const interval = parseInt(stage.dataset.interval || "4000", 10);
-    let index = 0, timer = null, playing = !reduceMotion;
+    // "playing" is the user's choice; "held" pauses temporarily while the tour is hovered,
+    // focused, scrolled away or in a background tab, without overriding that choice.
+    let index = 0, timer = null, playing = !reduceMotion, hover = false, focus = false, visible = true;
+    const held = function () { return hover || focus || !visible || document.hidden; };
 
     function show(i) {
       index = (i + slides.length) % slides.length;
@@ -31,8 +34,8 @@
     }
     function schedule() {
       clearInterval(timer);
-      stage.classList.toggle("is-paused", !playing);
-      if (playing) timer = setInterval(function () { show(index + 1); }, interval);
+      stage.classList.toggle("is-paused", !playing || held());
+      if (playing && !held()) timer = setInterval(function () { show(index + 1); }, interval);
       if (toggle) {
         toggle.setAttribute("aria-label", playing ? "Pause tour" : "Play tour");
         toggle.innerHTML = playing ? '<i class="bi bi-pause-fill"></i>' : '<i class="bi bi-play-fill"></i>';
@@ -41,16 +44,26 @@
     stage.style.setProperty("--tour-interval", interval + "ms");
     stage.querySelector("[data-tour-prev]").addEventListener("click", function () { show(index - 1); schedule(); });
     stage.querySelector("[data-tour-next]").addEventListener("click", function () { show(index + 1); schedule(); });
-    if (toggle) toggle.addEventListener("click", function () { playing = !playing; schedule(); });
+    if (toggle) toggle.addEventListener("click", function () {
+      playing = !playing;
+      if (playing) { hover = false; focus = false; } // an explicit Play wins over hover/focus holds
+      schedule();
+    });
     rooms.forEach(function (r) { r.addEventListener("click", function () { show(parseInt(r.dataset.tourGoto, 10)); schedule(); }); });
     stage.addEventListener("keydown", function (e) {
       if (e.key === "ArrowRight") { show(index + 1); schedule(); }
       if (e.key === "ArrowLeft") { show(index - 1); schedule(); }
     });
-    // Only run while visible, to save battery and data.
+    // Hold while the visitor is looking at or interacting with the tour.
+    stage.addEventListener("mouseenter", function () { hover = true; schedule(); });
+    stage.addEventListener("mouseleave", function () { hover = false; schedule(); });
+    stage.addEventListener("focusin", function () { focus = true; schedule(); });
+    stage.addEventListener("focusout", function (e) { if (!stage.contains(e.relatedTarget)) { focus = false; schedule(); } });
+    document.addEventListener("visibilitychange", schedule);
+    // Only run while on screen, to save battery and data.
     if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) { if (en.isIntersecting) schedule(); else clearInterval(timer); });
+        entries.forEach(function (en) { visible = en.isIntersecting; schedule(); });
       }, { threshold: 0.3 }).observe(stage);
     } else { schedule(); }
     show(0);
