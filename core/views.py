@@ -141,6 +141,7 @@ def robots_txt(request):
         "Disallow: /payments/",
         "Disallow: /notifications/",
         "Disallow: /login/",
+        "Disallow: /admin-login/",
         "Disallow: /register/",
         "Disallow: /*?*sort=",
         "Allow: /",

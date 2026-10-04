@@ -113,6 +113,22 @@ class LoginForm(BootstrapFormMixin, AuthenticationForm):
         return self.cleaned_data
 
 
+class AdminLoginForm(LoginForm):
+    """Sign-in for platform administrators only."""
+
+    username = forms.CharField(
+        label="Admin username", max_length=254,
+        widget=forms.TextInput(attrs={"autofocus": True, "autocomplete": "username", "autocapitalize": "none", "spellcheck": "false"}),
+    )
+
+    def confirm_login_allowed(self, user):
+        super().confirm_login_allowed(user)
+        if not user.is_platform_admin:
+            raise forms.ValidationError(
+                "This sign-in is for administrators only. Use the regular Sign in page.", code="not_admin"
+            )
+
+
 class ThrottledPasswordResetForm(BootstrapFormMixin, PasswordResetForm):
     pass
 

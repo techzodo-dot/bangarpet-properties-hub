@@ -56,3 +56,20 @@ class EnsureAdminTests(TestCase):
         resp = self.client.post("/login/", {"username": "bph@admin", "password": "wrong"})
         self.assertEqual(resp.status_code, 200)
         self.assertContains(resp, "Incorrect email/username or password.")
+
+    def test_admin_login_page_signs_admins_into_management(self):
+        self.run_cmd(ADMIN_USERNAME="bph@admin", ADMIN_PASSWORD="Test#Admin2024")
+        page = self.client.get("/admin-login/")
+        self.assertContains(page, "Admin sign in")
+        resp = self.client.post("/admin-login/", {"username": "bph@admin", "password": "Test#Admin2024"})
+        self.assertRedirects(resp, "/management/")
+
+    def test_admin_login_page_rejects_other_accounts(self):
+        get_user_model().objects.create_user("owner@example.com", "Owner#Pass2024", role=Role.OWNER, full_name="Owner")
+        resp = self.client.post("/admin-login/", {"username": "owner@example.com", "password": "Owner#Pass2024"})
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, "administrators only")
+        self.assertNotIn("_auth_user_id", self.client.session)
+
+    def test_header_links_to_admin_login(self):
+        self.assertContains(self.client.get("/"), 'href="/admin-login/"')

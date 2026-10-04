@@ -12,6 +12,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import FormView
 
 from accounts.forms import (
+    AdminLoginForm,
     LoginForm,
     RegistrationForm,
     StyledPasswordChangeForm,
@@ -71,6 +72,16 @@ class LoginView(auth_views.LoginView):
 
     def get_default_redirect_url(self):
         return str(reverse_lazy("accounts:post_login"))
+
+
+class AdminLoginView(LoginView):
+    """Separate sign-in for platform administrators; lands on the management panel."""
+
+    template_name = "accounts/admin_login.html"
+    form_class = AdminLoginForm
+
+    def get_default_redirect_url(self):
+        return str(reverse_lazy("adminpanel:dashboard"))
 
 
 @login_required
