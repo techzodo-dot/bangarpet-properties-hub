@@ -16,18 +16,30 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env                 # defaults work for local development
 python manage.py migrate             # creates tables + reference data (categories, Bangarpet locations, plans)
-python manage.py createsuperuser     # your admin account (email + full name + password)
-python manage.py seed_demo           # OPTIONAL: clearly-marked [DEMO] users and listings
+python manage.py seed_demo           # OPTIONAL: [DEMO] accounts (incl. an admin), listings and activity
+python manage.py createsuperuser     # your own admin account (email + full name + password)
 python manage.py runserver
 ```
 
 Open http://127.0.0.1:8000/. The admin panel is at **/management/** (sign in with the superuser).
 
-Demo accounts created by `seed_demo` (password `DemoPass#2024`): `owner@demo.bph.local`,
-`broker@demo.bph.local` (verified), `customer@demo.bph.local`. Remove them with
-`python manage.py seed_demo --clear`. Demo listings carry a `[DEMO]` title prefix, a banner on the detail
-page and generated illustration images — they are never real properties. The command refuses to run when
-`DEBUG=False`.
+`seed_demo` creates four demo accounts (password `DemoPass#2024` for all):
+
+| Account | Role | Start at |
+|---|---|---|
+| `admin@demo.bph.local` | super admin | `/management/` |
+| `owner@demo.bph.local` | owner (Pro plan) | `/partner/dashboard/` |
+| `broker@demo.bph.local` | verified broker (Broker plan) | `/partner/dashboard/` |
+| `customer@demo.bph.local` | customer | `/dashboard/` |
+
+It also creates 10 live listings and 1 waiting for approval, plus sample activity: enquiries, a requested
+and a scheduled visit, saved homes, recently viewed properties, an open report and notifications.
+Every demo listing has a `[DEMO]` title prefix, a banner on its page and illustrations labelled
+"SAMPLE IMAGE · DEMO" - never real properties or photos.
+
+* `python manage.py seed_demo --reset` recreates the demo data from scratch.
+* `python manage.py seed_demo --clear` removes all demo accounts, listings, images and payments (real data is untouched).
+* The command refuses to run when `DEBUG=False` (use `--force` only on a staging copy).
 
 Emails print to the console in development (no SMTP needed).
 
@@ -37,11 +49,11 @@ Emails print to the console in development (no SMTP needed).
 python manage.py test          # uses config.settings.test automatically (in-memory SQLite)
 ```
 
-102 tests cover registration/login/throttling, password reset, email verification, role permissions,
+106 tests cover registration/login/throttling, password reset, email verification, role permissions,
 cross-user access protection, the listing wizard, image upload validation (type, size, dimensions,
 EXIF stripping), search filters/sorting/pagination, favourites, reports, enquiries and visit scheduling,
 moderation, user suspension, subscriptions and expiry, Razorpay checkout/signature verification/webhooks
-(idempotency, amount mismatch), manual payments, notifications and SEO (sitemap/robots).
+(idempotency, amount mismatch), manual payments, notifications, SEO (sitemap/robots) and the demo seeder.
 
 ## Feature overview
 
@@ -122,7 +134,7 @@ saved-search alerts and purges verification documents past their retention date.
 4. **Management panel** — moderation, verification, banners/ads, configuration, audit logs.
 5. **Subscriptions, payments, notifications** — plans, Razorpay, manual payments, email/WhatsApp.
 6. **SEO, security, tests, performance, deployment** — sitemap/robots/JSON-LD, security headers,
-   rate limiting, 102 automated tests, query optimisation and caching, production settings and docs.
+   rate limiting, 106 automated tests, query optimisation and caching, production settings and docs.
 
 ## Before launch
 
