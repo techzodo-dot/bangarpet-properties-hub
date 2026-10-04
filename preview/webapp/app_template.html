@@ -1,0 +1,1407 @@
+<title>Bangarpet Property Hub</title>
+<meta name="description" content="Interactive demo of Bangarpet Property Hub: search, property pages with photo tours, enquiries, visits and listing a property.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap">
+<style>
+/* Layout: sticky glass header; full-bleed navy bands alternate with off-white content; 1200px reading container.
+   Single light theme by choice (the brand is navy on white), every colour set explicitly. */
+:root {
+  color-scheme: light;
+  --navy: #172B4D; --navy-900: #0d1b33; --navy-700: #22396a; --navy-50: #eef2f8;
+  --yellow: #FFD600; --yellow-600: #e6c000; --yellow-50: #fff9d6;
+  --bg: #F7F8FA; --surface: #ffffff; --text: #1f2633; --muted: #5f6b7a; --border: #e3e7ee;
+  --green: #138a3e; --green-50: #e7f6ec; --red: #c62828; --red-50: #fdecec; --amber-50: #fff6e0; --amber: #8a5a00;
+  --on-navy: #ffffff; --on-navy-muted: rgba(255,255,255,.72);
+  --display: "Montserrat", "Segoe UI", system-ui, sans-serif;
+  --body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --r-sm: 10px; --r: 16px; --r-lg: 24px;
+  --sh-sm: 0 1px 2px rgba(23,43,77,.06), 0 1px 3px rgba(23,43,77,.06);
+  --sh: 0 4px 16px rgba(23,43,77,.08);
+  --sh-lg: 0 18px 40px rgba(23,43,77,.14);
+  --header-h: 68px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 15px/1.6 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+h1, h2, h3, h4 { font-family: var(--display); color: var(--navy); letter-spacing: -.01em; line-height: 1.2; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: #1d4ed8; text-underline-offset: 3px; }
+button { font: inherit; cursor: pointer; }
+img { max-width: 100%; display: block; }
+:focus-visible { outline: 3px solid rgba(255,214,0,.95); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+.wrap { width: 100%; max-width: 1232px; margin-inline: auto; padding-inline: 16px; }
+.muted { color: var(--muted); }
+.small { font-size: .85rem; }
+.tnum { font-variant-numeric: tabular-nums; }
+.vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Icons (Bootstrap Icons subset, embedded) */
+/*__ICON_CSS__*/
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .45rem; padding: .62rem 1.1rem; border-radius: 12px; border: 1px solid transparent; font-weight: 600; font-size: .95rem; text-decoration: none; line-height: 1.2; transition: background .15s, border-color .15s, transform .1s, color .15s; white-space: nowrap; }
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--navy); color: #fff; }
+.btn-primary:hover { background: var(--navy-700); }
+.btn-accent { background: var(--yellow); color: var(--navy); }
+.btn-accent:hover { background: var(--yellow-600); }
+.btn-soft { background: var(--navy-50); color: var(--navy); }
+.btn-soft:hover { background: #e1e8f3; }
+.btn-outline { background: var(--surface); color: var(--navy); border-color: var(--navy); }
+.btn-outline:hover { background: var(--navy); color: #fff; }
+.btn-danger { background: var(--surface); color: var(--red); border-color: #f0b8b8; }
+.btn-danger:hover { background: var(--red-50); }
+.btn-glass { background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.3); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.btn-glass:hover { background: #fff; color: var(--navy); }
+.btn-lg { padding: .82rem 1.4rem; font-size: 1.02rem; border-radius: 14px; }
+.btn-sm { padding: .38rem .75rem; font-size: .85rem; border-radius: 9px; }
+.btn-block { width: 100%; }
+.btn[disabled] { opacity: .55; cursor: not-allowed; }
+.icon-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); color: var(--navy); display: inline-grid; place-items: center; font-size: 1.1rem; }
+.icon-btn:hover { background: var(--navy-50); }
+
+/* Forms */
+.field { display: grid; gap: .35rem; min-width: 0; }
+.field > label, .label { font-weight: 600; font-size: .86rem; color: var(--navy); }
+.req { color: var(--red); }
+.input, .select, .textarea { width: 100%; min-height: 46px; padding: .62rem .85rem; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); font: inherit; }
+.textarea { min-height: 110px; resize: vertical; }
+.input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--navy); box-shadow: 0 0 0 3px rgba(23,43,77,.14); }
+.input.invalid, .select.invalid, .textarea.invalid { border-color: var(--red); }
+.err { color: var(--red); font-size: .82rem; }
+.hint { color: var(--muted); font-size: .82rem; }
+.check { display: flex; align-items: flex-start; gap: .55rem; font-size: .92rem; cursor: pointer; }
+.check input { margin-top: .25rem; accent-color: var(--navy); width: 17px; height: 17px; }
+.form-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.form-grid .full { grid-column: 1 / -1; }
+@media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+.tiles { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.tile { display: flex; align-items: center; gap: .55rem; padding: .7rem .85rem; border: 1.5px solid var(--border); border-radius: 12px; background: var(--surface); cursor: pointer; font-weight: 500; font-size: .92rem; }
+.tile input { accent-color: var(--navy); }
+.tile:has(input:checked) { border-color: var(--navy); background: var(--navy-50); }
+.tile.disabled { opacity: .45; cursor: not-allowed; }
+
+/* Badges & chips */
+.badge { display: inline-flex; align-items: center; gap: .3rem; padding: .25rem .6rem; border-radius: 999px; font-size: .76rem; font-weight: 600; border: 1px solid transparent; white-space: nowrap; }
+.b-soft { background: var(--navy-50); color: var(--navy); }
+.b-verified { background: var(--green-50); color: var(--green); border-color: #bfe5cc; }
+.b-featured { background: var(--yellow); color: var(--navy); }
+.b-pending { background: var(--amber-50); color: var(--amber); border-color: #f3d48b; }
+.b-cancel { background: var(--red-50); color: var(--red); border-color: #f3c0c0; }
+.b-ok { background: var(--green-50); color: var(--green); border-color: #bfe5cc; }
+.glass-chip { display: inline-flex; align-items: center; gap: .3rem; padding: .28rem .65rem; border-radius: 999px; font-size: .74rem; font-weight: 700; color: #fff; background: rgba(13,27,51,.45); border: 1px solid rgba(255,255,255,.35); backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%); }
+.glass-chip.yellow { color: var(--navy); background: rgba(255,214,0,.9); border-color: rgba(255,240,160,.9); }
+.glass-chip.light { color: var(--navy); background: rgba(255,255,255,.75); }
+.eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--navy); background: var(--yellow-50); border: 1px solid #f5e48a; padding: .3rem .7rem; border-radius: 999px; }
+.eyebrow.dark { background: rgba(255,214,0,.12); border-color: rgba(255,214,0,.35); color: var(--yellow); }
+
+/* Header */
+.demo-bar { background: var(--yellow); color: var(--navy); font-size: .82rem; font-weight: 600; text-align: center; padding: .4rem 16px; }
+@media (max-width: 560px) { .hide-sm { display: none; } }
+.site-header { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: rgba(255,255,255,.95); border-bottom: 1px solid var(--border); }
+@supports (backdrop-filter: blur(1px)) { .site-header { background: rgba(255,255,255,.86); backdrop-filter: saturate(180%) blur(12px); -webkit-backdrop-filter: saturate(180%) blur(12px); } }
+.header-row { height: var(--header-h); display: flex; align-items: center; gap: 1rem; }
+.brand { display: inline-flex; align-items: center; gap: .55rem; text-decoration: none; background: none; border: 0; padding: 0; }
+.brand svg { width: 50px; height: 40px; }
+.brand-name { display: block; font-family: var(--display); font-weight: 800; color: var(--navy); font-size: 1rem; letter-spacing: .03em; line-height: 1.05; text-transform: uppercase; text-align: left; }
+.brand-sub { display: block; font-family: var(--display); font-weight: 700; color: #c9a800; font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; text-align: left; }
+.nav { display: flex; gap: .15rem; margin-left: auto; }
+.nav button { background: none; border: 0; padding: .5rem .8rem; border-radius: 10px; font-weight: 600; color: var(--text); }
+.nav button:hover, .nav button.active { background: var(--navy-50); color: var(--navy); }
+.header-actions { display: flex; align-items: center; gap: .5rem; margin-left: auto; }
+.count-dot { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--red); color: #fff; font-size: .7rem; font-weight: 700; display: inline-grid; place-items: center; line-height: 1; }
+.menu-btn { display: none; }
+@media (max-width: 1023px) {
+  .nav, .header-actions .hide-md { display: none; }
+  .menu-btn { display: inline-grid; margin-left: auto; }
+}
+.drawer-backdrop { position: fixed; inset: 0; background: rgba(13,27,51,.45); z-index: 80; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(320px, 86vw); background: var(--surface); z-index: 81; padding: calc(1rem + env(safe-area-inset-top, 0px)) 1.25rem 1rem; display: flex; flex-direction: column; gap: .3rem; box-shadow: var(--sh-lg); overflow-y: auto; }
+.drawer button.link { text-align: left; background: none; border: 0; padding: .75rem .5rem; border-radius: 10px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: .6rem; }
+.drawer button.link:hover { background: var(--navy-50); }
+
+.tabbar { display: none; }
+@media (max-width: 1023px) {
+  .tabbar { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; background: rgba(255,255,255,.97); border-top: 1px solid var(--border); padding: .3rem .25rem calc(.3rem + env(safe-area-inset-bottom, 0px)); }
+  .tabbar button { flex: 1; background: none; border: 0; display: flex; flex-direction: column; align-items: center; gap: 1px; font-size: .68rem; font-weight: 600; color: var(--muted); min-height: 50px; justify-content: center; position: relative; }
+  .tabbar button.active { color: var(--navy); }
+  .tabbar .bi { font-size: 1.22rem; }
+  .tabbar .count-dot { position: absolute; top: 2px; left: calc(50% + 6px); }
+  main { padding-bottom: 76px; }
+}
+
+/* Sections */
+.section { padding-block: 4rem; }
+.section-sm { padding-block: 2.5rem; }
+.sec-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem; margin-bottom: 1.6rem; }
+.sec-head > div { display: grid; gap: .5rem; max-width: 680px; }
+.sec-title { font-size: clamp(1.45rem, 2.6vw, 2.05rem); }
+.lead { color: var(--muted); }
+.band { background: var(--navy); color: var(--on-navy-muted); position: relative; overflow: hidden; }
+.band h1, .band h2, .band h3 { color: #fff; }
+.white-band { background: var(--surface); border-block: 1px solid var(--border); }
+.orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; opacity: .6; mix-blend-mode: screen; }
+.orb-a { width: 460px; height: 460px; right: -120px; top: -140px; background: rgba(255,196,0,.3); }
+.orb-b { width: 520px; height: 520px; left: -200px; bottom: -260px; background: rgba(86,128,214,.45); }
+.orb-c { width: 560px; height: 560px; right: 5%; top: 20%; background: rgba(90,140,230,.4); }
+
+/* Hero */
+.hero { padding-block: 4.5rem 6.5rem; }
+.hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; align-items: center; }
+@media (max-width: 1023px) { .hero-grid { grid-template-columns: 1fr; } .hero-show { display: none; } .hero { padding-block: 3rem 5rem; } }
+.kicker { display: inline-flex; align-items: center; gap: .45rem; color: rgba(255,255,255,.85); font-size: .8rem; font-weight: 600; letter-spacing: .04em; padding: .35rem .8rem; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06); }
+.kicker .bi { color: var(--yellow); }
+.hero h1 { font-size: clamp(2rem, 4.4vw, 3.35rem); font-weight: 800; margin-block: 1rem; }
+.hero h1 em { font-style: normal; color: var(--yellow); }
+.hero .lead { color: rgba(255,255,255,.8); font-size: 1.06rem; max-width: 34rem; margin-bottom: 1.6rem; }
+.glass { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.24); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); box-shadow: 0 20px 50px rgba(5,12,28,.28); }
+.search-panel { border-radius: var(--r-lg); padding: 1.2rem; display: grid; gap: .8rem; }
+.search-panel .label { color: rgba(255,255,255,.85); font-size: .74rem; text-transform: uppercase; letter-spacing: .06em; }
+.search-panel .input, .search-panel .select { border-color: transparent; background: rgba(255,255,255,.97); }
+.seg { display: inline-flex; gap: .25rem; }
+.seg label { cursor: pointer; padding: .42rem 1rem; border-radius: 10px; font-weight: 600; color: rgba(255,255,255,.85); }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label:has(input:checked) { background: var(--yellow); color: var(--navy); }
+.seg label:has(input:focus-visible) { outline: 3px solid rgba(255,214,0,.9); }
+.sp-grid { display: grid; gap: .6rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.hero-show { position: relative; display: block; border-radius: 28px; aspect-ratio: 5 / 4; padding: 0; border: 0; background: none; text-align: left; box-shadow: 0 40px 80px rgba(3,10,25,.45); }
+.hero-show img { width: 100%; height: 100%; object-fit: cover; border-radius: 28px; border: 1px solid rgba(255,255,255,.18); }
+.float { position: absolute; display: inline-flex; align-items: center; gap: .45rem; color: #fff; padding: .7rem 1rem; border-radius: 16px; background: rgba(13,27,51,.42); border: 1px solid rgba(255,255,255,.28); backdrop-filter: blur(16px) saturate(160%); -webkit-backdrop-filter: blur(16px) saturate(160%); box-shadow: 0 16px 36px rgba(3,10,25,.3); font-weight: 600; font-size: .88rem; transition: transform .3s; }
+.hero-show:hover .float { transform: translateY(-3px); }
+.float-price { left: -24px; bottom: 34px; flex-direction: column; align-items: flex-start; gap: .1rem; width: 270px; padding: 1rem 1.1rem; }
+.float-price strong { font-family: var(--display); font-size: 1.45rem; color: var(--yellow); }
+.float-price strong small { font-size: .78rem; color: #fff; font-weight: 500; }
+.float-price .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.float-check { right: -14px; top: 28px; }
+.float-check .bi { color: var(--yellow); }
+.float-verified { right: 26px; bottom: -16px; background: rgba(19,138,62,.82); }
+
+.trust-bar { position: relative; z-index: 3; margin-top: -3.2rem; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--surface); border: 1px solid var(--border); border-radius: 22px; box-shadow: var(--sh-lg); }
+.tb { display: flex; gap: .8rem; align-items: center; padding: 1.2rem 1.3rem; min-width: 0; }
+.tb + .tb { border-left: 1px solid var(--border); }
+.tb strong { display: block; color: var(--navy); font-family: var(--display); font-size: .96rem; }
+.tb span.d { display: block; color: var(--muted); font-size: .8rem; line-height: 1.4; }
+.tb-ic { flex: none; width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; background: var(--yellow-50); color: var(--navy); font-size: 1.2rem; }
+@media (max-width: 1023px) { .trust-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); } .tb:nth-child(3) { border-left: 0; } .tb:nth-child(n+3) { border-top: 1px solid var(--border); } }
+@media (max-width: 560px) { .trust-bar { grid-template-columns: 1fr; margin-top: -2.5rem; } .tb + .tb { border-left: 0; border-top: 1px solid var(--border); } .tb { padding: .85rem 1.1rem; } }
+
+.cats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .9rem; }
+@media (max-width: 1023px) { .cats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .cats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; } }
+.cat { display: flex; flex-direction: column; align-items: center; gap: .45rem; padding: 1.1rem .5rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--sh-sm); color: var(--navy); font-weight: 600; font-size: .9rem; transition: transform .18s, box-shadow .18s; }
+.cat .bi { font-size: 1.5rem; width: 52px; height: 52px; display: grid; place-items: center; border-radius: 14px; background: var(--yellow-50); }
+.cat:hover { transform: translateY(-3px); box-shadow: var(--sh-lg); }
+
+/* Property cards */
+.cards { display: grid; gap: 1.4rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.cards.cols-3 { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.pcard { position: relative; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; box-shadow: var(--sh-sm); transition: transform .2s, box-shadow .2s; min-width: 0; }
+.pcard:hover { transform: translateY(-4px); box-shadow: var(--sh-lg); }
+.pcard .media { position: relative; aspect-ratio: 4 / 3; background: var(--navy-50); overflow: hidden; }
+.pcard .media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+.pcard:hover .media img { transform: scale(1.04); }
+.chips-top { position: absolute; top: .7rem; left: .7rem; right: 3.4rem; display: flex; flex-wrap: wrap; gap: .3rem; z-index: 2; }
+.price-glass { position: absolute; left: .7rem; bottom: .7rem; padding: .4rem .75rem; border-radius: 12px; color: #fff; background: rgba(13,27,51,.5); border: 1px solid rgba(255,255,255,.3); backdrop-filter: blur(12px) saturate(150%); -webkit-backdrop-filter: blur(12px) saturate(150%); font-family: var(--display); font-weight: 700; font-size: 1.02rem; }
+.price-glass small { font-family: var(--body); font-weight: 500; font-size: .7rem; opacity: .85; }
+.fav { position: absolute; top: .6rem; right: .6rem; z-index: 3; width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(255,255,255,.7); background: rgba(255,255,255,.85); color: var(--navy); display: grid; place-items: center; font-size: 1.05rem; transition: transform .15s; }
+.fav:hover { transform: scale(1.08); }
+.fav.on { color: var(--red); }
+.pcard .body { padding: 1rem 1.05rem 1.05rem; display: flex; flex-direction: column; gap: .35rem; flex: 1; }
+.pcard .title { font-family: var(--display); font-size: 1rem; font-weight: 700; color: var(--navy); line-height: 1.3; margin: 0; }
+.pcard .title button { all: unset; cursor: pointer; }
+.pcard .title button::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.pcard .title button:focus-visible { outline: 3px solid rgba(255,214,0,.95); }
+.loc { color: var(--muted); font-size: .86rem; }
+.specs { display: flex; flex-wrap: wrap; gap: .3rem .85rem; font-size: .84rem; padding-top: .55rem; margin-top: auto; border-top: 1px dashed var(--border); }
+.specs .bi { color: var(--navy); opacity: .7; }
+.meta-foot { display: flex; justify-content: space-between; align-items: center; gap: .5rem; font-size: .76rem; color: var(--muted); }
+.list-view .pcard { flex-direction: row; }
+.list-view .pcard .media { flex: 0 0 290px; aspect-ratio: auto; min-height: 200px; }
+@media (max-width: 720px) { .list-view .pcard { flex-direction: column; } .list-view .pcard .media { flex: none; aspect-ratio: 4 / 3; min-height: 0; } }
+.list-view { grid-template-columns: 1fr !important; }
+
+/* Glass cards (featured on navy) */
+.gcard { position: relative; display: flex; flex-direction: column; border-radius: 22px; overflow: hidden; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(18px) saturate(150%); -webkit-backdrop-filter: blur(18px) saturate(150%); box-shadow: 0 24px 50px rgba(3,10,25,.35); transition: transform .25s, border-color .25s, background .25s; min-width: 0; }
+.gcard:hover { transform: translateY(-6px); border-color: rgba(255,214,0,.55); background: rgba(255,255,255,.12); }
+.gcard .media { position: relative; aspect-ratio: 16 / 11; overflow: hidden; }
+.gcard .media img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
+.gcard:hover .media img { transform: scale(1.05); }
+.gcard .gbody { padding: 1.1rem 1.2rem 1.15rem; display: flex; flex-direction: column; gap: .4rem; flex: 1; }
+.gprice { font-family: var(--display); font-weight: 800; font-size: 1.3rem; color: var(--yellow); }
+.gprice small { font-family: var(--body); font-size: .76rem; font-weight: 500; color: rgba(255,255,255,.7); }
+.gtitle { font-family: var(--display); font-size: 1.02rem; font-weight: 700; line-height: 1.3; color: #fff; }
+.gtitle button { all: unset; cursor: pointer; }
+.gtitle button::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.gloc { font-size: .86rem; color: rgba(255,255,255,.7); }
+.gspecs { display: flex; flex-wrap: wrap; gap: .3rem 1rem; font-size: .83rem; color: rgba(255,255,255,.88); }
+.gspecs .bi { color: var(--yellow); }
+.gfoot { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: .75rem; border-top: 1px solid rgba(255,255,255,.14); font-size: .8rem; }
+.gver { color: #7ee2a2; font-weight: 600; }
+.gcta { font-weight: 700; color: var(--yellow); transition: transform .2s; }
+.gcard:hover .gcta { transform: translateX(4px); }
+@media (max-width: 560px) {
+  .swipe { display: flex !important; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: .5rem; scrollbar-width: none; }
+  .swipe::-webkit-scrollbar { display: none; }
+  .swipe > * { flex: 0 0 86%; scroll-snap-align: start; }
+}
+
+/* Virtual tour */
+.tour-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1.4rem; }
+@media (max-width: 900px) { .tour-grid { grid-template-columns: 1fr; } }
+.stage { position: relative; min-height: 460px; border-radius: 24px; overflow: hidden; background: #0b1222; box-shadow: var(--sh-lg); }
+.slide { position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity .9s; }
+.slide.on { opacity: 1; }
+.slide img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.02); }
+.slide.on img { animation: pan 5200ms ease-out forwards; }
+.stage.paused .slide.on img, .stage.paused .bars .on i { animation-play-state: paused; }
+@keyframes pan { from { transform: scale(1.02); } to { transform: scale(1.12) translate(-1.5%, -1%); } }
+.stage::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5,12,28,.45), transparent 25%, transparent 55%, rgba(5,12,28,.6)); pointer-events: none; }
+.bars { position: absolute; z-index: 3; top: 14px; left: 16px; right: 16px; display: flex; gap: 6px; }
+.bars span { flex: 1; height: 4px; border-radius: 4px; background: rgba(255,255,255,.3); overflow: hidden; }
+.bars i { display: block; height: 100%; width: 0; background: var(--yellow); }
+.bars .done i { width: 100%; }
+.bars .on i { animation: bar 4000ms linear forwards; }
+@keyframes bar { to { width: 100%; } }
+.stage-top { position: absolute; z-index: 3; top: 32px; left: 16px; right: 16px; display: flex; justify-content: space-between; }
+.stage-ctl { position: absolute; z-index: 3; right: 16px; bottom: 16px; display: flex; gap: .5rem; }
+.tbtn { width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(255,255,255,.4); color: #fff; font-size: 1.15rem; display: grid; place-items: center; background: rgba(13,27,51,.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: background .2s, transform .2s; }
+.tbtn:hover { background: var(--yellow); color: var(--navy); transform: scale(1.06); }
+.panel { color: #fff; background: rgba(13,27,51,.45); border: 1px solid rgba(255,255,255,.25); backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%); border-radius: 18px; }
+.stage-info { position: absolute; z-index: 3; left: 16px; bottom: 16px; max-width: min(420px, calc(100% - 190px)); padding: 1rem 1.1rem; display: grid; gap: .2rem; }
+.stage-info strong { color: var(--yellow); font-family: var(--display); font-size: 1.15rem; }
+@media (max-width: 560px) { .stage { min-height: 380px; } .stage-info { right: 16px; max-width: none; bottom: 76px; } }
+.rooms { display: grid; gap: .5rem; list-style: none; margin: 0 0 1rem; padding: 0; }
+.room { width: 100%; display: flex; gap: .75rem; align-items: center; text-align: left; padding: .45rem; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); }
+.room img { width: 64px; height: 48px; object-fit: cover; border-radius: 10px; flex: none; }
+.room strong { display: block; color: var(--navy); font-size: .92rem; }
+.room small { color: var(--muted); font-size: .76rem; }
+.room.on { border-color: var(--navy); background: var(--navy-50); box-shadow: inset 3px 0 0 var(--yellow); }
+
+/* Surfaces */
+.surface { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--sh-sm); }
+.pad { padding: 1.4rem; }
+.stack { display: grid; gap: 1rem; }
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+.between { justify-content: space-between; }
+
+.area-grid { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.area { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: 1rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); color: var(--navy); font-weight: 600; text-align: left; transition: border-color .15s, box-shadow .15s, transform .15s; }
+.area:hover { border-color: var(--navy); box-shadow: var(--sh); transform: translateY(-2px); }
+.area .ic { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--navy-50); flex: none; }
+.area .c { font-size: .8rem; color: var(--muted); font-weight: 500; }
+
+.agents { display: grid; gap: 1.4rem; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+.agent { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 1.2rem 1.3rem; border-radius: 22px; background: var(--surface); border: 1px solid var(--border); overflow: hidden; transition: transform .25s, box-shadow .25s; }
+.agent:hover { transform: translateY(-5px); box-shadow: var(--sh-lg); }
+.agent .cover { align-self: stretch; height: 84px; margin-inline: -1.2rem; background: radial-gradient(240px 120px at 80% 0%, rgba(255,214,0,.45), transparent 70%), var(--navy); }
+.agent .av { position: relative; margin-top: -46px; margin-bottom: .7rem; width: 92px; height: 92px; border-radius: 50%; display: grid; place-items: center; background: var(--navy-700); color: var(--yellow); font-family: var(--display); font-weight: 800; font-size: 1.55rem; border: 4px solid #fff; box-shadow: 0 0 0 2px var(--yellow), var(--sh); }
+.agent .av .bi { position: absolute; right: 0; bottom: 2px; font-size: 1.2rem; color: var(--green); background: #fff; border-radius: 50%; line-height: 1; }
+.stats3 { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; margin: 1rem 0; padding: .7rem 0; border-block: 1px solid var(--border); }
+.stats3 div + div { border-left: 1px solid var(--border); }
+.stats3 b { display: block; font-family: var(--display); font-weight: 800; color: var(--navy); font-size: 1.08rem; }
+.stats3 span { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.join { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; text-align: center; padding: 1.5rem; border-radius: 22px; border: 2px dashed #cfd6e2; background: var(--bg); color: var(--muted); min-height: 300px; }
+.join:hover { border-color: var(--navy); background: var(--navy-50); }
+.join .ic { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-size: 1.55rem; background: var(--surface); color: var(--navy); border: 1px solid var(--border); }
+.join strong { color: var(--navy); font-family: var(--display); }
+
+.pillars { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 640px) { .pillars { grid-template-columns: 1fr; } }
+.pillar { padding: 1.3rem; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); display: grid; gap: .45rem; align-content: start; }
+.pillar .ic { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: var(--navy); color: var(--yellow); font-size: 1.2rem; }
+.pillar p { color: var(--muted); font-size: .9rem; }
+.two-col { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 2.5rem; align-items: center; }
+@media (max-width: 900px) { .two-col { grid-template-columns: 1fr; gap: 1.5rem; } }
+
+.steps { display: grid; gap: 1.2rem; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 1023px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
+.step { position: relative; padding: 1.5rem 1.3rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); display: grid; gap: .5rem; align-content: start; }
+.step .n { position: absolute; top: 1rem; right: 1.2rem; font-family: var(--display); font-weight: 800; font-size: 2.1rem; color: var(--navy-50); }
+.step .ic { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; background: var(--yellow); color: var(--navy); font-size: 1.35rem; }
+.step p { color: var(--muted); font-size: .92rem; }
+
+.cta { position: relative; overflow: hidden; border-radius: var(--r-lg); background: var(--navy); color: var(--on-navy-muted); padding: 2.6rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; }
+.cta::after { content: ""; position: absolute; right: -80px; top: -80px; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(circle, rgba(255,214,0,.28), transparent 70%); pointer-events: none; }
+.cta > * { position: relative; z-index: 1; }
+.cta h2 { color: #fff; font-size: clamp(1.35rem, 2.6vw, 1.85rem); }
+@media (max-width: 560px) { .cta { padding: 1.6rem; } }
+
+.faq { display: grid; gap: .6rem; }
+.faq details { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); overflow: hidden; }
+.faq summary { cursor: pointer; padding: 1rem 1.15rem; font-weight: 600; color: var(--navy); list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-size: 1.3rem; line-height: 1; color: var(--navy); }
+.faq details[open] summary { background: var(--navy-50); }
+.faq details[open] summary::after { content: "\2212"; }
+.faq details p { padding: .9rem 1.15rem 1.1rem; color: var(--muted); }
+
+.cpoints { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; gap: 1rem; }
+.cpoints li { display: flex; gap: .85rem; align-items: flex-start; }
+.cpoints small { display: block; color: rgba(255,255,255,.55); font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; }
+.cpoints span.v { color: #fff; font-weight: 500; }
+.cp-ic { flex: none; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; color: var(--yellow); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); }
+.glass-form { padding: 2rem; border-radius: 26px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); box-shadow: 0 30px 60px rgba(3,10,25,.35); display: grid; gap: 1rem; }
+.glass-form .field > label { color: rgba(255,255,255,.88); }
+.glass-form .input, .glass-form .textarea { border-color: transparent; }
+.glass-form .err { color: #ffb4b4; }
+@media (max-width: 560px) { .glass-form { padding: 1.2rem; } }
+
+footer { background: var(--navy-900); color: rgba(255,255,255,.75); padding-block: 3rem 1.5rem; }
+.foot-grid { display: grid; gap: 2rem; grid-template-columns: 2fr 1fr 1fr 1.5fr; }
+@media (max-width: 900px) { .foot-grid { grid-template-columns: 1fr 1fr; } }
+footer h4 { color: #fff; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .8rem; }
+footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
+footer button.fl { background: none; border: 0; padding: 0; color: rgba(255,255,255,.75); text-align: left; }
+footer button.fl:hover { color: var(--yellow); }
+footer .brand-name { color: #fff; }
+footer .brand-sub { color: var(--yellow); }
+.legal { border-top: 1px solid rgba(255,255,255,.1); margin-top: 2rem; padding-top: 1.2rem; font-size: .82rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem; }
+
+/* Search page */
+.page-head { padding-block: 1.6rem 1rem; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; }
+.crumbs { font-size: .82rem; color: var(--muted); display: flex; gap: .4rem; flex-wrap: wrap; }
+.crumbs button { background: none; border: 0; padding: 0; color: #1d4ed8; text-decoration: underline; text-underline-offset: 3px; font-size: inherit; }
+.search-layout { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 1.6rem; padding-bottom: 3rem; align-items: start; }
+.filters { position: sticky; top: calc(var(--header-h) + 1rem); padding: 1.2rem; gap: .9rem; display: grid; }
+@media (max-width: 1023px) { .search-layout { grid-template-columns: 1fr; } .filters { position: static; } .filters:not(.open) { display: none; } }
+.filters h3 { font-size: 1rem; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: 1rem; }
+.toggle { display: inline-flex; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.toggle button { border: 0; background: none; padding: .45rem .7rem; color: var(--muted); }
+.toggle button.on { background: var(--navy); color: #fff; }
+.chip { display: inline-flex; align-items: center; gap: .35rem; padding: .3rem .65rem; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-size: .8rem; font-weight: 500; color: var(--text); }
+.chip:hover { border-color: var(--red); color: var(--red); }
+.empty { text-align: center; padding: 3rem 1.5rem; background: var(--surface); border: 1px dashed #cfd6e2; border-radius: var(--r); display: grid; gap: .6rem; justify-items: center; }
+.empty .bi { font-size: 2.3rem; color: #9aa8bf; }
+
+/* Property page */
+.gallery { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 210px 210px; gap: .5rem; border-radius: var(--r-lg); overflow: hidden; }
+.gallery button { position: relative; padding: 0; border: 0; overflow: hidden; background: var(--navy-50); cursor: zoom-in; }
+.gallery button:first-child { grid-row: span 2; }
+.gallery img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+.gallery button:hover img { transform: scale(1.03); }
+.gallery .more { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(13,27,51,.55); color: #fff; font-weight: 700; }
+.gallery.one { grid-template-columns: 1fr; grid-template-rows: 420px; }
+.gallery.one button:first-child { grid-row: auto; }
+@media (max-width: 720px) { .gallery, .gallery.one { grid-template-columns: 1fr; grid-template-rows: 260px; } .gallery button:not(:first-child) { display: none; } .gallery button:first-child { grid-row: auto; } }
+.detail { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1.6rem; padding-block: 1.6rem 3rem; align-items: start; }
+@media (max-width: 1023px) { .detail { grid-template-columns: 1fr; } }
+.facts { display: grid; gap: .7rem; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.fact { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: .75rem .9rem; }
+.fact .k { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+.fact .v { font-weight: 700; color: var(--navy); }
+.big-price { font-family: var(--display); font-size: 2rem; font-weight: 800; color: var(--navy); }
+.big-price small { font-size: .95rem; font-weight: 500; color: var(--muted); }
+.contact-card { position: sticky; top: calc(var(--header-h) + 1rem); }
+.avatar { width: 52px; height: 52px; border-radius: 50%; background: var(--navy); color: var(--yellow); display: grid; place-items: center; font-family: var(--display); font-weight: 800; flex: none; }
+.note { background: var(--amber-50); border: 1px solid #f3d48b; color: #6b4600; border-radius: 14px; padding: .85rem 1rem; font-size: .88rem; }
+.prose { white-space: pre-line; line-height: 1.7; }
+.amen { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+.amen div { display: flex; gap: .5rem; align-items: center; }
+.amen .bi { color: var(--navy); }
+
+/* Lightbox / modal / toast */
+.overlay { position: fixed; inset: 0; z-index: 100; background: rgba(8,14,28,.62); display: grid; place-items: center; padding: 16px; }
+.modal { width: min(640px, 100%); max-height: calc(100% - 32px); overflow-y: auto; background: var(--surface); border-radius: 20px; box-shadow: var(--sh-lg); }
+.modal-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.1rem 1.3rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--surface); z-index: 1; }
+.modal-head h2 { font-size: 1.1rem; }
+.modal-body { padding: 1.3rem; display: grid; gap: 1rem; }
+.lightbox { position: fixed; inset: 0; z-index: 110; background: #070c18; display: grid; grid-template-rows: auto 1fr auto; color: #fff; }
+.lightbox .lb-top { display: flex; justify-content: space-between; align-items: center; padding: calc(.8rem + env(safe-area-inset-top, 0px)) 1rem .8rem; gap: 1rem; }
+.lightbox .lb-img { display: grid; place-items: center; min-height: 0; padding: 0 1rem; position: relative; }
+.lightbox .lb-img img { max-height: 100%; max-width: 100%; object-fit: contain; border-radius: 10px; }
+.lightbox .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); }
+.lightbox .lb-prev { left: 1rem; } .lightbox .lb-next { right: 1rem; }
+.lightbox .lb-cap { text-align: center; padding: .8rem 1rem calc(1rem + env(safe-area-inset-bottom, 0px)); color: rgba(255,255,255,.7); font-size: .9rem; }
+.toast { position: fixed; left: 50%; bottom: calc(90px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); z-index: 200; background: var(--navy); color: #fff; padding: .8rem 1.1rem; border-radius: 12px; box-shadow: var(--sh-lg); font-weight: 500; max-width: calc(100% - 32px); display: flex; gap: .55rem; align-items: center; }
+.toast .bi { color: var(--yellow); }
+
+/* Activity & wizard */
+.tabs { display: flex; gap: .35rem; overflow-x: auto; padding-bottom: .25rem; margin-bottom: 1.2rem; }
+.tabs button { flex: none; border: 1px solid var(--border); background: var(--surface); color: var(--text); padding: .55rem .9rem; border-radius: 12px; font-weight: 600; display: inline-flex; gap: .45rem; align-items: center; }
+.tabs button.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+.tabs .n { background: var(--navy-50); color: var(--navy); border-radius: 999px; padding: 0 .45rem; font-size: .75rem; }
+.tabs button.on .n { background: var(--yellow); }
+.item { display: flex; gap: 1rem; padding: 1rem; align-items: flex-start; }
+.item img { width: 120px; height: 90px; object-fit: cover; border-radius: 12px; flex: none; }
+@media (max-width: 560px) { .item { flex-direction: column; } .item img { width: 100%; height: 160px; } }
+.timeline { list-style: none; padding: 0; margin: .4rem 0 0; display: grid; gap: .25rem; font-size: .84rem; color: var(--muted); }
+.wsteps { display: flex; gap: .35rem; overflow-x: auto; padding-bottom: .3rem; margin-bottom: 1.2rem; scrollbar-width: none; }
+.wsteps::-webkit-scrollbar { display: none; }
+.wsteps button { flex: 1 0 auto; display: flex; align-items: center; gap: .5rem; padding: .55rem .8rem; border-radius: 12px; background: var(--surface); border: 1px solid var(--border); font-size: .84rem; font-weight: 600; color: var(--muted); }
+.wsteps .n { width: 24px; height: 24px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--navy-50); color: var(--navy); font-size: .76rem; line-height: 1; }
+.wsteps .done .n { background: var(--green); color: #fff; }
+.wsteps .cur { border-color: var(--navy); color: var(--navy); background: var(--navy-50); }
+.wsteps .cur .n { background: var(--navy); color: var(--yellow); }
+.wsteps button:disabled { cursor: default; }
+.drop { border: 2px dashed #c3ccda; border-radius: var(--r); padding: 1.8rem; text-align: center; background: #fbfcfe; display: grid; gap: .4rem; justify-items: center; cursor: pointer; }
+.drop:hover, .drop.drag { border-color: var(--navy); background: var(--navy-50); }
+.thumbs { display: grid; gap: .7rem; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+.thumb { position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 4 / 3; border: 1px solid var(--border); background: var(--navy-50); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.thumb .acts { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: flex-end; gap: .3rem; padding: .35rem; background: linear-gradient(transparent, rgba(0,0,0,.55)); }
+.thumb .acts button { width: 32px; height: 32px; border-radius: 8px; border: 0; background: rgba(255,255,255,.92); color: var(--navy); display: grid; place-items: center; }
+.thumb .cover { position: absolute; top: .4rem; left: .4rem; }
+.plans { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.plan { display: flex; flex-direction: column; gap: .7rem; padding: 1.4rem; }
+.plan.hl { border: 2px solid var(--navy); }
+.plan ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .45rem; font-size: .9rem; flex: 1; }
+.plan li { display: flex; gap: .5rem; }
+.plan li .bi { color: var(--green); }
+.plan .p { font-family: var(--display); font-weight: 800; font-size: 1.9rem; color: var(--navy); }
+</style>
+
+<div class="demo-bar" role="note">Interactive demo with [DEMO] listings<span class="hide-sm">. What you save or send stays in this browser only.</span></div>
+<header class="site-header" id="top">
+  <div class="wrap header-row">
+    <button class="brand" data-go="home" aria-label="Bangarpet Property Hub home">__LOGO_SVG__<span><span class="brand-name">Bangarpet</span><span class="brand-sub">Property Hub</span></span></button>
+    <nav class="nav" aria-label="Main">
+      <button data-search='{"purpose":"rent"}'>Rent</button>
+      <button data-search='{"purpose":"sale"}'>Buy</button>
+      <button data-search='{"category":"pg-rooms"}'>PG &amp; Rooms</button>
+      <button data-search='{"category":"commercial"}'>Commercial</button>
+      <button data-search='{}'>All properties</button>
+    </nav>
+    <div class="header-actions">
+      <button class="btn btn-soft hide-md" data-go="activity" data-tab="saved"><i class="bi bi-heart"></i> Saved <span class="count-dot" data-fav-count hidden></span></button>
+      <button class="btn btn-primary hide-md" data-go="activity"><i class="bi bi-person-circle"></i> My activity</button>
+      <button class="btn btn-accent hide-md" data-go="list"><i class="bi bi-plus-lg"></i> List property</button>
+      <button class="icon-btn menu-btn" data-action="menu" aria-label="Open menu"><i class="bi bi-list"></i></button>
+    </div>
+  </div>
+</header>
+
+<main id="view" tabindex="-1"></main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="stack" style="gap:.8rem">
+        <button class="brand" data-go="home">__LOGO_SVG__<span><span class="brand-name">Bangarpet</span><span class="brand-sub">Property Hub</span></span></button>
+        <p>Find. Rent. Buy. Manage. A local property marketplace connecting tenants, buyers, owners and brokers in Bangarpet and nearby towns of Kolar district.</p>
+      </div>
+      <div><h4>Explore</h4><ul>
+        <li><button class="fl" data-search='{"purpose":"rent"}'>Properties for rent</button></li>
+        <li><button class="fl" data-search='{"purpose":"sale"}'>Properties for sale</button></li>
+        <li><button class="fl" data-search='{"category":"pg-rooms"}'>PG &amp; rooms</button></li>
+        <li><button class="fl" data-search='{"category":"plots"}'>Plots</button></li>
+      </ul></div>
+      <div><h4>For owners</h4><ul>
+        <li><button class="fl" data-go="list">List your property</button></li>
+        <li><button class="fl" data-go="pricing">Plans &amp; pricing</button></li>
+        <li><button class="fl" data-go="activity">My activity</button></li>
+      </ul></div>
+      <div><h4>Stay safe</h4><p class="small">Never pay a token amount or deposit before visiting a property and checking the owner's documents. The "Verified" badge is an identity check, not a check of legal title.</p></div>
+    </div>
+    <div class="legal"><span>&copy; Bangarpet Property Hub &middot; Bangarpet, Kolar district, Karnataka</span><span>Demo build: listings marked [DEMO] are sample data</span></div>
+  </div>
+</footer>
+
+<nav class="tabbar" aria-label="Quick navigation">
+  <button data-go="home" data-tabbar="home"><i class="bi bi-house-door"></i>Home</button>
+  <button data-search='{}' data-tabbar="search"><i class="bi bi-search"></i>Search</button>
+  <button data-go="list" data-tabbar="list"><i class="bi bi-plus-square"></i>List</button>
+  <button data-go="activity" data-tab="saved" data-tabbar="saved"><i class="bi bi-heart"></i>Saved<span class="count-dot" data-fav-count hidden></span></button>
+  <button data-go="activity" data-tabbar="activity"><i class="bi bi-person"></i>Activity</button>
+</nav>
+
+<div id="layer"></div>
+<div id="toast-root" aria-live="polite"></div>
+
+<script>
+const DATA = __DATA_JSON__;
+</script>
+<script>
+(function () {
+"use strict";
+
+/* ---------------------------------------------------------------- utils */
+const $ = (s, el) => (el || document).querySelector(s);
+const $$ = (s, el) => Array.from((el || document).querySelectorAll(s));
+const esc = (v) => String(v == null ? "" : v).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const icon = (n) => `<i class="bi bi-${n}" aria-hidden="true"></i>`;
+
+function inr(n) {
+  n = Math.round(Number(n) || 0);
+  const s = String(n);
+  if (s.length <= 3) return "₹" + s;
+  let head = s.slice(0, -3), tail = s.slice(-3), out = [];
+  while (head.length > 2) { out.unshift(head.slice(-2)); head = head.slice(0, -2); }
+  if (head) out.unshift(head);
+  return "₹" + out.join(",") + "," + tail;
+}
+function inrShort(n) {
+  n = Number(n) || 0;
+  const t = (v) => v.toFixed(2).replace(/\.?0+$/, "");
+  if (n >= 1e7) return "₹" + t(n / 1e7) + " Cr";
+  if (n >= 1e5) return "₹" + t(n / 1e5) + " L";
+  return inr(n);
+}
+const priceLabel = (p) => p.purpose === "rent" ? `${inr(p.price)}<small> /month</small>` : inrShort(p.price);
+const ago = (d) => d <= 0 ? "Today" : d === 1 ? "Yesterday" : `${d} days ago`;
+const today = () => new Date().toISOString().slice(0, 10);
+function addDays(n) { const d = new Date(); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); }
+const fmtDate = (iso) => { try { return new Date(iso + (iso.length === 10 ? "T00:00:00" : "")).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }); } catch (e) { return iso; } };
+
+/* ------------------------------------------------------- local storage */
+const KEY = "bph-demo-v1";
+const store = (() => {
+  let mem = { favs: [], enquiries: [], visits: [], listings: [], messages: [], reports: [], seq: 1 };
+  try { const raw = localStorage.getItem(KEY); if (raw) mem = Object.assign(mem, JSON.parse(raw)); } catch (e) { /* storage unavailable: memory only */ }
+  return {
+    get: () => mem,
+    save() { try { localStorage.setItem(KEY, JSON.stringify(mem)); } catch (e) { /* quota or blocked */ } },
+    id() { return mem.seq++; },
+  };
+})();
+const S = store.get();
+
+/* ------------------------------------------------------------ data */
+const LIST = DATA.listings;
+const catName = (slug) => (DATA.categories.find((c) => c.slug === slug) || {}).name || slug;
+function allListings() { return LIST; }
+function findListing(id) {
+  return LIST.find((p) => p.id === id) || S.listings.find((p) => p.id === id) || null;
+}
+const locLabel = (p) => [p.area || p.locality, p.town].filter(Boolean).join(", ");
+const isFav = (id) => S.favs.includes(id);
+
+/* ------------------------------------------------------------ toast */
+let toastTimer;
+function toast(msg) {
+  const root = $("#toast-root");
+  root.innerHTML = `<div class="toast" role="status">${icon("check-circle-fill")}<span>${esc(msg)}</span></div>`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { root.innerHTML = ""; }, 3200);
+}
+
+/* ------------------------------------------------------------ router */
+let state = { view: "home", params: {} };
+let tourTimer = null;
+function go(view, params, opts) {
+  state = { view, params: params || {} };
+  clearInterval(tourTimer);
+  closeLayer();
+  render();
+  if (!(opts && opts.keepScroll)) window.scrollTo({ top: 0, behavior: "auto" });
+  const main = $("#view"); if (main && !(opts && opts.noFocus)) main.focus({ preventScroll: true });
+}
+function render() {
+  const v = state.view;
+  const html = v === "search" ? viewSearch() : v === "property" ? viewProperty() : v === "activity" ? viewActivity()
+    : v === "list" ? viewWizard() : v === "pricing" ? viewPricing() : viewHome();
+  $("#view").innerHTML = html;
+  $$(".nav button").forEach((b) => b.classList.remove("active"));
+  $$(".tabbar button").forEach((b) => b.classList.toggle("active",
+    b.dataset.tabbar === (v === "activity" ? (state.params.tab === "saved" ? "saved" : "activity") : v)));
+  updateCounts();
+  if (v === "home") initTour();
+}
+function updateCounts() {
+  $$("[data-fav-count]").forEach((el) => { el.textContent = S.favs.length; el.hidden = !S.favs.length; });
+}
+
+/* ------------------------------------------------------------ pieces */
+function favBtn(p, cls) {
+  const on = isFav(p.id);
+  return `<button class="${cls || "fav"}${on ? " on" : ""}" data-fav="${p.id}" aria-pressed="${on}" aria-label="${on ? "Remove from saved" : "Save property"}">${icon(on ? "heart-fill" : "heart")}</button>`;
+}
+function specs(p, cls) {
+  const out = [`<span>${icon("house")} ${esc(p.categoryName)}</span>`];
+  if (p.beds) out.push(`<span>${icon("door-closed")} ${p.beds} ${p.category === "pg-rooms" ? "room" + (p.beds > 1 ? "s" : "") : "BHK"}</span>`);
+  if (p.baths && cls !== "g") out.push(`<span>${icon("droplet")} ${p.baths} bath</span>`);
+  if (p.sqft) out.push(`<span>${icon("arrows-angle-expand")} ${p.sqft} sq.ft</span>`);
+  else if (p.land) out.push(`<span>${icon("bounding-box")} ${p.land} ${esc(p.landUnit)}</span>`);
+  return out.join("");
+}
+function card(p) {
+  const img = p.images[0];
+  return `<article class="pcard">
+    <div class="media">${img ? `<img src="${img.thumb}" alt="${esc(img.caption || p.title)}" loading="lazy">` : ""}
+      <div class="chips-top"><span class="glass-chip">${p.purpose === "rent" ? "For rent" : "For sale"}</span>${p.featured ? `<span class="glass-chip yellow">${icon("star-fill")} Featured</span>` : ""}</div>
+      ${favBtn(p)}
+      <div class="price-glass">${priceLabel(p)}</div>
+    </div>
+    <div class="body">
+      <h3 class="title"><button data-open="${p.id}">${esc(p.title)}</button></h3>
+      <div class="loc">${icon("geo-alt")} ${esc(locLabel(p))}</div>
+      <div class="specs">${specs(p)}</div>
+      <div class="meta-foot"><span>${p.verified ? `<span class="badge b-verified">${icon("patch-check-fill")} Verified ${p.listedBy}</span>` : `${p.listedBy === "broker" ? "Broker" : "Owner"} listing`}</span><span>${ago(p.daysAgo)}</span></div>
+    </div>
+  </article>`;
+}
+function gcard(p) {
+  const img = p.images[0];
+  return `<article class="gcard">
+    <div class="media">${img ? `<img src="${img.thumb}" alt="${esc(img.caption || p.title)}" loading="lazy">` : ""}
+      <div class="chips-top"><span class="glass-chip">${p.purpose === "rent" ? "For rent" : "For sale"}</span>${p.featured ? `<span class="glass-chip yellow">${icon("star-fill")} Featured</span>` : ""}</div>
+      ${favBtn(p)}
+    </div>
+    <div class="gbody">
+      <div class="gprice">${p.purpose === "rent" ? `${inr(p.price)}<small> / month</small>` : inrShort(p.price)}</div>
+      <h3 class="gtitle"><button data-open="${p.id}">${esc(p.title)}</button></h3>
+      <div class="gloc">${icon("geo-alt")} ${esc(locLabel(p))}</div>
+      <div class="gspecs">${specs(p, "g")}</div>
+      <div class="gfoot">${p.verified ? `<span class="gver">${icon("patch-check-fill")} Verified ${p.listedBy}</span>` : `<span style="opacity:.75">${icon("shield-check")} Reviewed listing</span>`}<span class="gcta">View ${icon("arrow-right")}</span></div>
+    </div>
+  </article>`;
+}
+function optionList(items, selected, placeholder) {
+  return (placeholder != null ? `<option value="">${esc(placeholder)}</option>` : "") +
+    items.map((i) => `<option value="${esc(i.value)}"${String(i.value) === String(selected) ? " selected" : ""}>${esc(i.label)}</option>`).join("");
+}
+const locOptions = () => DATA.locations.map((l) => ({ value: l.slug, label: l.name }));
+const catOptions = () => DATA.categories.map((c) => ({ value: c.slug, label: c.name }));
+
+/* ============================================================ HOME */
+function viewHome() {
+  const featured = LIST.filter((p) => p.featured);
+  const hero = featured.find((p) => p.images.length) || LIST[0];
+  const tour = LIST.find((p) => p.images.length >= 3 && p.featured) || LIST.find((p) => p.images.length >= 2);
+  const recent = LIST.slice().sort((a, b) => a.daysAgo - b.daysAgo).slice(0, 8);
+  const verified = DATA.agents.length;
+  return `
+  <section class="band hero" aria-labelledby="hero-title">
+    <span class="orb orb-a"></span><span class="orb orb-b"></span>
+    <div class="wrap hero-grid">
+      <div>
+        <span class="kicker">${icon("geo-alt-fill")} Bangarpet &middot; Kolar district &middot; Karnataka</span>
+        <h1 id="hero-title">Homes you can <em>trust</em>, in the town you know.</h1>
+        <p class="lead">Every listing is reviewed before it goes live. Talk directly to owners and verified brokers, walk through photo tours, and schedule visits in one place.</p>
+        <form class="glass search-panel" data-form="hero-search" aria-label="Search properties">
+          <div class="seg" role="radiogroup" aria-label="Rent or buy">
+            <label><input type="radio" name="purpose" value="" checked> All</label>
+            <label><input type="radio" name="purpose" value="rent"> Rent</label>
+            <label><input type="radio" name="purpose" value="sale"> Buy</label>
+          </div>
+          <div class="sp-grid">
+            <div class="field"><label class="label" for="h-loc">Location</label><select class="select" id="h-loc" name="location">${optionList(locOptions(), "", "All locations")}</select></div>
+            <div class="field"><label class="label" for="h-cat">Property type</label><select class="select" id="h-cat" name="category">${optionList(catOptions(), "", "All property types")}</select></div>
+            <div class="field"><label class="label" for="h-min">Min price (&#8377;)</label><input class="input" id="h-min" name="min" type="number" min="0" inputmode="numeric" placeholder="No min"></div>
+            <div class="field"><label class="label" for="h-max">Max price (&#8377;)</label><input class="input" id="h-max" name="max" type="number" min="0" inputmode="numeric" placeholder="No max"></div>
+          </div>
+          <button class="btn btn-accent btn-lg btn-block" type="submit">${icon("search")} Search properties</button>
+        </form>
+      </div>
+      ${hero ? `<button class="hero-show" data-open="${hero.id}" aria-label="View ${esc(hero.title)}">
+        <img src="${hero.images[0].full}" alt="${esc(hero.images[0].caption || hero.title)}">
+        <span class="float float-price"><span class="small" style="opacity:.75">${hero.featured ? "Featured &middot; " : ""}${hero.purpose === "rent" ? "For rent" : "For sale"}</span>
+          <strong>${hero.purpose === "rent" ? `${inr(hero.price)}<small>/month</small>` : inrShort(hero.price)}</strong>
+          <span class="small t">${esc(hero.title)}</span><span class="small" style="opacity:.75">${icon("geo-alt")} ${esc(locLabel(hero))}</span></span>
+        <span class="float float-check">${icon("shield-check")} Reviewed before publishing</span>
+        ${hero.verified ? `<span class="float float-verified">${icon("patch-check-fill")} Verified ${hero.listedBy}</span>` : ""}
+      </button>` : ""}
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="trust-bar" role="list">
+      <div class="tb" role="listitem"><span class="tb-ic">${icon("shield-check")}</span><div><strong>Every listing reviewed</strong><span class="d">Checked before it goes live</span></div></div>
+      <div class="tb" role="listitem"><span class="tb-ic">${icon("house-door")}</span><div><strong class="tnum">${LIST.length} live listings</strong><span class="d">Houses, flats, PG, shops &amp; plots</span></div></div>
+      <div class="tb" role="listitem"><span class="tb-ic">${icon("patch-check")}</span><div><strong class="tnum">${verified} verified partner${verified === 1 ? "" : "s"}</strong><span class="d">ID-checked owners &amp; brokers</span></div></div>
+      <div class="tb" role="listitem"><span class="tb-ic">${icon("lock")}</span><div><strong>Privacy protected</strong><span class="d">Owners choose who sees their number</span></div></div>
+    </div>
+  </div>
+
+  <section class="section-sm"><div class="wrap"><nav class="cats" aria-label="Browse by category">
+    <button class="cat" data-search='{"category":"houses","purpose":"rent"}'>${icon("house-door")}Houses for rent</button>
+    <button class="cat" data-search='{"category":"apartments"}'>${icon("building")}Apartments</button>
+    <button class="cat" data-search='{"category":"pg-rooms"}'>${icon("door-open")}PG &amp; rooms</button>
+    <button class="cat" data-search='{"category":"commercial"}'>${icon("shop")}Commercial</button>
+    <button class="cat" data-search='{"purpose":"sale"}'>${icon("key")}For sale</button>
+    <button class="cat" data-search='{"category":"plots"}'>${icon("bounding-box")}Plots</button>
+  </nav></div></section>
+
+  ${featured.length ? `<section class="band section" aria-labelledby="feat-title"><span class="orb orb-c"></span>
+    <div class="wrap" style="position:relative">
+      <div class="sec-head"><div><span class="eyebrow dark">${icon("gem")} Featured collection</span><h2 class="sec-title" id="feat-title">Featured properties</h2><p style="color:rgba(255,255,255,.65)">Handpicked, reviewed listings promoted by their owners and brokers.</p></div>
+        <button class="btn btn-glass" data-search='{}'>Explore all listings ${icon("arrow-right")}</button></div>
+      <div class="cards cols-3 swipe">${featured.map(gcard).join("")}</div>
+    </div></section>` : ""}
+
+  ${tour ? `<section class="section" aria-labelledby="tour-title"><div class="wrap">
+    <div class="sec-head" style="justify-content:center;text-align:center"><div style="justify-items:center"><span class="eyebrow">${icon("badge-vr")} Virtual tour</span><h2 class="sec-title" id="tour-title">Walk through before you visit</h2><p class="lead">Step room by room through a listing from home. Shortlist with confidence and visit only the places that fit.</p></div></div>
+    <div class="tour-grid">
+      <div class="stage" id="stage" tabindex="0" aria-roledescription="carousel" aria-label="Photo tour of ${esc(tour.title)}">
+        ${tour.images.map((im, i) => `<figure class="slide${i ? "" : " on"}" data-cap="${esc(im.caption || "Photo " + (i + 1))}" aria-hidden="${i ? "true" : "false"}"><img src="${im.full}" alt="${esc(im.caption || tour.title)}"></figure>`).join("")}
+        <div class="bars" aria-hidden="true">${tour.images.map((_, i) => `<span class="${i ? "" : "on"}"><i></i></span>`).join("")}</div>
+        <div class="stage-top"><span class="glass-chip">${icon("badge-vr")} <span id="tour-label">${esc(tour.images[0].caption || "Photo 1")}</span></span><span class="glass-chip light"><span id="tour-count">1</span> / ${tour.images.length}</span></div>
+        <div class="stage-ctl">
+          <button class="tbtn" data-tour="prev" aria-label="Previous room">${icon("chevron-left")}</button>
+          <button class="tbtn" data-tour="toggle" aria-label="Pause tour">${icon("pause-fill")}</button>
+          <button class="tbtn" data-tour="next" aria-label="Next room">${icon("chevron-right")}</button>
+        </div>
+        <div class="stage-info panel"><span class="small" style="opacity:.75;text-transform:uppercase;font-weight:600;letter-spacing:.04em">${esc(tour.categoryName)} &middot; ${tour.purpose === "rent" ? "For rent" : "For sale"}</span>
+          <span style="font-family:var(--display);font-weight:700;font-size:1.05rem">${esc(tour.title)}</span><span class="small" style="opacity:.75">${icon("geo-alt")} ${esc(locLabel(tour))}</span>
+          <strong>${tour.purpose === "rent" ? `${inr(tour.price)}<small style="font-weight:500;color:#fff">/mo</small>` : inrShort(tour.price)}</strong></div>
+      </div>
+      <div class="surface pad" style="display:flex;flex-direction:column">
+        <h3 class="small muted" style="text-transform:uppercase;letter-spacing:.07em;margin-bottom:.8rem;font-family:var(--body)">Rooms in this tour</h3>
+        <ol class="rooms">${tour.images.map((im, i) => `<li><button class="room${i ? "" : " on"}" data-tour-goto="${i}"><img src="${im.thumb}" alt=""><span><strong>${esc(im.caption || "Photo " + (i + 1))}</strong><small>Step ${i + 1} of ${tour.images.length}</small></span></button></li>`).join("")}</ol>
+        <div class="stack" style="margin-top:auto;gap:.5rem">
+          <button class="btn btn-primary btn-block" data-open="${tour.id}">${icon("arrows-fullscreen")} Open full tour &amp; details</button>
+          <button class="btn btn-soft btn-block" data-enquire="${tour.id}" data-visit="1">${icon("calendar-plus")} Request a visit</button>
+        </div>
+      </div>
+    </div>
+  </div></section>` : ""}
+
+  <section class="section" style="padding-top:${tour ? "0" : "4rem"}"><div class="wrap">
+    <div class="sec-head"><div><span class="eyebrow">${icon("clock-history")} Just listed</span><h2 class="sec-title">Recently added</h2><p class="lead">The newest approved listings in and around Bangarpet.</p></div>
+      <button class="btn btn-soft" data-search='{"sort":"newest"}'>See all new listings ${icon("arrow-right")}</button></div>
+    <div class="cards">${recent.map(card).join("")}</div>
+  </div></section>
+
+  <section class="section" style="padding-top:0"><div class="wrap">
+    <div class="sec-head"><div><span class="eyebrow">${icon("pin-map")} Explore</span><h2 class="sec-title">Popular areas in Bangarpet</h2></div></div>
+    <div class="area-grid">${DATA.areas.map((a) => `<button class="area" data-search='${esc(JSON.stringify({ location: a.slug }))}'><span class="row" style="gap:.8rem;flex-wrap:nowrap"><span class="ic">${icon("geo-alt")}</span><span>${esc(a.name)}${a.parent ? `<span class="c" style="display:block">${esc(a.parent)}</span>` : ""}</span></span><span class="c">${a.count ? `${a.count} listing${a.count === 1 ? "" : "s"}` : "Explore"} ${icon("chevron-right")}</span></button>`).join("")}</div>
+  </div></section>
+
+  <section class="section white-band"><div class="wrap">
+    <div class="sec-head"><div><span class="eyebrow">${icon("person-badge")} Verified agents</span><h2 class="sec-title">Local experts you can rely on</h2><p class="lead">Brokers shown here submitted identity and business documents that our team reviewed.</p></div></div>
+    <div class="agents">
+      ${DATA.agents.map((a) => `<article class="agent"><div class="cover"></div><div class="av">${esc(a.name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase())}${icon("patch-check-fill")}</div>
+        <h3 style="font-size:1rem">${esc(a.name)}</h3><div class="small muted">${esc(a.agency)}</div><span class="badge b-verified" style="margin-top:.5rem">${icon("patch-check-fill")} Verified broker</span>
+        <div class="stats3"><div><b class="tnum">${a.listings}</b><span>Listings</span></div><div><b class="tnum">${a.years ? a.years + "+" : "&ndash;"}</b><span>Years</span></div><div><b class="tnum">${a.joined}</b><span>Joined</span></div></div>
+        <button class="btn btn-primary btn-sm btn-block" data-search='{"listedBy":"broker"}'>View listings</button></article>`).join("")}
+      <button class="join" data-go="list"><span class="ic">${icon("person-plus")}</span><strong>Your profile here</strong><span class="small">Brokers in Bangarpet can register, submit documents and earn a verified profile.</span><span style="color:var(--navy);font-weight:700">Get started ${icon("arrow-right")}</span></button>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="wrap two-col">
+    <div class="stack"><span class="eyebrow" style="justify-self:start">${icon("shield-lock")} Built on trust</span><h2 class="sec-title">How we keep every search safe</h2><p class="lead">Property decisions are big decisions. We put checks in place so you can focus on finding the right home.</p><p class="small muted">${icon("info-circle")} The "Verified" badge means identity documents were reviewed by our team. It is not a legal check of property title, so always verify ownership documents before paying.</p></div>
+    <div class="pillars">
+      <div class="pillar"><span class="ic">${icon("clipboard2-check")}</span><h3 style="font-size:1rem">Manual listing review</h3><p>Photos, prices and details are checked before a listing is published, and again when key details change.</p></div>
+      <div class="pillar"><span class="ic">${icon("person-check")}</span><h3 style="font-size:1rem">Verified owners &amp; brokers</h3><p>Partners submit ID and business documents, stored privately and seen only by our verification team.</p></div>
+      <div class="pillar"><span class="ic">${icon("eye-slash")}</span><h3 style="font-size:1rem">Privacy controls</h3><p>Owners decide who sees their phone number. Exact addresses stay hidden unless they choose to share them.</p></div>
+      <div class="pillar"><span class="ic">${icon("flag")}</span><h3 style="font-size:1rem">Report &amp; act fast</h3><p>Anything suspicious can be reported in one tap. Our team reviews every report and removes policy violations.</p></div>
+    </div>
+  </div></section>
+
+  <section class="section white-band"><div class="wrap">
+    <div class="sec-head" style="justify-content:center;text-align:center"><div style="justify-items:center"><span class="eyebrow">${icon("lightning-charge")} Simple &amp; transparent</span><h2 class="sec-title">From search to keys in four steps</h2></div></div>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><span class="ic">${icon("search")}</span><h3 style="font-size:1.05rem">Search</h3><p>Filter by area, budget, bedrooms and more. Save the homes you like.</p></div>
+      <div class="step"><span class="n">2</span><span class="ic">${icon("badge-vr")}</span><h3 style="font-size:1.05rem">Tour</h3><p>Walk through photo tours to shortlist without wasted trips.</p></div>
+      <div class="step"><span class="n">3</span><span class="ic">${icon("calendar-check")}</span><h3 style="font-size:1.05rem">Visit</h3><p>Request a time slot. You're notified when the owner confirms.</p></div>
+      <div class="step"><span class="n">4</span><span class="ic">${icon("house-check")}</span><h3 style="font-size:1.05rem">Move in</h3><p>Check documents, agree terms directly with the owner and move in.</p></div>
+    </div>
+  </div></section>
+
+  <section class="section"><div class="wrap"><div class="cta">
+    <div class="stack" style="max-width:640px;gap:.6rem"><span class="eyebrow dark" style="justify-self:start">${icon("stars")} For owners &amp; brokers</span><h2>List your property where Bangarpet is searching.</h2><p>Start free with one listing. Manage enquiries and visits from one dashboard, and upgrade only when you need more.</p></div>
+    <div class="row"><button class="btn btn-accent btn-lg" data-go="list">${icon("plus-lg")} List your property</button><button class="btn btn-glass btn-lg" data-go="pricing">See plans</button></div>
+  </div></div></section>
+
+  <section class="section" style="padding-top:0"><div class="wrap two-col" style="align-items:start">
+    <div class="stack"><span class="eyebrow" style="justify-self:start">${icon("question-circle")} FAQ</span><h2 class="sec-title">Questions, answered</h2><p class="lead">Searching, listing and staying safe.</p></div>
+    <div class="faq">${DATA.faqs.map((f, i) => `<details${i ? "" : " open"}><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("")}</div>
+  </div></section>
+
+  <section class="band section" id="contact" aria-labelledby="contact-title"><span class="orb orb-a"></span><span class="orb orb-b"></span>
+    <div class="wrap two-col" style="position:relative">
+      <div><span class="eyebrow dark">${icon("chat-heart")} Talk to us</span><h2 class="sec-title" id="contact-title" style="margin-top:.8rem">A real team, right here in Kolar district</h2>
+        <p style="margin-top:.8rem">Questions about a listing, verification, plans or a report? Send a message and our team will get back to you.</p>
+        <ul class="cpoints">
+          <li><span class="cp-ic">${icon("geo-alt")}</span><div><small>Office</small><span class="v">Bangarpet, Kolar district, Karnataka</span></div></li>
+          <li><span class="cp-ic">${icon("shield-lock")}</span><div><small>Privacy</small><span class="v">Your details are used only to respond to you.</span></div></li>
+          <li><span class="cp-ic">${icon("clock")}</span><div><small>Messages in this demo</small><span class="v">${S.messages.length ? `${S.messages.length} saved in this browser` : "Saved in this browser only"}</span></div></li>
+        </ul></div>
+      <form class="glass-form" data-form="contact" novalidate>
+        <h3 style="font-size:1.1rem">Send a message</h3>
+        <div class="form-grid">
+          <div class="field"><label for="c-name">Name <span class="req">*</span></label><input class="input" id="c-name" name="name" autocomplete="name" required></div>
+          <div class="field"><label for="c-phone">Mobile number</label><input class="input" id="c-phone" name="phone" inputmode="tel" placeholder="10-digit mobile number"></div>
+          <div class="field full"><label for="c-email">Email <span class="req">*</span></label><input class="input" id="c-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field full"><label for="c-msg">Message <span class="req">*</span></label><textarea class="textarea" id="c-msg" name="message" required></textarea></div>
+        </div>
+        <div class="row between"><span class="small" style="color:rgba(255,255,255,.6)">${icon("lock")} Demo: saved in this browser</span><button class="btn btn-accent btn-lg" type="submit">Send message ${icon("send")}</button></div>
+      </form>
+    </div>
+  </section>`;
+}
+
+/* ------------------------------------------------------------ tour */
+function initTour() {
+  const stage = $("#stage");
+  if (!stage) return;
+  const slides = $$(".slide", stage), bars = $$(".bars span", stage), rooms = $$("[data-tour-goto]");
+  let i = 0, playing = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function show(n) {
+    i = (n + slides.length) % slides.length;
+    slides.forEach((s, k) => { s.classList.toggle("on", k === i); s.setAttribute("aria-hidden", k === i ? "false" : "true"); });
+    bars.forEach((b, k) => { b.classList.toggle("done", k < i); b.classList.remove("on"); if (k === i) { void b.offsetWidth; b.classList.add("on"); } });
+    rooms.forEach((r) => r.classList.toggle("on", Number(r.dataset.tourGoto) === i));
+    $("#tour-label").textContent = slides[i].dataset.cap;
+    $("#tour-count").textContent = i + 1;
+  }
+  function schedule() {
+    clearInterval(tourTimer);
+    stage.classList.toggle("paused", !playing);
+    if (playing) tourTimer = setInterval(() => show(i + 1), 4000);
+    const t = $('[data-tour="toggle"]', stage);
+    t.setAttribute("aria-label", playing ? "Pause tour" : "Play tour");
+    t.innerHTML = icon(playing ? "pause-fill" : "play-fill");
+  }
+  stage._tour = { prev: () => { show(i - 1); schedule(); }, next: () => { show(i + 1); schedule(); },
+    toggle: () => { playing = !playing; schedule(); }, goto: (n) => { show(n); schedule(); } };
+  stage.addEventListener("keydown", (e) => { if (e.key === "ArrowRight") stage._tour.next(); if (e.key === "ArrowLeft") stage._tour.prev(); });
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver((es) => es.forEach((en) => { if (en.isIntersecting) schedule(); else clearInterval(tourTimer); }), { threshold: .3 }).observe(stage);
+  } else schedule();
+  show(0);
+}
+
+/* ============================================================ SEARCH */
+const SORTS = [["recommended", "Recommended"], ["newest", "Newest first"], ["price_asc", "Price: low to high"], ["price_desc", "Price: high to low"]];
+function filterListings(f) {
+  let r = allListings().filter((p) => {
+    if (f.q) { const q = f.q.toLowerCase(); if (![p.title, p.locality, p.area, p.town, p.ref, p.categoryName].join(" ").toLowerCase().includes(q)) return false; }
+    if (f.purpose && p.purpose !== f.purpose) return false;
+    if (f.category && p.category !== f.category) return false;
+    if (f.location) { const loc = DATA.locations.find((l) => l.slug === f.location); if (loc && (loc.kind === "town" ? !loc.name.startsWith(p.town) : p.areaSlug !== f.location)) return false; }
+    if (f.min && p.price < Number(f.min)) return false;
+    if (f.max && p.price > Number(f.max)) return false;
+    if (f.beds && (p.beds || 0) < Number(f.beds)) return false;
+    if (f.furnishing && p.furnishingKey !== f.furnishing) return false;
+    if (f.parking && !["bike", "car", "both"].includes(p.parkingKey)) return false;
+    if (f.verified && !p.verified) return false;
+    if (f.listedBy && p.listedBy !== f.listedBy) return false;
+    return true;
+  });
+  const s = f.sort || "recommended";
+  r.sort(s === "price_asc" ? (a, b) => a.price - b.price : s === "price_desc" ? (a, b) => b.price - a.price
+    : s === "newest" ? (a, b) => a.daysAgo - b.daysAgo : (a, b) => (b.featured - a.featured) || (a.daysAgo - b.daysAgo));
+  return r;
+}
+const FILTER_LABELS = { q: "Keyword", purpose: "Purpose", category: "Type", location: "Location", min: "Min", max: "Max", beds: "Bedrooms", furnishing: "Furnishing", parking: "Parking", verified: "Verified", listedBy: "Listed by" };
+function filterValueLabel(k, v) {
+  if (k === "purpose") return v === "rent" ? "Rent" : "Buy";
+  if (k === "category") return catName(v);
+  if (k === "location") return (DATA.locations.find((l) => l.slug === v) || {}).name || v;
+  if (k === "min" || k === "max") return inr(v);
+  if (k === "beds") return v + "+";
+  if (k === "furnishing") return { unfurnished: "Unfurnished", semi: "Semi-furnished", fully: "Fully furnished" }[v] || v;
+  if (k === "listedBy") return v === "broker" ? "Brokers" : "Owners";
+  if (k === "parking" || k === "verified") return "Yes";
+  return v;
+}
+function viewSearch() {
+  const f = state.params;
+  const results = filterListings(f);
+  const view = f.view || "grid";
+  const title = f.category ? `${catName(f.category)} in Bangarpet` : f.purpose === "rent" ? "Properties for rent in Bangarpet" : f.purpose === "sale" ? "Properties for sale in Bangarpet" : "All properties in Bangarpet";
+  const active = Object.keys(FILTER_LABELS).filter((k) => f[k]);
+  const sel = (name, opts, ph) => `<select class="select" id="f-${name}" name="${name}">${optionList(opts, f[name] || "", ph)}</select>`;
+  return `<div class="wrap">
+    <div class="page-head"><div class="stack" style="gap:.3rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><span>Search</span></div><h1 style="font-size:1.6rem">${esc(title)}</h1></div>
+      <button class="btn btn-soft" data-action="toggle-filters" style="display:none" id="filters-btn">${icon("sliders")} Filters${active.length ? ` (${active.length})` : ""}</button></div>
+    <div class="search-layout">
+      <form class="surface filters" id="filters" data-form="filters" aria-label="Filters">
+        <h3>Filters</h3>
+        <div class="field"><label for="f-q">Keyword</label><input class="input" id="f-q" name="q" value="${esc(f.q || "")}" placeholder="Area, landmark or ID"></div>
+        <div class="field"><label for="f-purpose">Rent or buy</label>${sel("purpose", [{ value: "rent", label: "Rent" }, { value: "sale", label: "Buy" }], "Rent or buy")}</div>
+        <div class="field"><label for="f-location">Location</label>${sel("location", locOptions(), "All locations")}</div>
+        <div class="field"><label for="f-category">Property type</label>${sel("category", catOptions(), "All types")}</div>
+        <div class="form-grid" style="gap:.6rem"><div class="field"><label for="f-min">Min &#8377;</label><input class="input" id="f-min" name="min" type="number" min="0" value="${esc(f.min || "")}"></div><div class="field"><label for="f-max">Max &#8377;</label><input class="input" id="f-max" name="max" type="number" min="0" value="${esc(f.max || "")}"></div></div>
+        <div class="field"><label for="f-beds">Bedrooms</label>${sel("beds", [1, 2, 3, 4].map((n) => ({ value: n, label: n + "+" })), "Any")}</div>
+        <div class="field"><label for="f-furnishing">Furnishing</label>${sel("furnishing", [{ value: "unfurnished", label: "Unfurnished" }, { value: "semi", label: "Semi-furnished" }, { value: "fully", label: "Fully furnished" }], "Any")}</div>
+        <div class="field"><label for="f-listedBy">Listed by</label>${sel("listedBy", [{ value: "owner", label: "Owners" }, { value: "broker", label: "Brokers" }], "Anyone")}</div>
+        <label class="check"><input type="checkbox" name="parking" ${f.parking ? "checked" : ""}> Parking available</label>
+        <label class="check"><input type="checkbox" name="verified" ${f.verified ? "checked" : ""}> Verified owners/brokers only</label>
+        <button class="btn btn-primary btn-block" type="submit">${icon("search")} Apply filters</button>
+        <button class="btn btn-soft btn-block" type="button" data-search='{}'>Clear filters</button>
+      </form>
+      <div style="min-width:0">
+        <div class="toolbar">
+          <div><strong class="tnum">${results.length}</strong> propert${results.length === 1 ? "y" : "ies"} found</div>
+          <div class="row">
+            <label class="small muted" for="sort">Sort by</label>
+            <select class="select" id="sort" data-action="sort" style="width:auto;min-height:40px">${optionList(SORTS.map(([v, l]) => ({ value: v, label: l })), f.sort || "recommended")}</select>
+            <div class="toggle" role="group" aria-label="View"><button class="${view === "grid" ? "on" : ""}" data-view="grid" aria-label="Grid view">${icon("grid-3x3-gap")}</button><button class="${view === "list" ? "on" : ""}" data-view="list" aria-label="List view">${icon("list-ul")}</button></div>
+          </div>
+        </div>
+        ${active.length ? `<div class="row" style="margin-bottom:1rem">${active.map((k) => `<button class="chip" data-unfilter="${k}" aria-label="Remove ${FILTER_LABELS[k]} filter">${FILTER_LABELS[k]}: ${esc(filterValueLabel(k, f[k]))} ${icon("x")}</button>`).join("")}<button class="chip" data-search='{}'>Clear all</button></div>` : ""}
+        ${results.length ? `<div class="cards ${view === "list" ? "list-view" : ""}">${results.map(card).join("")}</div>`
+          : `<div class="empty">${icon("search")}<h3>No properties match these filters</h3><p class="muted">Try a wider budget, a nearby area, or fewer filters.</p><button class="btn btn-primary" data-search='{}'>Clear filters</button></div>`}
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ============================================================ PROPERTY */
+function viewProperty() {
+  const p = findListing(state.params.id);
+  if (!p) return `<div class="wrap section"><div class="empty">${icon("signpost-split")}<h3>Listing not found</h3><button class="btn btn-primary" data-search='{}'>Browse properties</button></div></div>`;
+  const mine = !!p.mine;
+  const imgs = p.images;
+  const similar = LIST.filter((x) => x.id !== p.id && x.category === p.category).concat(LIST.filter((x) => x.id !== p.id && x.category !== p.category && x.purpose === p.purpose)).slice(0, 4);
+  const enq = S.enquiries.find((e) => e.listingId === p.id && e.status !== "Cancelled");
+  const facts = [];
+  if (p.beds != null) facts.push([p.category === "pg-rooms" ? "Rooms" : "Bedrooms", p.beds]);
+  if (p.baths != null) facts.push(["Bathrooms", p.baths]);
+  if (p.sqft) facts.push(["Built-up area", p.sqft + " sq.ft"]);
+  if (p.land) facts.push(["Land area", p.land + " " + p.landUnit]);
+  if (p.furnishing) facts.push(["Furnishing", p.furnishing]);
+  if (p.parking) facts.push(["Parking", p.parking]);
+  facts.push(["Availability", p.availability || "Ready to move"]);
+  return `${mine ? `<div class="demo-bar" style="background:var(--amber-50);color:#6b4600">Preview of your listing. Status: <strong>Pending review</strong>. It is not visible to the public yet.</div>` : ""}
+  <div class="wrap">
+    <div class="page-head" style="padding-bottom:.8rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><button data-search='${esc(JSON.stringify({ purpose: p.purpose }))}'>${p.purpose === "rent" ? "For rent" : "For sale"}</button><span>/</span><button data-search='${esc(JSON.stringify({ category: p.category }))}'>${esc(p.categoryName)}</button><span>/</span><span>${esc(p.ref)}</span></div></div>
+    ${imgs.length ? `<div class="gallery${imgs.length === 1 ? " one" : ""}">${imgs.slice(0, 3).map((im, i) => `<button data-lightbox="${i}" aria-label="Open photo ${i + 1} of ${imgs.length}"><img src="${i ? im.thumb : im.full}" alt="${esc(im.caption || p.title)}">${i === 2 && imgs.length > 3 ? `<span class="more">+${imgs.length - 3} photos</span>` : ""}</button>`).join("")}</div>`
+      : `<div class="empty">${icon("image")}<p class="muted">No photos yet</p></div>`}
+    <div class="detail">
+      <div class="stack" style="gap:1.4rem;min-width:0">
+        <div class="surface pad stack" style="gap:.6rem">
+          <div class="row"><span class="badge b-soft">${p.purpose === "rent" ? "For rent" : "For sale"}</span><span class="badge b-soft">${esc(p.categoryName)}</span>${p.verified ? `<span class="badge b-verified">${icon("patch-check-fill")} Verified ${p.listedBy}</span>` : ""}${p.featured ? `<span class="badge b-featured">${icon("star-fill")} Featured</span>` : ""}${mine ? `<span class="badge b-pending">Pending review</span>` : ""}</div>
+          <h1 style="font-size:clamp(1.4rem,3vw,1.9rem)">${esc(p.title)}</h1>
+          <p class="muted">${icon("geo-alt")} ${esc(locLabel(p))}${p.locality && p.area ? " &middot; " + esc(p.locality) : ""}</p>
+          <div class="row between" style="align-items:flex-end">
+            <div><div class="big-price tnum">${p.purpose === "rent" ? `${inr(p.price)}<small> /month</small>` : inr(p.price)}</div>
+              <div class="small muted">${p.purpose === "rent" ? [p.deposit ? "Deposit " + inr(p.deposit) : "", p.maintenance ? "Maintenance " + inr(p.maintenance) + "/month" : "", p.negotiable ? "Negotiable" : ""].filter(Boolean).join(" &middot; ") : [inrShort(p.price), p.sqft ? `approx. ${inr(Math.round(p.price / p.sqft))}/sq.ft` : "", p.negotiable ? "Negotiable" : ""].filter(Boolean).join(" &middot; ")}</div></div>
+            ${mine ? "" : `<div class="row">${favBtn(p, "btn btn-soft")}<button class="btn btn-soft" data-copy="${esc(p.title + " (" + p.ref + ")")}">${icon("share")} Share</button></div>`}
+          </div>
+          <div class="small muted">Property ID <strong>${esc(p.ref)}</strong> &middot; ${mine ? "Submitted today" : "Posted " + ago(p.daysAgo).toLowerCase()} &middot; <span class="tnum">${p.views || 0}</span> views</div>
+        </div>
+        <section class="stack" aria-label="Key details"><h2 style="font-size:1.15rem">Key details</h2><div class="facts">${facts.map(([k, v]) => `<div class="fact"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join("")}</div></section>
+        ${p.amenities.length ? `<section class="surface pad stack"><h2 style="font-size:1.15rem">Amenities</h2><div class="amen">${p.amenities.map((a) => `<div>${icon(a.icon || "check2-circle")} ${esc(a.name)}</div>`).join("")}</div></section>` : ""}
+        <section class="surface pad stack"><h2 style="font-size:1.15rem">About this property</h2><div class="prose">${esc(p.description)}</div></section>
+        <section class="surface pad stack"><h2 style="font-size:1.15rem">Location</h2><p>${icon("geo-alt")} ${esc(locLabel(p))} <span class="small muted">(exact address shared by the owner on request)</span></p>
+          ${p.lat ? `<a class="btn btn-soft btn-sm" style="justify-self:start" href="https://www.google.com/maps/search/?api=1&query=${p.lat.toFixed(2)},${p.lng.toFixed(2)}" target="_blank" rel="noopener">${icon("box-arrow-up-right")} View area on Google Maps</a>` : ""}</section>
+        <div class="note">${icon("shield-exclamation")} <strong>Stay safe:</strong> never pay a token or deposit before visiting the property and checking the owner's documents.</div>
+        ${mine ? "" : `<button class="btn btn-danger btn-sm" style="justify-self:start" data-report="${p.id}">${icon("flag")} Report this listing</button>`}
+      </div>
+      <aside class="surface pad contact-card stack">
+        <div class="row" style="flex-wrap:nowrap;gap:.8rem"><span class="avatar">${esc((p.ownerName || "?").split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase())}</span>
+          <div style="min-width:0"><div style="font-weight:700;color:var(--navy)">${esc(p.ownerName)}</div><div class="small muted">${p.listedBy === "broker" ? "Real estate broker" : "Property owner"}</div>${p.verified ? `<span class="badge b-verified" style="margin-top:.3rem">${icon("patch-check-fill")} Verified</span>` : ""}</div></div>
+        ${mine ? `<p class="small muted">This is your listing. In the full app you'd manage enquiries and visits from your dashboard.</p><button class="btn btn-primary btn-block" data-go="activity" data-tab="listings">Back to my listings</button>` : `
+        ${enq ? `<div class="note" style="background:var(--navy-50);border-color:#cfd9ea;color:var(--navy)">${icon("chat-text")} You sent an enquiry (${esc(enq.status)}). <button class="btn btn-sm btn-soft" data-go="activity" data-tab="enquiries" style="margin-top:.4rem">Track it</button></div>` : ""}
+        <button class="btn btn-accent btn-block" data-enquire="${p.id}">${icon("chat-text")} ${enq ? "Send another message" : `Contact ${p.listedBy}`}</button>
+        <button class="btn btn-outline btn-block" data-enquire="${p.id}" data-visit="1">${icon("calendar-plus")} Request a visit</button>
+        <p class="small muted">${icon("telephone")} Phone and WhatsApp numbers are hidden in this demo. In the full app, owners choose who can see them.</p>`}
+      </aside>
+    </div>
+    ${!mine && similar.length ? `<section style="padding-bottom:3rem" class="stack"><h2 style="font-size:1.3rem">Similar properties</h2><div class="cards">${similar.map(card).join("")}</div></section>` : ""}
+  </div>`;
+}
+
+function openLightbox(index) {
+  const p = findListing(state.params.id); if (!p) return;
+  let i = index;
+  const draw = () => {
+    const im = p.images[i];
+    $("#layer").innerHTML = `<div class="lightbox" role="dialog" aria-modal="true" aria-label="Photo gallery">
+      <div class="lb-top"><span class="small" style="opacity:.8">${esc(p.title)}</span><button class="tbtn" data-action="close" aria-label="Close gallery">${icon("x-lg")}</button></div>
+      <div class="lb-img"><img src="${im.full}" alt="${esc(im.caption || p.title)}">
+        ${p.images.length > 1 ? `<button class="tbtn lb-nav lb-prev" data-lb="-1" aria-label="Previous photo">${icon("chevron-left")}</button><button class="tbtn lb-nav lb-next" data-lb="1" aria-label="Next photo">${icon("chevron-right")}</button>` : ""}</div>
+      <div class="lb-cap">${i + 1} / ${p.images.length}${im.caption ? " &middot; " + esc(im.caption) : ""}</div></div>`;
+    const close = $('#layer [data-action="close"]'); if (close) close.focus();
+  };
+  $("#layer")._lb = (d) => { i = (i + d + p.images.length) % p.images.length; draw(); };
+  draw();
+}
+
+/* ------------------------------------------------------------ modals */
+function closeLayer() { const l = $("#layer"); l.innerHTML = ""; l._lb = null; l._onclose && l._onclose(); l._onclose = null; }
+function modal(title, body, onMount) {
+  const prev = document.activeElement;
+  $("#layer").innerHTML = `<div class="overlay" data-action="backdrop"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <div class="modal-head"><h2 id="m-title">${title}</h2><button class="icon-btn" data-action="close" aria-label="Close">${icon("x-lg")}</button></div>
+    <div class="modal-body">${body}</div></div></div>`;
+  $("#layer")._onclose = () => { if (prev && prev.focus) prev.focus({ preventScroll: true }); };
+  const first = $("#layer input, #layer select, #layer textarea, #layer button:not([data-action])"); if (first) first.focus();
+  if (onMount) onMount($("#layer"));
+}
+function enquiryModal(id, visit) {
+  const p = findListing(id); if (!p) return;
+  modal(`Contact about ${esc(p.ref)}`, `
+    <p class="small muted">${esc(p.title)}</p>
+    <form class="stack" data-form="enquiry" data-id="${p.id}" novalidate>
+      <div class="form-grid">
+        <div class="field"><label for="e-name">Your name <span class="req">*</span></label><input class="input" id="e-name" name="name" autocomplete="name" required></div>
+        <div class="field"><label for="e-phone">Mobile number <span class="req">*</span></label><input class="input" id="e-phone" name="phone" inputmode="tel" placeholder="10-digit mobile number" required></div>
+        <div class="field"><label for="e-contact">Preferred contact</label><select class="select" id="e-contact" name="contact"><option>Phone call</option><option>WhatsApp</option><option>Email</option></select></div>
+        <div class="field"><label for="e-email">Email</label><input class="input" id="e-email" name="email" type="email" autocomplete="email"></div>
+        <div class="field full"><label for="e-msg">Message <span class="req">*</span></label><textarea class="textarea" id="e-msg" name="message" required>Hi, I'm interested in this property. Is it still available?</textarea></div>
+        <label class="check full"><input type="checkbox" id="e-visit" name="visit" ${visit ? "checked" : ""}> I'd like to visit this property</label>
+      </div>
+      <div class="form-grid" id="visit-fields" ${visit ? "" : "hidden"}>
+        <div class="field"><label for="e-date">Preferred date <span class="req">*</span></label><input class="input" id="e-date" name="date" type="date" min="${addDays(1)}" max="${addDays(60)}" value="${addDays(2)}"></div>
+        <div class="field"><label for="e-slot">Preferred time</label><select class="select" id="e-slot" name="slot"><option>Morning (9 am - 12 pm)</option><option>Afternoon (12 pm - 4 pm)</option><option selected>Evening (4 pm - 7 pm)</option></select></div>
+      </div>
+      <p class="small muted">In the full app your name, phone and message are shared with the owner or broker. In this demo they stay in your browser.</p>
+      <button class="btn btn-primary btn-block" type="submit">${visit ? "Send visit request" : "Send enquiry"}</button>
+    </form>`, (root) => {
+      const box = $("#e-visit", root);
+      box.addEventListener("change", () => { $("#visit-fields", root).hidden = !box.checked; $('[data-form="enquiry"] [type=submit]', root).textContent = box.checked ? "Send visit request" : "Send enquiry"; });
+    });
+}
+function reportModal(id) {
+  modal("Report this listing", `<form class="stack" data-form="report" data-id="${id}" novalidate>
+    <div class="field"><label for="r-reason">Reason <span class="req">*</span></label><select class="select" id="r-reason" name="reason" required><option value="">Choose a reason</option><option>Suspected fraud or scam</option><option>Incorrect price or details</option><option>Property no longer available</option><option>Photos do not match the property</option><option>Asked for advance payment before a visit</option><option>Other</option></select></div>
+    <div class="field"><label for="r-details">Details (optional)</label><textarea class="textarea" id="r-details" name="details"></textarea></div>
+    <button class="btn btn-danger btn-block" type="submit">${icon("flag")} Submit report</button></form>`);
+}
+
+/* ============================================================ ACTIVITY */
+function viewActivity() {
+  const tab = state.params.tab || "enquiries";
+  const favs = S.favs.map(findListing).filter(Boolean);
+  const tabs = [["enquiries", "Enquiries", S.enquiries.length, "chat-left-text"], ["visits", "Visits", S.visits.length, "calendar-check"], ["saved", "Saved homes", favs.length, "heart"], ["listings", "My listings", S.listings.length, "buildings"]];
+  let body = "";
+  if (tab === "saved") {
+    body = favs.length ? `<div class="cards">${favs.map(card).join("")}</div>` : empty("heart", "No saved homes yet", "Tap the heart on any listing to keep it here.", `<button class="btn btn-primary" data-search='{}'>Browse properties</button>`);
+  } else if (tab === "enquiries") {
+    body = S.enquiries.length ? `<div class="stack">${S.enquiries.slice().reverse().map((e) => { const p = findListing(e.listingId); return `<article class="surface item">${p && p.images[0] ? `<img src="${p.images[0].thumb}" alt="">` : ""}
+      <div class="stack" style="gap:.35rem;min-width:0;flex:1"><div class="row between"><button class="btn btn-sm" style="padding:0;color:var(--navy);font-weight:700;background:none" data-open="${e.listingId}">${esc(p ? p.title : "Listing")}</button><span class="badge ${e.status === "Cancelled" ? "b-cancel" : e.status === "Visit requested" ? "b-pending" : "b-soft"}">${esc(e.status)}</span></div>
+      <p class="small muted">${esc(p ? p.ref + " · " + locLabel(p) : "")} &middot; sent ${fmtDate(e.created)}</p><p>${esc(e.message)}</p>
+      <ul class="timeline">${e.history.map((h) => `<li>${icon("dot")}${fmtDate(h.at)} &middot; ${esc(h.status)}</li>`).join("")}</ul>
+      ${e.status !== "Cancelled" ? `<div><button class="btn btn-danger btn-sm" data-cancel-enquiry="${e.id}">Cancel enquiry</button></div>` : ""}</div></article>`; }).join("")}</div>`
+      : empty("chat-left-text", "No enquiries yet", "Use “Contact owner” on a listing and track replies here.", `<button class="btn btn-primary" data-search='{}'>Find a property</button>`);
+  } else if (tab === "visits") {
+    body = S.visits.length ? `<div class="stack">${S.visits.slice().reverse().map((v) => { const p = findListing(v.listingId); return `<article class="surface item">${p && p.images[0] ? `<img src="${p.images[0].thumb}" alt="">` : ""}
+      <div class="stack" style="gap:.35rem;min-width:0;flex:1"><div class="row between"><strong style="color:var(--navy)">${esc(p ? p.title : "Listing")}</strong><span class="badge ${v.status === "Cancelled" ? "b-cancel" : "b-pending"}">${esc(v.status)}</span></div>
+      <p class="small">${icon("calendar-event")} ${fmtDate(v.date)}, ${esc(v.slot)}${v.status === "Requested" ? " &middot; waiting for the owner to confirm" : ""}</p>
+      ${v.status === "Requested" ? `<div><button class="btn btn-danger btn-sm" data-cancel-visit="${v.id}">Cancel request</button></div>` : ""}</div></article>`; }).join("")}</div>`
+      : empty("calendar-check", "No visits requested", "Use “Request a visit” on any listing to pick a date and time.", `<button class="btn btn-primary" data-search='{}'>Find a property</button>`);
+  } else {
+    body = S.listings.length ? `<div class="stack">${S.listings.slice().reverse().map((p) => `<article class="surface item">${p.images[0] ? `<img src="${p.images[0].thumb}" alt="">` : ""}
+      <div class="stack" style="gap:.35rem;min-width:0;flex:1"><div class="row between"><strong style="color:var(--navy)">${esc(p.title)}</strong><span class="badge b-pending">Pending review</span></div>
+      <p class="small muted">${esc(p.ref)} &middot; ${esc(p.categoryName)} &middot; ${p.purpose === "rent" ? inr(p.price) + "/month" : inr(p.price)} &middot; ${esc(locLabel(p))}</p>
+      <p class="small">In the full app, our team reviews every listing before it goes live, and you get a notification when it's approved.</p>
+      <div class="row"><button class="btn btn-soft btn-sm" data-open="${p.id}">${icon("eye")} Preview</button><button class="btn btn-danger btn-sm" data-delete-listing="${p.id}">${icon("trash")} Delete</button></div></div></article>`).join("")}</div>`
+      : empty("buildings", "You haven't listed a property", "List a house, flat, PG, shop or plot in a few short steps.", `<button class="btn btn-accent" data-go="list">${icon("plus-lg")} List your property</button>`);
+  }
+  return `<div class="wrap" style="padding-bottom:3rem">
+    <div class="page-head"><div class="stack" style="gap:.3rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><span>My activity</span></div><h1 style="font-size:1.6rem">My activity</h1><p class="small muted">Everything you do in this demo is stored only in this browser.</p></div>
+      ${S.enquiries.length + S.visits.length + S.favs.length + S.listings.length ? `<button class="btn btn-danger btn-sm" data-action="reset-demo">${icon("arrow-counterclockwise")} Reset demo data</button>` : ""}</div>
+    <div class="tabs" role="tablist">${tabs.map(([k, l, n, ic]) => `<button role="tab" aria-selected="${k === tab}" class="${k === tab ? "on" : ""}" data-go="activity" data-tab="${k}">${icon(ic)} ${l} <span class="n tnum">${n}</span></button>`).join("")}</div>
+    ${body}
+  </div>`;
+}
+function empty(ic, t, txt, action) { return `<div class="empty">${icon(ic)}<h3>${t}</h3><p class="muted">${txt}</p>${action || ""}</div>`; }
+
+/* ============================================================ WIZARD */
+const WSTEPS = ["Basics", "Location", "Details", "Pricing", "Photos", "Contact", "Review"];
+let draft = null;
+function newDraft() { return { step: 0, done: 0, purpose: "rent", category: "", title: "", description: "", town: "bangarpet", area: "", locality: "", beds: "", baths: "", sqft: "", furnishing: "", parking: "", amenities: [], price: "", deposit: "", negotiable: false, images: [], cover: 0, contactName: "", phone: "", whatsapp: "", visibility: "registered", errors: {} }; }
+function viewWizard() {
+  if (!draft) draft = newDraft();
+  const d = draft, step = d.step, er = d.errors;
+  const errs = (k) => er[k] ? `<span class="err">${esc(er[k])}</span>` : "";
+  const inv = (k) => er[k] ? " invalid" : "";
+  let body = "";
+  if (step === 0) {
+    const cat = DATA.categories.find((c) => c.slug === d.category);
+    body = `<div class="form-grid">
+      <div class="field full"><label for="w-title">Listing title <span class="req">*</span></label><input class="input${inv("title")}" id="w-title" name="title" value="${esc(d.title)}" placeholder="e.g. 2 BHK independent house near Bangarpet railway station">${errs("title")}</div>
+      <div class="field"><label for="w-category">Property type <span class="req">*</span></label><select class="select${inv("category")}" id="w-category" name="category">${optionList(catOptions(), d.category, "Select property type")}</select>${errs("category")}</div>
+      <div class="field"><span class="label">Purpose <span class="req">*</span></span><div class="tiles" style="grid-template-columns:1fr 1fr">${[["rent", "For rent"], ["sale", "For sale"]].map(([v, l]) => { const ok = !cat || (v === "rent" ? cat.rent : cat.sale); return `<label class="tile${ok ? "" : " disabled"}"><input type="radio" name="purpose" value="${v}" ${d.purpose === v ? "checked" : ""} ${ok ? "" : "disabled"}> ${l}</label>`; }).join("")}</div>${errs("purpose")}</div>
+      <div class="field full"><label for="w-desc">Description <span class="req">*</span></label><textarea class="textarea${inv("description")}" id="w-desc" name="description" placeholder="Describe the property, water supply, nearby landmarks, transport…">${esc(d.description)}</textarea>${errs("description") || `<span class="hint">At least 30 characters.</span>`}</div></div>`;
+  } else if (step === 1) {
+    const towns = DATA.locations.filter((l) => l.kind === "town"), areas = DATA.locations.filter((l) => l.kind === "area");
+    body = `<div class="form-grid">
+      <div class="field"><label for="w-state">State</label><input class="input" id="w-state" value="Karnataka" readonly></div>
+      <div class="field"><label for="w-district">District</label><input class="input" id="w-district" value="Kolar" readonly></div>
+      <div class="field"><label for="w-town">Town <span class="req">*</span></label><select class="select" id="w-town" name="town">${optionList(towns.map((t) => ({ value: t.slug, label: t.name })), d.town)}</select></div>
+      <div class="field"><label for="w-area">Area / locality</label><select class="select" id="w-area" name="area">${optionList(areas.map((a) => ({ value: a.slug, label: a.name })), d.area, "Other / not listed")}</select></div>
+      <div class="field full"><label for="w-locality">Locality / landmark ${d.area ? "" : '<span class="req">*</span>'}</label><input class="input${inv("locality")}" id="w-locality" name="locality" value="${esc(d.locality)}" placeholder="e.g. Behind the bus stand">${errs("locality")}</div>
+      <p class="hint full">${icon("eye-slash")} Only the area and town are shown publicly unless you choose to share the exact address.</p></div>`;
+  } else if (step === 2) {
+    const cat = DATA.categories.find((c) => c.slug === d.category) || {};
+    body = `<div class="form-grid">
+      ${cat.rooms ? `<div class="field"><label for="w-beds">${d.category === "pg-rooms" ? "Rooms / beds" : "Bedrooms"} <span class="req">*</span></label><input class="input${inv("beds")}" id="w-beds" name="beds" type="number" min="0" max="20" value="${esc(d.beds)}">${errs("beds")}</div>
+      <div class="field"><label for="w-baths">Bathrooms <span class="req">*</span></label><input class="input${inv("baths")}" id="w-baths" name="baths" type="number" min="0" max="20" value="${esc(d.baths)}">${errs("baths")}</div>` : ""}
+      <div class="field"><label for="w-sqft">${d.category === "plots" || d.category === "agricultural-land" ? "Plot area (sq. ft)" : "Built-up area (sq. ft)"} <span class="req">*</span></label><input class="input${inv("sqft")}" id="w-sqft" name="sqft" type="number" min="50" value="${esc(d.sqft)}">${errs("sqft")}</div>
+      ${cat.rooms || d.category === "commercial" ? `<div class="field"><label for="w-furn">Furnishing</label><select class="select" id="w-furn" name="furnishing">${optionList([{ value: "unfurnished", label: "Unfurnished" }, { value: "semi", label: "Semi-furnished" }, { value: "fully", label: "Fully furnished" }], d.furnishing, "Select")}</select></div>
+      <div class="field"><label for="w-park">Parking</label><select class="select" id="w-park" name="parking">${optionList([{ value: "none", label: "No parking" }, { value: "bike", label: "Two-wheeler" }, { value: "car", label: "Car" }, { value: "both", label: "Car and two-wheeler" }], d.parking, "Select")}</select></div>` : ""}
+      <div class="field full"><span class="label">Amenities</span><div class="tiles">${DATA.amenityOptions.map((a) => `<label class="tile"><input type="checkbox" name="amenities" value="${esc(a.name)}" ${d.amenities.includes(a.name) ? "checked" : ""}> ${icon(a.icon)} ${esc(a.name)}</label>`).join("")}</div></div></div>`;
+  } else if (step === 3) {
+    body = `<p class="small muted">Enter amounts in rupees without commas. This listing is <strong>${d.purpose === "rent" ? "for rent" : "for sale"}</strong>.</p><div class="form-grid">
+      <div class="field"><label for="w-price">${d.purpose === "rent" ? "Monthly rent (₹)" : "Expected price (₹)"} <span class="req">*</span></label><input class="input${inv("price")}" id="w-price" name="price" type="number" min="0" value="${esc(d.price)}">${errs("price") || (d.price ? `<span class="hint">${d.purpose === "rent" ? inr(d.price) + " per month" : inrShort(d.price)}</span>` : "")}</div>
+      ${d.purpose === "rent" ? `<div class="field"><label for="w-dep">Security deposit (₹)</label><input class="input" id="w-dep" name="deposit" type="number" min="0" value="${esc(d.deposit)}"></div>` : ""}
+      <label class="check full"><input type="checkbox" name="negotiable" ${d.negotiable ? "checked" : ""}> Price is negotiable</label></div>`;
+  } else if (step === 4) {
+    body = `<label class="drop" id="drop" for="w-photos">${icon("cloud-arrow-up")}<strong style="color:var(--navy)">Drag photos here or click to choose</strong><span class="small muted">JPG, PNG or WEBP. Photos are resized in your browser.</span><input class="vh" id="w-photos" type="file" accept="image/jpeg,image/png,image/webp" multiple></label>
+      ${errs("images")}
+      ${d.images.length ? `<div class="thumbs">${d.images.map((im, i) => `<div class="thumb"><img src="${im.thumb}" alt="Photo ${i + 1}">${i === d.cover ? `<span class="glass-chip yellow cover">Cover</span>` : ""}<div class="acts">${i !== d.cover ? `<button type="button" data-cover="${i}" aria-label="Set as cover photo">${icon("star")}</button>` : ""}<button type="button" data-remove-photo="${i}" aria-label="Remove photo">${icon("trash")}</button></div></div>`).join("")}</div>`
+        : `<p class="small muted">No photos yet. Add at least one; clear photos of the outside, living room, kitchen and bedrooms get the most enquiries.</p>`}
+      <button type="button" class="btn btn-soft btn-sm" data-action="sample-photos" style="justify-self:start">${icon("images")} Use sample photos instead</button>`;
+  } else if (step === 5) {
+    body = `<div class="form-grid">
+      <div class="field"><label for="w-cname">Contact name <span class="req">*</span></label><input class="input${inv("contactName")}" id="w-cname" name="contactName" value="${esc(d.contactName)}">${errs("contactName")}</div>
+      <div class="field"><label for="w-phone">Mobile number <span class="req">*</span></label><input class="input${inv("phone")}" id="w-phone" name="phone" inputmode="tel" value="${esc(d.phone)}" placeholder="10-digit mobile number">${errs("phone")}</div>
+      <div class="field"><label for="w-wa">WhatsApp number</label><input class="input" id="w-wa" name="whatsapp" inputmode="tel" value="${esc(d.whatsapp)}"></div>
+      <div class="field full"><span class="label">Who can see your phone number?</span><div class="tiles" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">${[["public", "Everyone"], ["registered", "Signed-in users only"], ["hidden", "Nobody (enquiries only)"]].map(([v, l]) => `<label class="tile"><input type="radio" name="visibility" value="${v}" ${d.visibility === v ? "checked" : ""}> ${l}</label>`).join("")}</div></div></div>`;
+  } else {
+    const p = draftAsListing(), problems = draftProblems();
+    body = `${problems.length ? `<div class="note" style="background:var(--red-50);border-color:#f3c0c0;color:var(--red)"><strong>Complete these before submitting:</strong><ul style="margin:.4rem 0 0;padding-left:1.1rem">${problems.map(([s, m]) => `<li><button class="btn btn-sm" style="padding:0;background:none;color:inherit;text-decoration:underline" data-wstep="${s}">${esc(m)}</button></li>`).join("")}</ul></div>` : ""}
+      <div class="surface" style="overflow:hidden"><div class="item">${p.images[0] ? `<img src="${p.images[0].thumb}" alt="">` : ""}<div class="stack" style="gap:.3rem;min-width:0"><div class="row"><span class="badge b-soft">${p.purpose === "rent" ? "For rent" : "For sale"}</span><span class="badge b-soft">${esc(p.categoryName || "Type not set")}</span></div>
+        <strong style="color:var(--navy);font-size:1.1rem">${esc(p.title || "Untitled listing")}</strong><span class="small muted">${icon("geo-alt")} ${esc(locLabel(p))}</span><span style="font-weight:700;color:var(--navy)">${p.price ? (p.purpose === "rent" ? inr(p.price) + " /month" : inr(p.price)) : "Price not set"}</span><span class="small muted">${p.images.length} photo${p.images.length === 1 ? "" : "s"}${p.beds ? ` &middot; ${p.beds} bedroom(s)` : ""}${p.sqft ? ` &middot; ${p.sqft} sq.ft` : ""}</span></div></div></div>
+      <div class="surface pad small muted prose">Only list properties you own or are authorised to market.
+Provide accurate prices, photos and details. Do not post duplicate listings.
+Listings are reviewed before publishing and may be removed if they violate these rules.</div>
+      <label class="check"><input type="checkbox" id="w-accept" ${d.accept ? "checked" : ""}> I confirm the details are accurate, I am authorised to list this property, and I accept the listing policy.</label>${errs("accept")}`;
+  }
+  return `<div class="wrap" style="padding-bottom:3rem;max-width:960px">
+    <div class="page-head"><div class="stack" style="gap:.3rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><span>List your property</span></div><h1 style="font-size:1.6rem">List your property</h1><p class="small muted">Step ${step + 1} of 7 &middot; ${WSTEPS[step]}</p></div>
+      <button class="btn btn-soft btn-sm" data-action="wizard-reset">${icon("arrow-counterclockwise")} Start over</button></div>
+    <nav class="wsteps" aria-label="Steps">${WSTEPS.map((s, i) => `<button type="button" data-wstep="${i}" class="${i === step ? "cur" : i < d.done ? "done" : ""}" ${i <= d.done ? "" : "disabled"} ${i === step ? 'aria-current="step"' : ""}><span class="n">${i < d.done && i !== step ? icon("check") : i + 1}</span>${s}</button>`).join("")}</nav>
+    <form class="surface pad stack" data-form="wizard" novalidate>${body}
+      <div class="row between" style="margin-top:.5rem">${step ? `<button type="button" class="btn btn-soft" data-wstep="${step - 1}">${icon("arrow-left")} Back</button>` : "<span></span>"}
+        <button type="submit" class="btn ${step === 6 ? "btn-accent btn-lg" : "btn-primary"}">${step === 6 ? icon("send") + " Submit for review" : "Save &amp; continue " + icon("arrow-right")}</button></div>
+    </form></div>`;
+}
+function readWizardForm(form) {
+  const d = draft, fd = new FormData(form);
+  ["title", "category", "purpose", "description", "town", "area", "locality", "beds", "baths", "sqft", "furnishing", "parking", "price", "deposit", "contactName", "phone", "whatsapp", "visibility"].forEach((k) => { if (fd.has(k)) d[k] = String(fd.get(k)).trim(); });
+  if (d.step === 2) d.amenities = fd.getAll("amenities");
+  if (d.step === 3) d.negotiable = fd.has("negotiable");
+  if (d.step === 6) d.accept = $("#w-accept").checked;
+  const cat = DATA.categories.find((c) => c.slug === d.category);
+  if (cat && !(d.purpose === "rent" ? cat.rent : cat.sale)) d.purpose = cat.rent ? "rent" : "sale";
+}
+const PHONE_RE = /^(?:\+?91[\s-]?|0)?[6-9]\d{9}$/;
+function stepErrors(step) {
+  const d = draft, e = {}, cat = DATA.categories.find((c) => c.slug === d.category) || {};
+  if (step === 0) {
+    if (d.title.length < 10) e.title = "Use a descriptive title of at least 10 characters.";
+    if (!d.category) e.category = "Choose the property type.";
+    if (d.description.length < 30) e.description = "Add a few more details (at least 30 characters).";
+  } else if (step === 1) { if (!d.area && !d.locality) e.locality = "Enter the locality or a nearby landmark."; }
+  else if (step === 2) {
+    if (cat.rooms && d.beds === "") e.beds = "Enter the number of bedrooms.";
+    if (cat.rooms && d.baths === "") e.baths = "Enter the number of bathrooms.";
+    if (!(Number(d.sqft) >= 50)) e.sqft = "Enter a realistic area in sq. ft.";
+  } else if (step === 3) {
+    const v = Number(d.price);
+    if (!v) e.price = d.purpose === "rent" ? "Enter the monthly rent." : "Enter the expected price.";
+    else if (d.purpose === "sale" && v < 10000) e.price = "Enter the full price in rupees (e.g. 4500000 for 45 lakh).";
+    else if (d.purpose === "rent" && v > 1000000) e.price = "That rent looks too high. Please check the amount.";
+  } else if (step === 4) { if (!d.images.length) e.images = "Add at least one photo."; }
+  else if (step === 5) {
+    if (!d.contactName) e.contactName = "Enter a contact name.";
+    if (!PHONE_RE.test(d.phone.replace(/[\s()-]/g, ""))) e.phone = "Enter a valid 10-digit Indian mobile number.";
+  } else if (step === 6) { if (!d.accept) e.accept = "Please confirm and accept the listing policy."; }
+  return e;
+}
+function draftProblems() { const out = []; for (let s = 0; s < 6; s++) { const e = stepErrors(s); Object.values(e).forEach((m) => out.push([s, `${WSTEPS[s]}: ${m}`])); } return out; }
+function draftAsListing() {
+  const d = draft, cat = DATA.categories.find((c) => c.slug === d.category) || {};
+  const town = DATA.locations.find((l) => l.slug === d.town), area = DATA.locations.find((l) => l.slug === d.area);
+  const imgs = d.images.slice(); if (d.cover) imgs.unshift(imgs.splice(d.cover, 1)[0]);
+  return { title: d.title, purpose: d.purpose, category: d.category, categoryName: cat.name || "", town: town ? town.name : "Bangarpet", area: area ? area.name.split(",")[0] : "", areaSlug: d.area, locality: d.locality, price: Number(d.price) || 0, deposit: Number(d.deposit) || 0, maintenance: 0, negotiable: d.negotiable, beds: d.beds === "" ? null : Number(d.beds), baths: d.baths === "" ? null : Number(d.baths), sqft: Number(d.sqft) || null, land: null, landUnit: "", furnishing: { unfurnished: "Unfurnished", semi: "Semi-furnished", fully: "Fully furnished" }[d.furnishing] || "", furnishingKey: d.furnishing, parking: { none: "No parking", bike: "Two-wheeler", car: "Car", both: "Car and two-wheeler" }[d.parking] || "", parkingKey: d.parking, availability: "Ready to move", amenities: DATA.amenityOptions.filter((a) => d.amenities.includes(a.name)), description: d.description, daysAgo: 0, featured: false, verified: false, listedBy: "owner", ownerName: d.contactName || "You", views: 0, images: imgs, ref: "" };
+}
+function resizeImage(file) {
+  return new Promise((resolve, reject) => {
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return reject(new Error(`${file.name}: only JPG, PNG or WEBP images are allowed.`));
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error(`${file.name} could not be read.`));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error(`${file.name} is not a valid image.`));
+      img.onload = () => {
+        if (img.width < 300 || img.height < 200) return reject(new Error(`${file.name} is too small (minimum 300 x 200 px).`));
+        const out = (max, q) => { const s = Math.min(1, max / Math.max(img.width, img.height)); const c = document.createElement("canvas"); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); return c.toDataURL("image/jpeg", q); };
+        resolve({ full: out(1200, .8), thumb: out(480, .72), caption: "" });
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+async function addPhotos(files) {
+  const errors = [];
+  for (const f of Array.from(files).slice(0, 12 - draft.images.length)) {
+    try { draft.images.push(await resizeImage(f)); } catch (e) { errors.push(e.message); }
+  }
+  draft.errors = errors.length ? { images: errors.join(" ") } : {};
+  render();
+}
+
+/* ============================================================ PRICING */
+function viewPricing() {
+  return `<div class="wrap" style="padding-bottom:3rem">
+    <div class="page-head"><div class="stack" style="gap:.3rem"><div class="crumbs"><button data-go="home">Home</button><span>/</span><span>Pricing</span></div><h1 style="font-size:1.6rem">Plans for owners &amp; brokers</h1><p class="muted">Start free. Upgrade when you need more listings. Searching and enquiring is always free.</p></div></div>
+    <div class="plans">${DATA.plans.map((pl, i) => `<div class="surface plan${i === 2 ? " hl" : ""}">
+      <div class="row between"><h2 style="font-size:1.15rem">${esc(pl.name)}</h2>${i === 2 ? `<span class="badge b-featured">Popular</span>` : ""}</div>
+      <p class="small muted">${esc(pl.description)}</p>
+      <div><span class="p tnum">${pl.price ? inr(pl.price) : "Free"}</span>${pl.price ? `<span class="muted"> / ${pl.days} days</span>` : ""}</div>
+      <ul>${pl.features.concat([`Listings stay live ${pl.duration} days`]).map((f) => `<li>${icon("check2-circle")}<span>${esc(f)}</span></li>`).join("")}</ul>
+      ${pl.roles === "broker" ? `<span class="small muted">For registered brokers</span>` : ""}
+      <button class="btn ${pl.price ? "btn-primary" : "btn-soft"} btn-block" data-plan="${esc(pl.name)}">${pl.price ? "Choose " + esc(pl.name) : "Start free"}</button></div>`).join("")}</div>
+    <p class="small muted" style="margin-top:1rem">${icon("shield-lock")} In the full app, paid plans are bought through Razorpay and activate only after the payment is verified on the server.</p>
+  </div>`;
+}
+
+/* ============================================================ EVENTS */
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("button, a, [data-action]");
+  if (!t) return;
+  const ds = t.dataset;
+  if (ds.action === "backdrop" && e.target === t) return closeLayer();
+  if (ds.action === "close") return closeLayer();
+  if (ds.action === "menu") return openMenu();
+  if (ds.search !== undefined) { e.preventDefault(); return go("search", JSON.parse(ds.search || "{}")); }
+  if (ds.go) { e.preventDefault(); if (ds.go === "list" && !draft) draft = newDraft(); return go(ds.go, ds.tab ? { tab: ds.tab } : {}); }
+  if (ds.open) return go("property", { id: Number(ds.open) });
+  if (ds.fav) {
+    const id = Number(ds.fav), i = S.favs.indexOf(id);
+    if (i >= 0) S.favs.splice(i, 1); else S.favs.push(id);
+    store.save();
+    $$(`[data-fav="${id}"]`).forEach((b) => { const on = isFav(id); b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); b.setAttribute("aria-label", on ? "Remove from saved" : "Save property"); b.innerHTML = icon(on ? "heart-fill" : "heart"); });
+    updateCounts();
+    return toast(isFav(id) ? "Saved to your homes" : "Removed from saved homes");
+  }
+  if (ds.tour) { const st = $("#stage"); if (st && st._tour) st._tour[ds.tour](); return; }
+  if (ds.tourGoto !== undefined) { const st = $("#stage"); if (st && st._tour) st._tour.goto(Number(ds.tourGoto)); return; }
+  if (ds.view) return go("search", Object.assign({}, state.params, { view: ds.view }), { keepScroll: true, noFocus: true });
+  if (ds.unfilter) { const p = Object.assign({}, state.params); delete p[ds.unfilter]; return go("search", p, { keepScroll: true }); }
+  if (ds.action === "toggle-filters") { $("#filters").classList.toggle("open"); return; }
+  if (ds.lightbox !== undefined) return openLightbox(Number(ds.lightbox));
+  if (ds.lb) { const l = $("#layer"); if (l._lb) l._lb(Number(ds.lb)); return; }
+  if (ds.enquire) return enquiryModal(Number(ds.enquire), ds.visit === "1");
+  if (ds.report) return reportModal(Number(ds.report));
+  if (ds.copy !== undefined) {
+    const text = ds.copy;
+    const done = () => toast("Listing name copied. Paste it to share.");
+    try { navigator.clipboard.writeText(text).then(done, () => toast(text)); } catch (err) { toast(text); }
+    return;
+  }
+  if (ds.cancelEnquiry) {
+    const en = S.enquiries.find((x) => x.id === Number(ds.cancelEnquiry));
+    if (en) { en.status = "Cancelled"; en.history.push({ at: today(), status: "Cancelled by you" }); S.visits.forEach((v) => { if (v.enquiryId === en.id && v.status === "Requested") v.status = "Cancelled"; }); store.save(); toast("Enquiry cancelled"); render(); }
+    return;
+  }
+  if (ds.cancelVisit) { const v = S.visits.find((x) => x.id === Number(ds.cancelVisit)); if (v) { v.status = "Cancelled"; store.save(); toast("Visit request cancelled"); render(); } return; }
+  if (ds.deleteListing) {
+    const id = Number(ds.deleteListing);
+    return modal("Delete this listing?", `<p>This removes the draft listing from this demo.</p><div class="row" style="justify-content:flex-end"><button class="btn btn-soft" data-action="close">Keep it</button><button class="btn btn-danger" data-confirm-delete="${id}">${icon("trash")} Delete</button></div>`);
+  }
+  if (ds.confirmDelete) { S.listings = S.listings.filter((x) => x.id !== Number(ds.confirmDelete)); store.save(); closeLayer(); toast("Listing deleted"); return render(); }
+  if (ds.action === "reset-demo") return modal("Reset demo data?", `<p>This clears your saved homes, enquiries, visits and listings in this browser.</p><div class="row" style="justify-content:flex-end"><button class="btn btn-soft" data-action="close">Cancel</button><button class="btn btn-danger" data-action="confirm-reset">Reset</button></div>`);
+  if (ds.action === "confirm-reset") { Object.assign(S, { favs: [], enquiries: [], visits: [], listings: [], messages: [], reports: [] }); store.save(); closeLayer(); toast("Demo data cleared"); return render(); }
+  if (ds.plan) return toast(`${ds.plan}: payments run through Razorpay in the full app.`);
+  if (ds.wstep !== undefined) {
+    const n = Number(ds.wstep);
+    const form = $('[data-form="wizard"]'); if (form) readWizardForm(form);
+    if (n <= draft.done) { draft.step = n; draft.errors = {}; go("list", {}, { keepScroll: false }); }
+    return;
+  }
+  if (ds.cover !== undefined) { draft.cover = Number(ds.cover); return render(); }
+  if (ds.removePhoto !== undefined) { const i = Number(ds.removePhoto); draft.images.splice(i, 1); if (draft.cover >= draft.images.length) draft.cover = 0; return render(); }
+  if (ds.action === "sample-photos") {
+    const src = LIST.find((p) => p.category === draft.category && p.images.length) || LIST.find((p) => p.images.length);
+    draft.images = src.images.map((im) => ({ full: im.full, thumb: im.thumb, caption: im.caption })); draft.cover = 0; draft.errors = {};
+    toast("Sample photos added"); return render();
+  }
+  if (ds.action === "wizard-reset") { draft = newDraft(); return go("list"); }
+});
+
+document.addEventListener("submit", (e) => {
+  const f = e.target; e.preventDefault();
+  const kind = f.dataset.form, fd = new FormData(f);
+  if (kind === "hero-search") {
+    const p = {}; ["purpose", "location", "category", "min", "max"].forEach((k) => { const v = String(fd.get(k) || "").trim(); if (v) p[k] = v; });
+    return go("search", p);
+  }
+  if (kind === "filters") {
+    const p = {}; ["q", "purpose", "location", "category", "min", "max", "beds", "furnishing", "listedBy"].forEach((k) => { const v = String(fd.get(k) || "").trim(); if (v) p[k] = v; });
+    if (fd.has("parking")) p.parking = "1"; if (fd.has("verified")) p.verified = "1";
+    if (state.params.sort) p.sort = state.params.sort; if (state.params.view) p.view = state.params.view;
+    return go("search", p);
+  }
+  if (kind === "contact" || kind === "enquiry") {
+    const errs = [];
+    $$(".err", f).forEach((x) => x.remove()); $$(".invalid", f).forEach((x) => x.classList.remove("invalid"));
+    const need = (name, msg, test) => { const el = f.elements[name]; const v = String(el.value || "").trim(); if (!v || (test && !test(v))) { el.classList.add("invalid"); el.insertAdjacentHTML("afterend", `<span class="err">${msg}</span>`); errs.push(el); } };
+    need("name", "Enter your name.");
+    if (kind === "contact") { need("email", "Enter a valid email address.", (v) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)); need("message", "Write a short message."); }
+    else {
+      need("phone", "Enter a valid 10-digit Indian mobile number.", (v) => PHONE_RE.test(v.replace(/[\s()-]/g, "")));
+      need("message", "Write a short message.", (v) => v.length >= 5);
+      if (fd.has("visit")) need("date", "Choose a date from tomorrow onwards.", (v) => v > today());
+    }
+    if (errs.length) { errs[0].focus(); return; }
+    if (kind === "contact") { S.messages.push({ at: today(), name: fd.get("name") }); store.save(); f.reset(); return toast("Message saved in this demo. In the full app it goes to our team."); }
+    const id = Number(f.dataset.id), visit = fd.has("visit");
+    if (!visit && S.enquiries.some((x) => x.listingId === id && x.status !== "Cancelled" && x.message === fd.get("message"))) { closeLayer(); return toast("You already sent this message."); }
+    const en = { id: store.id(), listingId: id, created: today(), message: String(fd.get("message")), contact: fd.get("contact"), status: visit ? "Visit requested" : "New", history: [{ at: today(), status: "Sent to the owner" }] };
+    S.enquiries.push(en);
+    if (visit) { S.visits.push({ id: store.id(), enquiryId: en.id, listingId: id, date: String(fd.get("date")), slot: String(fd.get("slot")), status: "Requested" }); en.history.push({ at: today(), status: "Visit requested for " + fmtDate(String(fd.get("date"))) }); }
+    store.save(); closeLayer(); toast(visit ? "Visit request sent. Track it in My activity." : "Enquiry sent. Track it in My activity.");
+    return render();
+  }
+  if (kind === "report") {
+    if (!fd.get("reason")) { const el = f.elements.reason; el.classList.add("invalid"); el.focus(); return; }
+    S.reports.push({ listingId: Number(f.dataset.id), reason: fd.get("reason"), at: today() }); store.save(); closeLayer();
+    return toast("Thanks. In the full app our team reviews every report.");
+  }
+  if (kind === "wizard") {
+    readWizardForm(f);
+    const errs = stepErrors(draft.step);
+    draft.errors = errs;
+    if (Object.keys(errs).length) { render(); const el = $(".invalid") || $(".err"); if (el) el.scrollIntoView({ block: "center" }); return; }
+    if (draft.step < 6) { draft.step++; draft.done = Math.max(draft.done, draft.step); return go("list"); }
+    const problems = draftProblems();
+    if (problems.length) { draft.errors = {}; return render(); }
+    const listing = Object.assign(draftAsListing(), { id: 100000 + store.id(), mine: true });
+    listing.ref = "BPH-NEW-" + String(listing.id).slice(-3);
+    S.listings.push(listing); store.save(); draft = null;
+    toast("Submitted for review. You can preview it in My activity.");
+    return go("activity", { tab: "listings" });
+  }
+});
+
+document.addEventListener("change", (e) => {
+  const t = e.target;
+  if (t.matches('[data-action="sort"]')) return go("search", Object.assign({}, state.params, { sort: t.value }), { keepScroll: true, noFocus: true });
+  if (t.id === "w-photos") return addPhotos(t.files);
+  if (t.id === "w-category" && draft) { readWizardForm(t.form); draft.errors = {}; render(); const el = $("#w-category"); if (el) el.focus(); }
+});
+document.addEventListener("dragover", (e) => { const z = e.target.closest && e.target.closest("#drop"); if (z) { e.preventDefault(); z.classList.add("drag"); } });
+document.addEventListener("dragleave", (e) => { const z = e.target.closest && e.target.closest("#drop"); if (z) z.classList.remove("drag"); });
+document.addEventListener("drop", (e) => { const z = e.target.closest && e.target.closest("#drop"); if (z) { e.preventDefault(); z.classList.remove("drag"); addPhotos(e.dataTransfer.files); } });
+document.addEventListener("keydown", (e) => {
+  const l = $("#layer");
+  if (!l.innerHTML) return;
+  if (e.key === "Escape") closeLayer();
+  if (l._lb && e.key === "ArrowRight") l._lb(1);
+  if (l._lb && e.key === "ArrowLeft") l._lb(-1);
+});
+
+function openMenu() {
+  $("#layer").innerHTML = `<div class="drawer-backdrop" data-action="close"></div><nav class="drawer" aria-label="Menu">
+    <div class="row between" style="margin-bottom:.5rem"><strong style="color:var(--navy)">Menu</strong><button class="icon-btn" data-action="close" aria-label="Close menu">${icon("x-lg")}</button></div>
+    <button class="link" data-search='{"purpose":"rent"}'>${icon("key")} Rent</button>
+    <button class="link" data-search='{"purpose":"sale"}'>${icon("house-door")} Buy</button>
+    <button class="link" data-search='{"category":"pg-rooms"}'>${icon("door-open")} PG &amp; Rooms</button>
+    <button class="link" data-search='{"category":"commercial"}'>${icon("shop")} Commercial</button>
+    <button class="link" data-search='{}'>${icon("search")} All properties</button>
+    <hr style="border:0;border-top:1px solid var(--border);width:100%">
+    <button class="link" data-go="activity" data-tab="saved">${icon("heart")} Saved homes</button>
+    <button class="link" data-go="activity">${icon("person-circle")} My activity</button>
+    <button class="link" data-go="pricing">${icon("stars")} Plans &amp; pricing</button>
+    <button class="btn btn-accent btn-block" data-go="list" style="margin-top:.5rem">${icon("plus-lg")} List property</button></nav>`;
+  const c = $('#layer [data-action="close"].icon-btn'); if (c) c.focus();
+}
+
+// Show the mobile "Filters" button only where the sidebar is collapsed.
+const mq = window.matchMedia("(max-width: 1023px)");
+const syncFiltersBtn = () => { const b = $("#filters-btn"); if (b) b.style.display = mq.matches ? "" : "none"; };
+const _render = render;
+render = function () { _render(); syncFiltersBtn(); };
+mq.addEventListener ? mq.addEventListener("change", syncFiltersBtn) : mq.addListener(syncFiltersBtn);
+
+// Deep links: #search, #list, #pricing, #activity, #saved
+const start = (location.hash || "").replace("#", "");
+if (start === "search") go("search", {}, { noFocus: true });
+else if (start === "list") { draft = newDraft(); go("list", {}, { noFocus: true }); }
+else if (start === "pricing" || start === "activity") go(start, {}, { noFocus: true });
+else if (start === "saved") go("activity", { tab: "saved" }, { noFocus: true });
+else go("home", {}, { noFocus: true });
+})();
+</script>

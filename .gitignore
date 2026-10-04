@@ -20,3 +20,7 @@ htmlcov/
 *.log
 node_modules/
 .DS_Store
+
+# Generated web app demo build
+preview/webapp/data.json
+preview/webapp/dist/
