@@ -327,24 +327,6 @@
   if (swUrl && secure && "serviceWorker" in navigator) {
     window.addEventListener("load", function () { navigator.serviceWorker.register(swUrl, { scope: "/" }).catch(function () {}); });
   }
-  // Show "Install the app" links only when the browser offers installation.
-  let installPrompt = null;
-  window.addEventListener("beforeinstallprompt", function (event) {
-    event.preventDefault();
-    installPrompt = event;
-    document.querySelectorAll("[data-install-app]").forEach(function (el) { el.hidden = false; });
-  });
-  window.addEventListener("appinstalled", function () {
-    installPrompt = null;
-    document.querySelectorAll("[data-install-app]").forEach(function (el) { el.hidden = true; });
-  });
-  document.addEventListener("click", function (event) {
-    const btn = event.target.closest("[data-install-button]");
-    if (!btn || !installPrompt) return;
-    event.preventDefault();
-    installPrompt.prompt();
-    installPrompt.userChoice.finally(function () { installPrompt = null; });
-  });
 
   // On phones the dashboard nav is a horizontal strip: keep the active tab in view.
   const dashNav = document.querySelector(".dash-nav");
