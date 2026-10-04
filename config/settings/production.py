@@ -32,6 +32,11 @@ if ON_VERCEL:
     _prod_host = env("VERCEL_PROJECT_PRODUCTION_URL", "")
     if _prod_host and not env("SITE_URL"):
         SITE_URL = f"https://{_prod_host}"
+    # Vercel only routes a project's own domains to its functions, and system
+    # variables such as VERCEL_URL are not always exposed at runtime, so accept
+    # the project's *.vercel.app addresses (custom domains go in ALLOWED_HOSTS).
+    ALLOWED_HOSTS.append(".vercel.app")  # noqa: F405
+    CSRF_TRUSTED_ORIGINS.append("https://*.vercel.app")  # noqa: F405
 
 # Hosting platforms that publish the app's public hostname in the environment.
 for _var in ("RENDER_EXTERNAL_HOSTNAME", "RAILWAY_PUBLIC_DOMAIN",

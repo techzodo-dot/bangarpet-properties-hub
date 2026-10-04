@@ -152,6 +152,13 @@ class VercelSettingsTests(TestCase):
         self.assertEqual(data["handlers"], ["console"])
         self.assertTrue(data["finders"])
 
+    def test_vercel_app_hosts_allowed_without_system_variables(self):
+        result = self._load(VERCEL_URL="", VERCEL_PROJECT_PRODUCTION_URL="", VERCEL_DEPLOYMENT_ID="")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        data = json.loads(result.stdout.strip().splitlines()[-1])
+        self.assertIn(".vercel.app", data["hosts"])
+        self.assertIn("https://*.vercel.app", data["csrf"])
+
     def test_missing_database_fails_loudly(self):
         result = self._load(DATABASE_URL="")
         self.assertNotEqual(result.returncode, 0)
