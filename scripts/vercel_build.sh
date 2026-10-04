@@ -17,8 +17,8 @@ fi
 
 if [ -z "${DATABASE_URL:-}" ]; then
   echo "ERROR: DATABASE_URL is not set."
-  echo "Add a Neon Postgres database in the Vercel dashboard (Project -> Storage -> Create Database -> Neon),"
-  echo "connect it to this project, then redeploy."
+  echo "Connect a PostgreSQL database (Supabase or Neon) to this project and redeploy."
+  echo "See docs/DEPLOYMENT.md, option F."
   exit 1
 fi
 

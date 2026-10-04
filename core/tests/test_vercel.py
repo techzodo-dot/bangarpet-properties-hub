@@ -162,4 +162,4 @@ class VercelSettingsTests(TestCase):
     def test_missing_database_fails_loudly(self):
         result = self._load(DATABASE_URL="")
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("Neon", result.stderr)
+        self.assertIn("DATABASE_URL is not set", result.stderr)

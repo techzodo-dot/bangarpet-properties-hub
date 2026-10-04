@@ -18,8 +18,8 @@ ON_VERCEL = bool(env("VERCEL", ""))
 if ON_VERCEL:
     if not env("DATABASE_URL"):
         raise ImproperlyConfigured(
-            "DATABASE_URL is not set. Add a Neon Postgres database to the Vercel project "
-            "(Storage -> Create Database -> Neon) and redeploy."
+            "DATABASE_URL is not set. Connect a PostgreSQL database (Supabase or Neon) to the "
+            "Vercel project and redeploy. See docs/DEPLOYMENT.md, option F."
         )
     # Serverless instances come and go: don't hold connections open between requests.
     DATABASES["default"]["CONN_MAX_AGE"] = 0  # noqa: F405

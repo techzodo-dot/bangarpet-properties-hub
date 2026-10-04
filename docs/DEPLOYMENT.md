@@ -9,7 +9,7 @@ Bangarpet Property Hub is a standard Django app, so it runs on most hosts. Pick 
 | **C. Render** (`render.yaml` included) | Push-to-deploy, managed database | PostgreSQL (managed) | Low |
 | **D. Railway** (`Procfile` included) | Push-to-deploy, simple pricing | PostgreSQL (plugin) | Low |
 | **E. Docker** (`Dockerfile`, `docker-compose.yml`) | Any server with Docker | PostgreSQL container | Low–medium |
-| **F. Vercel** (`vercel.json` included) | Serverless, free Hobby plan for testing | Neon PostgreSQL | Low |
+| **F. Vercel** (`vercel.json` included) | Serverless, free Hobby plan for testing | Supabase or Neon PostgreSQL | Low |
 
 Whatever you choose, the steps are the same: **set environment variables → run `scripts/release.sh` →
 start Gunicorn → add HTTPS → add the hourly cron job.**
@@ -135,12 +135,12 @@ volumes for the database, photos, private documents and logs. Put a TLS proxy in
 (Caddy, Nginx, Traefik or your host's load balancer) and point your domain at it.
 Cron: `docker compose exec web python manage.py run_scheduled_tasks` hourly from the host's crontab.
 
-## 8. Option F — Vercel (serverless) + Neon + Vercel Blob
+## 8. Option F — Vercel (serverless) + PostgreSQL + Vercel Blob
 
 Vercel runs Django as a serverless function. There is no persistent disk, so the app switches
 automatically (when the `VERCEL` variable is present) to:
 
-* **Neon PostgreSQL** for the database (`DATABASE_URL`, required),
+* **PostgreSQL** from Supabase or Neon for the database (`DATABASE_URL`, required),
 * **Vercel Blob** for public photos, avatars and banners (`BLOB_READ_WRITE_TOKEN`),
 * **the database** for private verification documents (never at a public URL),
 * WhiteNoise serving `static/` directly, with a per-deployment `?v=` cache buster,
@@ -150,7 +150,17 @@ Setup:
 
 1. Vercel → **Add New → Project** → import the GitHub repository. `vercel.json` sets the framework
    (Django), the build command (`scripts/vercel_build.sh`), the region (Mumbai, `bom1`) and the cron job.
-2. Project → **Storage** → **Create Database → Neon** → connect it to the project (adds `DATABASE_URL`).
+2. Database, either:
+   * **Supabase** (used by the live site): create a project in the Mumbai region (`ap-south-1`). In the
+     SQL editor, create a login and schema for the app:
+     `CREATE ROLE bph_app LOGIN PASSWORD '<strong password>'; GRANT bph_app TO postgres;`
+     `CREATE SCHEMA bph AUTHORIZATION bph_app; ALTER ROLE bph_app SET search_path = bph;`
+     Then set `DATABASE_URL=postgres://bph_app.<project-ref>:<password>@<pooler-host>:6543/postgres?sslmode=require`
+     using the **transaction pooler** host from Supabase → Connect (for this project `aws-0-ap-south-1.pooler.supabase.com`).
+     Vercel cannot reach Supabase's direct `db.<ref>.supabase.co` address (IPv6 only).
+   * **Neon**: Project → **Storage** → **Create Database → Neon** → connect it (adds `DATABASE_URL`).
+
+   The app turns off prepared statements and server-side cursors on Vercel, as transaction poolers require.
 3. Project → **Storage** → **Create → Blob** (public access) → connect it (adds `BLOB_READ_WRITE_TOKEN`).
 4. Project → **Settings → Environment Variables**:
    `DJANGO_SETTINGS_MODULE=config.settings.production`, `SECRET_KEY`, `ADMIN_USERNAME=bph@admin`,
@@ -166,7 +176,10 @@ Limits to know about:
   batches automatically; verification documents are limited to 4 MB.
 * Hobby cron jobs run **once a day** (`/cron/scheduled-tasks/` at 06:00 IST). Listing expiry and
   alerts therefore run daily instead of hourly.
-* Backups: use Neon's point-in-time restore (Neon console); photos stay in the Blob store.
+* Backups: Supabase/Neon take daily database backups (Supabase free plan: download them from the
+  dashboard, or run `pg_dump` against the session pooler on port 5432); photos stay in the Blob store.
+* The first deploy is slow (a few minutes) because migrations run from Vercel's build machine;
+  later deploys only check for new migrations.
 
 ## 9. Installable web app (PWA)
 
