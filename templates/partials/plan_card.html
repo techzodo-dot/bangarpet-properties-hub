@@ -17,5 +17,5 @@
     {% for f in plan.feature_list %}<li><i class="bi bi-check2"></i>{{ f }}</li>{% endfor %}
     <li><i class="bi bi-check2"></i>Listings stay live {{ plan.listing_duration_days }} days</li>
   </ul>
-  {% if show_actions %}{% include "partials/plan_actions.html" %}{% endif %}
+  {% if show_actions %}{% include "partials/plan_actions.html" %}{% elif public_actions %}<div class="mt-auto pt-2">{% include "partials/plan_public_actions.html" %}</div>{% endif %}
 </div>

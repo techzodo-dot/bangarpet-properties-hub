@@ -1,0 +1,12 @@
+{# Pricing page buttons: partners pick the plan; visitors sign up first and land on their plan page. #}
+{% if plan.can_choose %}
+  {% include "partials/plan_actions.html" %}
+{% elif user.is_authenticated and user.is_partner %}
+  <span class="small text-muted">Not available for your account type.</span>
+{% elif user.is_authenticated %}
+  <span class="small text-muted">For owner and broker accounts.</span>
+{% elif plan.is_free %}
+  <a class="btn btn-soft w-100" href="{% url 'accounts:register' %}?type={{ plan.signup_type }}">Start free</a>
+{% else %}
+  <a class="btn btn-primary w-100" href="{% url 'accounts:register' %}?type={{ plan.signup_type }}&amp;next={% filter urlencode %}{% url 'dashboard:partner_subscription' %}{% endfilter %}">Choose {{ plan.name }}</a>
+{% endif %}

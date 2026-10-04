@@ -1,0 +1,17 @@
+{% extends base_template %}
+{% load bph %}
+{% block title %}Choose the {{ plan.name }} plan - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Choose the {{ plan.name }} plan</h1></div>
+<div class="surface p-4" style="max-width:640px">
+  <p class="mb-2">Plan: <strong>{{ plan.name }}</strong> &middot; Amount: <strong>{{ plan.effective_price|inr }}</strong> for {{ plan.billing_period_days }} days</p>
+  <p class="text-muted small">Send us a request and our team will call you to collect the payment by UPI, bank transfer or cash. Your plan is activated as soon as the payment is confirmed.{% if site.support_phone %} You can also call us on <a href="tel:{{ site.support_phone }}">{{ site.support_phone }}</a>.{% endif %}</p>
+  {% if site.manual_payment_instructions %}<div class="bg-soft rounded-4 p-3 mb-3 prose small">{{ site.manual_payment_instructions|linebreaksbr }}</div>{% endif %}
+  <form method="post" data-once novalidate>{% csrf_token %}
+    {% include "partials/field.html" with field=form.phone %}
+    {% include "partials/field.html" with field=form.note %}
+    <button class="btn btn-primary" type="submit">Send request</button>
+    <a class="btn btn-link" href="{% url 'dashboard:partner_subscription' %}">Cancel</a>
+  </form>
+</div>
+{% endblock %}

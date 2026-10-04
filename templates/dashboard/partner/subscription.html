@@ -19,7 +19,7 @@
   <div class="col-md-6 col-xxl-3">{% with plan=p is_current=False %}{% if current and current.plan_id == p.pk %}{% include "partials/plan_card.html" with is_current=True show_actions=True %}{% elif not current and p.is_default %}{% include "partials/plan_card.html" with is_current=True show_actions=True %}{% else %}{% include "partials/plan_card.html" with show_actions=True %}{% endif %}{% endwith %}</div>
   {% endfor %}
 </div>
-<p class="small text-muted mt-3"><i class="bi bi-shield-lock me-1"></i>Payments are processed by Razorpay. Your plan activates only after the payment is verified on our server. Buying the same plan again extends it; choosing a different plan starts it immediately.</p>
+<p class="small text-muted mt-3"><i class="bi bi-shield-lock me-1"></i>{% if ONLINE_PAYMENTS %}Payments are processed by Razorpay. Your plan activates only after the payment is verified on our server.{% else %}Choose a plan and our team will call you to collect the payment by UPI, bank transfer or cash. Your plan activates as soon as the payment is confirmed.{% endif %} Buying the same plan again extends it; choosing a different plan starts it immediately.</p>
 {% if history %}
 <h2 class="h5 mt-4">Plan history</h2>
 <div class="table-card"><div class="table-responsive"><table class="table"><thead><tr><th>Plan</th><th>Status</th><th>From</th><th>Until</th><th>Amount</th></tr></thead><tbody>

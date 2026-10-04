@@ -54,7 +54,7 @@ class RegisterView(FormView):
         msg = "Welcome to Bangarpet Property Hub! "
         msg += "We've sent a link to verify your email address." if sent else "Email verification could not be sent right now; you can resend it from your profile."
         messages.success(self.request, msg)
-        return redirect("accounts:post_login")
+        return redirect(safe_next_url(self.request, None) or "accounts:post_login")
 
 
 @method_decorator(never_cache, name="dispatch")

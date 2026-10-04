@@ -9,6 +9,7 @@ def platform(request):
         "site": site,
         "SITE_URL": settings.SITE_URL,
         "GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY,
+        "ONLINE_PAYMENTS": bool(settings.RAZORPAY_KEY_ID and settings.RAZORPAY_KEY_SECRET),
     }
     user = getattr(request, "user", None)
     if user is not None and user.is_authenticated:

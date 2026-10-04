@@ -10,6 +10,7 @@ urlpatterns = [
     path("verify/", views.verify, name="verify"),
     path("failed/", views.failed, name="failed"),
     path("manual/<slug:slug>/", views.manual_payment, name="manual"),
+    path("request/<slug:slug>/", views.request_plan, name="request"),
     path("receipt/<uuid:uid>/", views.receipt, name="receipt"),
     path("razorpay/webhook/", views.razorpay_webhook, name="razorpay_webhook"),
 ]

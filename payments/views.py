@@ -19,7 +19,7 @@ from core.permissions import partner_required
 from notifications.models import Notification
 from notifications.services import notify_admins
 from payments import razorpay
-from payments.forms import ManualPaymentForm
+from payments.forms import ManualPaymentForm, PlanRequestForm
 from payments.models import Invoice, Payment, WebhookEvent
 from payments.services import mark_failed, mark_paid
 from subscriptions.models import SubscriptionPlan
@@ -39,8 +39,10 @@ def _get_plan(user, slug):
 def checkout(request, slug):
     plan = _get_plan(request.user, slug)
     if not razorpay.is_configured():
-        messages.error(request, "Online payments are not configured yet. Please contact support.")
-        return redirect("dashboard:partner_subscription")
+        # No online gateway yet: fall back to UPI/bank transfer or a plan request.
+        if PlatformSetting.load().allow_manual_payments:
+            return redirect("payments:manual", slug=plan.slug)
+        return redirect("payments:request", slug=plan.slug)
     if not ratelimit.check_and_hit("payment", f"user:{request.user.pk}"):
         messages.error(request, "Too many payment attempts. Please try again later.")
         return redirect("dashboard:partner_subscription")
@@ -131,6 +133,44 @@ def manual_payment(request, slug):
         return redirect("dashboard:partner_payments")
     return render(request, "payments/manual.html", {
         "form": form, "plan": plan, "site": site, "base_template": "dashboard/partner_base.html", "active": "subscription",
+    })
+
+
+MAX_OPEN_REQUESTS = 3
+
+
+@partner_required
+def request_plan(request, slug):
+    """Ask the team to activate a plan when online payment is not available.
+
+    Creates a payment awaiting verification; an admin collects the payment
+    (UPI, bank transfer or cash) and approves it, which activates the plan.
+    """
+    plan = _get_plan(request.user, slug)
+    form = PlanRequestForm(request.POST or None, initial={"phone": request.user.phone})
+    if request.method == "POST" and form.is_valid():
+        open_requests = Payment.objects.filter(user=request.user, status=Payment.Status.PENDING_VERIFICATION)
+        if open_requests.filter(plan=plan).exists():
+            messages.info(request, f"You have already requested the {plan.name} plan. Our team will contact you shortly.")
+            return redirect("dashboard:partner_payments")
+        if open_requests.count() >= MAX_OPEN_REQUESTS:
+            messages.error(request, "You already have requests awaiting our team. Please wait for them to be processed.")
+            return redirect("dashboard:partner_payments")
+        phone = form.cleaned_data["phone"]
+        payment = Payment.objects.create(
+            user=request.user, plan=plan, amount=plan.effective_price, gateway=Payment.Gateway.MANUAL,
+            status=Payment.Status.PENDING_VERIFICATION, manual_reference=f"Plan request - call {phone}"[:80],
+        )
+        log_action(request, "payment.plan_requested", payment, phone=phone)
+        note = form.cleaned_data["note"]
+        notify_admins(Notification.Event.ADMIN_NOTICE, f"Plan request: {plan.name}",
+                      f"{request.user.display_name} ({phone}) wants the {plan.name} plan ({plan.effective_price} INR)."
+                      + (f" Note: {note}" if note else "") + " Collect the payment, then approve it to activate the plan.",
+                      reverse("adminpanel:payments") + "?status=pending_verification")
+        messages.success(request, f"Request sent. Our team will call you on {phone} to complete the payment and activate your {plan.name} plan.")
+        return redirect("dashboard:partner_payments")
+    return render(request, "payments/request.html", {
+        "form": form, "plan": plan, "base_template": "dashboard/partner_base.html", "active": "subscription",
     })
 
 

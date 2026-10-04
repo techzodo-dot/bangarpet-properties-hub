@@ -9,13 +9,16 @@
 <div class="row g-4">
   {% for plan in plans %}
   <div class="col-md-6 col-xl-3">
-    {% if forloop.counter == 3 %}{% include "partials/plan_card.html" with highlight=True %}{% else %}{% include "partials/plan_card.html" %}{% endif %}
+    {% if current and current.plan_id == plan.pk %}{% include "partials/plan_card.html" with is_current=True public_actions=True %}
+    {% elif current_plan and not current and plan.is_default %}{% include "partials/plan_card.html" with is_current=True public_actions=True %}
+    {% elif forloop.counter == 3 %}{% include "partials/plan_card.html" with highlight=True public_actions=True %}
+    {% else %}{% include "partials/plan_card.html" with public_actions=True %}{% endif %}
   </div>
   {% endfor %}
 </div>
 <div class="text-center mt-4">
   {% if user.is_authenticated and user.is_partner %}<a class="btn btn-primary btn-lg" href="{% url 'dashboard:partner_subscription' %}">Manage my plan</a>
   {% else %}<a class="btn btn-accent btn-lg" href="{% url 'accounts:register' %}?type=owner">Get started free</a>{% endif %}
-  <p class="small text-muted mt-3">Prices in Indian Rupees. Payments are processed securely by Razorpay. "Priority visibility" moves your listings higher in the default sort order; it is not a guarantee of placement.</p>
+  <p class="small text-muted mt-3">Prices in Indian Rupees. {% if ONLINE_PAYMENTS %}Payments are processed securely by Razorpay.{% else %}Pay by UPI, bank transfer or cash; your plan starts as soon as the payment is confirmed.{% endif %} "Priority visibility" moves your listings higher in the default sort order; it is not a guarantee of placement.</p>
 </div>
 {% endblock %}

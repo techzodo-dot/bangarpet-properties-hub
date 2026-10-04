@@ -98,9 +98,9 @@ class CheckoutTests(TestCase):
         self.assertEqual(self.client.post(reverse("payments:checkout", args=["broker"])).status_code, 403)
 
     @override_settings(RAZORPAY_KEY_ID="", RAZORPAY_KEY_SECRET="")
-    def test_not_configured(self):
+    def test_not_configured_falls_back_to_plan_request(self):
         resp = self.client.post(reverse("payments:checkout", args=["basic"]))
-        self.assertRedirects(resp, reverse("dashboard:partner_subscription"))
+        self.assertRedirects(resp, reverse("payments:request", args=["basic"]))
         self.assertFalse(Payment.objects.exists())
 
 
@@ -158,3 +158,65 @@ class ManualPaymentTests(TestCase):
         payment.refresh_from_db()
         self.assertEqual(payment.status, Payment.Status.PAID)
         self.assertEqual(listing_limit(owner), 5)
+
+
+@override_settings(RAZORPAY_KEY_ID="", RAZORPAY_KEY_SECRET="")
+class PlanRequestTests(TestCase):
+    """Without an online gateway, partners can still choose a paid plan."""
+
+    def setUp(self):
+        cache.clear()
+        self.owner = make_user(Role.OWNER)
+        self.client.force_login(self.owner)
+
+    def test_subscription_page_offers_working_choose_buttons(self):
+        resp = self.client.get(reverse("dashboard:partner_subscription"))
+        self.assertContains(resp, reverse("payments:request", args=["basic"]))
+        self.assertNotContains(resp, reverse("payments:checkout", args=["basic"]))
+
+    def test_request_creates_pending_payment_and_admin_approval_activates_plan(self):
+        page = self.client.get(reverse("payments:request", args=["basic"]))
+        self.assertContains(page, "Choose the Basic plan")
+        resp = self.client.post(reverse("payments:request", args=["basic"]), {"phone": "9876543210", "note": "Call after 5pm"})
+        self.assertRedirects(resp, reverse("dashboard:partner_payments"))
+        payment = Payment.objects.get()
+        self.assertEqual(payment.status, Payment.Status.PENDING_VERIFICATION)
+        self.assertEqual(payment.gateway, Payment.Gateway.MANUAL)
+        self.assertIn("9876543210", payment.manual_reference)
+        self.assertEqual(listing_limit(self.owner), 1)
+        # A second request for the same plan does not create a duplicate.
+        self.client.post(reverse("payments:request", args=["basic"]), {"phone": "9876543210"})
+        self.assertEqual(Payment.objects.count(), 1)
+
+        self.client.force_login(make_user(Role.ADMIN))
+        self.client.post(reverse("adminpanel:payment_action", args=[payment.pk, "approve"]))
+        payment.refresh_from_db()
+        self.assertEqual(payment.status, Payment.Status.PAID)
+        self.assertEqual(listing_limit(self.owner), 5)
+
+    def test_request_requires_phone_and_partner_account(self):
+        resp = self.client.post(reverse("payments:request", args=["basic"]), {"phone": ""})
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(Payment.objects.exists())
+        self.client.force_login(make_user())
+        self.assertEqual(self.client.get(reverse("payments:request", args=["basic"])).status_code, 403)
+
+
+class PricingPageTests(TestCase):
+    def test_visitors_get_choose_buttons_that_return_to_the_plan_page(self):
+        resp = self.client.get(reverse("subscriptions:pricing"))
+        self.assertContains(resp, "Choose Basic")
+        self.assertContains(resp, "?type=owner&amp;next=/partner/subscription/")
+
+    def test_partners_can_choose_directly(self):
+        self.client.force_login(make_user(Role.OWNER))
+        resp = self.client.get(reverse("subscriptions:pricing"))
+        self.assertContains(resp, reverse("payments:checkout", args=["basic"]))
+
+    def test_signup_returns_to_next(self):
+        resp = self.client.post(reverse("accounts:register") + "?type=owner", {
+            "account_type": "owner", "full_name": "New Owner", "email": "new.owner@example.com",
+            "phone": "9876543211", "password1": "Strong#Pass2024", "password2": "Strong#Pass2024",
+            "accept_terms": "on", "next": "/partner/subscription/",
+        })
+        self.assertRedirects(resp, "/partner/subscription/", fetch_redirect_response=False)

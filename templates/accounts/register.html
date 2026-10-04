@@ -6,6 +6,7 @@
 {% include "partials/form_errors.html" %}
 <form method="post" novalidate data-once>
   {% csrf_token %}
+  {% if request.GET.next %}<input type="hidden" name="next" value="{{ request.GET.next }}">{% endif %}
   {{ form.website }}
   {% include "partials/field.html" with field=form.account_type %}
   <div class="row g-3">
