@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block content %}
 <section class="page-hero">
   <div class="container">
-    <nav aria-label="breadcrumb"><ol class="breadcrumb mb-3"><li class="breadcrumb-item"><a href="{% url 'core:home' %}">Home</a></li><li class="breadcrumb-item active" aria-current="page">{% block crumb %}{% endblock %}</li></ol></nav>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb mb-3"><li class="breadcrumb-item"><a href="{% url 'core:home' %}">{% translate "Home" %}</a></li><li class="breadcrumb-item active" aria-current="page">{% block crumb %}{% endblock %}</li></ol></nav>
     <h1 class="mb-0">{% block page_heading %}{% endblock %}</h1>
     {% block page_sub %}{% endblock %}
   </div>

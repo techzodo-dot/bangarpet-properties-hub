@@ -1,0 +1,3 @@
+Noto Sans Kannada - Copyright 2022 The Noto Project Authors (https://github.com/notofonts/kannada)
+Licensed under the SIL Open Font License, Version 1.1: https://openfontlicense.org
+Subset (Kannada range) downloaded from Google Fonts.

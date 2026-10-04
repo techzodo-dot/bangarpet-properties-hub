@@ -6,6 +6,7 @@ from django.db import IntegrityError, transaction
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
 from accounts.models import Role
@@ -69,11 +70,13 @@ def property_search(request, preset=None, category_slug=None):
                 })
 
     if category:
-        title, description = f"{category.name} in Bangarpet", category.description or f"{category.name} for rent and sale in Bangarpet."
+        name = _(category.name)
+        title = _("%(category)s in Bangarpet") % {"category": name}
+        description = _(category.description) if category.description else _("%(category)s for rent and sale in Bangarpet.") % {"category": name}
     elif preset:
-        title, description = PRESET_TITLES[preset]
+        title, description = (_(text) for text in PRESET_TITLES[preset])
     else:
-        title, description = "Search properties in Bangarpet", "Search verified rental and sale listings in Bangarpet, Kolar district."
+        title, description = _("Search properties in Bangarpet"), _("Search verified rental and sale listings in Bangarpet, Kolar district.")
 
     filter_keys = [k for k in request.GET.keys() if k not in ("page", "view", "sort") and request.GET.get(k)]
     active_filters = []
@@ -86,9 +89,9 @@ def property_search(request, preset=None, category_slug=None):
             if hasattr(form.fields[key], "choices") and key != "amenities":
                 display = dict((str(k), v) for k, v in _flatten_choices(form.fields[key].choices)).get(str(value), value)
             elif key == "amenities":
-                display = f"{len(value)} selected"
+                display = _("%(count)s selected") % {"count": len(value)}
             elif key in ("verified", "parking"):
-                display = "Yes"
+                display = _("Yes")
             params_without = request.GET.copy()
             params_without.pop(key, None)
             params_without.pop("page", None)
@@ -191,7 +194,7 @@ def toggle_favourite(request, pk):
         favourited = True
     if request.headers.get("x-requested-with") == "XMLHttpRequest":
         return JsonResponse({"favourited": favourited})
-    messages.success(request, "Saved to your favourites." if favourited else "Removed from your favourites.")
+    messages.success(request, _("Saved to your favourites.") if favourited else _("Removed from your favourites."))
     from core.utils import safe_next_url
 
     return redirect(safe_next_url(request, prop.get_absolute_url()))
@@ -204,12 +207,12 @@ def save_search(request):
     query = request.POST.get("query_string", "")[:1000]
     if form.is_valid():
         if request.user.saved_searches.count() >= 20:
-            messages.error(request, "You can keep up to 20 saved searches. Delete one to add another.")
+            messages.error(request, _("You can keep up to 20 saved searches. Delete one to add another."))
         else:
             SavedSearch.objects.create(user=request.user, query_string=query, **form.cleaned_data)
-            messages.success(request, "Search saved. Find it under Saved searches in your dashboard.")
+            messages.success(request, _("Search saved. Find it under Saved searches in your dashboard."))
     else:
-        messages.error(request, "Please give your search a name.")
+        messages.error(request, _("Please give your search a name."))
     return redirect(f"{reverse('properties:search')}?{query}")
 
 
@@ -218,21 +221,21 @@ def save_search(request):
 def report_property(request, pk):
     prop = get_object_or_404(Property.objects.public(), pk=pk)
     if prop.owner_id == request.user.pk:
-        messages.error(request, "You cannot report your own listing.")
+        messages.error(request, _("You cannot report your own listing."))
         return redirect(prop.get_absolute_url())
     if not ratelimit.check_and_hit("report", ratelimit.request_ident(request)):
-        messages.error(request, "You've sent several reports recently. Please try again later.")
+        messages.error(request, _("You've sent several reports recently. Please try again later."))
         return redirect(prop.get_absolute_url())
     form = ReportForm(request.POST)
     if form.is_valid():
         try:
             with transaction.atomic():
                 Report.objects.create(property=prop, reporter=request.user, **form.cleaned_data)
-            messages.success(request, "Thank you. Our team will review this listing.")
+            messages.success(request, _("Thank you. Our team will review this listing."))
         except IntegrityError:
-            messages.info(request, "You have already reported this listing. Our team is reviewing it.")
+            messages.info(request, _("You have already reported this listing. Our team is reviewing it."))
     else:
-        messages.error(request, "Please choose a reason for the report.")
+        messages.error(request, _("Please choose a reason for the report."))
     return redirect(prop.get_absolute_url())
 
 

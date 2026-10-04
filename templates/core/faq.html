@@ -1,7 +1,8 @@
 {% extends "core/page_base.html" %}
-{% block title %}FAQ - {{ site.site_name }}{% endblock %}
-{% block crumb %}FAQ{% endblock %}
-{% block page_heading %}Frequently asked questions{% endblock %}
+{% load i18n %}
+{% block title %}{% translate "FAQ" %} - {{ site.site_name }}{% endblock %}
+{% block crumb %}{% translate "FAQ" %}{% endblock %}
+{% block page_heading %}{% translate "Frequently asked questions" %}{% endblock %}
 {% block structured_data %}
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{% for q, a in faqs %}{"@type":"Question","name":"{{ q|escapejs }}","acceptedAnswer":{"@type":"Answer","text":"{{ a|escapejs }}"}}{% if not forloop.last %},{% endif %}{% endfor %}]}</script>
 {% endblock %}
@@ -14,5 +15,5 @@
   </div>
   {% endfor %}
 </div>
-<p class="text-center mt-4">Still have a question? <a href="{% url 'core:contact' %}">Contact us</a>.</p>
+<p class="text-center mt-4">{% translate "Still have a question?" %} <a href="{% url 'core:contact' %}">{% translate "Contact us" %}</a>.</p>
 {% endblock %}

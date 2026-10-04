@@ -4,6 +4,7 @@ from django.urls import include, path, re_path
 from django.views.static import serve
 
 urlpatterns = [
+    path("i18n/", include("django.conf.urls.i18n")),
     path("", include("core.urls")),
     path("", include("accounts.urls")),
     path("", include("properties.urls")),

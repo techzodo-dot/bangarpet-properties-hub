@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load bph %}
-{% block title %}{{ partner.display_name }} - properties in Bangarpet | {{ site.site_name }}{% endblock %}
+{% block title %}{{ partner.display_name }} - {% translate "properties in Bangarpet" %} | {{ site.site_name }}{% endblock %}
 {% block meta_description %}Properties listed by {{ partner.display_name }} on {{ site.site_name }}.{% endblock %}
 {% block content %}
 <div class="container py-5">
@@ -8,17 +9,17 @@
     {% if partner.profile.avatar %}<img class="avatar avatar-lg" src="{{ partner.profile.avatar.url }}" alt="">{% else %}<span class="avatar avatar-lg">{{ partner|initials }}</span>{% endif %}
     <div>
       <h1 class="h3 mb-1">{{ partner.display_name }}</h1>
-      <div class="text-muted">{% if partner.role == 'broker' %}Real estate broker{% if partner.broker_profile.years_of_experience %} &middot; {{ partner.broker_profile.years_of_experience }} years experience{% endif %}{% if partner.broker_profile.rera_number %} &middot; RERA {{ partner.broker_profile.rera_number }}{% endif %}{% else %}Property owner{% endif %} &middot; Member since {{ partner.date_joined|date:"M Y" }}</div>
-      {% if partner.is_verified_partner %}<span class="badge badge-verified mt-2"><i class="bi bi-patch-check-fill"></i> Verified {{ partner.role }}</span>{% endif %}
+      <div class="text-muted">{% if partner.role == 'broker' %}{% translate "Real estate broker" %}{% if partner.broker_profile.years_of_experience %} &middot; {% blocktranslate with n=partner.broker_profile.years_of_experience %}{{ n }} years experience{% endblocktranslate %}{% endif %}{% if partner.broker_profile.rera_number %} &middot; RERA {{ partner.broker_profile.rera_number }}{% endif %}{% else %}{% translate "Property owner" %}{% endif %} &middot; {% translate "Member since" %} {{ partner.date_joined|date:"M Y" }}</div>
+      {% if partner.is_verified_partner %}<span class="badge badge-verified mt-2"><i class="bi bi-patch-check-fill"></i> {% if partner.role == 'broker' %}{% translate "Verified broker" %}{% else %}{% translate "Verified owner" %}{% endif %}</span>{% endif %}
       {% if partner.profile.about %}<p class="mt-2 mb-0">{{ partner.profile.about }}</p>{% endif %}
     </div>
   </div>
-  <h2 class="h5 mb-3">Active listings ({{ page_obj.paginator.count }})</h2>
+  <h2 class="h5 mb-3">{% translate "Active listings" %} ({{ page_obj.paginator.count }})</h2>
   {% if page_obj.object_list %}
     <div class="row g-4">{% for prop in page_obj.object_list %}<div class="col-sm-6 col-lg-4">{% include "partials/property_card.html" %}</div>{% endfor %}</div>
     {% include "partials/pagination.html" %}
   {% else %}
-    {% include "partials/empty_state.html" with icon="buildings" title="No active listings right now" %}
+    {% translate "No active listings right now" as es_title %}{% include "partials/empty_state.html" with icon="buildings" title=es_title %}
   {% endif %}
 </div>
 {% endblock %}

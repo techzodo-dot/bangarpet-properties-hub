@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load static bph %}
-{% block title %}{{ site.site_name }} - Houses, Flats, PG &amp; Plots for Rent and Sale in Bangarpet{% endblock %}
+{% block title %}{{ site.site_name }} - {% translate "Houses, Flats, PG & Plots for Rent and Sale in Bangarpet" %}{% endblock %}
 {% block content %}
 
 {# ======================= HERO ======================= #}
@@ -8,50 +9,50 @@
   <div class="container">
     <div class="row g-4 g-lg-5 align-items-center">
       <div class="col-lg-6">
-        <span class="hero-kicker"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Bangarpet &middot; Kolar district &middot; Karnataka</span>
-        <h1 id="hero-title">Find a <span class="hl">home</span> you can trust in Bangarpet</h1>
-        <p class="lead">Houses, flats, PG rooms, shops and plots &mdash; every listing reviewed by our team. Talk directly to owners and verified brokers.</p>
+        <span class="hero-kicker"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> {% translate "Bangarpet · Kolar district · Karnataka" %}</span>
+        <h1 id="hero-title">{% blocktranslate %}Find a <span class="hl">home</span> you can trust in Bangarpet{% endblocktranslate %}</h1>
+        <p class="lead">{% translate "Houses, flats, PG rooms, shops and plots — every listing reviewed by our team. Talk directly to owners and verified brokers." %}</p>
 
-        <form method="get" action="{% url 'properties:search' %}" role="search" aria-label="Search properties">
-          <div class="purpose-tabs" role="radiogroup" aria-label="Rent or buy">
-            <label><input type="radio" name="purpose" value="" checked> All</label>
-            <label><input type="radio" name="purpose" value="rent"> Rent</label>
-            <label><input type="radio" name="purpose" value="sale"> Buy</label>
+        <form method="get" action="{% url 'properties:search' %}" role="search" aria-label="{% translate "Search properties" %}">
+          <div class="purpose-tabs" role="radiogroup" aria-label="{% translate "Rent or buy" %}">
+            <label><input type="radio" name="purpose" value="" checked> {% translate "All" %}</label>
+            <label><input type="radio" name="purpose" value="rent"> {% translate "Rent" %}</label>
+            <label><input type="radio" name="purpose" value="sale"> {% translate "Buy" %}</label>
           </div>
           <div class="hero-search">
             <div class="hs-field">
-              <label for="{{ search_form.location.id_for_label }}">Location</label>
+              <label for="{{ search_form.location.id_for_label }}">{% translate "Location" %}</label>
               {{ search_form.location }}
             </div>
             <div class="hs-field">
-              <label for="{{ search_form.category.id_for_label }}">Property type</label>
+              <label for="{{ search_form.category.id_for_label }}">{% translate "Property type" %}</label>
               {{ search_form.category }}
             </div>
             <div class="hs-field hs-budget-field">
-              <label for="hero-min">Budget (&#8377;)</label>
+              <label for="hero-min">{% translate "Budget" %} (&#8377;)</label>
               <div class="hs-budget">
-                <input id="hero-min" type="number" name="min_price" min="0" inputmode="numeric" placeholder="Min" aria-label="Minimum price">
+                <input id="hero-min" type="number" name="min_price" min="0" inputmode="numeric" placeholder="{% translate "Min" %}" aria-label="{% translate "Minimum price" %}">
                 <span aria-hidden="true">&ndash;</span>
-                <input id="hero-max" type="number" name="max_price" min="0" inputmode="numeric" placeholder="Max" aria-label="Maximum price">
+                <input id="hero-max" type="number" name="max_price" min="0" inputmode="numeric" placeholder="{% translate "Max" %}" aria-label="{% translate "Maximum price" %}">
               </div>
             </div>
-            <button class="btn btn-accent btn-lg" type="submit"><i class="bi bi-search me-2" aria-hidden="true"></i>Search</button>
+            <button class="btn btn-accent btn-lg" type="submit"><i class="bi bi-search me-2" aria-hidden="true"></i>{% translate "Search" %}</button>
           </div>
         </form>
 
         <div class="hero-points">
-          <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i>Free for tenants &amp; buyers</span>
-          <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i>Direct owner contact</span>
-          <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i>Book visits online</span>
+          <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i>{% translate "Free for tenants & buyers" %}</span>
+          <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i>{% translate "Direct owner contact" %}</span>
+          <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i>{% translate "Book visits online" %}</span>
         </div>
       </div>
       <div class="col-lg-6 d-none d-md-block">
         {% with hero_img=hero_property.primary_image %}
         {% if hero_img %}
-        <a class="hero-photo" href="{{ hero_property.get_absolute_url }}" aria-label="View {{ hero_property.title }}">
+        <a class="hero-photo" href="{{ hero_property.get_absolute_url }}" aria-label="{% blocktranslate with title=hero_property.title %}View {{ title }}{% endblocktranslate %}">
           <img src="{{ hero_img.image.url }}" alt="{{ hero_img.alt_text }}" width="{{ hero_img.width|default:1200 }}" height="{{ hero_img.height|default:900 }}" fetchpriority="high">
-          <span class="hero-float check"><span class="ic ok"><i class="bi bi-shield-check" aria-hidden="true"></i></span><span><strong>Reviewed listing</strong><small>Checked before publishing</small></span></span>
-          <span class="hero-float price"><span class="ic"><i class="bi bi-house-door" aria-hidden="true"></i></span><span class="min-w-0"><strong>{% if hero_property.purpose == 'rent' %}{{ hero_property.price|inr }} / month{% else %}{{ hero_property.price|inr_short }}{% endif %}</strong><small class="text-truncate d-block">{{ hero_property.title|truncatechars:44 }}</small></span></span>
+          <span class="hero-float check"><span class="ic ok"><i class="bi bi-shield-check" aria-hidden="true"></i></span><span><strong>{% translate "Reviewed listing" %}</strong><small>{% translate "Checked before publishing" %}</small></span></span>
+          <span class="hero-float price"><span class="ic"><i class="bi bi-house-door" aria-hidden="true"></i></span><span class="min-w-0"><strong>{% if hero_property.purpose == 'rent' %}{{ hero_property.price|inr }} / {% translate "month" %}{% else %}{{ hero_property.price|inr_short }}{% endif %}</strong><small class="text-truncate d-block">{{ hero_property.title|truncatechars:44 }}</small></span></span>
         </a>
         {% else %}
         <div class="hero-photo d-grid" style="place-items:center"><img src="{% static 'img/skyline.svg' %}" alt="" style="width:80%;height:auto;opacity:.6"></div>
@@ -63,13 +64,13 @@
 </section>
 
 {# ======================= VALUE STRIP (real numbers only) ======================= #}
-<section class="section-sm" aria-label="Why people use Bangarpet Property Hub">
+<section class="section-sm" aria-label="{% translate "Why people use Bangarpet Property Hub" %}">
   <div class="container">
     <div class="stat-strip">
-      <div class="stat-tile"><span class="ic"><i class="bi bi-shield-check" aria-hidden="true"></i></span><div><strong>Every listing reviewed</strong><span>Checked by our team before it goes live</span></div></div>
-      <div class="stat-tile"><span class="ic"><i class="bi bi-house-door" aria-hidden="true"></i></span><div>{% if stats.live %}<strong>{{ stats.live }} live listing{{ stats.live|pluralize }}</strong>{% else %}<strong>Fresh listings</strong>{% endif %}<span>Houses, flats, PG, shops &amp; plots</span></div></div>
-      <div class="stat-tile"><span class="ic"><i class="bi bi-patch-check" aria-hidden="true"></i></span><div>{% if stats.verified_partners %}<strong>{{ stats.verified_partners }} verified partner{{ stats.verified_partners|pluralize }}</strong>{% else %}<strong>Verified partners</strong>{% endif %}<span>ID-checked owners &amp; brokers</span></div></div>
-      <div class="stat-tile"><span class="ic"><i class="bi bi-lock" aria-hidden="true"></i></span><div><strong>Privacy protected</strong><span>Owners choose who sees their number</span></div></div>
+      <div class="stat-tile"><span class="ic"><i class="bi bi-shield-check" aria-hidden="true"></i></span><div><strong>{% translate "Every listing reviewed" %}</strong><span>{% translate "Checked by our team before it goes live" %}</span></div></div>
+      <div class="stat-tile"><span class="ic"><i class="bi bi-house-door" aria-hidden="true"></i></span><div>{% if stats.live %}<strong>{% blocktranslate count counter=stats.live %}{{ counter }} live listing{% plural %}{{ counter }} live listings{% endblocktranslate %}</strong>{% else %}<strong>{% translate "Fresh listings" %}</strong>{% endif %}<span>{% translate "Houses, flats, PG, shops & plots" %}</span></div></div>
+      <div class="stat-tile"><span class="ic"><i class="bi bi-patch-check" aria-hidden="true"></i></span><div>{% if stats.verified_partners %}<strong>{% blocktranslate count counter=stats.verified_partners %}{{ counter }} verified partner{% plural %}{{ counter }} verified partners{% endblocktranslate %}</strong>{% else %}<strong>{% translate "Verified partners" %}</strong>{% endif %}<span>{% translate "ID-checked owners & brokers" %}</span></div></div>
+      <div class="stat-tile"><span class="ic"><i class="bi bi-lock" aria-hidden="true"></i></span><div><strong>{% translate "Privacy protected" %}</strong><span>{% translate "Owners choose who sees their number" %}</span></div></div>
     </div>
   </div>
 </section>
@@ -79,24 +80,24 @@
   <div class="container">
     <div class="sec-head">
       <div>
-        <span class="section-eyebrow"><i class="bi bi-grid" aria-hidden="true"></i> Browse</span>
-        <h2 id="types-title" class="section-title mb-0">What are you looking for?</h2>
+        <span class="section-eyebrow"><i class="bi bi-grid" aria-hidden="true"></i> {% translate "Browse" %}</span>
+        <h2 id="types-title" class="section-title mb-0">{% translate "What are you looking for?" %}</h2>
       </div>
       <div class="d-flex flex-wrap gap-2">
-        <a class="btn btn-soft" href="{% url 'properties:rent' %}">For rent</a>
-        <a class="btn btn-soft" href="{% url 'properties:buy' %}">For sale</a>
+        <a class="btn btn-soft" href="{% url 'properties:rent' %}">{% translate "For rent" %}</a>
+        <a class="btn btn-soft" href="{% url 'properties:buy' %}">{% translate "For sale" %}</a>
       </div>
     </div>
-    <nav class="cat-grid" aria-label="Property types">
+    <nav class="cat-grid" aria-label="{% translate "Property types" %}">
       {% for cat in categories %}
-      <a class="cat-tile" href="{{ cat.get_absolute_url }}"><span class="ic"><i class="bi bi-{{ cat.icon }}" aria-hidden="true"></i></span><strong>{{ cat.name }}</strong><span>{% if cat.live_count %}{{ cat.live_count }} listing{{ cat.live_count|pluralize }}{% else %}Explore{% endif %}</span></a>
+      <a class="cat-tile" href="{{ cat.get_absolute_url }}"><span class="ic"><i class="bi bi-{{ cat.icon }}" aria-hidden="true"></i></span><strong>{{ cat.name|tr }}</strong><span>{% if cat.live_count %}{% blocktranslate count counter=cat.live_count %}{{ counter }} listing{% plural %}{{ counter }} listings{% endblocktranslate %}{% else %}{% translate "Explore" %}{% endif %}</span></a>
       {% endfor %}
     </nav>
   </div>
 </section>
 
 {% if banners_top %}
-<section class="section-sm pt-0" aria-label="Promotions">
+<section class="section-sm pt-0" aria-label="{% translate "Promotions" %}">
   <div class="container"><div class="row g-3">{% for banner in banners_top %}<div class="col-lg">{% include "partials/banner.html" %}</div>{% endfor %}</div></div>
 </section>
 {% endif %}
@@ -107,11 +108,11 @@
   <div class="container">
     <div class="sec-head">
       <div>
-        <span class="section-eyebrow"><i class="bi bi-star-fill" aria-hidden="true"></i> Featured</span>
-        <h2 id="featured-title" class="section-title mb-1">Featured properties</h2>
-        <p class="section-lead mb-0">Hand-picked, reviewed listings promoted by their owners and brokers.</p>
+        <span class="section-eyebrow"><i class="bi bi-star-fill" aria-hidden="true"></i> {% translate "Featured" %}</span>
+        <h2 id="featured-title" class="section-title mb-1">{% translate "Featured properties" %}</h2>
+        <p class="section-lead mb-0">{% translate "Hand-picked, reviewed listings promoted by their owners and brokers." %}</p>
       </div>
-      <a class="btn btn-outline-primary" href="{% url 'properties:search' %}">View all listings <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>
+      <a class="btn btn-outline-primary" href="{% url 'properties:search' %}">{% translate "View all listings" %} <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>
     </div>
     <div class="row g-4">
       {% for prop in featured %}<div class="col-sm-6 col-lg-4">{% include "partials/property_card.html" %}</div>{% endfor %}
@@ -126,51 +127,51 @@
   <div class="container">
     <div class="sec-head">
       <div>
-        <span class="section-eyebrow"><i class="bi bi-badge-vr" aria-hidden="true"></i> Virtual tour</span>
-        <h2 id="tour-title" class="section-title mb-1">Walk through before you visit</h2>
-        <p class="section-lead mb-0">Step room by room from home, then visit only the places that fit.</p>
+        <span class="section-eyebrow"><i class="bi bi-badge-vr" aria-hidden="true"></i> {% translate "Virtual tour" %}</span>
+        <h2 id="tour-title" class="section-title mb-1">{% translate "Walk through before you visit" %}</h2>
+        <p class="section-lead mb-0">{% translate "Step room by room from home, then visit only the places that fit." %}</p>
       </div>
     </div>
     <div class="row g-4 align-items-stretch">
       <div class="col-lg-8">
-        <div class="tour-stage" data-tour data-interval="4000" aria-roledescription="carousel" aria-label="Photo tour of {{ tour.title }}">
+        <div class="tour-stage" data-tour data-interval="4000" aria-roledescription="carousel" aria-label="{% blocktranslate with title=tour.title %}Photo tour of {{ title }}{% endblocktranslate %}">
           {% for img in tour_images %}
-          <figure class="tour-slide{% if forloop.first %} is-active{% endif %}" data-caption="{% if img.caption %}{{ img.caption }}{% else %}Photo {{ forloop.counter }}{% endif %}" aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
+          <figure class="tour-slide{% if forloop.first %} is-active{% endif %}" data-caption="{% if img.caption %}{{ img.caption }}{% else %}{% blocktranslate with n=forloop.counter %}Photo {{ n }}{% endblocktranslate %}{% endif %}" aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
             <img src="{{ img.image.url }}" alt="{{ img.alt_text }}" {% if not forloop.first %}loading="lazy"{% endif %} width="{{ img.width|default:1200 }}" height="{{ img.height|default:900 }}">
           </figure>
           {% endfor %}
           <div class="tour-progress" aria-hidden="true">{% for img in tour_images %}<span class="{% if forloop.first %}is-active{% endif %}"><i></i></span>{% endfor %}</div>
           <div class="tour-topbar">
-            <span class="glass-chip"><i class="bi bi-badge-vr" aria-hidden="true"></i> <span data-tour-label>{% if tour_images.0.caption %}{{ tour_images.0.caption }}{% else %}Photo 1{% endif %}</span></span>
+            <span class="glass-chip"><i class="bi bi-badge-vr" aria-hidden="true"></i> <span data-tour-label>{% if tour_images.0.caption %}{{ tour_images.0.caption }}{% else %}{% blocktranslate with n=1 %}Photo {{ n }}{% endblocktranslate %}{% endif %}</span></span>
             <span class="glass-chip"><span data-tour-count>1</span> / {{ tour_images|length }}</span>
           </div>
           <div class="tour-controls">
-            <button type="button" class="tour-btn" data-tour-prev aria-label="Previous room"><i class="bi bi-chevron-left"></i></button>
-            <button type="button" class="tour-btn" data-tour-toggle aria-label="Pause tour"><i class="bi bi-pause-fill"></i></button>
-            <button type="button" class="tour-btn" data-tour-next aria-label="Next room"><i class="bi bi-chevron-right"></i></button>
+            <button type="button" class="tour-btn" data-tour-prev aria-label="{% translate "Previous room" %}"><i class="bi bi-chevron-left"></i></button>
+            <button type="button" class="tour-btn" data-tour-toggle aria-label="{% translate "Pause tour" %}"><i class="bi bi-pause-fill"></i></button>
+            <button type="button" class="tour-btn" data-tour-next aria-label="{% translate "Next room" %}"><i class="bi bi-chevron-right"></i></button>
           </div>
           <div class="tour-info glass-panel">
-            <div class="small fw-semibold meta">{{ tour.category.name }} &middot; {{ tour.get_purpose_display }}</div>
+            <div class="small fw-semibold meta">{{ tour.category.name|tr }} &middot; {{ tour.get_purpose_display|tr }}</div>
             <div class="h5 mb-1">{{ tour.title|truncatechars:56 }}</div>
             <div class="small meta mb-1"><i class="bi bi-geo-alt" aria-hidden="true"></i> {{ tour.location_label }}</div>
-            <strong class="fs-5">{% if tour.purpose == 'rent' %}{{ tour.price|inr }}<small class="fw-normal meta">/mo</small>{% else %}{{ tour.price|inr_short }}{% endif %}</strong>
+            <strong class="fs-5">{% if tour.purpose == 'rent' %}{{ tour.price|inr }}<small class="fw-normal meta">/{% translate "month" %}</small>{% else %}{{ tour.price|inr_short }}{% endif %}</strong>
           </div>
         </div>
       </div>
       <div class="col-lg-4">
         <div class="surface p-3 p-lg-4 h-100 d-flex flex-column">
-          <h3 class="h6 mb-3">Rooms in this tour</h3>
+          <h3 class="h6 mb-3">{% translate "Rooms in this tour" %}</h3>
           <ol class="tour-rooms list-unstyled mb-4">
             {% for img in tour_images %}
             <li><button type="button" class="tour-room{% if forloop.first %} is-active{% endif %}" data-tour-goto="{{ forloop.counter0 }}">
-              <img src="{{ img.thumb_url }}" alt="" loading="lazy"><span><strong>{% if img.caption %}{{ img.caption }}{% else %}Photo {{ forloop.counter }}{% endif %}</strong><small>Step {{ forloop.counter }} of {{ tour_images|length }}</small></span>
+              <img src="{{ img.thumb_url }}" alt="" loading="lazy"><span><strong>{% if img.caption %}{{ img.caption }}{% else %}{% blocktranslate with n=forloop.counter %}Photo {{ n }}{% endblocktranslate %}{% endif %}</strong><small>{% blocktranslate with n=forloop.counter total=tour_images|length %}Step {{ n }} of {{ total }}{% endblocktranslate %}</small></span>
             </button></li>
             {% endfor %}
           </ol>
           <div class="mt-auto d-grid gap-2">
-            <a class="btn btn-primary" href="{{ tour.get_absolute_url }}">Open full tour &amp; details</a>
+            <a class="btn btn-primary" href="{{ tour.get_absolute_url }}">{% translate "Open full tour & details" %}</a>
             {% if tour.youtube_embed_url %}
-              <button class="btn btn-soft" type="button" data-bs-toggle="modal" data-bs-target="#videoTourModal"><i class="bi bi-play-circle me-1" aria-hidden="true"></i>Watch video walkthrough</button>
+              <button class="btn btn-soft" type="button" data-bs-toggle="modal" data-bs-target="#videoTourModal"><i class="bi bi-play-circle me-1" aria-hidden="true"></i>{% translate "Watch video walkthrough" %}</button>
             {% endif %}
           </div>
         </div>
@@ -179,9 +180,9 @@
   </div>
 </section>
 {% if tour.youtube_embed_url %}
-<div class="modal fade" id="videoTourModal" tabindex="-1" aria-label="Video walkthrough" aria-hidden="true">
+<div class="modal fade" id="videoTourModal" tabindex="-1" aria-label="{% translate "Video walkthrough" %}" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl"><div class="modal-content bg-black border-0 rounded-4 overflow-hidden">
-    <div class="video-frame rounded-0"><iframe data-src="{{ tour.youtube_embed_url }}&amp;autoplay=1" title="Video tour of {{ tour.title }}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    <div class="video-frame rounded-0"><iframe data-src="{{ tour.youtube_embed_url }}&amp;autoplay=1" title="{% blocktranslate with title=tour.title %}Video tour of {{ title }}{% endblocktranslate %}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
   </div></div>
 </div>
 {% endif %}
@@ -192,16 +193,17 @@
   <div class="container">
     <div class="sec-head">
       <div>
-        <span class="section-eyebrow"><i class="bi bi-clock-history" aria-hidden="true"></i> Just listed</span>
-        <h2 id="recent-title" class="section-title mb-0">New in Bangarpet</h2>
+        <span class="section-eyebrow"><i class="bi bi-clock-history" aria-hidden="true"></i> {% translate "Just listed" %}</span>
+        <h2 id="recent-title" class="section-title mb-0">{% translate "New in Bangarpet" %}</h2>
       </div>
-      {% if recent %}<a class="btn btn-outline-primary" href="{% url 'properties:search' %}?sort=newest">See all new listings <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>{% endif %}
+      {% if recent %}<a class="btn btn-outline-primary" href="{% url 'properties:search' %}?sort=newest">{% translate "See all new listings" %} <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>{% endif %}
     </div>
     {% if recent %}
       <div class="row g-4">{% for prop in recent %}<div class="col-sm-6 col-lg-3{% if forloop.counter > 4 %} d-none d-sm-block{% endif %}">{% include "partials/property_card.html" %}</div>{% endfor %}</div>
     {% else %}
       {% url 'accounts:register' as reg_url %}
-      {% include "partials/empty_state.html" with icon="buildings" title="Listings are on their way" text="We're onboarding owners and brokers in Bangarpet. Be among the first to list your property - it's free to start." action_url=reg_url|add:"?type=owner" action_label="List your property" %}
+      {% translate "Listings are on their way" as es_title %}{% translate "We're onboarding owners and brokers in Bangarpet. Be among the first to list your property - it's free to start." as es_text %}{% translate "List your property" as es_action %}
+      {% include "partials/empty_state.html" with icon="buildings" title=es_title text=es_text action_url=reg_url|add:"?type=owner" action_label=es_action %}
     {% endif %}
   </div>
 </section>
@@ -212,16 +214,16 @@
   <div class="container">
     <div class="sec-head">
       <div>
-        <span class="section-eyebrow"><i class="bi bi-pin-map" aria-hidden="true"></i> Explore</span>
-        <h2 id="areas-title" class="section-title mb-0">Popular areas</h2>
+        <span class="section-eyebrow"><i class="bi bi-pin-map" aria-hidden="true"></i> {% translate "Explore" %}</span>
+        <h2 id="areas-title" class="section-title mb-0">{% translate "Popular areas" %}</h2>
       </div>
     </div>
     <div class="row g-3">
       {% for area in areas %}
       <div class="col-sm-6 col-lg-4">
         <a class="area-card" href="{% url 'properties:search' %}?location={{ area.slug }}">
-          <span class="d-flex align-items-center gap-3"><span class="ic"><i class="bi bi-geo-alt" aria-hidden="true"></i></span><span>{{ area.name }}{% if area.parent %}<span class="d-block count">{{ area.parent.name }}</span>{% endif %}</span></span>
-          <span class="count">{% if area.listing_count %}{{ area.listing_count }} listing{{ area.listing_count|pluralize }}{% else %}Explore{% endif %} <i class="bi bi-chevron-right" aria-hidden="true"></i></span>
+          <span class="d-flex align-items-center gap-3"><span class="ic"><i class="bi bi-geo-alt" aria-hidden="true"></i></span><span>{{ area.name|tr }}{% if area.parent %}<span class="d-block count">{{ area.parent.name|tr }}</span>{% endif %}</span></span>
+          <span class="count">{% if area.listing_count %}{% blocktranslate count counter=area.listing_count %}{{ counter }} listing{% plural %}{{ counter }} listings{% endblocktranslate %}{% else %}{% translate "Explore" %}{% endif %} <i class="bi bi-chevron-right" aria-hidden="true"></i></span>
         </a>
       </div>
       {% endfor %}
@@ -235,11 +237,11 @@
   <div class="container">
     <div class="sec-head">
       <div>
-        <span class="section-eyebrow"><i class="bi bi-person-badge" aria-hidden="true"></i> Verified agents</span>
-        <h2 id="agents-title" class="section-title mb-1">Local experts you can rely on</h2>
-        <p class="section-lead mb-0">Brokers shown here submitted identity and business documents that our team reviewed.</p>
+        <span class="section-eyebrow"><i class="bi bi-person-badge" aria-hidden="true"></i> {% translate "Verified agents" %}</span>
+        <h2 id="agents-title" class="section-title mb-1">{% translate "Local experts you can rely on" %}</h2>
+        <p class="section-lead mb-0">{% translate "Brokers shown here submitted identity and business documents that our team reviewed." %}</p>
       </div>
-      <a class="btn btn-soft" href="{% url 'accounts:register' %}?type=broker">Join as a broker <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>
+      <a class="btn btn-soft" href="{% url 'accounts:register' %}?type=broker">{% translate "Join as a broker" %} <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>
     </div>
     <div class="row g-4">
       {% for agent in agents %}
@@ -248,15 +250,15 @@
           <div class="av">{% if agent.profile.avatar %}<img src="{{ agent.profile.avatar.url }}" alt="">{% else %}<span>{{ agent|initials }}</span>{% endif %}</div>
           <h3>{{ agent.full_name }}</h3>
           <div class="agency">{{ agent.broker_profile.agency_name }}</div>
-          <span class="badge badge-verified mt-2"><i class="bi bi-patch-check-fill" aria-hidden="true"></i> Verified broker</span>
+          <span class="badge badge-verified mt-2"><i class="bi bi-patch-check-fill" aria-hidden="true"></i> {% translate "Verified broker" %}</span>
           <div class="agent-stats">
-            <div><b>{{ agent.active_listings }}</b><span>Listings</span></div>
-            <div><b>{% if agent.broker_profile.years_of_experience %}{{ agent.broker_profile.years_of_experience }}+{% else %}&ndash;{% endif %}</b><span>Years</span></div>
-            <div><b>{{ agent.date_joined|date:"Y" }}</b><span>Joined</span></div>
+            <div><b>{{ agent.active_listings }}</b><span>{% translate "Listings" %}</span></div>
+            <div><b>{% if agent.broker_profile.years_of_experience %}{{ agent.broker_profile.years_of_experience }}+{% else %}&ndash;{% endif %}</b><span>{% translate "Years" %}</span></div>
+            <div><b>{{ agent.date_joined|date:"Y" }}</b><span>{% translate "Joined" %}</span></div>
           </div>
           {% if agent.broker_profile.rera_number %}<div class="small text-muted mb-2">RERA {{ agent.broker_profile.rera_number }}</div>{% endif %}
           <div class="d-grid gap-2 w-100 mt-auto">
-            <a class="btn btn-primary btn-sm" href="{% url 'properties:partner_profile' agent.pk %}">View profile &amp; listings</a>
+            <a class="btn btn-primary btn-sm" href="{% url 'properties:partner_profile' agent.pk %}">{% translate "View profile & listings" %}</a>
             {% if agent.broker_profile.business_phone %}<a class="btn btn-whatsapp btn-sm" href="https://wa.me/{{ agent.broker_profile.business_phone|cut:'+' }}" target="_blank" rel="noopener"><i class="bi bi-whatsapp me-1" aria-hidden="true"></i>WhatsApp</a>{% endif %}
           </div>
         </article>
@@ -265,9 +267,9 @@
       <div class="col-sm-6 col-lg-3">
         <a class="agent-join" href="{% url 'accounts:register' %}?type=broker">
           <span class="aj-ic"><i class="bi bi-person-plus" aria-hidden="true"></i></span>
-          <strong>Your profile here</strong>
-          <span class="small">Brokers in Bangarpet can register, submit documents and earn a verified profile.</span>
-          <span class="aj-link">Become a verified agent <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
+          <strong>{% translate "Your profile here" %}</strong>
+          <span class="small">{% translate "Brokers in Bangarpet can register, submit documents and earn a verified profile." %}</span>
+          <span class="aj-link">{% translate "Become a verified agent" %} <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
         </a>
       </div>
       {% endif %}
@@ -275,8 +277,8 @@
       <div class="col-12">
         <div class="agent-empty">
           <span class="aj-ic"><i class="bi bi-person-badge" aria-hidden="true"></i></span>
-          <div class="flex-grow-1"><h3 class="h6 mb-1">Verified agents will appear here</h3><p class="text-muted mb-0 small">Are you a broker in Bangarpet? Register, submit your documents and get a verified profile.</p></div>
-          <a class="btn btn-primary" href="{% url 'accounts:register' %}?type=broker">Register as broker</a>
+          <div class="flex-grow-1"><h3 class="h6 mb-1">{% translate "Verified agents will appear here" %}</h3><p class="text-muted mb-0 small">{% translate "Are you a broker in Bangarpet? Register, submit your documents and get a verified profile." %}</p></div>
+          <a class="btn btn-primary" href="{% url 'accounts:register' %}?type=broker">{% translate "Register as broker" %}</a>
         </div>
       </div>
       {% endfor %}
@@ -289,24 +291,24 @@
   <div class="container">
     <div class="row g-4 g-lg-5">
       <div class="col-lg-5">
-        <span class="section-eyebrow"><i class="bi bi-shield-lock" aria-hidden="true"></i> Built on trust</span>
-        <h2 id="trust-title" class="section-title">How we keep every search safe</h2>
-        <p class="section-lead">Property decisions are big decisions. We put checks in place so you can focus on finding the right home.</p>
+        <span class="section-eyebrow"><i class="bi bi-shield-lock" aria-hidden="true"></i> {% translate "Built on trust" %}</span>
+        <h2 id="trust-title" class="section-title">{% translate "How we keep every search safe" %}</h2>
+        <p class="section-lead">{% translate "Property decisions are big decisions. We put checks in place so you can focus on finding the right home." %}</p>
         <div class="trust-list mt-4">
-          <div class="trust-item"><span class="ic"><i class="bi bi-clipboard2-check" aria-hidden="true"></i></span><div><h3>Manual listing review</h3><p>Photos, prices and details are checked before publishing, and again when key details change.</p></div></div>
-          <div class="trust-item"><span class="ic"><i class="bi bi-person-check" aria-hidden="true"></i></span><div><h3>Verified owners &amp; brokers</h3><p>ID and business documents are stored privately and seen only by our verification team.</p></div></div>
-          <div class="trust-item"><span class="ic"><i class="bi bi-flag" aria-hidden="true"></i></span><div><h3>Report &amp; act fast</h3><p>Anything suspicious can be reported in one tap. We review every report.</p></div></div>
+          <div class="trust-item"><span class="ic"><i class="bi bi-clipboard2-check" aria-hidden="true"></i></span><div><h3>{% translate "Manual listing review" %}</h3><p>{% translate "Photos, prices and details are checked before publishing, and again when key details change." %}</p></div></div>
+          <div class="trust-item"><span class="ic"><i class="bi bi-person-check" aria-hidden="true"></i></span><div><h3>{% translate "Verified owners & brokers" %}</h3><p>{% translate "ID and business documents are stored privately and seen only by our verification team." %}</p></div></div>
+          <div class="trust-item"><span class="ic"><i class="bi bi-flag" aria-hidden="true"></i></span><div><h3>{% translate "Report & act fast" %}</h3><p>{% translate "Anything suspicious can be reported in one tap. We review every report." %}</p></div></div>
         </div>
-        <p class="small text-muted mt-3 mb-0"><i class="bi bi-info-circle me-1" aria-hidden="true"></i>"Verified" means identity documents were reviewed by our team. It is not a legal check of property title.</p>
+        <p class="small text-muted mt-3 mb-0"><i class="bi bi-info-circle me-1" aria-hidden="true"></i>{% translate "“Verified” means identity documents were reviewed by our team. It is not a legal check of property title." %}</p>
       </div>
       <div class="col-lg-7">
-        <span class="section-eyebrow"><i class="bi bi-lightning-charge" aria-hidden="true"></i> Simple &amp; transparent</span>
-        <h2 class="section-title">From search to keys in four steps</h2>
+        <span class="section-eyebrow"><i class="bi bi-lightning-charge" aria-hidden="true"></i> {% translate "Simple & transparent" %}</span>
+        <h2 class="section-title">{% translate "From search to keys in four steps" %}</h2>
         <div class="row g-3 mt-2">
-          <div class="col-sm-6"><div class="step-card"><span class="num">01</span><div class="ic"><i class="bi bi-search" aria-hidden="true"></i></div><h3>Search</h3><p class="text-muted mb-0">Filter by area, budget and bedrooms. Save searches and get alerts.</p></div></div>
-          <div class="col-sm-6"><div class="step-card"><span class="num">02</span><div class="ic"><i class="bi bi-badge-vr" aria-hidden="true"></i></div><h3>Tour</h3><p class="text-muted mb-0">Walk through photo and video tours to shortlist without wasted trips.</p></div></div>
-          <div class="col-sm-6"><div class="step-card"><span class="num">03</span><div class="ic"><i class="bi bi-calendar-check" aria-hidden="true"></i></div><h3>Visit</h3><p class="text-muted mb-0">Request a time slot. You're notified as soon as the owner confirms.</p></div></div>
-          <div class="col-sm-6"><div class="step-card"><span class="num">04</span><div class="ic"><i class="bi bi-house-check" aria-hidden="true"></i></div><h3>Move in</h3><p class="text-muted mb-0">Check documents, agree terms directly with the owner and move in.</p></div></div>
+          <div class="col-sm-6"><div class="step-card"><span class="num">01</span><div class="ic"><i class="bi bi-search" aria-hidden="true"></i></div><h3>{% translate "Search" %}</h3><p class="text-muted mb-0">{% translate "Filter by area, budget and bedrooms. Save searches and get alerts." %}</p></div></div>
+          <div class="col-sm-6"><div class="step-card"><span class="num">02</span><div class="ic"><i class="bi bi-badge-vr" aria-hidden="true"></i></div><h3>{% translate "Tour" %}</h3><p class="text-muted mb-0">{% translate "Walk through photo and video tours to shortlist without wasted trips." %}</p></div></div>
+          <div class="col-sm-6"><div class="step-card"><span class="num">03</span><div class="ic"><i class="bi bi-calendar-check" aria-hidden="true"></i></div><h3>{% translate "Visit" %}</h3><p class="text-muted mb-0">{% translate "Request a time slot. You're notified as soon as the owner confirms." %}</p></div></div>
+          <div class="col-sm-6"><div class="step-card"><span class="num">04</span><div class="ic"><i class="bi bi-house-check" aria-hidden="true"></i></div><h3>{% translate "Move in" %}</h3><p class="text-muted mb-0">{% translate "Check documents, agree terms directly with the owner and move in." %}</p></div></div>
         </div>
       </div>
     </div>
@@ -314,7 +316,7 @@
 </section>
 
 {% if banners_middle %}
-<section class="section-sm" aria-label="Promotions">
+<section class="section-sm" aria-label="{% translate "Promotions" %}">
   <div class="container"><div class="row g-3">{% for banner in banners_middle %}<div class="col-lg">{% include "partials/banner.html" %}</div>{% endfor %}</div></div>
 </section>
 {% endif %}
@@ -325,17 +327,17 @@
     <div class="cta-band">
       <div class="row align-items-center g-4">
         <div class="col-lg-7">
-          <span class="section-eyebrow eyebrow-dark"><i class="bi bi-stars" aria-hidden="true"></i> For owners &amp; brokers</span>
-          <h2 id="cta-title" class="mb-2">List your property where Bangarpet is searching.</h2>
-          <p class="mb-0">Start free with one listing. Manage enquiries and visits from one dashboard and upgrade only when you need more.</p>
+          <span class="section-eyebrow eyebrow-dark"><i class="bi bi-stars" aria-hidden="true"></i> {% translate "For owners & brokers" %}</span>
+          <h2 id="cta-title" class="mb-2">{% translate "List your property where Bangarpet is searching." %}</h2>
+          <p class="mb-0">{% translate "Start free with one listing. Manage enquiries and visits from one dashboard and upgrade only when you need more." %}</p>
         </div>
         <div class="col-lg-5 d-flex flex-wrap gap-2 justify-content-lg-end">
           {% if user.is_authenticated and user.is_partner %}
-            <a class="btn btn-accent btn-lg" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add a listing</a>
+            <a class="btn btn-accent btn-lg" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>{% translate "Add a listing" %}</a>
           {% else %}
-            <a class="btn btn-accent btn-lg" href="{% url 'accounts:register' %}?type=owner"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>List your property</a>
+            <a class="btn btn-accent btn-lg" href="{% url 'accounts:register' %}?type=owner"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>{% translate "List your property" %}</a>
           {% endif %}
-          <a class="btn btn-glass btn-lg" href="{% url 'subscriptions:pricing' %}">See plans</a>
+          <a class="btn btn-glass btn-lg" href="{% url 'subscriptions:pricing' %}">{% translate "See plans" %}</a>
         </div>
       </div>
     </div>
@@ -347,8 +349,8 @@
   <div class="container">
     <div class="row g-4 g-lg-5">
       <div class="col-lg-6">
-        <span class="section-eyebrow"><i class="bi bi-question-circle" aria-hidden="true"></i> FAQ</span>
-        <h2 class="section-title mb-3">Questions, answered</h2>
+        <span class="section-eyebrow"><i class="bi bi-question-circle" aria-hidden="true"></i> {% translate "FAQ" %}</span>
+        <h2 class="section-title mb-3">{% translate "Questions, answered" %}</h2>
         <div class="accordion faq" id="faqAccordion">
           {% for q, a in faqs|slice:":5" %}
           <div class="accordion-item">
@@ -357,21 +359,21 @@
           </div>
           {% endfor %}
         </div>
-        <a href="{% url 'core:faq' %}" class="d-inline-block mt-2 fw-bold">All questions <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        <a href="{% url 'core:faq' %}" class="d-inline-block mt-2 fw-bold">{% translate "All questions" %} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
       </div>
       <div class="col-lg-6">
         <form method="post" action="{% url 'core:contact' %}" class="form-card" data-once novalidate>
           {% csrf_token %}{{ contact_form.website }}<input type="hidden" name="source" value="home">
-          <span class="section-eyebrow"><i class="bi bi-chat-heart" aria-hidden="true"></i> Talk to us</span>
-          <h2 id="contact-title" class="section-title mb-2">A real team in Kolar district</h2>
+          <span class="section-eyebrow"><i class="bi bi-chat-heart" aria-hidden="true"></i> {% translate "Talk to us" %}</span>
+          <h2 id="contact-title" class="section-title mb-2">{% translate "A real team in Kolar district" %}</h2>
           <ul class="contact-points list-unstyled my-3">
-            {% if site.support_phone %}<li><span class="cp-ic"><i class="bi bi-telephone" aria-hidden="true"></i></span><div><small>Call us</small><a href="tel:{{ site.support_phone }}">{{ site.support_phone }}</a></div></li>{% endif %}
-            {% if site.whatsapp_digits %}<li><span class="cp-ic"><i class="bi bi-whatsapp" aria-hidden="true"></i></span><div><small>WhatsApp</small><a href="https://wa.me/{{ site.whatsapp_digits }}" target="_blank" rel="noopener">Chat with support</a></div></li>{% endif %}
-            {% if site.contact_email %}<li><span class="cp-ic"><i class="bi bi-envelope" aria-hidden="true"></i></span><div><small>Email</small><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></div></li>{% endif %}
-            {% if not site.support_phone and not site.contact_email %}<li><span class="cp-ic"><i class="bi bi-geo-alt" aria-hidden="true"></i></span><div><small>Office</small><span>{% if site.office_address %}{{ site.office_address|linebreaksbr }}{% else %}Bangarpet, Kolar district, Karnataka{% endif %}</span></div></li>{% endif %}
+            {% if site.support_phone %}<li><span class="cp-ic"><i class="bi bi-telephone" aria-hidden="true"></i></span><div><small>{% translate "Call us" %}</small><a href="tel:{{ site.support_phone }}">{{ site.support_phone }}</a></div></li>{% endif %}
+            {% if site.whatsapp_digits %}<li><span class="cp-ic"><i class="bi bi-whatsapp" aria-hidden="true"></i></span><div><small>WhatsApp</small><a href="https://wa.me/{{ site.whatsapp_digits }}" target="_blank" rel="noopener">{% translate "Chat with support" %}</a></div></li>{% endif %}
+            {% if site.contact_email %}<li><span class="cp-ic"><i class="bi bi-envelope" aria-hidden="true"></i></span><div><small>{% translate "Email" %}</small><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></div></li>{% endif %}
+            {% if not site.support_phone and not site.contact_email %}<li><span class="cp-ic"><i class="bi bi-geo-alt" aria-hidden="true"></i></span><div><small>{% translate "Office" %}</small><span>{% if site.office_address %}{{ site.office_address|linebreaksbr }}{% else %}{% translate "Bangarpet, Kolar district, Karnataka" %}{% endif %}</span></div></li>{% endif %}
           </ul>
           {% if contact_sent %}
-          <div class="alert alert-success d-flex gap-2 align-items-start" role="status" tabindex="-1" data-autofocus><i class="bi bi-check-circle-fill mt-1" aria-hidden="true"></i><div><strong>Message received.</strong> Thank you &mdash; a member of our team will reply soon. You can send another below.</div></div>
+          <div class="alert alert-success d-flex gap-2 align-items-start" role="status" tabindex="-1" data-autofocus><i class="bi bi-check-circle-fill mt-1" aria-hidden="true"></i><div><strong>{% translate "Message received." %}</strong> {% translate "Thank you — a member of our team will reply soon. You can send another below." %}</div></div>
           {% endif %}
           {% if user.is_authenticated and user.is_platform_admin and not site.support_phone and not site.contact_email %}
           <div class="alert alert-warning small py-2"><i class="bi bi-gear me-1" aria-hidden="true"></i>Admin: add a support phone, WhatsApp and email in <a href="{% url 'adminpanel:settings' %}">Management &rarr; Settings</a> to show them here.</div>
@@ -384,8 +386,8 @@
             <div class="col-12">{% include "partials/field.html" with field=contact_form.message wrapper_class="" %}</div>
           </div>
           <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mt-4">
-            <span class="small text-muted"><i class="bi bi-lock me-1" aria-hidden="true"></i>Used only to reply to you</span>
-            <button class="btn btn-accent btn-lg" type="submit">Send message <i class="bi bi-send ms-1" aria-hidden="true"></i><span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
+            <span class="small text-muted"><i class="bi bi-lock me-1" aria-hidden="true"></i>{% translate "Used only to reply to you" %}</span>
+            <button class="btn btn-accent btn-lg" type="submit">{% translate "Send message" %} <i class="bi bi-send ms-1" aria-hidden="true"></i><span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
           </div>
         </form>
       </div>

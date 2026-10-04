@@ -25,3 +25,10 @@ FAQS = [
     ("Which areas do you cover?",
      "We focus on Bangarpet and nearby towns in Kolar district such as KGF, Kolar, Malur, Budikote and Kamasamudra."),
 ]
+
+
+def translated_faqs():
+    """FAQ pairs in the visitor's language (falls back to English)."""
+    from django.utils.translation import gettext
+
+    return [(gettext(q), gettext(a)) for q, a in FAQS]

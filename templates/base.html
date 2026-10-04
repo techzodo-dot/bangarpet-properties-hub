@@ -1,5 +1,5 @@
-{% load static %}<!doctype html>
-<html lang="en-IN" data-bs-theme="{% block theme %}light{% endblock %}" data-sw="{% url 'core:service_worker' %}">
+{% load static i18n %}{% get_current_language as LANGUAGE_CODE %}<!doctype html>
+<html lang="{% if LANGUAGE_CODE == 'kn' %}kn{% else %}en-IN{% endif %}" data-bs-theme="{% block theme %}light{% endblock %}" data-sw="{% url 'core:service_worker' %}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -33,7 +33,7 @@
   {% endblock %}
 </head>
 <body class="{% block body_class %}has-tabbar{% endblock %}">
-  <a class="skip-link" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main">{% translate "Skip to content" %}</a>
   {% block header %}{% include "partials/header.html" %}{% endblock %}
   {% block messages %}{% include "partials/messages.html" %}{% endblock %}
   <main id="main" tabindex="-1">

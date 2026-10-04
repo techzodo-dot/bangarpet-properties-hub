@@ -65,6 +65,7 @@ class PropertySearchForm(BootstrapFormMixin, forms.Form):
             (c.slug, c.name) for c in Category.objects.filter(is_active=True)
         ]
         self.fields["amenities"].queryset = Amenity.objects.filter(is_active=True)
+        self.translate_fields()  # location and category names were added after the base translation pass
 
     def clean(self):
         data = super().clean()

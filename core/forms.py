@@ -1,6 +1,21 @@
 from django import forms
+from django.utils.translation import get_language, gettext
 
 from core.models import ContactMessage
+
+
+def _tr(text):
+    return gettext(str(text)) if text not in (None, "") else text
+
+
+def _tr_choices(choices):
+    out = []
+    for value, label in choices:
+        if isinstance(label, (list, tuple)):  # option group
+            out.append((_tr(value), _tr_choices(label)))
+        else:
+            out.append((value, _tr(label)))
+    return out
 from core.validators import normalize_indian_phone
 
 
@@ -24,6 +39,23 @@ class BootstrapFormMixin:
                 widget.attrs["class"] = f"{css} {base}".strip()
             if field.required and not isinstance(widget, (forms.CheckboxSelectMultiple, forms.RadioSelect)):
                 widget.attrs.setdefault("required", "required")
+        self.translate_fields()
+
+    def translate_fields(self):
+        """Show labels, help texts, placeholders and choices in the visitor's language (e.g. Kannada).
+
+        Forms keep plain English strings; the translations live in locale/<lang>/LC_MESSAGES.
+        """
+        if (get_language() or "en").startswith("en"):
+            return
+        for field in self.fields.values():
+            field.label = _tr(field.label)
+            field.help_text = _tr(field.help_text)
+            placeholder = field.widget.attrs.get("placeholder")
+            if placeholder:
+                field.widget.attrs["placeholder"] = _tr(placeholder)
+            if isinstance(field, forms.ChoiceField) and not isinstance(field, forms.ModelChoiceField):
+                field.choices = _tr_choices(field.choices)
 
     def add_invalid_classes(self):
         for name in self.errors:

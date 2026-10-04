@@ -1,62 +1,63 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load static bph %}
-{% block title %}{{ page_title }}{% if page_obj.number > 1 %} - page {{ page_obj.number }}{% endif %} | {{ site.site_name }}{% endblock %}
+{% block title %}{{ page_title }}{% if page_obj.number > 1 %} - {% blocktranslate with n=page_obj.number %}page {{ n }}{% endblocktranslate %}{% endif %} | {{ site.site_name }}{% endblock %}
 {% block meta_description %}{{ meta_description }}{% endblock %}
 {% block robots %}{% if noindex %}<meta name="robots" content="noindex, follow">{% else %}<meta name="robots" content="index, follow">{% endif %}{% endblock %}
 {% block content %}
 <section class="search-hero">
   <div class="container">
-    <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0"><li class="breadcrumb-item"><a href="{% url 'core:home' %}">Home</a></li><li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li></ol></nav>
+    <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0"><li class="breadcrumb-item"><a href="{% url 'core:home' %}">{% translate "Home" %}</a></li><li class="breadcrumb-item active" aria-current="page">{{ page_title }}</li></ol></nav>
     <h1>{{ page_title }}</h1>
   </div>
 </section>
 
-<form method="get" id="filters-form" aria-label="Search filters">
+<form method="get" id="filters-form" aria-label="{% translate "Search filters" %}">
   <input type="hidden" name="view" value="{{ view_mode }}">
   <div class="search-bar">
     <div class="container">
       <div class="sb-row">
         <div class="sb-q">
           <i class="bi bi-search" aria-hidden="true"></i>
-          <label class="visually-hidden" for="{{ form.q.id_for_label }}">Keyword</label>
+          <label class="visually-hidden" for="{{ form.q.id_for_label }}">{% translate "Keyword" %}</label>
           {{ form.q }}
         </div>
         <div class="sb-chips">
           {% if 'purpose' not in fixed %}
-          <div class="sb-seg" role="radiogroup" aria-label="Rent or buy">
-            <label><input type="radio" name="purpose" value="" {% if not form.purpose.value %}checked{% endif %}> All</label>
-            <label><input type="radio" name="purpose" value="rent" {% if form.purpose.value == 'rent' %}checked{% endif %}> Rent</label>
-            <label><input type="radio" name="purpose" value="sale" {% if form.purpose.value == 'sale' %}checked{% endif %}> Buy</label>
+          <div class="sb-seg" role="radiogroup" aria-label="{% translate "Rent or buy" %}">
+            <label><input type="radio" name="purpose" value="" {% if not form.purpose.value %}checked{% endif %}> {% translate "All" %}</label>
+            <label><input type="radio" name="purpose" value="rent" {% if form.purpose.value == 'rent' %}checked{% endif %}> {% translate "Rent" %}</label>
+            <label><input type="radio" name="purpose" value="sale" {% if form.purpose.value == 'sale' %}checked{% endif %}> {% translate "Buy" %}</label>
           </div>
           {% else %}<input type="hidden" name="purpose" value="{{ fixed.purpose }}">{% endif %}
-          <label class="visually-hidden" for="{{ form.location.id_for_label }}">Location</label>
+          <label class="visually-hidden" for="{{ form.location.id_for_label }}">{% translate "Location" %}</label>
           {{ form.location }}
           {% if 'category' not in fixed %}
-            <label class="visually-hidden" for="{{ form.category.id_for_label }}">Property type</label>
+            <label class="visually-hidden" for="{{ form.category.id_for_label }}">{% translate "Property type" %}</label>
             {{ form.category }}
           {% else %}<input type="hidden" name="category" value="{{ fixed.category }}">{% endif %}
           <div class="sb-budget">
-            <label class="visually-hidden" for="{{ form.min_price.id_for_label }}">Minimum price</label>
-            <input class="form-control" type="number" name="min_price" id="{{ form.min_price.id_for_label }}" min="0" inputmode="numeric" placeholder="&#8377; Min" value="{{ form.min_price.value|default_if_none:'' }}">
-            <label class="visually-hidden" for="{{ form.max_price.id_for_label }}">Maximum price</label>
-            <input class="form-control" type="number" name="max_price" id="{{ form.max_price.id_for_label }}" min="0" inputmode="numeric" placeholder="&#8377; Max" value="{{ form.max_price.value|default_if_none:'' }}">
+            <label class="visually-hidden" for="{{ form.min_price.id_for_label }}">{% translate "Minimum price" %}</label>
+            <input class="form-control" type="number" name="min_price" id="{{ form.min_price.id_for_label }}" min="0" inputmode="numeric" placeholder="&#8377; {% translate "Min" %}" value="{{ form.min_price.value|default_if_none:'' }}">
+            <label class="visually-hidden" for="{{ form.max_price.id_for_label }}">{% translate "Maximum price" %}</label>
+            <input class="form-control" type="number" name="max_price" id="{{ form.max_price.id_for_label }}" min="0" inputmode="numeric" placeholder="&#8377; {% translate "Max" %}" value="{{ form.max_price.value|default_if_none:'' }}">
           </div>
-          <button class="btn btn-soft sb-more" type="button" data-bs-toggle="offcanvas" data-bs-target="#filtersCanvas" aria-controls="filtersCanvas"><i class="bi bi-sliders me-1"></i>Filters{% if active_filters %} <span class="sb-count">{{ active_filters|length }}</span>{% endif %}</button>
+          <button class="btn btn-soft sb-more" type="button" data-bs-toggle="offcanvas" data-bs-target="#filtersCanvas" aria-controls="filtersCanvas"><i class="bi bi-sliders me-1"></i>{% translate "Filters" %}{% if active_filters %} <span class="sb-count">{{ active_filters|length }}</span>{% endif %}</button>
         </div>
-        <button class="btn btn-accent sb-go" type="submit"><i class="bi bi-search"></i><span class="sb-go-label ms-2">Search</span></button>
+        <button class="btn btn-accent sb-go" type="submit"><i class="bi bi-search"></i><span class="sb-go-label ms-2">{% translate "Search" %}</span></button>
       </div>
     </div>
   </div>
 
   <div class="offcanvas offcanvas-end offcanvas-filters" tabindex="-1" id="filtersCanvas" aria-labelledby="filtersLabel">
     <div class="offcanvas-header border-bottom">
-      <h2 class="offcanvas-title h3 mb-0" id="filtersLabel">More filters</h2>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      <h2 class="offcanvas-title h3 mb-0" id="filtersLabel">{% translate "More filters" %}</h2>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="{% translate "Close" %}"></button>
     </div>
     <div class="offcanvas-body">
       <div class="filters-panel">
         <div class="filter-group">
-          <h3>Rooms &amp; size</h3>
+          <h3>{% translate "Rooms & size" %}</h3>
           <div class="row g-2">
             <div class="col-6">{% include "partials/field.html" with field=form.bedrooms %}</div>
             <div class="col-6">{% include "partials/field.html" with field=form.bathrooms %}</div>
@@ -65,16 +66,16 @@
           </div>
         </div>
         <div class="filter-group">
-          <h3>Furnishing &amp; parking</h3>
+          <h3>{% translate "Furnishing & parking" %}</h3>
           {% include "partials/field.html" with field=form.furnishing %}
           <label class="filter-check">{{ form.parking }} {{ form.parking.label }}</label>
         </div>
         <div class="filter-group">
-          <h3>Amenities</h3>
-          <div class="filter-checks">{% for cb in form.amenities %}<label class="filter-check">{{ cb.tag }} {{ cb.choice_label }}</label>{% endfor %}</div>
+          <h3>{% translate "Amenities" %}</h3>
+          <div class="filter-checks">{% for cb in form.amenities %}<label class="filter-check">{{ cb.tag }} {{ cb.choice_label|tr }}</label>{% endfor %}</div>
         </div>
         <div class="filter-group">
-          <h3>Listed by &amp; availability</h3>
+          <h3>{% translate "Listed by & availability" %}</h3>
           <label class="filter-check mb-3">{{ form.verified }} {{ form.verified.label }}</label>
           {% include "partials/field.html" with field=form.listed_by %}
           {% include "partials/field.html" with field=form.available_by wrapper_class="" %}
@@ -82,38 +83,38 @@
       </div>
     </div>
     <div class="offcanvas-footer d-flex gap-2 p-3 border-top">
-      <a class="btn btn-soft flex-fill" href="{{ request.path }}">Clear all</a>
-      <button class="btn btn-primary flex-fill" type="submit">Show results</button>
+      <a class="btn btn-soft flex-fill" href="{{ request.path }}">{% translate "Clear all" %}</a>
+      <button class="btn btn-primary flex-fill" type="submit">{% translate "Show results" %}</button>
     </div>
   </div>
 </form>
 
 <div class="container pb-5">
   <div class="result-toolbar">
-    <div class="count">{{ results_count }} propert{{ results_count|pluralize:"y,ies" }}</div>
+    <div class="count">{% blocktranslate count counter=results_count %}{{ counter }} property{% plural %}{{ counter }} properties{% endblocktranslate %}</div>
     <div class="d-flex flex-wrap gap-2 align-items-center">
-      <label class="visually-hidden" for="sort-select">Sort by</label>
+      <label class="visually-hidden" for="sort-select">{% translate "Sort by" %}</label>
       <select class="form-select form-select-sm sb-sort" id="sort-select" name="sort" form="filters-form" data-autosubmit>
         {% for value, label in form.fields.sort.choices %}<option value="{{ value }}" {% if form.sort.value == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
       </select>
-      <noscript><button class="btn btn-sm btn-soft" form="filters-form">Sort</button></noscript>
-      <div class="view-toggle" role="group" aria-label="View mode">
-        <a class="btn btn-sm {% if view_mode == 'grid' %}active{% endif %}" href="?{% query_replace view='grid' %}" aria-label="Grid view"><i class="bi bi-grid-3x3-gap"></i></a>
-        <a class="btn btn-sm {% if view_mode == 'list' %}active{% endif %}" href="?{% query_replace view='list' %}" aria-label="List view"><i class="bi bi-list-ul"></i></a>
-        <a class="btn btn-sm {% if view_mode == 'map' %}active{% endif %}" href="?{% query_replace view='map' %}" aria-label="Map view"><i class="bi bi-map"></i></a>
+      <noscript><button class="btn btn-sm btn-soft" form="filters-form">{% translate "Sort" %}</button></noscript>
+      <div class="view-toggle" role="group" aria-label="{% translate "View mode" %}">
+        <a class="btn btn-sm {% if view_mode == 'grid' %}active{% endif %}" href="?{% query_replace view='grid' %}" aria-label="{% translate "Grid view" %}"><i class="bi bi-grid-3x3-gap"></i></a>
+        <a class="btn btn-sm {% if view_mode == 'list' %}active{% endif %}" href="?{% query_replace view='list' %}" aria-label="{% translate "List view" %}"><i class="bi bi-list-ul"></i></a>
+        <a class="btn btn-sm {% if view_mode == 'map' %}active{% endif %}" href="?{% query_replace view='map' %}" aria-label="{% translate "Map view" %}"><i class="bi bi-map"></i></a>
       </div>
       {% if user.is_authenticated and not user.is_platform_admin %}
-        <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#saveSearchModal"><i class="bi bi-bookmark-plus"></i><span class="d-none d-sm-inline ms-1">Save search</span></button>
+        <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#saveSearchModal"><i class="bi bi-bookmark-plus"></i><span class="d-none d-sm-inline ms-1">{% translate "Save search" %}</span></button>
       {% elif not user.is_authenticated %}
-        <a class="btn btn-sm btn-outline-primary" href="{% url 'accounts:login' %}?next={{ request.get_full_path|urlencode }}"><i class="bi bi-bookmark-plus"></i><span class="d-none d-sm-inline ms-1">Save search</span></a>
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'accounts:login' %}?next={{ request.get_full_path|urlencode }}"><i class="bi bi-bookmark-plus"></i><span class="d-none d-sm-inline ms-1">{% translate "Save search" %}</span></a>
       {% endif %}
     </div>
   </div>
 
   {% if active_filters %}
-  <div class="d-flex flex-wrap gap-2 mb-4" aria-label="Active filters">
-    {% for f in active_filters %}<a class="active-filter" href="?{{ f.remove_qs }}" aria-label="Remove filter {{ f.label }}">{{ f.label }}: {{ f.value }} <i class="bi bi-x"></i></a>{% endfor %}
-    <a class="active-filter" href="{{ request.path }}">Clear all</a>
+  <div class="d-flex flex-wrap gap-2 mb-4" aria-label="{% translate "Active filters" %}">
+    {% for f in active_filters %}<a class="active-filter" href="?{{ f.remove_qs }}" aria-label="{% translate "Remove filter" %} {{ f.label }}">{{ f.label }}: {{ f.value }} <i class="bi bi-x"></i></a>{% endfor %}
+    <a class="active-filter" href="{{ request.path }}">{% translate "Clear all" %}</a>
   </div>
   {% endif %}
 
@@ -125,11 +126,11 @@
 
   {% if view_mode == 'map' %}
     {% if GOOGLE_MAPS_API_KEY %}
-      <div id="results-map" class="surface mb-3" role="region" aria-label="Map of results"></div>
+      <div id="results-map" class="surface mb-3" role="region" aria-label="{% translate "Map of results" %}"></div>
       {{ markers|json_script:"map-markers" }}
-      <p class="small text-muted">Pins are approximate unless the owner chose to show the exact address. {% if markers|length < results_count %}Only listings with map coordinates are shown.{% endif %}</p>
+      <p class="small text-muted">{% translate "Pins are approximate unless the owner chose to show the exact address." %} {% if markers|length < results_count %}{% translate "Only listings with map coordinates are shown." %}{% endif %}</p>
     {% else %}
-      <div class="alert alert-info mb-4"><i class="bi bi-map me-1"></i>The map view needs a Google Maps API key. Results are shown below. {% if user.is_platform_admin %}Set <code>GOOGLE_MAPS_API_KEY</code> in the environment to enable maps.{% endif %}</div>
+      <div class="alert alert-info mb-4"><i class="bi bi-map me-1"></i>{% translate "The map view is not available yet. Results are shown below." %} {% if user.is_platform_admin %}Set <code>GOOGLE_MAPS_API_KEY</code> in the environment to enable maps.{% endif %}</div>
     {% endif %}
   {% endif %}
 
@@ -141,7 +142,8 @@
     </div>
     {% include "partials/pagination.html" %}
   {% else %}
-    {% include "partials/empty_state.html" with icon="search" title="No properties match your filters" text="Try widening your budget, choosing a nearby area, or clearing some filters. You can also save this search and check back later." %}
+    {% translate "No properties match your filters" as es_title %}{% translate "Try widening your budget, choosing a nearby area, or clearing some filters. You can also save this search and check back later." as es_text %}
+    {% include "partials/empty_state.html" with icon="search" title=es_title text=es_text %}
   {% endif %}
 
   {% if banners %}<div class="row g-3 mt-4">{% for banner in banners %}<div class="col-lg">{% include "partials/banner.html" %}</div>{% endfor %}</div>{% endif %}
@@ -153,12 +155,12 @@
     <form class="modal-content" method="post" action="{% url 'properties:save_search' %}" data-once>
       {% csrf_token %}
       <input type="hidden" name="query_string" value="{{ querystring }}">
-      <div class="modal-header"><h2 class="modal-title h3" id="saveSearchLabel">Save this search</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+      <div class="modal-header"><h2 class="modal-title h3" id="saveSearchLabel">{% translate "Save this search" %}</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% translate "Close" %}"></button></div>
       <div class="modal-body">
         {% include "partials/field.html" with field=save_search_form.name %}
         {% include "partials/field.html" with field=save_search_form.notify wrapper_class="mb-0" %}
       </div>
-      <div class="modal-footer"><button type="button" class="btn btn-soft" data-bs-dismiss="modal">Cancel</button><button class="btn btn-primary" type="submit">Save</button></div>
+      <div class="modal-footer"><button type="button" class="btn btn-soft" data-bs-dismiss="modal">{% translate "Cancel" %}</button><button class="btn btn-primary" type="submit">{% translate "Save" %}</button></div>
     </form>
   </div>
 </div>

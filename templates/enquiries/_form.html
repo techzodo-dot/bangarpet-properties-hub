@@ -1,4 +1,4 @@
-<form method="post" action="{% url 'enquiries:create' prop.pk %}" data-once novalidate>
+{% load i18n %}<form method="post" action="{% url 'enquiries:create' prop.pk %}" data-once novalidate>
   {% csrf_token %}
   {% include "partials/form_errors.html" %}
   <div class="row g-3">
@@ -14,6 +14,6 @@
     <div class="col-md-6">{% include "partials/field.html" with field=form.preferred_slot wrapper_class="" %}</div>
     <div class="col-12">{% include "partials/field.html" with field=form.visit_note wrapper_class="" %}</div>
   </div>
-  <p class="small text-muted mt-3 mb-3">Your name, phone and message will be shared with the owner/broker of this listing.</p>
-  <button class="btn btn-primary w-100" type="submit">Send <span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
+  <p class="small text-muted mt-3 mb-3">{% translate "Your name, phone and message will be shared with the owner/broker of this listing." %}</p>
+  <button class="btn btn-primary w-100" type="submit">{% translate "Send" %} <span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
 </form>

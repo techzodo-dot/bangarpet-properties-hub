@@ -1,10 +1,11 @@
-{% load static %}
+{% load i18n %}{% load static %}
 <footer class="site-footer" role="contentinfo">
   <div class="container">
     <div class="row g-4 g-lg-5">
       <div class="col-lg-5">
         {% include "partials/brand.html" with extra_class="footer-brand mb-4" %}
-        <p class="footer-statement mb-4">Homes, rooms, shops and land in Bangarpet &mdash; listed by people you can actually meet.</p>
+        <p class="footer-statement mb-4">{% translate "Homes, rooms, shops and land in Bangarpet — listed by people you can actually meet." %}</p>
+        {% include "partials/lang_switch.html" with extra_class="mb-3" %}
         <div class="social">
           {% if site.facebook_url %}<a href="{{ site.facebook_url }}" rel="noopener" target="_blank" aria-label="Facebook"><i class="bi bi-facebook"></i></a>{% endif %}
           {% if site.instagram_url %}<a href="{{ site.instagram_url }}" rel="noopener" target="_blank" aria-label="Instagram"><i class="bi bi-instagram"></i></a>{% endif %}
@@ -15,38 +16,38 @@
         </div>
       </div>
       <div class="col-6 col-lg-2">
-        <h6>Explore</h6>
+        <h6>{% translate "Explore" %}</h6>
         <ul class="list-unstyled footer-links">
-          <li><a href="{% url 'properties:rent' %}">For rent</a></li>
-          <li><a href="{% url 'properties:buy' %}">For sale</a></li>
-          <li><a href="{% url 'properties:pg_rooms' %}">PG &amp; rooms</a></li>
-          <li><a href="{% url 'properties:commercial' %}">Commercial</a></li>
-          <li><a href="{% url 'properties:category' 'plots' %}">Plots</a></li>
+          <li><a href="{% url 'properties:rent' %}">{% translate "For rent" %}</a></li>
+          <li><a href="{% url 'properties:buy' %}">{% translate "For sale" %}</a></li>
+          <li><a href="{% url 'properties:pg_rooms' %}">{% translate "PG & rooms" %}</a></li>
+          <li><a href="{% url 'properties:commercial' %}">{% translate "Commercial" %}</a></li>
+          <li><a href="{% url 'properties:category' 'plots' %}">{% translate "Plots" %}</a></li>
         </ul>
       </div>
       <div class="col-6 col-lg-2">
-        <h6>Company</h6>
+        <h6>{% translate "Company" %}</h6>
         <ul class="list-unstyled footer-links">
-          <li><a href="{% url 'core:about' %}">About</a></li>
-          <li><a href="{% url 'core:contact' %}">Contact</a></li>
-          <li><a href="{% url 'core:faq' %}">FAQ</a></li>
-          <li><a href="{% url 'subscriptions:pricing' %}">Owner pricing</a></li>
-          <li><a href="{% url 'accounts:register' %}?type=broker">For brokers</a></li>
+          <li><a href="{% url 'core:about' %}">{% translate "About" %}</a></li>
+          <li><a href="{% url 'core:contact' %}">{% translate "Contact" %}</a></li>
+          <li><a href="{% url 'core:faq' %}">{% translate "FAQ" %}</a></li>
+          <li><a href="{% url 'subscriptions:pricing' %}">{% translate "Owner pricing" %}</a></li>
+          <li><a href="{% url 'accounts:register' %}?type=broker">{% translate "For brokers" %}</a></li>
         </ul>
       </div>
       <div class="col-lg-3">
-        <h6>Visit &amp; contact</h6>
+        <h6>{% translate "Visit & contact" %}</h6>
         <ul class="list-unstyled footer-links">
-          {% if site.office_address %}<li>{{ site.office_address|linebreaksbr }}</li>{% else %}<li>Bangarpet, Kolar district, Karnataka</li>{% endif %}
+          {% if site.office_address %}<li>{{ site.office_address|linebreaksbr }}</li>{% else %}<li>{% translate "Bangarpet, Kolar district, Karnataka" %}</li>{% endif %}
           {% if site.support_phone %}<li><a href="tel:{{ site.support_phone }}">{{ site.support_phone }}</a></li>{% endif %}
           {% if site.contact_email %}<li><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></li>{% endif %}
         </ul>
-        <p class="small mb-0"><i class="bi bi-shield-check me-1" style="color:var(--yellow)"></i>Never pay a token or deposit before visiting the property and checking the owner's documents.</p>
+        <p class="small mb-0"><i class="bi bi-shield-check me-1" style="color:var(--yellow)"></i>{% translate "Never pay a token or deposit before visiting the property and checking the owner's documents." %}</p>
       </div>
     </div>
     <div class="legal d-flex flex-column flex-md-row justify-content-between gap-2">
-      <span>&copy; {% now "Y" %} {{ site.site_name }} &middot; Built by: TECHZODO TECHNOLOGY</span>
-      <span><a href="{% url 'core:privacy' %}">Privacy</a> &middot; <a href="{% url 'core:terms' %}">Terms</a> &middot; <a href="{% url 'core:listing_policy' %}">Listing policy</a></span>
+      <span>&copy; {% now "Y" %} {{ site.site_name }} &middot; {% translate "Built by" %}: TECHZODO TECHNOLOGY</span>
+      <span><a href="{% url 'core:privacy' %}">{% translate "Privacy" %}</a> &middot; <a href="{% url 'core:terms' %}">{% translate "Terms" %}</a> &middot; <a href="{% url 'core:listing_policy' %}">{% translate "Listing policy" %}</a></span>
     </div>
   </div>
 </footer>

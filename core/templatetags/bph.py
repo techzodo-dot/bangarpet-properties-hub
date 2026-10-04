@@ -89,3 +89,11 @@ def get_item(mapping, key):
 @register.simple_tag
 def qs(**kwargs):
     return urlencode({k: v for k, v in kwargs.items() if v not in (None, "")})
+
+
+@register.filter
+def tr(value):
+    """Translate a database label (category, amenity, etc.) when a translation exists."""
+    from django.utils.translation import gettext
+
+    return gettext(str(value)) if value not in (None, "") else value

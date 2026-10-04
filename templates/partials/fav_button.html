@@ -1,8 +1,8 @@
-<form method="post" action="{% url 'properties:toggle_favourite' prop.pk %}" class="fav-form" data-login-url="{% url 'accounts:login' %}?next={{ request.path|urlencode }}">
+{% load i18n %}<form method="post" action="{% url 'properties:toggle_favourite' prop.pk %}" class="fav-form" data-login-url="{% url 'accounts:login' %}?next={{ request.path|urlencode }}">
   {% csrf_token %}<input type="hidden" name="next" value="{{ request.get_full_path }}">
   {% if prop.pk in favourite_ids %}
-    <button type="submit" class="{{ btn_class|default:'fav-btn' }} is-fav" aria-pressed="true" aria-label="Remove from saved"><i class="bi bi-heart-fill"></i>{% if with_label %} <span class="fav-label">Saved</span>{% endif %}</button>
+    <button type="submit" class="{{ btn_class|default:'fav-btn' }} is-fav" aria-pressed="true" aria-label="{% translate "Remove from saved" %}"><i class="bi bi-heart-fill"></i>{% if with_label %} <span class="fav-label">{% translate "Saved" %}</span>{% endif %}</button>
   {% else %}
-    <button type="submit" class="{{ btn_class|default:'fav-btn' }}" aria-pressed="false" aria-label="Save property"><i class="bi bi-heart"></i>{% if with_label %} <span class="fav-label">Save</span>{% endif %}</button>
+    <button type="submit" class="{{ btn_class|default:'fav-btn' }}" aria-pressed="false" aria-label="{% translate "Save property" %}"><i class="bi bi-heart"></i>{% if with_label %} <span class="fav-label">{% translate "Save" %}</span>{% endif %}</button>
   {% endif %}
 </form>

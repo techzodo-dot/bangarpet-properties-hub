@@ -1,0 +1,1835 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Bangarpet Property Hub\n"
+"PO-Revision-Date: 2026-10-04\n"
+"Language: kn\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "%(category)s for rent and sale in Bangarpet."
+msgstr "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಬಾಡಿಗೆ ಮತ್ತು ಮಾರಾಟಕ್ಕೆ %(category)s."
+
+msgid "%(category)s in Bangarpet"
+msgstr "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ %(category)s"
+
+msgid "%(count)s selected"
+msgstr "%(count)s ಆಯ್ಕೆ ಮಾಡಲಾಗಿದೆ"
+
+msgid "%(n)s years experience"
+msgstr "%(n)s ವರ್ಷಗಳ ಅನುಭವ"
+
+msgid ""
+"%(title)s is no longer available. Here are other options you might like."
+msgstr "%(title)s ಇನ್ನು ಲಭ್ಯವಿಲ್ಲ. ನಿಮಗೆ ಇಷ್ಟವಾಗಬಹುದಾದ ಇತರ ಆಯ್ಕೆಗಳು ಇಲ್ಲಿವೆ."
+
+msgid "1+"
+msgstr "1+"
+
+msgid "10-digit mobile number"
+msgstr "10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ"
+
+msgid "2+"
+msgstr "2+"
+
+msgid "3+"
+msgstr "3+"
+
+msgid "4+"
+msgstr "4+"
+
+msgid "A real team in Kolar district"
+msgstr "ಕೋಲಾರ ಜಿಲ್ಲೆಯಲ್ಲೇ ಇರುವ ನಿಜವಾದ ತಂಡ"
+
+msgid "About"
+msgstr "ನಮ್ಮ ಬಗ್ಗೆ"
+
+msgid "Account"
+msgstr "ಖಾತೆ"
+
+msgid "Active filters"
+msgstr "ಆಯ್ದ ಫಿಲ್ಟರ್‌ಗಳು"
+
+msgid "Active listings"
+msgstr "ಸಕ್ರಿಯ ಜಾಹೀರಾತುಗಳು"
+
+msgid "Add a listing"
+msgstr "ಜಾಹೀರಾತು ಸೇರಿಸಿ"
+
+msgid "Admin"
+msgstr "ಅಡ್ಮಿನ್"
+
+msgid "Admin login"
+msgstr "ಅಡ್ಮಿನ್ ಲಾಗಿನ್"
+
+msgid "Afternoon (12 pm - 4 pm)"
+msgstr "ಮಧ್ಯಾಹ್ನ (12 ರಿಂದ 4)"
+
+msgid "Agency / business name"
+msgstr "ಏಜೆನ್ಸಿ / ವ್ಯವಹಾರದ ಹೆಸರು"
+
+msgid "Agricultural Land"
+msgstr "ಕೃಷಿ ಜಮೀನು"
+
+msgid "Air conditioning"
+msgstr "ಏರ್ ಕಂಡೀಷನಿಂಗ್"
+
+msgid "Alerts"
+msgstr "ಸೂಚನೆಗಳು"
+
+msgid "All"
+msgstr "ಎಲ್ಲಾ"
+
+msgid "All locations"
+msgstr "ಎಲ್ಲಾ ಸ್ಥಳಗಳು"
+
+msgid "All properties"
+msgstr "ಎಲ್ಲಾ ಆಸ್ತಿಗಳು"
+
+msgid "All property types"
+msgstr "ಎಲ್ಲಾ ಆಸ್ತಿ ಪ್ರಕಾರಗಳು"
+
+msgid "All questions"
+msgstr "ಎಲ್ಲಾ ಪ್ರಶ್ನೆಗಳು"
+
+msgid "Already registered?"
+msgstr "ಈಗಾಗಲೇ ನೋಂದಾಯಿಸಿದ್ದೀರಾ?"
+
+msgid "Amenities"
+msgstr "ಸೌಲಭ್ಯಗಳು"
+
+msgid "Any"
+msgstr "ಯಾವುದಾದರೂ"
+
+msgid "Anyone"
+msgstr "ಯಾರಾದರೂ"
+
+msgid ""
+"Anything suspicious can be reported in one tap. We review every report."
+msgstr ""
+"ಯಾವುದೇ ಅನುಮಾನಾಸ್ಪದ ವಿಷಯವನ್ನು ಒಂದೇ ಸ್ಪರ್ಶದಲ್ಲಿ ವರದಿ ಮಾಡಬಹುದು. ಪ್ರತಿ ವರದಿಯನ್ನು"
+" ನಾವು ಪರಿಶೀಲಿಸುತ್ತೇವೆ."
+
+msgid "Apartment / Flat"
+msgstr "ಅಪಾರ್ಟ್‌ಮೆಂಟ್ / ಫ್ಲ್ಯಾಟ್"
+
+msgid ""
+"Are you a broker in Bangarpet? Register, submit your documents and get a "
+"verified profile."
+msgstr ""
+"ನೀವು ಬಂಗಾರಪೇಟೆಯ ಬ್ರೋಕರ್ ಆಗಿದ್ದೀರಾ? ನೋಂದಾಯಿಸಿ, ದಾಖಲೆಗಳನ್ನು ಸಲ್ಲಿಸಿ ಮತ್ತು "
+"ಪರಿಶೀಲಿತ ಪ್ರೊಫೈಲ್ ಪಡೆಯಿರಿ."
+
+msgid "Area, landmark or property ID"
+msgstr "ಪ್ರದೇಶ, ಹೆಗ್ಗುರುತು ಅಥವಾ ಆಸ್ತಿ ಸಂಖ್ಯೆ"
+
+msgid "Areas"
+msgstr "ಪ್ರದೇಶಗಳು"
+
+msgid "Asked for advance payment before a visit"
+msgstr "ಭೇಟಿಗೆ ಮೊದಲೇ ಮುಂಗಡ ಹಣ ಕೇಳಿದ್ದಾರೆ"
+
+msgid "At least 8 characters. Avoid common or purely numeric passwords."
+msgstr "ಕನಿಷ್ಠ 8 ಅಕ್ಷರಗಳು. ಸಾಮಾನ್ಯ ಅಥವಾ ಕೇವಲ ಸಂಖ್ಯೆಗಳ ಪಾಸ್‌ವರ್ಡ್ ಬೇಡ."
+
+msgid "Availability"
+msgstr "ಲಭ್ಯತೆ"
+
+msgid "Available"
+msgstr "ಲಭ್ಯತೆ"
+
+msgid "Available by"
+msgstr "ಈ ದಿನಾಂಕದೊಳಗೆ ಲಭ್ಯ"
+
+msgid "Available from a date"
+msgstr "ನಿರ್ದಿಷ್ಟ ದಿನಾಂಕದಿಂದ ಲಭ್ಯ"
+
+msgid "Balconies"
+msgstr "ಬಾಲ್ಕನಿಗಳು"
+
+msgid "Bangarpet"
+msgstr "ಬಂಗಾರಪೇಟೆ"
+
+msgid "Bangarpet · Kolar district · Karnataka"
+msgstr "ಬಂಗಾರಪೇಟೆ · ಕೋಲಾರ ಜಿಲ್ಲೆ · ಕರ್ನಾಟಕ"
+
+msgid "Bangarpet, Kolar district, Karnataka"
+msgstr "ಬಂಗಾರಪೇಟೆ, ಕೋಲಾರ ಜಿಲ್ಲೆ, ಕರ್ನಾಟಕ"
+
+msgid "Bathrooms"
+msgstr "ಸ್ನಾನಗೃಹಗಳು"
+
+msgid "Baths"
+msgstr "ಸ್ನಾನಗೃಹಗಳು"
+
+msgid "Become a verified agent"
+msgstr "ಪರಿಶೀಲಿತ ಏಜೆಂಟ್ ಆಗಿ"
+
+msgid "Bedrooms"
+msgstr "ಬೆಡ್‌ರೂಮ್‌ಗಳು"
+
+msgid "Bethamangala"
+msgstr "ಬೇತಮಂಗಲ"
+
+msgid "Book visits and track every enquiry in one place"
+msgstr "ಭೇಟಿಗಳನ್ನು ಬುಕ್ ಮಾಡಿ ಮತ್ತು ಎಲ್ಲಾ ವಿಚಾರಣೆಗಳನ್ನು ಒಂದೇ ಕಡೆ ನೋಡಿ"
+
+msgid "Book visits online"
+msgstr "ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಭೇಟಿ ಬುಕ್ ಮಾಡಿ"
+
+msgid "Borewell water"
+msgstr "ಬೋರ್‌ವೆಲ್ ನೀರು"
+
+msgid "Broker"
+msgstr "ಬ್ರೋಕರ್"
+
+msgid "Broker listing"
+msgstr "ಬ್ರೋಕರ್ ಜಾಹೀರಾತು"
+
+msgid "Brokers"
+msgstr "ಬ್ರೋಕರ್‌ಗಳು"
+
+msgid ""
+"Brokers in Bangarpet can register, submit documents and earn a verified "
+"profile."
+msgstr ""
+"ಬಂಗಾರಪೇಟೆಯ ಬ್ರೋಕರ್‌ಗಳು ನೋಂದಾಯಿಸಿ, ದಾಖಲೆಗಳನ್ನು ಸಲ್ಲಿಸಿ ಪರಿಶೀಲಿತ ಪ್ರೊಫೈಲ್ "
+"ಪಡೆಯಬಹುದು."
+
+msgid ""
+"Brokers shown here submitted identity and business documents that our team "
+"reviewed."
+msgstr ""
+"ಇಲ್ಲಿರುವ ಬ್ರೋಕರ್‌ಗಳು ಸಲ್ಲಿಸಿದ ಗುರುತು ಮತ್ತು ವ್ಯವಹಾರ ದಾಖಲೆಗಳನ್ನು ನಮ್ಮ ತಂಡ "
+"ಪರಿಶೀಲಿಸಿದೆ."
+
+msgid "Browse"
+msgstr "ವೀಕ್ಷಿಸಿ"
+
+msgid "Browse similar properties"
+msgstr "ಇದೇ ರೀತಿಯ ಆಸ್ತಿಗಳನ್ನು ನೋಡಿ"
+
+msgid "Budget"
+msgstr "ಬಜೆಟ್"
+
+msgid "Budikote"
+msgstr "ಬೂದಿಕೋಟೆ"
+
+msgid "Budikote Road"
+msgstr "ಬೂದಿಕೋಟೆ ರಸ್ತೆ"
+
+msgid "Budikote Road, Bangarpet"
+msgstr "ಬೂದಿಕೋಟೆ ರಸ್ತೆ, ಬಂಗಾರಪೇಟೆ"
+
+msgid "Built by"
+msgstr "ನಿರ್ಮಿಸಿದವರು"
+
+msgid "Built on trust"
+msgstr "ನಂಬಿಕೆಯ ಮೇಲೆ ನಿರ್ಮಿತ"
+
+msgid "Built-up"
+msgstr "ನಿರ್ಮಿತ ವಿಸ್ತೀರ್ಣ"
+
+msgid "Built-up area"
+msgstr "ನಿರ್ಮಿತ ವಿಸ್ತೀರ್ಣ"
+
+msgid "Buy"
+msgstr "ಖರೀದಿ"
+
+msgid "CCTV"
+msgstr "ಸಿಸಿಟಿವಿ"
+
+msgid "Call"
+msgstr "ಕರೆ ಮಾಡಿ"
+
+msgid "Call us"
+msgstr "ನಮಗೆ ಕರೆ ಮಾಡಿ"
+
+msgid "Cancel"
+msgstr "ರದ್ದುಮಾಡಿ"
+
+msgid "Cancelled"
+msgstr "ರದ್ದಾಗಿದೆ"
+
+msgid "Car"
+msgstr "ಕಾರು"
+
+msgid "Car and two-wheeler"
+msgstr "ಕಾರು ಮತ್ತು ದ್ವಿಚಕ್ರ ವಾಹನ"
+
+msgid "Chat on WhatsApp"
+msgstr "ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ಚಾಟ್ ಮಾಡಿ"
+
+msgid "Chat with support"
+msgstr "ಸಹಾಯ ತಂಡದೊಂದಿಗೆ ಚಾಟ್ ಮಾಡಿ"
+
+msgid "Check documents, agree terms directly with the owner and move in."
+msgstr ""
+"ದಾಖಲೆಗಳನ್ನು ಪರಿಶೀಲಿಸಿ, ಮಾಲೀಕರೊಂದಿಗೆ ನೇರವಾಗಿ ನಿಯಮಗಳನ್ನು ಒಪ್ಪಿ ವಾಸ ಆರಂಭಿಸಿ."
+
+msgid "Checked before publishing"
+msgstr "ಪ್ರಕಟಿಸುವ ಮೊದಲು ಪರಿಶೀಲಿಸಲಾಗಿದೆ"
+
+msgid "Checked by our team before it goes live"
+msgstr "ಪ್ರಕಟವಾಗುವ ಮೊದಲು ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸುತ್ತದೆ"
+
+msgid "Children's play area"
+msgstr "ಮಕ್ಕಳ ಆಟದ ಸ್ಥಳ"
+
+msgid "Clear all"
+msgstr "ಎಲ್ಲವನ್ನೂ ತೆರವುಗೊಳಿಸಿ"
+
+msgid "Close"
+msgstr "ಮುಚ್ಚಿ"
+
+msgid "Close gallery"
+msgstr "ಗ್ಯಾಲರಿ ಮುಚ್ಚಿ"
+
+msgid "Closed"
+msgstr "ಮುಕ್ತಾಯ"
+
+msgid "Commercial"
+msgstr "ವಾಣಿಜ್ಯ"
+
+msgid "Commercial properties in Bangarpet"
+msgstr "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ವಾಣಿಜ್ಯ ಆಸ್ತಿಗಳು"
+
+msgid "Company"
+msgstr "ಸಂಸ್ಥೆ"
+
+msgid "Completed"
+msgstr "ಪೂರ್ಣಗೊಂಡಿದೆ"
+
+msgid "Confirm password"
+msgstr "ಪಾಸ್‌ವರ್ಡ್ ಖಚಿತಪಡಿಸಿ"
+
+msgid "Contact"
+msgstr "ಸಂಪರ್ಕ"
+
+msgid "Contact about %(ref)s"
+msgstr "%(ref)s ಬಗ್ಗೆ ಸಂಪರ್ಕಿಸಿ"
+
+msgid "Contact actions"
+msgstr "ಸಂಪರ್ಕ ಆಯ್ಕೆಗಳು"
+
+msgid "Contact broker"
+msgstr "ಬ್ರೋಕರ್ ಅನ್ನು ಸಂಪರ್ಕಿಸಿ"
+
+msgid "Contact owner"
+msgstr "ಮಾಲೀಕರನ್ನು ಸಂಪರ್ಕಿಸಿ"
+
+msgid "Contact us"
+msgstr "ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ"
+
+msgid "Contacted"
+msgstr "ಸಂಪರ್ಕಿಸಲಾಗಿದೆ"
+
+msgid "Covered parking"
+msgstr "ಮುಚ್ಚಿದ ಪಾರ್ಕಿಂಗ್"
+
+msgid "Create a free account"
+msgstr "ಉಚಿತ ಖಾತೆ ತೆರೆಯಿರಿ"
+
+msgid "Create account"
+msgstr "ಖಾತೆ ತೆರೆಯಿರಿ"
+
+msgid "Create an account"
+msgstr "ಖಾತೆ ತೆರೆಯಿರಿ"
+
+msgid "Create your account"
+msgstr "ನಿಮ್ಮ ಖಾತೆ ತೆರೆಯಿರಿ"
+
+msgid "Dashboard"
+msgstr "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"
+
+msgid "Deposit"
+msgstr "ಮುಂಗಡ ಠೇವಣಿ"
+
+msgid "Details"
+msgstr "ವಿವರಗಳು"
+
+msgid "Direct owner contact"
+msgstr "ಮಾಲೀಕರೊಂದಿಗೆ ನೇರ ಸಂಪರ್ಕ"
+
+msgid "Duplicate listing"
+msgstr "ಪುನರಾವರ್ತಿತ ಜಾಹೀರಾತು"
+
+msgid ""
+"Each plan has a listing duration (for example 30 days on the Free plan). You"
+" will get a reminder before your listing expires and can renew it from your "
+"dashboard."
+msgstr ""
+"ಪ್ರತಿ ಯೋಜನೆಗೆ ಒಂದು ಅವಧಿ ಇದೆ (ಉದಾಹರಣೆಗೆ ಉಚಿತ ಯೋಜನೆಯಲ್ಲಿ 30 ದಿನಗಳು). ಜಾಹೀರಾತು "
+"ಮುಗಿಯುವ ಮೊದಲು ನಿಮಗೆ ನೆನಪಿಸಲಾಗುತ್ತದೆ ಮತ್ತು ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಿಂದ ನವೀಕರಿಸಬಹುದು."
+
+msgid "Email"
+msgstr "ಇಮೇಲ್"
+
+msgid "Email or username"
+msgstr "ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು"
+
+msgid "Enquire"
+msgstr "ವಿಚಾರಿಸಿ"
+
+msgid "Evening (4 pm - 7 pm)"
+msgstr "ಸಂಜೆ (4 ರಿಂದ 7)"
+
+msgid "Every listing reviewed"
+msgstr "ಪ್ರತಿ ಜಾಹೀರಾತು ಪರಿಶೀಲಿತ"
+
+msgid "Every listing reviewed. Every owner reachable."
+msgstr "ಪ್ರತಿ ಜಾಹೀರಾತು ಪರಿಶೀಲಿತ. ಪ್ರತಿ ಮಾಲೀಕರು ಸಂಪರ್ಕಕ್ಕೆ ಲಭ್ಯ."
+
+msgid "Explore"
+msgstr "ಅನ್ವೇಷಿಸಿ"
+
+msgid "FAQ"
+msgstr "ಪ್ರಶ್ನೋತ್ತರ"
+
+msgid "Featured"
+msgstr "ವಿಶೇಷ"
+
+msgid "Featured properties"
+msgstr "ವಿಶೇಷ ಆಸ್ತಿಗಳು"
+
+msgid "Filter by area, budget and bedrooms. Save searches and get alerts."
+msgstr ""
+"ಪ್ರದೇಶ, ಬಜೆಟ್ ಮತ್ತು ಬೆಡ್‌ರೂಮ್‌ಗಳ ಮೂಲಕ ಹುಡುಕಿ. ಹುಡುಕಾಟಗಳನ್ನು ಉಳಿಸಿ ಮತ್ತು "
+"ಸೂಚನೆಗಳನ್ನು ಪಡೆಯಿರಿ."
+
+msgid "Filters"
+msgstr "ಫಿಲ್ಟರ್‌ಗಳು"
+
+msgid "Find a <span class=\"hl\">home</span> you can trust in Bangarpet"
+msgstr "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ನಂಬಿಕೆಯ <span class=\"hl\">ಮನೆ</span> ಹುಡುಕಿ"
+
+msgid "Floor"
+msgstr "ಮಹಡಿ"
+
+msgid "For brokers"
+msgstr "ಬ್ರೋಕರ್‌ಗಳಿಗೆ"
+
+msgid "For owners"
+msgstr "ಮಾಲೀಕರಿಗೆ"
+
+msgid "For owners & brokers"
+msgstr "ಮಾಲೀಕರು ಮತ್ತು ಬ್ರೋಕರ್‌ಗಳಿಗೆ"
+
+msgid ""
+"For questions about listings, plans, payments or a report, send us a message"
+" and our team will respond."
+msgstr ""
+"ಜಾಹೀರಾತುಗಳು, ಯೋಜನೆಗಳು, ಪಾವತಿಗಳು ಅಥವಾ ವರದಿಯ ಬಗ್ಗೆ ಪ್ರಶ್ನೆಗಳಿದ್ದರೆ ನಮಗೆ ಸಂದೇಶ "
+"ಕಳುಹಿಸಿ, ನಮ್ಮ ತಂಡ ಉತ್ತರಿಸುತ್ತದೆ."
+
+msgid "For rent"
+msgstr "ಬಾಡಿಗೆಗೆ"
+
+msgid "For sale"
+msgstr "ಮಾರಾಟಕ್ಕೆ"
+
+msgid "Forgot password?"
+msgstr "ಪಾಸ್‌ವರ್ಡ್ ಮರೆತಿರಾ?"
+
+msgid "Free for tenants & buyers"
+msgstr "ಬಾಡಿಗೆದಾರರು ಮತ್ತು ಖರೀದಿದಾರರಿಗೆ ಉಚಿತ"
+
+msgid ""
+"Free for tenants and buyers. Owners and brokers can list properties after "
+"signing up."
+msgstr ""
+"ಬಾಡಿಗೆದಾರರು ಮತ್ತು ಖರೀದಿದಾರರಿಗೆ ಉಚಿತ. ನೋಂದಾಯಿಸಿದ ನಂತರ ಮಾಲೀಕರು ಮತ್ತು "
+"ಬ್ರೋಕರ್‌ಗಳು ಆಸ್ತಿಗಳನ್ನು ಪಟ್ಟಿ ಮಾಡಬಹುದು."
+
+msgid "Frequently asked questions"
+msgstr "ಹೆಚ್ಚಾಗಿ ಕೇಳುವ ಪ್ರಶ್ನೆಗಳು"
+
+msgid "Fresh listings"
+msgstr "ಹೊಸ ಜಾಹೀರಾತುಗಳು"
+
+msgid "From"
+msgstr "ಇಂದಿನಿಂದ"
+
+msgid "From search to keys in four steps"
+msgstr "ಹುಡುಕಾಟದಿಂದ ಮನೆಯ ಕೀಲಿಯವರೆಗೆ ನಾಲ್ಕು ಹಂತಗಳಲ್ಲಿ"
+
+msgid "Fully furnished"
+msgstr "ಪೂರ್ಣ ಪೀಠೋಪಕರಣ"
+
+msgid "Furnishing"
+msgstr "ಪೀಠೋಪಕರಣ"
+
+msgid "Furnishing & parking"
+msgstr "ಪೀಠೋಪಕರಣ ಮತ್ತು ಪಾರ್ಕಿಂಗ್"
+
+msgid "Garden"
+msgstr "ತೋಟ"
+
+msgid "Gated community"
+msgstr "ಗೇಟೆಡ್ ಸಮುದಾಯ"
+
+msgid "Geyser"
+msgstr "ಗೀಸರ್"
+
+msgid "Grid view"
+msgstr "ಗ್ರಿಡ್ ನೋಟ"
+
+msgid "Ground"
+msgstr "ನೆಲ ಮಹಡಿ"
+
+msgid "Gym"
+msgstr "ಜಿಮ್"
+
+msgid "Hand-picked, reviewed listings promoted by their owners and brokers."
+msgstr ""
+"ಮಾಲೀಕರು ಮತ್ತು ಬ್ರೋಕರ್‌ಗಳು ಪ್ರಚಾರ ಮಾಡಿರುವ, ಆಯ್ದ ಮತ್ತು ಪರಿಶೀಲಿಸಿದ ಜಾಹೀರಾತುಗಳು."
+
+msgid "Home"
+msgstr "ಮುಖಪುಟ"
+
+msgid ""
+"Homes, rooms, shops and land in Bangarpet — listed by people you can "
+"actually meet."
+msgstr ""
+"ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಮನೆಗಳು, ರೂಮುಗಳು, ಅಂಗಡಿಗಳು ಮತ್ತು ಜಮೀನು — ನೀವು ನೇರವಾಗಿ "
+"ಭೇಟಿಯಾಗಬಹುದಾದ ಜನರಿಂದ ಪಟ್ಟಿ ಮಾಡಲಾಗಿದೆ."
+
+msgid "Houses, Flats, PG & Plots for Rent and Sale in Bangarpet"
+msgstr ""
+"ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಬಾಡಿಗೆ ಮತ್ತು ಮಾರಾಟಕ್ಕೆ ಮನೆಗಳು, ಫ್ಲ್ಯಾಟ್‌ಗಳು, ಪಿಜಿ ಮತ್ತು "
+"ನಿವೇಶನಗಳು"
+
+msgid ""
+"Houses, apartments, rooms and shops available for rent in Bangarpet and "
+"nearby towns."
+msgstr ""
+"ಬಂಗಾರಪೇಟೆ ಮತ್ತು ಸುತ್ತಮುತ್ತಲಿನ ಪಟ್ಟಣಗಳಲ್ಲಿ ಬಾಡಿಗೆಗೆ ಮನೆಗಳು, "
+"ಅಪಾರ್ಟ್‌ಮೆಂಟ್‌ಗಳು, ರೂಮುಗಳು ಮತ್ತು ಅಂಗಡಿಗಳು."
+
+msgid ""
+"Houses, flats, PG rooms, shops and plots — every listing reviewed by our "
+"team. Talk directly to owners and verified brokers."
+msgstr ""
+"ಮನೆಗಳು, ಫ್ಲ್ಯಾಟ್‌ಗಳು, ಪಿಜಿ ರೂಮುಗಳು, ಅಂಗಡಿಗಳು ಮತ್ತು ನಿವೇಶನಗಳು — ಪ್ರತಿ "
+"ಜಾಹೀರಾತನ್ನು ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸುತ್ತದೆ. ಮಾಲೀಕರು ಮತ್ತು ಪರಿಶೀಲಿತ ಬ್ರೋಕರ್‌ಗಳೊಂದಿಗೆ"
+" ನೇರವಾಗಿ ಮಾತನಾಡಿ."
+
+msgid "Houses, flats, PG, shops & plots"
+msgstr "ಮನೆಗಳು, ಫ್ಲ್ಯಾಟ್‌ಗಳು, ಪಿಜಿ, ಅಂಗಡಿಗಳು ಮತ್ತು ನಿವೇಶನಗಳು"
+
+msgid "How do I list my property?"
+msgstr "ನನ್ನ ಆಸ್ತಿಯನ್ನು ಹೇಗೆ ಪಟ್ಟಿ ಮಾಡುವುದು?"
+
+msgid "How do I pay for a plan?"
+msgstr "ಯೋಜನೆಗೆ ಹೇಗೆ ಪಾವತಿಸುವುದು?"
+
+msgid "How do I report a suspicious listing?"
+msgstr "ಅನುಮಾನಾಸ್ಪದ ಜಾಹೀರಾತನ್ನು ಹೇಗೆ ವರದಿ ಮಾಡುವುದು?"
+
+msgid "How long does a listing stay live?"
+msgstr "ಜಾಹೀರಾತು ಎಷ್ಟು ದಿನ ಪ್ರಕಟವಾಗಿರುತ್ತದೆ?"
+
+msgid "How we keep every search safe"
+msgstr "ಪ್ರತಿ ಹುಡುಕಾಟವನ್ನು ನಾವು ಹೇಗೆ ಸುರಕ್ಷಿತವಾಗಿಡುತ್ತೇವೆ"
+
+msgid ""
+"I agree to the <a href=\"%(terms_url)s\" target=\"_blank\">Terms of Use</a> "
+"and <a href=\"%(privacy_url)s\" target=\"_blank\">Privacy Policy</a>"
+msgstr ""
+"ನಾನು <a href=\"%(terms_url)s\" target=\"_blank\">ಬಳಕೆಯ ನಿಯಮಗಳು</a> ಮತ್ತು <a "
+"href=\"%(privacy_url)s\" target=\"_blank\">ಗೌಪ್ಯತಾ ನೀತಿ</a>ಗೆ ಒಪ್ಪುತ್ತೇನೆ"
+
+msgid "I agree to the Terms of Use and Privacy Policy"
+msgstr "ನಾನು ಬಳಕೆಯ ನಿಯಮಗಳು ಮತ್ತು ಗೌಪ್ಯತಾ ನೀತಿಗೆ ಒಪ್ಪುತ್ತೇನೆ"
+
+msgid "I own property to rent or sell"
+msgstr "ಬಾಡಿಗೆ ಅಥವಾ ಮಾರಾಟಕ್ಕೆ ನನ್ನ ಬಳಿ ಆಸ್ತಿ ಇದೆ"
+
+msgid "I'd like to visit this property"
+msgstr "ನಾನು ಈ ಆಸ್ತಿಗೆ ಭೇಟಿ ನೀಡಲು ಬಯಸುತ್ತೇನೆ"
+
+msgid "I'm a real estate broker / agent"
+msgstr "ನಾನು ರಿಯಲ್ ಎಸ್ಟೇಟ್ ಬ್ರೋಕರ್ / ಏಜೆಂಟ್"
+
+msgid "I'm looking for a property"
+msgstr "ನಾನು ಆಸ್ತಿಯನ್ನು ಹುಡುಕುತ್ತಿದ್ದೇನೆ"
+
+msgid ""
+"ID and business documents are stored privately and seen only by our "
+"verification team."
+msgstr ""
+"ಗುರುತು ಮತ್ತು ವ್ಯವಹಾರ ದಾಖಲೆಗಳನ್ನು ಗೌಪ್ಯವಾಗಿ ಇಡಲಾಗುತ್ತದೆ ಮತ್ತು ನಮ್ಮ ಪರಿಶೀಲನಾ "
+"ತಂಡ ಮಾತ್ರ ನೋಡುತ್ತದೆ."
+
+msgid "ID-checked owners & brokers"
+msgstr "ಗುರುತು ಪರಿಶೀಲಿಸಿದ ಮಾಲೀಕರು ಮತ್ತು ಬ್ರೋಕರ್‌ಗಳು"
+
+msgid "Incorrect price or details"
+msgstr "ತಪ್ಪಾದ ಬೆಲೆ ಅಥವಾ ವಿವರಗಳು"
+
+msgid "Independent House"
+msgstr "ಸ್ವತಂತ್ರ ಮನೆ"
+
+msgid ""
+"Independent houses, apartments, plots and land for sale in Bangarpet, Kolar "
+"district."
+msgstr ""
+"ಕೋಲಾರ ಜಿಲ್ಲೆಯ ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಮಾರಾಟಕ್ಕೆ ಸ್ವತಂತ್ರ ಮನೆಗಳು, ಅಪಾರ್ಟ್‌ಮೆಂಟ್‌ಗಳು, "
+"ನಿವೇಶನಗಳು ಮತ್ತು ಜಮೀನು."
+
+msgid "Is it free to search for properties?"
+msgstr "ಆಸ್ತಿಗಳನ್ನು ಹುಡುಕುವುದು ಉಚಿತವೇ?"
+
+msgid ""
+"It means our team has reviewed the identity (and, for brokers, business) "
+"documents submitted by the owner or broker. It is not a legal verification "
+"of property title. Always check ownership documents yourself, or with a "
+"lawyer, before paying any money."
+msgstr ""
+"ಮಾಲೀಕರು ಅಥವಾ ಬ್ರೋಕರ್ ಸಲ್ಲಿಸಿದ ಗುರುತಿನ (ಬ್ರೋಕರ್‌ಗಳಿಗೆ ವ್ಯವಹಾರದ) ದಾಖಲೆಗಳನ್ನು "
+"ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸಿದೆ ಎಂದರ್ಥ. ಇದು ಆಸ್ತಿಯ ಮಾಲೀಕತ್ವದ ಕಾನೂನು ಪರಿಶೀಲನೆ ಅಲ್ಲ. "
+"ಯಾವುದೇ ಹಣ ಪಾವತಿಸುವ ಮೊದಲು ಮಾಲೀಕತ್ವದ ದಾಖಲೆಗಳನ್ನು ನೀವೇ ಅಥವಾ ವಕೀಲರ ಮೂಲಕ "
+"ಪರಿಶೀಲಿಸಿ."
+
+msgid "Join as a broker"
+msgstr "ಬ್ರೋಕರ್ ಆಗಿ ಸೇರಿ"
+
+msgid "Joined"
+msgstr "ಸೇರಿದ್ದು"
+
+msgid "Just listed"
+msgstr "ಹೊಸದಾಗಿ ಸೇರಿಸಲಾಗಿದೆ"
+
+msgid "KGF Road"
+msgstr "ಕೆಜಿಎಫ್ ರಸ್ತೆ"
+
+msgid "KGF Road, Bangarpet"
+msgstr "ಕೆಜಿಎಫ್ ರಸ್ತೆ, ಬಂಗಾರಪೇಟೆ"
+
+msgid "Kamasamudra"
+msgstr "ಕಾಮಸಮುದ್ರ"
+
+msgid "Keep me signed in"
+msgstr "ನನ್ನನ್ನು ಸೈನ್ ಇನ್ ಆಗಿರಿಸಿ"
+
+msgid "Keyword"
+msgstr "ಪದ"
+
+msgid "Kolar"
+msgstr "ಕೋಲಾರ"
+
+msgid "Kolar Gold Fields (KGF)"
+msgstr "ಕೋಲಾರ ಚಿನ್ನದ ಗಣಿ (ಕೆಜಿಎಫ್)"
+
+msgid "Kolar Road"
+msgstr "ಕೋಲಾರ ರಸ್ತೆ"
+
+msgid "Kolar Road, Bangarpet"
+msgstr "ಕೋಲಾರ ರಸ್ತೆ, ಬಂಗಾರಪೇಟೆ"
+
+msgid "Land"
+msgstr "ಜಮೀನು"
+
+msgid "Land area"
+msgstr "ಜಮೀನಿನ ವಿಸ್ತೀರ್ಣ"
+
+msgid "Laundry service"
+msgstr "ಬಟ್ಟೆ ಒಗೆಯುವ ಸೇವೆ"
+
+msgid "Lift"
+msgstr "ಲಿಫ್ಟ್"
+
+msgid "List"
+msgstr "ಸೇರಿಸಿ"
+
+msgid "List property"
+msgstr "ಆಸ್ತಿ ಸೇರಿಸಿ"
+
+msgid "List view"
+msgstr "ಪಟ್ಟಿ ನೋಟ"
+
+msgid "List your property"
+msgstr "ಆಸ್ತಿ ಪಟ್ಟಿ ಮಾಡಿ"
+
+msgid "List your property where Bangarpet is searching."
+msgstr "ಬಂಗಾರಪೇಟೆ ಹುಡುಕುತ್ತಿರುವಲ್ಲೇ ನಿಮ್ಮ ಆಸ್ತಿಯನ್ನು ಪಟ್ಟಿ ಮಾಡಿ."
+
+msgid "Listed by"
+msgstr "ಪಟ್ಟಿ ಮಾಡಿದವರು"
+
+msgid "Listed by & availability"
+msgstr "ಪಟ್ಟಿ ಮಾಡಿದವರು ಮತ್ತು ಲಭ್ಯತೆ"
+
+msgid "Listing policy"
+msgstr "ಜಾಹೀರಾತು ನೀತಿ"
+
+msgid "Listings"
+msgstr "ಜಾಹೀರಾತುಗಳು"
+
+msgid "Listings are on their way"
+msgstr "ಜಾಹೀರಾತುಗಳು ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿವೆ"
+
+msgid "Listings checked by our team before they go live"
+msgstr "ಪ್ರಕಟವಾಗುವ ಮೊದಲು ಜಾಹೀರಾತುಗಳನ್ನು ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸುತ್ತದೆ"
+
+msgid "Local experts you can rely on"
+msgstr "ನೀವು ನಂಬಬಹುದಾದ ಸ್ಥಳೀಯ ತಜ್ಞರು"
+
+msgid "Location"
+msgstr "ಸ್ಥಳ"
+
+msgid "Main navigation"
+msgstr "ಮುಖ್ಯ ಮೆನು"
+
+msgid "Maintenance"
+msgstr "ನಿರ್ವಹಣೆ ಶುಲ್ಕ"
+
+msgid "Malur"
+msgstr "ಮಾಲೂರು"
+
+msgid "Manage listing"
+msgstr "ಜಾಹೀರಾತು ನಿರ್ವಹಿಸಿ"
+
+msgid "Manage this listing"
+msgstr "ಈ ಜಾಹೀರಾತನ್ನು ನಿರ್ವಹಿಸಿ"
+
+msgid "Manual listing review"
+msgstr "ಜಾಹೀರಾತುಗಳ ಕೈಯಾರೆ ಪರಿಶೀಲನೆ"
+
+msgid "Map"
+msgstr "ನಕ್ಷೆ"
+
+msgid "Map of results"
+msgstr "ಫಲಿತಾಂಶಗಳ ನಕ್ಷೆ"
+
+msgid "Map view"
+msgstr "ನಕ್ಷೆ ನೋಟ"
+
+msgid "Max"
+msgstr "ಗರಿಷ್ಠ"
+
+msgid "Max area (sq. ft)"
+msgstr "ಗರಿಷ್ಠ ವಿಸ್ತೀರ್ಣ (ಚ.ಅಡಿ)"
+
+msgid "Max price (₹)"
+msgstr "ಗರಿಷ್ಠ ಬೆಲೆ (₹)"
+
+msgid "Maximum price"
+msgstr "ಗರಿಷ್ಠ ಬೆಲೆ"
+
+msgid "Meals included"
+msgstr "ಊಟ ಸೇರಿದೆ"
+
+msgid "Member since"
+msgstr "ಸದಸ್ಯರಾದದ್ದು"
+
+msgid "Menu"
+msgstr "ಮೆನು"
+
+msgid "Message"
+msgstr "ಸಂದೇಶ"
+
+msgid "Message received."
+msgstr "ಸಂದೇಶ ತಲುಪಿದೆ."
+
+msgid "Min"
+msgstr "ಕನಿಷ್ಠ"
+
+msgid "Min area (sq. ft)"
+msgstr "ಕನಿಷ್ಠ ವಿಸ್ತೀರ್ಣ (ಚ.ಅಡಿ)"
+
+msgid "Min price (₹)"
+msgstr "ಕನಿಷ್ಠ ಬೆಲೆ (₹)"
+
+msgid "Minimum price"
+msgstr "ಕನಿಷ್ಠ ಬೆಲೆ"
+
+msgid "Mobile number"
+msgstr "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ"
+
+msgid "Modular kitchen"
+msgstr "ಮಾಡ್ಯುಲರ್ ಅಡುಗೆಮನೆ"
+
+msgid "More filters"
+msgstr "ಇನ್ನಷ್ಟು ಫಿಲ್ಟರ್‌ಗಳು"
+
+msgid "Morning (9 am - 12 pm)"
+msgstr "ಬೆಳಿಗ್ಗೆ (9 ರಿಂದ 12)"
+
+msgid "Move in"
+msgstr "ವಾಸ ಆರಂಭಿಸಿ"
+
+msgid "Municipal water supply"
+msgstr "ನಗರಸಭೆ ನೀರು ಸರಬರಾಜು"
+
+msgid "My listings"
+msgstr "ನನ್ನ ಜಾಹೀರಾತುಗಳು"
+
+msgid "Name"
+msgstr "ಹೆಸರು"
+
+msgid "Name this search"
+msgstr "ಈ ಹುಡುಕಾಟಕ್ಕೆ ಹೆಸರು ನೀಡಿ"
+
+msgid "Negotiable"
+msgstr "ಮಾತುಕತೆಗೆ ಅವಕಾಶ"
+
+msgid ""
+"Never pay a token or deposit before visiting the property and checking the "
+"owner's documents."
+msgstr ""
+"ಆಸ್ತಿಯನ್ನು ನೋಡಿ ಮಾಲೀಕರ ದಾಖಲೆಗಳನ್ನು ಪರಿಶೀಲಿಸುವ ಮೊದಲು ಯಾವುದೇ ಟೋಕನ್ ಅಥವಾ ಮುಂಗಡ "
+"ಹಣ ಪಾವತಿಸಬೇಡಿ."
+
+msgid "New"
+msgstr "ಹೊಸದು"
+
+msgid "New here?"
+msgstr "ಹೊಸಬರೇ?"
+
+msgid "New in Bangarpet"
+msgstr "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಹೊಸದು"
+
+msgid "Newest first"
+msgstr "ಹೊಸದು ಮೊದಲು"
+
+msgid "Next"
+msgstr "ಮುಂದಿನ"
+
+msgid "Next page"
+msgstr "ಮುಂದಿನ ಪುಟ"
+
+msgid "Next room"
+msgstr "ಮುಂದಿನ ರೂಮ್"
+
+msgid "No active listings right now"
+msgstr "ಸದ್ಯಕ್ಕೆ ಯಾವುದೇ ಸಕ್ರಿಯ ಜಾಹೀರಾತುಗಳಿಲ್ಲ"
+
+msgid "No max"
+msgstr "ಗರಿಷ್ಠ ಮಿತಿ ಇಲ್ಲ"
+
+msgid "No min"
+msgstr "ಕನಿಷ್ಠ ಮಿತಿ ಇಲ್ಲ"
+
+msgid "No parking"
+msgstr "ಪಾರ್ಕಿಂಗ್ ಇಲ್ಲ"
+
+msgid "No properties match your filters"
+msgstr "ನಿಮ್ಮ ಫಿಲ್ಟರ್‌ಗಳಿಗೆ ಹೊಂದುವ ಆಸ್ತಿಗಳಿಲ್ಲ"
+
+msgid "Note for the visit (optional)"
+msgstr "ಭೇಟಿಗೆ ಟಿಪ್ಪಣಿ (ಐಚ್ಛಿಕ)"
+
+msgid "Notifications"
+msgstr "ಅಧಿಸೂಚನೆಗಳು"
+
+msgid "Notify"
+msgstr "ಸೂಚನೆ ಕಳುಹಿಸಿ"
+
+msgid "Notify me about new matching listings."
+msgstr "ಹೊಂದುವ ಹೊಸ ಜಾಹೀರಾತುಗಳು ಬಂದಾಗ ನನಗೆ ತಿಳಿಸಿ."
+
+msgid "Offensive or inappropriate content"
+msgstr "ಆಕ್ಷೇಪಾರ್ಹ ಅಥವಾ ಅನುಚಿತ ವಿಷಯ"
+
+msgid "Office"
+msgstr "ಕಚೇರಿ"
+
+msgid "Only listings with map coordinates are shown."
+msgstr "ನಕ್ಷೆ ಸ್ಥಾನ ಇರುವ ಜಾಹೀರಾತುಗಳನ್ನು ಮಾತ್ರ ತೋರಿಸಲಾಗಿದೆ."
+
+msgid "Open full tour & details"
+msgstr "ಪೂರ್ಣ ಪ್ರವಾಸ ಮತ್ತು ವಿವರಗಳನ್ನು ನೋಡಿ"
+
+msgid "Open in Google Maps"
+msgstr "ಗೂಗಲ್ ಮ್ಯಾಪ್ಸ್‌ನಲ್ಲಿ ತೆರೆಯಿರಿ"
+
+msgid "Open menu"
+msgstr "ಮೆನು ತೆರೆಯಿರಿ"
+
+msgid "Open photo %(n)s of %(total)s in full screen"
+msgstr "%(total)s ಫೋಟೋಗಳಲ್ಲಿ %(n)s ನೇ ಫೋಟೋವನ್ನು ಪೂರ್ಣ ಪರದೆಯಲ್ಲಿ ತೆರೆಯಿರಿ"
+
+msgid ""
+"Open the listing and use 'Report listing'. Our team reviews every report. "
+"Never pay a token amount before visiting the property and meeting the owner."
+msgstr ""
+"ಜಾಹೀರಾತನ್ನು ತೆರೆದು 'ವರದಿ ಮಾಡಿ' ಬಳಸಿ. ಪ್ರತಿ ವರದಿಯನ್ನು ನಮ್ಮ ತಂಡ "
+"ಪರಿಶೀಲಿಸುತ್ತದೆ. ಆಸ್ತಿಯನ್ನು ನೋಡಿ ಮಾಲೀಕರನ್ನು ಭೇಟಿಯಾಗುವ ಮೊದಲು ಟೋಕನ್ ಹಣ "
+"ಪಾವತಿಸಬೇಡಿ."
+
+msgid "Other"
+msgstr "ಇತರೆ"
+
+msgid "Overview"
+msgstr "ಸಾರಾಂಶ"
+
+msgid "Owner"
+msgstr "ಮಾಲೀಕರು"
+
+msgid "Owner listing"
+msgstr "ಮಾಲೀಕರ ಜಾಹೀರಾತು"
+
+msgid "Owner pricing"
+msgstr "ಮಾಲೀಕರ ದರಗಳು"
+
+msgid "Owners"
+msgstr "ಮಾಲೀಕರು"
+
+msgid ""
+"Owners and brokers choose who can see their phone number: everyone, signed-"
+"in users only, or nobody (enquiries through the website only). Exact street "
+"addresses are shown only when the owner allows it."
+msgstr ""
+"ತಮ್ಮ ಫೋನ್ ನಂಬರ್ ಯಾರು ನೋಡಬಹುದು ಎಂದು ಮಾಲೀಕರು ಮತ್ತು ಬ್ರೋಕರ್‌ಗಳೇ ಆಯ್ಕೆ "
+"ಮಾಡುತ್ತಾರೆ: ಎಲ್ಲರೂ, ಸೈನ್ ಇನ್ ಆದವರು ಮಾತ್ರ, ಅಥವಾ ಯಾರೂ ಇಲ್ಲ (ವೆಬ್‌ಸೈಟ್ ಮೂಲಕ "
+"ವಿಚಾರಣೆ ಮಾತ್ರ). ಮಾಲೀಕರು ಅನುಮತಿಸಿದಾಗ ಮಾತ್ರ ನಿಖರ ವಿಳಾಸ ತೋರಿಸಲಾಗುತ್ತದೆ."
+
+msgid "Owners choose who sees their number"
+msgstr "ತಮ್ಮ ಫೋನ್ ನಂಬರ್ ಯಾರು ನೋಡಬೇಕೆಂದು ಮಾಲೀಕರೇ ನಿರ್ಧರಿಸುತ್ತಾರೆ"
+
+msgid "PG & Rooms"
+msgstr "ಪಿಜಿ / ರೂಮ್"
+
+msgid "PG & rooms"
+msgstr "ಪಿಜಿ ಮತ್ತು ರೂಮುಗಳು"
+
+msgid "PG and rooms in Bangarpet"
+msgstr "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಪಿಜಿ ಮತ್ತು ರೂಮುಗಳು"
+
+msgid "Pagination"
+msgstr "ಪುಟಗಳು"
+
+msgid ""
+"Paid plans are purchased securely through Razorpay using UPI, cards or net "
+"banking. Your plan is activated only after the payment is verified on our "
+"server. We never store your card details."
+msgstr ""
+"ಪಾವತಿಸುವ ಯೋಜನೆಗಳನ್ನು Razorpay ಮೂಲಕ UPI, ಕಾರ್ಡ್ ಅಥವಾ ನೆಟ್ ಬ್ಯಾಂಕಿಂಗ್ ಬಳಸಿ "
+"ಸುರಕ್ಷಿತವಾಗಿ ಖರೀದಿಸಬಹುದು. ಪಾವತಿ ಪರಿಶೀಲನೆಯಾದ ನಂತರವೇ ಯೋಜನೆ ಸಕ್ರಿಯವಾಗುತ್ತದೆ. "
+"ನಿಮ್ಮ ಕಾರ್ಡ್ ವಿವರಗಳನ್ನು ನಾವು ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ."
+
+msgid "Parking"
+msgstr "ಪಾರ್ಕಿಂಗ್"
+
+msgid "Parking available"
+msgstr "ಪಾರ್ಕಿಂಗ್ ಲಭ್ಯ"
+
+msgid "Password"
+msgstr "ಪಾಸ್‌ವರ್ಡ್"
+
+msgid "Pause tour"
+msgstr "ಪ್ರವಾಸ ನಿಲ್ಲಿಸಿ"
+
+msgid "Paying guest accommodation and rooms for rent in Bangarpet."
+msgstr "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಪೇಯಿಂಗ್ ಗೆಸ್ಟ್ ವಸತಿ ಮತ್ತು ಬಾಡಿಗೆ ರೂಮುಗಳು."
+
+msgid "Pet friendly"
+msgstr "ಸಾಕುಪ್ರಾಣಿಗಳಿಗೆ ಅನುಮತಿ"
+
+msgid "Phone call"
+msgstr "ಫೋನ್ ಕರೆ"
+
+msgid "Photo %(n)s"
+msgstr "ಫೋಟೋ %(n)s"
+
+msgid "Photo gallery"
+msgstr "ಫೋಟೋ ಗ್ಯಾಲರಿ"
+
+msgid "Photo tour of %(title)s"
+msgstr "%(title)s ಫೋಟೋ ಪ್ರವಾಸ"
+
+msgid "Photos do not match the property"
+msgstr "ಫೋಟೋಗಳು ಆಸ್ತಿಗೆ ಹೊಂದುತ್ತಿಲ್ಲ"
+
+msgid ""
+"Photos, prices and details are checked before publishing, and again when key"
+" details change."
+msgstr ""
+"ಫೋಟೋಗಳು, ಬೆಲೆಗಳು ಮತ್ತು ವಿವರಗಳನ್ನು ಪ್ರಕಟಿಸುವ ಮೊದಲು ಹಾಗೂ ಮುಖ್ಯ ವಿವರಗಳು ಬದಲಾದಾಗ"
+" ಮತ್ತೆ ಪರಿಶೀಲಿಸಲಾಗುತ್ತದೆ."
+
+msgid "Pins are approximate unless the owner chose to show the exact address."
+msgstr ""
+"ಮಾಲೀಕರು ನಿಖರ ವಿಳಾಸ ತೋರಿಸಲು ಆಯ್ಕೆ ಮಾಡದ ಹೊರತು ನಕ್ಷೆಯ ಗುರುತುಗಳು ಅಂದಾಜು ಮಾತ್ರ."
+
+msgid "Please choose a reason for the report."
+msgstr "ದಯವಿಟ್ಟು ವರದಿಗೆ ಕಾರಣ ಆಯ್ಕೆ ಮಾಡಿ."
+
+msgid "Please correct the highlighted fields below."
+msgstr "ಕೆಳಗೆ ಗುರುತಿಸಿದ ಕ್ಷೇತ್ರಗಳನ್ನು ಸರಿಪಡಿಸಿ."
+
+msgid "Please give your search a name."
+msgstr "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹುಡುಕಾಟಕ್ಕೆ ಹೆಸರು ನೀಡಿ."
+
+msgid "Plots"
+msgstr "ನಿವೇಶನಗಳು"
+
+msgid "Popular areas"
+msgstr "ಜನಪ್ರಿಯ ಪ್ರದೇಶಗಳು"
+
+msgid "Posted"
+msgstr "ಪ್ರಕಟಿಸಿದ್ದು"
+
+msgid "Power backup"
+msgstr "ವಿದ್ಯುತ್ ಬ್ಯಾಕಪ್"
+
+msgid "Preferred contact method"
+msgstr "ಆದ್ಯತೆಯ ಸಂಪರ್ಕ ವಿಧಾನ"
+
+msgid "Preferred contact:"
+msgstr "ಆದ್ಯತೆಯ ಸಂಪರ್ಕ:"
+
+msgid "Preferred time"
+msgstr "ಆದ್ಯತೆಯ ಸಮಯ"
+
+msgid "Preferred visit date"
+msgstr "ಭೇಟಿಗೆ ಆದ್ಯತೆಯ ದಿನಾಂಕ"
+
+msgid ""
+"Preview - this listing is <strong>%(status)s</strong> and is not visible to "
+"the public."
+msgstr ""
+"ಮುನ್ನೋಟ - ಈ ಜಾಹೀರಾತು <strong>%(status)s</strong> ಸ್ಥಿತಿಯಲ್ಲಿದೆ ಮತ್ತು "
+"ಸಾರ್ವಜನಿಕರಿಗೆ ಕಾಣುವುದಿಲ್ಲ."
+
+msgid "Previous"
+msgstr "ಹಿಂದಿನ"
+
+msgid "Previous page"
+msgstr "ಹಿಂದಿನ ಪುಟ"
+
+msgid "Previous room"
+msgstr "ಹಿಂದಿನ ರೂಮ್"
+
+msgid "Price on request"
+msgstr "ಬೆಲೆಗಾಗಿ ವಿಚಾರಿಸಿ"
+
+msgid "Price: high to low"
+msgstr "ಬೆಲೆ: ಹೆಚ್ಚಿನಿಂದ ಕಡಿಮೆ"
+
+msgid "Price: low to high"
+msgstr "ಬೆಲೆ: ಕಡಿಮೆಯಿಂದ ಹೆಚ್ಚು"
+
+msgid "Privacy"
+msgstr "ಗೌಪ್ಯತೆ"
+
+msgid "Privacy protected"
+msgstr "ಗೌಪ್ಯತೆ ರಕ್ಷಿತ"
+
+msgid "Promotions"
+msgstr "ಪ್ರಚಾರಗಳು"
+
+msgid "Properties for rent in Bangarpet"
+msgstr "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಬಾಡಿಗೆಗೆ ಆಸ್ತಿಗಳು"
+
+msgid "Properties for sale in Bangarpet"
+msgstr "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಮಾರಾಟಕ್ಕೆ ಆಸ್ತಿಗಳು"
+
+msgid "Property ID"
+msgstr "ಆಸ್ತಿ ಸಂಖ್ಯೆ"
+
+msgid "Property age"
+msgstr "ಆಸ್ತಿಯ ವಯಸ್ಸು"
+
+msgid ""
+"Property decisions are big decisions. We put checks in place so you can "
+"focus on finding the right home."
+msgstr ""
+"ಆಸ್ತಿ ಕುರಿತ ನಿರ್ಧಾರಗಳು ದೊಡ್ಡ ನಿರ್ಧಾರಗಳು. ನೀವು ಸರಿಯಾದ ಮನೆಯನ್ನು ಹುಡುಕುವುದರ "
+"ಮೇಲೆ ಗಮನ ಹರಿಸಲು ನಾವು ಪರಿಶೀಲನೆಗಳನ್ನು ಮಾಡುತ್ತೇವೆ."
+
+msgid "Property details"
+msgstr "ಆಸ್ತಿಯ ವಿವರಗಳು"
+
+msgid "Property no longer available"
+msgstr "ಆಸ್ತಿ ಇನ್ನು ಲಭ್ಯವಿಲ್ಲ"
+
+msgid "Property owner"
+msgstr "ಆಸ್ತಿ ಮಾಲೀಕರು"
+
+msgid "Property type"
+msgstr "ಆಸ್ತಿಯ ಪ್ರಕಾರ"
+
+msgid "Property types"
+msgstr "ಆಸ್ತಿಯ ಪ್ರಕಾರಗಳು"
+
+msgid "Questions, answered"
+msgstr "ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಗಳು"
+
+msgid "Quick navigation"
+msgstr "ತ್ವರಿತ ಮೆನು"
+
+msgid "Railway Station Area"
+msgstr "ರೈಲು ನಿಲ್ದಾಣ ಪ್ರದೇಶ"
+
+msgid "Railway Station Area, Bangarpet"
+msgstr "ರೈಲು ನಿಲ್ದಾಣ ಪ್ರದೇಶ, ಬಂಗಾರಪೇಟೆ"
+
+msgid "Rainwater harvesting"
+msgstr "ಮಳೆನೀರು ಕೊಯ್ಲು"
+
+msgid "Ready to move / immediately"
+msgstr "ತಕ್ಷಣ ವಾಸಕ್ಕೆ ಸಿದ್ಧ"
+
+msgid "Real estate broker"
+msgstr "ರಿಯಲ್ ಎಸ್ಟೇಟ್ ಬ್ರೋಕರ್"
+
+msgid "Reason"
+msgstr "ಕಾರಣ"
+
+msgid "Recommended"
+msgstr "ಶಿಫಾರಸು"
+
+msgid ""
+"Register as a property owner or broker, then use 'List property' in your "
+"dashboard. The step-by-step form collects details, photos and pricing. Every"
+" listing is reviewed by our team before it goes live."
+msgstr ""
+"ಆಸ್ತಿ ಮಾಲೀಕರು ಅಥವಾ ಬ್ರೋಕರ್ ಆಗಿ ನೋಂದಾಯಿಸಿ, ನಂತರ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಲ್ಲಿ 'ಆಸ್ತಿ "
+"ಸೇರಿಸಿ' ಬಳಸಿ. ಹಂತ ಹಂತದ ಫಾರ್ಮ್ ವಿವರಗಳು, ಫೋಟೋಗಳು ಮತ್ತು ಬೆಲೆಯನ್ನು ಪಡೆಯುತ್ತದೆ. "
+"ಪ್ರತಿ ಜಾಹೀರಾತನ್ನು ಪ್ರಕಟಿಸುವ ಮೊದಲು ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸುತ್ತದೆ."
+
+msgid "Register as broker"
+msgstr "ಬ್ರೋಕರ್ ಆಗಿ ನೋಂದಾಯಿಸಿ"
+
+msgid "Remove filter"
+msgstr "ಫಿಲ್ಟರ್ ತೆಗೆದುಹಾಕಿ"
+
+msgid "Remove from saved"
+msgstr "ಉಳಿಸಿದ್ದರಿಂದ ತೆಗೆದುಹಾಕಿ"
+
+msgid "Removed from your favourites."
+msgstr "ನಿಮ್ಮ ಮೆಚ್ಚಿನವುಗಳಿಂದ ತೆಗೆದುಹಾಕಲಾಗಿದೆ."
+
+msgid "Rent"
+msgstr "ಬಾಡಿಗೆ"
+
+msgid "Rent or buy"
+msgstr "ಬಾಡಿಗೆ ಅಥವಾ ಖರೀದಿ"
+
+msgid "Report & act fast"
+msgstr "ವರದಿ ಮಾಡಿ, ತ್ವರಿತ ಕ್ರಮ"
+
+msgid "Report this listing"
+msgstr "ಈ ಜಾಹೀರಾತನ್ನು ವರದಿ ಮಾಡಿ"
+
+msgid "Request a time slot. You're notified as soon as the owner confirms."
+msgstr "ಭೇಟಿಯ ಸಮಯ ಕೇಳಿ. ಮಾಲೀಕರು ಖಚಿತಪಡಿಸಿದ ತಕ್ಷಣ ನಿಮಗೆ ತಿಳಿಸಲಾಗುತ್ತದೆ."
+
+msgid "Request a visit"
+msgstr "ಭೇಟಿಗೆ ವಿನಂತಿಸಿ"
+
+msgid "Required for brokers."
+msgstr "ಬ್ರೋಕರ್‌ಗಳಿಗೆ ಕಡ್ಡಾಯ."
+
+msgid "Residential Plot"
+msgstr "ವಸತಿ ನಿವೇಶನ"
+
+msgid "Reviewed listing"
+msgstr "ಪರಿಶೀಲಿಸಿದ ಜಾಹೀರಾತು"
+
+msgid "Rooms"
+msgstr "ರೂಮುಗಳು"
+
+msgid "Rooms & size"
+msgstr "ರೂಮುಗಳು ಮತ್ತು ಗಾತ್ರ"
+
+msgid "Rooms in this tour"
+msgstr "ಈ ಪ್ರವಾಸದಲ್ಲಿರುವ ರೂಮುಗಳು"
+
+msgid "Save"
+msgstr "ಉಳಿಸಿ"
+
+msgid "Save property"
+msgstr "ಆಸ್ತಿಯನ್ನು ಉಳಿಸಿ"
+
+msgid "Save search"
+msgstr "ಹುಡುಕಾಟ ಉಳಿಸಿ"
+
+msgid "Save this search"
+msgstr "ಈ ಹುಡುಕಾಟವನ್ನು ಉಳಿಸಿ"
+
+msgid "Saved"
+msgstr "ಉಳಿಸಲಾಗಿದೆ"
+
+msgid "Saved properties"
+msgstr "ಉಳಿಸಿದ ಆಸ್ತಿಗಳು"
+
+msgid "Saved to your favourites."
+msgstr "ನಿಮ್ಮ ಮೆಚ್ಚಿನವುಗಳಿಗೆ ಉಳಿಸಲಾಗಿದೆ."
+
+msgid "Search"
+msgstr "ಹುಡುಕಿ"
+
+msgid "Search filters"
+msgstr "ಹುಡುಕಾಟ ಫಿಲ್ಟರ್‌ಗಳು"
+
+msgid "Search properties"
+msgstr "ಆಸ್ತಿಗಳನ್ನು ಹುಡುಕಿ"
+
+msgid "Search properties in Bangarpet"
+msgstr "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಆಸ್ತಿಗಳನ್ನು ಹುಡುಕಿ"
+
+msgid "Search saved. Find it under Saved searches in your dashboard."
+msgstr ""
+"ಹುಡುಕಾಟ ಉಳಿಸಲಾಗಿದೆ. ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನ 'ಉಳಿಸಿದ ಹುಡುಕಾಟಗಳು' ವಿಭಾಗದಲ್ಲಿ ನೋಡಿ."
+
+msgid "Search verified rental and sale listings in Bangarpet, Kolar district."
+msgstr ""
+"ಕೋಲಾರ ಜಿಲ್ಲೆಯ ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಪರಿಶೀಲಿತ ಬಾಡಿಗೆ ಮತ್ತು ಮಾರಾಟ ಜಾಹೀರಾತುಗಳನ್ನು "
+"ಹುಡುಕಿ."
+
+msgid "Sections"
+msgstr "ವಿಭಾಗಗಳು"
+
+msgid "Security guard"
+msgstr "ಭದ್ರತಾ ಸಿಬ್ಬಂದಿ"
+
+msgid "See all new listings"
+msgstr "ಎಲ್ಲಾ ಹೊಸ ಜಾಹೀರಾತುಗಳನ್ನು ನೋಡಿ"
+
+msgid "See plans"
+msgstr "ಯೋಜನೆಗಳನ್ನು ನೋಡಿ"
+
+msgid "Semi-furnished"
+msgstr "ಭಾಗಶಃ ಪೀಠೋಪಕರಣ"
+
+msgid "Send"
+msgstr "ಕಳುಹಿಸಿ"
+
+msgid "Send message"
+msgstr "ಸಂದೇಶ ಕಳುಹಿಸಿ"
+
+msgid "Share"
+msgstr "ಹಂಚಿಕೊಳ್ಳಿ"
+
+msgid "Shops & Offices"
+msgstr "ಅಂಗಡಿಗಳು ಮತ್ತು ಕಚೇರಿಗಳು"
+
+msgid "Shops, offices and commercial spaces for rent or sale in Bangarpet."
+msgstr ""
+"ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಬಾಡಿಗೆ ಅಥವಾ ಮಾರಾಟಕ್ಕೆ ಅಂಗಡಿಗಳು, ಕಚೇರಿಗಳು ಮತ್ತು ವಾಣಿಜ್ಯ "
+"ಸ್ಥಳಗಳು."
+
+msgid "Show results"
+msgstr "ಫಲಿತಾಂಶಗಳನ್ನು ತೋರಿಸಿ"
+
+msgid "Sign in"
+msgstr "ಸೈನ್ ಇನ್"
+
+msgid "Sign in for WhatsApp"
+msgstr "ವಾಟ್ಸಾಪ್‌ಗಾಗಿ ಸೈನ್ ಇನ್ ಮಾಡಿ"
+
+msgid "Sign in to contact"
+msgstr "ಸಂಪರ್ಕಿಸಲು ಸೈನ್ ಇನ್ ಮಾಡಿ"
+
+msgid "Sign in to manage your enquiries, saved homes and listings."
+msgstr ""
+"ನಿಮ್ಮ ವಿಚಾರಣೆಗಳು, ಉಳಿಸಿದ ಮನೆಗಳು ಮತ್ತು ಜಾಹೀರಾತುಗಳನ್ನು ನಿರ್ವಹಿಸಲು ಸೈನ್ ಇನ್ "
+"ಮಾಡಿ."
+
+msgid "Sign in to report this listing"
+msgstr "ಈ ಜಾಹೀರಾತನ್ನು ವರದಿ ಮಾಡಲು ಸೈನ್ ಇನ್ ಮಾಡಿ"
+
+msgid "Sign in to request a visit"
+msgstr "ಭೇಟಿಗೆ ವಿನಂತಿಸಲು ಸೈನ್ ಇನ್ ಮಾಡಿ"
+
+msgid "Sign in to send an enquiry"
+msgstr "ವಿಚಾರಣೆ ಕಳುಹಿಸಲು ಸೈನ್ ಇನ್ ಮಾಡಿ"
+
+msgid "Sign in to view phone number"
+msgstr "ಫೋನ್ ನಂಬರ್ ನೋಡಲು ಸೈನ್ ಇನ್ ಮಾಡಿ"
+
+msgid "Sign out"
+msgstr "ಸೈನ್ ಔಟ್"
+
+msgid "Similar"
+msgstr "ಇದೇ ರೀತಿಯವು"
+
+msgid "Similar properties"
+msgstr "ಇದೇ ರೀತಿಯ ಆಸ್ತಿಗಳು"
+
+msgid "Simple & transparent"
+msgstr "ಸರಳ ಮತ್ತು ಪಾರದರ್ಶಕ"
+
+msgid "Skip to content"
+msgstr "ಮುಖ್ಯ ವಿಷಯಕ್ಕೆ ಹೋಗಿ"
+
+msgid "Sort"
+msgstr "ಜೋಡಿಸಿ"
+
+msgid "Sort by"
+msgstr "ಹೀಗೆ ಜೋಡಿಸಿ"
+
+msgid ""
+"Start free with one listing. Manage enquiries and visits from one dashboard "
+"and upgrade only when you need more."
+msgstr ""
+"ಒಂದು ಜಾಹೀರಾತಿನೊಂದಿಗೆ ಉಚಿತವಾಗಿ ಪ್ರಾರಂಭಿಸಿ. ವಿಚಾರಣೆಗಳು ಮತ್ತು ಭೇಟಿಗಳನ್ನು ಒಂದೇ "
+"ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಿಂದ ನಿರ್ವಹಿಸಿ, ಅಗತ್ಯವಿದ್ದಾಗ ಮಾತ್ರ ಅಪ್‌ಗ್ರೇಡ್ ಮಾಡಿ."
+
+msgid "Stay safe:"
+msgstr "ಸುರಕ್ಷಿತವಾಗಿರಿ:"
+
+msgid "Step %(n)s of %(total)s"
+msgstr "%(total)s ರಲ್ಲಿ %(n)s ನೇ ಹಂತ"
+
+msgid "Step room by room from home, then visit only the places that fit."
+msgstr ""
+"ಮನೆಯಿಂದಲೇ ಒಂದೊಂದು ರೂಮನ್ನು ನೋಡಿ, ನಿಮಗೆ ಸರಿಹೊಂದುವ ಸ್ಥಳಗಳಿಗೆ ಮಾತ್ರ ಭೇಟಿ ನೀಡಿ."
+
+msgid "Still have a question?"
+msgstr "ಇನ್ನೂ ಪ್ರಶ್ನೆ ಇದೆಯೇ?"
+
+msgid "Subject"
+msgstr "ವಿಷಯ"
+
+msgid "Submit report"
+msgstr "ವರದಿ ಸಲ್ಲಿಸಿ"
+
+msgid "Suspected fraud or scam"
+msgstr "ವಂಚನೆ ಅಥವಾ ಮೋಸದ ಅನುಮಾನ"
+
+msgid "Talk to owners and brokers directly, no middle desk"
+msgstr "ಮಧ್ಯವರ್ತಿಗಳಿಲ್ಲದೆ ಮಾಲೀಕರು ಮತ್ತು ಬ್ರೋಕರ್‌ಗಳೊಂದಿಗೆ ನೇರವಾಗಿ ಮಾತನಾಡಿ"
+
+msgid "Talk to us"
+msgstr "ನಮ್ಮೊಂದಿಗೆ ಮಾತನಾಡಿ"
+
+msgid "Tell us what's wrong (optional)"
+msgstr "ಏನು ತಪ್ಪಾಗಿದೆ ಎಂದು ತಿಳಿಸಿ (ಐಚ್ಛಿಕ)"
+
+msgid "Terms"
+msgstr "ನಿಯಮಗಳು"
+
+msgid ""
+"Thank you — a member of our team will reply soon. You can send another "
+"below."
+msgstr ""
+"ಧನ್ಯವಾದಗಳು — ನಮ್ಮ ತಂಡದ ಸದಸ್ಯರು ಶೀಘ್ರದಲ್ಲೇ ಉತ್ತರಿಸುತ್ತಾರೆ. ಬೇಕಿದ್ದರೆ ಕೆಳಗೆ "
+"ಮತ್ತೊಂದು ಸಂದೇಶ ಕಳುಹಿಸಬಹುದು."
+
+msgid "Thank you! Your message has been received. We'll get back to you soon."
+msgstr "ಧನ್ಯವಾದಗಳು! ನಿಮ್ಮ ಸಂದೇಶ ತಲುಪಿದೆ. ನಾವು ಶೀಘ್ರದಲ್ಲೇ ಉತ್ತರಿಸುತ್ತೇವೆ."
+
+msgid "Thank you. Our team will review this listing."
+msgstr "ಧನ್ಯವಾದಗಳು. ನಮ್ಮ ತಂಡ ಈ ಜಾಹೀರಾತನ್ನು ಪರಿಶೀಲಿಸುತ್ತದೆ."
+
+msgid "The map view is not available yet. Results are shown below."
+msgstr "ನಕ್ಷೆ ನೋಟ ಇನ್ನೂ ಲಭ್ಯವಿಲ್ಲ. ಫಲಿತಾಂಶಗಳನ್ನು ಕೆಳಗೆ ತೋರಿಸಲಾಗಿದೆ."
+
+msgid ""
+"The verified badge confirms identity documents were reviewed by our team; it"
+" is not a legal check of property title."
+msgstr ""
+"ಪರಿಶೀಲಿತ ಗುರುತು ಎಂದರೆ ಗುರುತಿನ ದಾಖಲೆಗಳನ್ನು ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸಿದೆ ಎಂದರ್ಥ; ಇದು "
+"ಆಸ್ತಿಯ ಮಾಲೀಕತ್ವದ ಕಾನೂನು ಪರಿಶೀಲನೆ ಅಲ್ಲ."
+
+msgid "This property has been rented out"
+msgstr "ಈ ಆಸ್ತಿಯನ್ನು ಬಾಡಿಗೆಗೆ ನೀಡಲಾಗಿದೆ"
+
+msgid "This property has been sold"
+msgstr "ಈ ಆಸ್ತಿ ಮಾರಾಟವಾಗಿದೆ"
+
+msgid "This property is not accepting enquiries."
+msgstr "ಈ ಆಸ್ತಿಗೆ ವಿಚಾರಣೆಗಳನ್ನು ಸ್ವೀಕರಿಸಲಾಗುತ್ತಿಲ್ಲ."
+
+msgid "Tour"
+msgstr "ನೋಡಿ"
+
+msgid "Town Centre"
+msgstr "ಪಟ್ಟಣ ಕೇಂದ್ರ"
+
+msgid "Town Centre, Bangarpet"
+msgstr "ಪಟ್ಟಣ ಕೇಂದ್ರ, ಬಂಗಾರಪೇಟೆ"
+
+msgid "Towns"
+msgstr "ಪಟ್ಟಣಗಳು"
+
+msgid "Track it"
+msgstr "ಅದರ ಸ್ಥಿತಿ ನೋಡಿ"
+
+msgid ""
+"Try widening your budget, choosing a nearby area, or clearing some filters. "
+"You can also save this search and check back later."
+msgstr ""
+"ಬಜೆಟ್ ಹೆಚ್ಚಿಸಿ, ಹತ್ತಿರದ ಪ್ರದೇಶ ಆಯ್ಕೆ ಮಾಡಿ ಅಥವಾ ಕೆಲವು ಫಿಲ್ಟರ್‌ಗಳನ್ನು "
+"ತೆಗೆದುಹಾಕಿ ನೋಡಿ. ಈ ಹುಡುಕಾಟವನ್ನು ಉಳಿಸಿ ನಂತರವೂ ನೋಡಬಹುದು."
+
+msgid "Two-wheeler"
+msgstr "ದ್ವಿಚಕ್ರ ವಾಹನ"
+
+msgid "Type"
+msgstr "ಪ್ರಕಾರ"
+
+msgid "Under construction"
+msgstr "ನಿರ್ಮಾಣ ಹಂತದಲ್ಲಿದೆ"
+
+msgid "Unfurnished"
+msgstr "ಪೀಠೋಪಕರಣ ಇಲ್ಲ"
+
+msgid "Used only to reply to you"
+msgstr "ನಿಮಗೆ ಉತ್ತರಿಸಲು ಮಾತ್ರ ಬಳಸಲಾಗುತ್ತದೆ"
+
+msgid "Verified"
+msgstr "ಪರಿಶೀಲಿತ"
+
+msgid "Verified agents"
+msgstr "ಪರಿಶೀಲಿತ ಏಜೆಂಟ್‌ಗಳು"
+
+msgid "Verified agents will appear here"
+msgstr "ಪರಿಶೀಲಿತ ಏಜೆಂಟ್‌ಗಳು ಇಲ್ಲಿ ಕಾಣಿಸುತ್ತಾರೆ"
+
+msgid "Verified broker"
+msgstr "ಪರಿಶೀಲಿತ ಬ್ರೋಕರ್"
+
+msgid "Verified owner"
+msgstr "ಪರಿಶೀಲಿತ ಮಾಲೀಕ"
+
+msgid "Verified owners & brokers"
+msgstr "ಪರಿಶೀಲಿತ ಮಾಲೀಕರು ಮತ್ತು ಬ್ರೋಕರ್‌ಗಳು"
+
+msgid "Verified owners/brokers only"
+msgstr "ಪರಿಶೀಲಿತ ಮಾಲೀಕರು/ಬ್ರೋಕರ್‌ಗಳು ಮಾತ್ರ"
+
+msgid "Verified partners"
+msgstr "ಪರಿಶೀಲಿತ ಪಾಲುದಾರರು"
+
+msgid "Video tour"
+msgstr "ವೀಡಿಯೊ ಪ್ರವಾಸ"
+
+msgid "Video tour available"
+msgstr "ವೀಡಿಯೊ ಪ್ರವಾಸ ಲಭ್ಯವಿದೆ"
+
+msgid "Video tour of %(title)s"
+msgstr "%(title)s ವೀಡಿಯೊ ಪ್ರವಾಸ"
+
+msgid "Video walkthrough"
+msgstr "ವೀಡಿಯೊ ಪ್ರವಾಸ"
+
+msgid "View %(n)s listings by this broker"
+msgstr "ಈ ಬ್ರೋಕರ್‌ನ %(n)s ಜಾಹೀರಾತುಗಳನ್ನು ನೋಡಿ"
+
+msgid "View %(n)s listings by this owner"
+msgstr "ಈ ಮಾಲೀಕರ %(n)s ಜಾಹೀರಾತುಗಳನ್ನು ನೋಡಿ"
+
+msgid "View %(title)s"
+msgstr "%(title)s ನೋಡಿ"
+
+msgid "View all %(total)s photos"
+msgstr "ಎಲ್ಲಾ %(total)s ಫೋಟೋಗಳನ್ನು ನೋಡಿ"
+
+msgid "View all listings"
+msgstr "ಎಲ್ಲಾ ಜಾಹೀರಾತುಗಳನ್ನು ನೋಡಿ"
+
+msgid "View area on Google Maps"
+msgstr "ಪ್ರದೇಶವನ್ನು ಗೂಗಲ್ ಮ್ಯಾಪ್ಸ್‌ನಲ್ಲಿ ನೋಡಿ"
+
+msgid "View mode"
+msgstr "ನೋಟದ ವಿಧ"
+
+msgid "View profile & listings"
+msgstr "ಪ್ರೊಫೈಲ್ ಮತ್ತು ಜಾಹೀರಾತುಗಳನ್ನು ನೋಡಿ"
+
+msgid "Virtual tour"
+msgstr "ವರ್ಚುವಲ್ ಪ್ರವಾಸ"
+
+msgid "Visit"
+msgstr "ಭೇಟಿ"
+
+msgid "Visit & contact"
+msgstr "ಭೇಟಿ ಮತ್ತು ಸಂಪರ್ಕ"
+
+msgid "Visit requested"
+msgstr "ಭೇಟಿಗೆ ವಿನಂತಿಸಲಾಗಿದೆ"
+
+msgid "Visit scheduled"
+msgstr "ಭೇಟಿ ನಿಗದಿಯಾಗಿದೆ"
+
+msgid "Walk through before you visit"
+msgstr "ಭೇಟಿ ನೀಡುವ ಮೊದಲು ಒಳಗೆ ನೋಡಿ"
+
+msgid "Walk through photo and video tours to shortlist without wasted trips."
+msgstr "ಫೋಟೋ ಮತ್ತು ವೀಡಿಯೊ ಪ್ರವಾಸಗಳ ಮೂಲಕ ನೋಡಿ, ಅನಗತ್ಯ ಓಡಾಟವಿಲ್ಲದೆ ಆಯ್ಕೆ ಮಾಡಿ."
+
+msgid "Wardrobes"
+msgstr "ವಾರ್ಡ್‌ರೋಬ್‌ಗಳು"
+
+msgid "Watch video walkthrough"
+msgstr "ವೀಡಿಯೊ ನೋಡಿ"
+
+msgid ""
+"We focus on Bangarpet and nearby towns in Kolar district such as KGF, Kolar,"
+" Malur, Budikote and Kamasamudra."
+msgstr ""
+"ನಾವು ಬಂಗಾರಪೇಟೆ ಮತ್ತು ಕೋಲಾರ ಜಿಲ್ಲೆಯ ಹತ್ತಿರದ ಪಟ್ಟಣಗಳಾದ ಕೆಜಿಎಫ್, ಕೋಲಾರ, ಮಾಲೂರು,"
+" ಬೂದಿಕೋಟೆ ಮತ್ತು ಕಾಮಸಮುದ್ರದ ಮೇಲೆ ಗಮನ ಹರಿಸುತ್ತೇವೆ."
+
+msgid "We're here to help"
+msgstr "ಸಹಾಯಕ್ಕೆ ನಾವು ಸಿದ್ಧ"
+
+msgid ""
+"We're onboarding owners and brokers in Bangarpet. Be among the first to list"
+" your property - it's free to start."
+msgstr ""
+"ಬಂಗಾರಪೇಟೆಯ ಮಾಲೀಕರು ಮತ್ತು ಬ್ರೋಕರ್‌ಗಳನ್ನು ನಾವು ಸೇರಿಸುತ್ತಿದ್ದೇವೆ. ನಿಮ್ಮ "
+"ಆಸ್ತಿಯನ್ನು ಮೊದಲು ಪಟ್ಟಿ ಮಾಡುವವರಲ್ಲಿ ಒಬ್ಬರಾಗಿ - ಪ್ರಾರಂಭಿಸುವುದು ಉಚಿತ."
+
+msgid "Website enquiry"
+msgstr "ವೆಬ್‌ಸೈಟ್ ಮೂಲಕ ವಿಚಾರಣೆ"
+
+msgid "Welcome back"
+msgstr "ಮತ್ತೆ ಸ್ವಾಗತ"
+
+msgid "What are you looking for?"
+msgstr "ನೀವು ಏನನ್ನು ಹುಡುಕುತ್ತಿದ್ದೀರಿ?"
+
+msgid "What does the 'Verified' badge mean?"
+msgstr "'ಪರಿಶೀಲಿತ' ಗುರುತು ಎಂದರೇನು?"
+
+msgid "WhatsApp"
+msgstr "ವಾಟ್ಸಾಪ್"
+
+msgid "WhatsApp enquiry"
+msgstr "ವಾಟ್ಸಾಪ್ ಮೂಲಕ ವಿಚಾರಿಸಿ"
+
+msgid "Which areas do you cover?"
+msgstr "ನೀವು ಯಾವ ಪ್ರದೇಶಗಳಲ್ಲಿ ಸೇವೆ ನೀಡುತ್ತೀರಿ?"
+
+msgid "Who can see my phone number?"
+msgstr "ನನ್ನ ಫೋನ್ ನಂಬರ್ ಯಾರು ನೋಡಬಹುದು?"
+
+msgid "Why people use Bangarpet Property Hub"
+msgstr "ಜನರು ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್ ಅನ್ನು ಏಕೆ ಬಳಸುತ್ತಾರೆ"
+
+msgid "Wi-Fi"
+msgstr "ವೈ-ಫೈ"
+
+msgid "Years"
+msgstr "ವರ್ಷಗಳು"
+
+msgid "Yes"
+msgstr "ಹೌದು"
+
+msgid ""
+"Yes. Tenants and buyers can search, save favourites, send enquiries and "
+"request visits for free."
+msgstr ""
+"ಹೌದು. ಬಾಡಿಗೆದಾರರು ಮತ್ತು ಖರೀದಿದಾರರು ಉಚಿತವಾಗಿ ಹುಡುಕಬಹುದು, ಇಷ್ಟವಾದವನ್ನು "
+"ಉಳಿಸಬಹುದು, ವಿಚಾರಣೆ ಕಳುಹಿಸಬಹುದು ಮತ್ತು ಭೇಟಿಗೆ ವಿನಂತಿಸಬಹುದು."
+
+msgid "You already have an active visit request for this property."
+msgstr "ಈ ಆಸ್ತಿಗೆ ನಿಮ್ಮ ಭೇಟಿ ವಿನಂತಿ ಈಗಾಗಲೇ ಚಾಲ್ತಿಯಲ್ಲಿದೆ."
+
+msgid "You already have an open enquiry for this property."
+msgstr "ಈ ಆಸ್ತಿಗೆ ನಿಮ್ಮ ವಿಚಾರಣೆ ಈಗಾಗಲೇ ಚಾಲ್ತಿಯಲ್ಲಿದೆ."
+
+msgid ""
+"You already have an open enquiry for this property. Track it in your "
+"dashboard."
+msgstr ""
+"ಈ ಆಸ್ತಿಗೆ ನಿಮ್ಮ ವಿಚಾರಣೆ ಈಗಾಗಲೇ ಚಾಲ್ತಿಯಲ್ಲಿದೆ. ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಲ್ಲಿ ಅದರ ಸ್ಥಿತಿ"
+" ನೋಡಿ."
+
+msgid "You can keep up to 20 saved searches. Delete one to add another."
+msgstr "ನೀವು 20 ಹುಡುಕಾಟಗಳವರೆಗೆ ಉಳಿಸಬಹುದು. ಹೊಸದನ್ನು ಸೇರಿಸಲು ಒಂದನ್ನು ಅಳಿಸಿ."
+
+msgid "You cannot enquire about your own listing."
+msgstr "ನಿಮ್ಮದೇ ಜಾಹೀರಾತಿನ ಬಗ್ಗೆ ವಿಚಾರಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ."
+
+msgid "You cannot report your own listing."
+msgstr "ನಿಮ್ಮದೇ ಜಾಹೀರಾತನ್ನು ವರದಿ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ."
+
+msgid "You have already reported this listing. Our team is reviewing it."
+msgstr "ನೀವು ಈಗಾಗಲೇ ಈ ಜಾಹೀರಾತನ್ನು ವರದಿ ಮಾಡಿದ್ದೀರಿ. ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸುತ್ತಿದೆ."
+
+msgid "You have an open enquiry (%(status)s)."
+msgstr "ನಿಮ್ಮ ವಿಚಾರಣೆ ಚಾಲ್ತಿಯಲ್ಲಿದೆ (%(status)s)."
+
+msgid "You may also like"
+msgstr "ನಿಮಗೆ ಇವೂ ಇಷ್ಟವಾಗಬಹುದು"
+
+msgid "You've sent many enquiries in a short time. Please try again later."
+msgstr ""
+"ನೀವು ಕಡಿಮೆ ಸಮಯದಲ್ಲಿ ಹಲವು ವಿಚಾರಣೆಗಳನ್ನು ಕಳುಹಿಸಿದ್ದೀರಿ. ದಯವಿಟ್ಟು ನಂತರ "
+"ಪ್ರಯತ್ನಿಸಿ."
+
+msgid "You've sent several messages recently. Please try again later."
+msgstr ""
+"ನೀವು ಇತ್ತೀಚೆಗೆ ಹಲವು ಸಂದೇಶಗಳನ್ನು ಕಳುಹಿಸಿದ್ದೀರಿ. ದಯವಿಟ್ಟು ನಂತರ ಪ್ರಯತ್ನಿಸಿ."
+
+msgid "You've sent several reports recently. Please try again later."
+msgstr ""
+"ನೀವು ಇತ್ತೀಚೆಗೆ ಹಲವು ವರದಿಗಳನ್ನು ಕಳುಹಿಸಿದ್ದೀರಿ. ದಯವಿಟ್ಟು ನಂತರ ಪ್ರಯತ್ನಿಸಿ."
+
+msgid "Your enquiry has been sent. The owner/broker will contact you soon."
+msgstr ""
+"ನಿಮ್ಮ ವಿಚಾರಣೆಯನ್ನು ಕಳುಹಿಸಲಾಗಿದೆ. ಮಾಲೀಕರು/ಬ್ರೋಕರ್ ಶೀಘ್ರದಲ್ಲೇ ನಿಮ್ಮನ್ನು "
+"ಸಂಪರ್ಕಿಸುತ್ತಾರೆ."
+
+msgid "Your name"
+msgstr "ನಿಮ್ಮ ಹೆಸರು"
+
+msgid ""
+"Your name, phone and message will be shared with the owner/broker of this "
+"listing."
+msgstr ""
+"ನಿಮ್ಮ ಹೆಸರು, ಫೋನ್ ಮತ್ತು ಸಂದೇಶವನ್ನು ಈ ಜಾಹೀರಾತಿನ ಮಾಲೀಕರು/ಬ್ರೋಕರ್‌ಗೆ "
+"ಹಂಚಿಕೊಳ್ಳಲಾಗುತ್ತದೆ."
+
+msgid "Your profile here"
+msgstr "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಇಲ್ಲಿ"
+
+msgid ""
+"Your visit request has been sent. You'll be notified when the owner confirms"
+" a time."
+msgstr ""
+"ನಿಮ್ಮ ಭೇಟಿ ವಿನಂತಿಯನ್ನು ಕಳುಹಿಸಲಾಗಿದೆ. ಮಾಲೀಕರು ಸಮಯ ಖಚಿತಪಡಿಸಿದಾಗ ನಿಮಗೆ "
+"ತಿಳಿಸಲಾಗುತ್ತದೆ."
+
+msgid "acre"
+msgstr "ಎಕರೆ"
+
+msgid "approx."
+msgstr "ಅಂದಾಜು"
+
+msgid "bath"
+msgstr "ಸ್ನಾನಗೃಹ"
+
+msgid "exact address shared by the owner on request"
+msgstr "ವಿನಂತಿಸಿದರೆ ಮಾಲೀಕರು ನಿಖರ ವಿಳಾಸ ಹಂಚಿಕೊಳ್ಳುತ್ತಾರೆ"
+
+msgid "gunta"
+msgstr "ಗುಂಟೆ"
+
+msgid "month"
+msgstr "ತಿಂಗಳು"
+
+msgid ""
+"never pay a token or deposit before visiting the property and checking the "
+"owner's documents."
+msgstr ""
+"ಆಸ್ತಿಯನ್ನು ನೋಡಿ ಮಾಲೀಕರ ದಾಖಲೆಗಳನ್ನು ಪರಿಶೀಲಿಸುವ ಮೊದಲು ಯಾವುದೇ ಟೋಕನ್ ಅಥವಾ ಮುಂಗಡ "
+"ಹಣ ಪಾವತಿಸಬೇಡಿ."
+
+msgid "no longer available"
+msgstr "ಇನ್ನು ಲಭ್ಯವಿಲ್ಲ"
+
+msgid "page %(n)s"
+msgstr "ಪುಟ %(n)s"
+
+msgid "properties in Bangarpet"
+msgstr "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಆಸ್ತಿಗಳು"
+
+msgid "room"
+msgstr "ರೂಮ್"
+
+msgid "rooms"
+msgstr "ರೂಮುಗಳು"
+
+msgid "sq. ft"
+msgstr "ಚ.ಅಡಿ"
+
+msgid "sq. yd"
+msgstr "ಚ.ಗಜ"
+
+msgid "sq.ft"
+msgstr "ಚ.ಅಡಿ"
+
+msgid ""
+"“Verified” means identity documents were reviewed by our team. It is not a "
+"legal check of property title."
+msgstr ""
+"“ಪರಿಶೀಲಿತ” ಎಂದರೆ ಗುರುತಿನ ದಾಖಲೆಗಳನ್ನು ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸಿದೆ ಎಂದರ್ಥ. ಇದು ಆಸ್ತಿಯ"
+" ಮಾಲೀಕತ್ವದ ಕಾನೂನು ಪರಿಶೀಲನೆ ಅಲ್ಲ."
+
+msgid "%(counter)s listing"
+msgid_plural "%(counter)s listings"
+msgstr[0] "%(counter)s ಜಾಹೀರಾತು"
+msgstr[1] "%(counter)s ಜಾಹೀರಾತುಗಳು"
+
+msgid "%(counter)s live listing"
+msgid_plural "%(counter)s live listings"
+msgstr[0] "%(counter)s ಸಕ್ರಿಯ ಜಾಹೀರಾತು"
+msgstr[1] "%(counter)s ಸಕ್ರಿಯ ಜಾಹೀರಾತುಗಳು"
+
+msgid "%(counter)s property"
+msgid_plural "%(counter)s properties"
+msgstr[0] "%(counter)s ಆಸ್ತಿ"
+msgstr[1] "%(counter)s ಆಸ್ತಿಗಳು"
+
+msgid "%(counter)s verified partner"
+msgid_plural "%(counter)s verified partners"
+msgstr[0] "%(counter)s ಪರಿಶೀಲಿತ ಪಾಲುದಾರ"
+msgstr[1] "%(counter)s ಪರಿಶೀಲಿತ ಪಾಲುದಾರರು"
+
+msgid "%(counter)s view"
+msgid_plural "%(counter)s views"
+msgstr[0] "%(counter)s ವೀಕ್ಷಣೆ"
+msgstr[1] "%(counter)s ವೀಕ್ಷಣೆಗಳು"
+
+msgid "%(counter)s year"
+msgid_plural "%(counter)s years"
+msgstr[0] "%(counter)s ವರ್ಷ"
+msgstr[1] "%(counter)s ವರ್ಷಗಳು"
+
+msgid "today"
+msgstr "ಇಂದು"
+
+msgid "yesterday"
+msgstr "ನಿನ್ನೆ"
+
+msgid "tomorrow"
+msgstr "ನಾಳೆ"
+
+msgid "now"
+msgstr "ಈಗ"
+
+msgid "%(delta)s ago"
+msgstr "%(delta)s ಹಿಂದೆ"
+
+msgctxt "naturaltime"
+msgid "%(delta)s ago"
+msgstr "%(delta)s ಹಿಂದೆ"
+
+msgid "%(delta)s from now"
+msgstr "%(delta)s ನಂತರ"
+
+msgctxt "naturaltime"
+msgid "%(delta)s from now"
+msgstr "%(delta)s ನಂತರ"
+
+msgid "a second ago"
+msgid_plural "%(count)s seconds ago"
+msgstr[0] "ಒಂದು ಸೆಕೆಂಡ್ ಹಿಂದೆ"
+msgstr[1] "%(count)s ಸೆಕೆಂಡ್‌ಗಳ ಹಿಂದೆ"
+
+msgid "a minute ago"
+msgid_plural "%(count)s minutes ago"
+msgstr[0] "ಒಂದು ನಿಮಿಷದ ಹಿಂದೆ"
+msgstr[1] "%(count)s ನಿಮಿಷಗಳ ಹಿಂದೆ"
+
+msgid "an hour ago"
+msgid_plural "%(count)s hours ago"
+msgstr[0] "ಒಂದು ಗಂಟೆಯ ಹಿಂದೆ"
+msgstr[1] "%(count)s ಗಂಟೆಗಳ ಹಿಂದೆ"
+
+msgid "a second from now"
+msgid_plural "%(count)s seconds from now"
+msgstr[0] "ಒಂದು ಸೆಕೆಂಡ್ ನಂತರ"
+msgstr[1] "%(count)s ಸೆಕೆಂಡ್‌ಗಳ ನಂತರ"
+
+msgid "a minute from now"
+msgid_plural "%(count)s minutes from now"
+msgstr[0] "ಒಂದು ನಿಮಿಷದ ನಂತರ"
+msgstr[1] "%(count)s ನಿಮಿಷಗಳ ನಂತರ"
+
+msgid "an hour from now"
+msgid_plural "%(count)s hours from now"
+msgstr[0] "ಒಂದು ಗಂಟೆಯ ನಂತರ"
+msgstr[1] "%(count)s ಗಂಟೆಗಳ ನಂತರ"
+
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] "%(num)d ವರ್ಷ"
+msgstr[1] "%(num)d ವರ್ಷಗಳು"
+
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] "%(num)d ತಿಂಗಳು"
+msgstr[1] "%(num)d ತಿಂಗಳುಗಳು"
+
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] "%(num)d ವಾರ"
+msgstr[1] "%(num)d ವಾರಗಳು"
+
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] "%(num)d ದಿನ"
+msgstr[1] "%(num)d ದಿನಗಳು"
+
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] "%(num)d ಗಂಟೆ"
+msgstr[1] "%(num)d ಗಂಟೆಗಳು"
+
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] "%(num)d ನಿಮಿಷ"
+msgstr[1] "%(num)d ನಿಮಿಷಗಳು"
+
+msgctxt "naturaltime-past"
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] "%(num)d ವರ್ಷದ"
+msgstr[1] "%(num)d ವರ್ಷಗಳ"
+
+msgctxt "naturaltime-past"
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] "%(num)d ತಿಂಗಳ"
+msgstr[1] "%(num)d ತಿಂಗಳುಗಳ"
+
+msgctxt "naturaltime-past"
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] "%(num)d ವಾರದ"
+msgstr[1] "%(num)d ವಾರಗಳ"
+
+msgctxt "naturaltime-past"
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] "%(num)d ದಿನದ"
+msgstr[1] "%(num)d ದಿನಗಳ"
+
+msgctxt "naturaltime-past"
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] "%(num)d ಗಂಟೆಯ"
+msgstr[1] "%(num)d ಗಂಟೆಗಳ"
+
+msgctxt "naturaltime-past"
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] "%(num)d ನಿಮಿಷದ"
+msgstr[1] "%(num)d ನಿಮಿಷಗಳ"
+
+msgctxt "naturaltime-future"
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] "%(num)d ವರ್ಷದ"
+msgstr[1] "%(num)d ವರ್ಷಗಳ"
+
+msgctxt "naturaltime-future"
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] "%(num)d ತಿಂಗಳ"
+msgstr[1] "%(num)d ತಿಂಗಳುಗಳ"
+
+msgctxt "naturaltime-future"
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] "%(num)d ವಾರದ"
+msgstr[1] "%(num)d ವಾರಗಳ"
+
+msgctxt "naturaltime-future"
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] "%(num)d ದಿನದ"
+msgstr[1] "%(num)d ದಿನಗಳ"
+
+msgctxt "naturaltime-future"
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] "%(num)d ಗಂಟೆಯ"
+msgstr[1] "%(num)d ಗಂಟೆಗಳ"
+
+msgctxt "naturaltime-future"
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] "%(num)d ನಿಮಿಷದ"
+msgstr[1] "%(num)d ನಿಮಿಷಗಳ"

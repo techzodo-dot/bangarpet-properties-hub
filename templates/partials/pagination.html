@@ -1,8 +1,8 @@
-{% if page_obj.has_other_pages %}
-<nav class="mt-4" aria-label="Pagination">
+{% load i18n %}{% if page_obj.has_other_pages %}
+<nav class="mt-4" aria-label="{% translate "Pagination" %}">
   <ul class="pagination justify-content-center flex-wrap gap-1">
     {% if page_obj.has_previous %}
-      <li class="page-item"><a class="page-link rounded-3" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}" rel="prev" aria-label="Previous page"><i class="bi bi-chevron-left"></i></a></li>
+      <li class="page-item"><a class="page-link rounded-3" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}" rel="prev" aria-label="{% translate "Previous page" %}"><i class="bi bi-chevron-left"></i></a></li>
     {% endif %}
     {% for num in page_obj.paginator.get_elided_page_range %}
       {% if num == page_obj.number %}
@@ -14,7 +14,7 @@
       {% endif %}
     {% endfor %}
     {% if page_obj.has_next %}
-      <li class="page-item"><a class="page-link rounded-3" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}" rel="next" aria-label="Next page"><i class="bi bi-chevron-right"></i></a></li>
+      <li class="page-item"><a class="page-link rounded-3" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}" rel="next" aria-label="{% translate "Next page" %}"><i class="bi bi-chevron-right"></i></a></li>
     {% endif %}
   </ul>
 </nav>

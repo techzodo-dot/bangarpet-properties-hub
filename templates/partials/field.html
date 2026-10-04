@@ -1,4 +1,4 @@
-{% if field.is_hidden %}{{ field }}{% else %}
+{% load bph %}{% if field.is_hidden %}{{ field }}{% else %}
 <div class="{{ wrapper_class|default:'mb-3' }}">
   {% if field.widget_type == 'checkbox' %}
     <div class="form-check">
@@ -10,7 +10,7 @@
     {% if field.widget_type == 'radioselect' %}
       <div class="choice-tiles" role="radiogroup">{% for radio in field %}<label for="{{ radio.id_for_label }}">{{ radio.tag }} <span>{{ radio.choice_label }}</span></label>{% endfor %}</div>
     {% elif field.widget_type == 'checkboxselectmultiple' %}
-      <div class="amenity-grid">{% for cb in field %}<label for="{{ cb.id_for_label }}">{{ cb.tag }} <span>{{ cb.choice_label }}</span></label>{% endfor %}</div>
+      <div class="amenity-grid">{% for cb in field %}<label for="{{ cb.id_for_label }}">{{ cb.tag }} <span>{{ cb.choice_label|tr }}</span></label>{% endfor %}</div>
     {% else %}
       {% if prefix_text %}<div class="input-group"><span class="input-group-text">{{ prefix_text }}</span>{{ field }}</div>{% else %}{{ field }}{% endif %}
     {% endif %}

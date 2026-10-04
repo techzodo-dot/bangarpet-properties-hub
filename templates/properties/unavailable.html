@@ -1,14 +1,15 @@
 {% extends "base.html" %}
-{% block title %}{{ prop.title }} - no longer available | {{ site.site_name }}{% endblock %}
+{% load i18n %}
+{% block title %}{{ prop.title }} - {% translate "no longer available" %} | {{ site.site_name }}{% endblock %}
 {% block robots %}<meta name="robots" content="noindex, follow">{% endblock %}
 {% block content %}
 <div class="container py-5 text-center">
   <i class="bi bi-house-check display-4 text-navy"></i>
-  <h1 class="h3 mt-3">This property has been {% if prop.status == 'rented' %}rented out{% else %}sold{% endif %}</h1>
-  <p class="text-muted">{{ prop.title }} is no longer available. Here are other options you might like.</p>
+  <h1 class="h3 mt-3">{% if prop.status == 'rented' %}{% translate "This property has been rented out" %}{% else %}{% translate "This property has been sold" %}{% endif %}</h1>
+  <p class="text-muted">{% blocktranslate with title=prop.title %}{{ title }} is no longer available. Here are other options you might like.{% endblocktranslate %}</p>
   <div class="d-flex gap-2 justify-content-center">
-    <a class="btn btn-primary" href="{{ prop.category.get_absolute_url }}?purpose={{ prop.purpose }}">Browse similar {{ prop.category.name|lower }}</a>
-    <a class="btn btn-soft" href="{% url 'properties:search' %}">All properties</a>
+    <a class="btn btn-primary" href="{{ prop.category.get_absolute_url }}?purpose={{ prop.purpose }}">{% translate "Browse similar properties" %}</a>
+    <a class="btn btn-soft" href="{% url 'properties:search' %}">{% translate "All properties" %}</a>
   </div>
 </div>
 {% endblock %}

@@ -7,11 +7,12 @@ from django.template import loader
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import cache_page
+from django.utils.translation import gettext as _
 from django.views.decorators.http import require_GET
 
 from accounts.models import BrokerProfile, OwnerProfile, Role, VerificationStatus
 from core import ratelimit
-from core.faq import FAQS
+from core.faq import translated_faqs
 from core.forms import ContactForm
 from core.models import Advertisement, Banner
 from notifications.models import Notification
@@ -76,7 +77,7 @@ def home(request):
         "agents": agents,
         "banners_top": Banner.objects.live().filter(placement=Banner.Placement.HOME_TOP)[:3],
         "banners_middle": Banner.objects.live().filter(placement=Banner.Placement.HOME_MIDDLE)[:2],
-        "faqs": FAQS[:6],
+        "faqs": translated_faqs()[:6],
         "favourite_ids": favourite_ids(request.user),
         "contact_form": ContactForm(),
         "contact_sent": request.GET.get("sent") == "1",
@@ -94,7 +95,7 @@ def about(request):
 
 
 def faq(request):
-    return render(request, "core/faq.html", {"faqs": FAQS})
+    return render(request, "core/faq.html", {"faqs": translated_faqs()})
 
 
 def privacy(request):
@@ -113,7 +114,7 @@ def contact(request):
     form = ContactForm(request.POST or None)
     if request.method == "POST":
         if not ratelimit.check_and_hit("contact", ratelimit.get_client_ip(request)):
-            messages.error(request, "You've sent several messages recently. Please try again later.")
+            messages.error(request, _("You've sent several messages recently. Please try again later."))
         elif form.is_valid():
             msg = form.save(commit=False)
             msg.ip_address = ratelimit.get_client_ip(request)
@@ -122,7 +123,7 @@ def contact(request):
             if request.POST.get("source") == "home":
                 # Sent from the homepage form: return to it and confirm in place.
                 return redirect(reverse("core:home") + "?sent=1#contact")
-            messages.success(request, "Thank you! Your message has been received. We'll get back to you soon.")
+            messages.success(request, _("Thank you! Your message has been received. We'll get back to you soon."))
             return redirect("core:contact")
     return render(request, "core/contact.html", {"form": form})
 
@@ -142,6 +143,7 @@ def robots_txt(request):
         "Disallow: /notifications/",
         "Disallow: /login/",
         "Disallow: /admin-login/",
+        "Disallow: /i18n/",
         "Disallow: /register/",
         "Disallow: /*?*sort=",
         "Allow: /",

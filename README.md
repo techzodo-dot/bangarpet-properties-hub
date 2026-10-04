@@ -60,6 +60,17 @@ It opens full-screen with its own icon and shows a friendly offline page without
 The service worker (`/sw.js`) caches only static files (CSS, JS, fonts, icons); pages are always loaded
 fresh, so private dashboards are never stored on the device. Installation requires HTTPS.
 
+## Kannada (ಕನ್ನಡ) language
+
+Customers can switch the public website between English and Kannada with the **ಕನ್ನಡ / English** button
+in the header and footer; phones set to Kannada get Kannada automatically. Dashboards and Management stay
+in English. Listing titles and descriptions are shown exactly as owners wrote them.
+
+To change or add Kannada text: edit `locale/kn_translations.py`, then run
+`pip install polib && python scripts/build_translations.py` and commit both files in `locale/kn/LC_MESSAGES/`.
+The test `core/tests/test_kannada.py` fails if a public page has text without a Kannada translation, and the
+build script lists exactly which phrases are missing.
+
 ## Running the tests
 
 ```bash

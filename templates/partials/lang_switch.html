@@ -1,0 +1,9 @@
+{% load i18n %}{% get_current_language as LANG %}
+<form class="lang-switch{% if extra_class %} {{ extra_class }}{% endif %}" action="{% url 'set_language' %}" method="post">{% csrf_token %}
+  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+  {% if LANG == "kn" %}
+  <button class="lang-btn" type="submit" name="language" value="en" lang="en" title="Switch to English"><i class="bi bi-translate" aria-hidden="true"></i><span>English</span></button>
+  {% else %}
+  <button class="lang-btn" type="submit" name="language" value="kn" lang="kn" title="ಕನ್ನಡದಲ್ಲಿ ನೋಡಿ (View in Kannada)"><i class="bi bi-translate" aria-hidden="true"></i><span>ಕನ್ನಡ</span></button>
+  {% endif %}
+</form>
