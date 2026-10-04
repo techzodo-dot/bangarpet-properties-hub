@@ -1,11 +1,27 @@
 {% extends "base.html" %}
+{% load static %}
 {% block robots %}<meta name="robots" content="noindex, follow">{% endblock %}
 {% block body_class %}{% endblock %}
 {% block tabbar %}{% endblock %}
+{% block footer %}{% endblock %}
 {% block content %}
-<div class="container auth-wrap">
-  <div class="surface auth-card">
-    {% block auth_content %}{% endblock %}
+<div class="auth-split">
+  <aside class="auth-art" aria-hidden="true">
+    <img class="bg" src="{% static 'img/skyline.svg' %}" alt="" style="object-fit:contain;object-position:bottom;opacity:.18">
+    <div>
+      <span class="lux-kicker mb-3">Bangarpet Property Hub</span>
+      <blockquote class="mt-3">Every listing reviewed. Every owner reachable.</blockquote>
+      <ul class="list-unstyled d-grid gap-2 mb-0" style="color:rgba(255,255,255,.75)">
+        <li><i class="bi bi-patch-check me-2 text-gold"></i>Listings checked by our team before they go live</li>
+        <li><i class="bi bi-chat-dots me-2 text-gold"></i>Talk to owners and brokers directly, no middle desk</li>
+        <li><i class="bi bi-calendar-check me-2 text-gold"></i>Book visits and track every enquiry in one place</li>
+      </ul>
+    </div>
+  </aside>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      {% block auth_content %}{% endblock %}
+    </div>
   </div>
 </div>
 {% endblock %}

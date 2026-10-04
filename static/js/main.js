@@ -200,4 +200,12 @@
     const sidebar = document.querySelector(".admin-sidebar");
     if (sidebar) sidebar.classList.toggle("open");
   });
+
+  // On phones the dashboard nav is a horizontal strip: keep the active tab in view.
+  const dashNav = document.querySelector(".dash-nav");
+  const activeLink = dashNav && dashNav.querySelector(".nav-link.active");
+  if (activeLink && dashNav.scrollWidth > dashNav.clientWidth) {
+    const offset = activeLink.getBoundingClientRect().left - dashNav.getBoundingClientRect().left + dashNav.scrollLeft;
+    dashNav.scrollLeft = offset - (dashNav.clientWidth - activeLink.offsetWidth) / 2;
+  }
 })();

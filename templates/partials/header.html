@@ -1,15 +1,15 @@
 {% with path=request.path %}
-<header class="site-header">
+<header class="site-header" data-bs-theme="dark">
   <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
     <div class="container">
       {% include "partials/brand.html" %}
       <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mainNav" aria-controls="mainNav" aria-label="Open menu">
-        <i class="bi bi-list fs-2 text-navy"></i>
+        <i class="bi bi-list fs-2"></i>
       </button>
       <div class="offcanvas offcanvas-end" tabindex="-1" id="mainNav" aria-labelledby="mainNavLabel">
         <div class="offcanvas-header">
-          <span class="h5 mb-0" id="mainNavLabel">Menu</span>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          <span class="offcanvas-title mb-0" id="mainNavLabel">Menu</span>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body align-items-lg-center">
           <ul class="navbar-nav mx-lg-auto gap-lg-1">
@@ -17,7 +17,7 @@
             <li class="nav-item"><a class="nav-link {% if path == '/buy/' %}active{% endif %}" href="{% url 'properties:buy' %}">Buy</a></li>
             <li class="nav-item"><a class="nav-link {% if path == '/pg-rooms/' %}active{% endif %}" href="{% url 'properties:pg_rooms' %}">PG &amp; Rooms</a></li>
             <li class="nav-item"><a class="nav-link {% if path == '/commercial/' %}active{% endif %}" href="{% url 'properties:commercial' %}">Commercial</a></li>
-            <li class="nav-item"><a class="nav-link {% if path == '/properties/' %}active{% endif %}" href="{% url 'properties:search' %}">All properties</a></li>
+            <li class="nav-item"><a class="nav-link {% if path == '/pricing/' %}active{% endif %}" href="{% url 'subscriptions:pricing' %}">For owners</a></li>
           </ul>
           <div class="d-flex flex-column flex-lg-row gap-2 mt-3 mt-lg-0 align-items-lg-center">
             {% if user.is_authenticated %}
@@ -28,7 +28,7 @@
                 <button class="btn btn-soft dropdown-toggle w-100" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="bi bi-person-circle me-1"></i>{{ user.get_short_name }}
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 p-2">
+                <ul class="dropdown-menu dropdown-menu-end shadow rounded-4 p-2">
                   <li><a class="dropdown-item rounded-3" href="{% url user.dashboard_url_name %}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
                   {% if user.is_partner %}<li><a class="dropdown-item rounded-3" href="{% url 'dashboard:partner_properties' %}"><i class="bi bi-buildings me-2"></i>My listings</a></li>{% endif %}
                   {% if not user.is_platform_admin %}<li><a class="dropdown-item rounded-3" href="{% url 'dashboard:customer_favourites' %}"><i class="bi bi-heart me-2"></i>Saved properties</a></li>{% endif %}
@@ -43,9 +43,8 @@
               </div>
               {% if user.is_partner %}<a class="btn btn-accent" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-lg me-1"></i>List property</a>{% endif %}
             {% else %}
-              <a class="btn btn-soft" href="{% url 'accounts:login' %}?next={{ request.get_full_path|urlencode }}">Sign in</a>
-              <a class="btn btn-primary" href="{% url 'accounts:register' %}">Register</a>
-              <a class="btn btn-accent" href="{% url 'accounts:register' %}?type=owner"><i class="bi bi-plus-lg me-1"></i>List property</a>
+              <a class="nav-link px-lg-2" href="{% url 'accounts:login' %}?next={{ request.get_full_path|urlencode }}"><i class="bi bi-person me-1"></i>Sign in</a>
+              <a class="btn btn-accent" href="{% url 'accounts:register' %}?type=owner">List your property</a>
             {% endif %}
           </div>
         </div>

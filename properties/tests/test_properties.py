@@ -370,10 +370,10 @@ class LandingPageTests(TestCase):
 
         add_images(prop, [image_file("a.jpg"), image_file("b.jpg")])
         resp = self.client.get("/")
-        self.assertContains(resp, "glass-card")              # featured glass cards
+        self.assertContains(resp, "feature-card")            # featured editorial collection
         self.assertContains(resp, "data-tour")               # virtual tour preview
         self.assertContains(resp, "Kolar Homes Realty")      # verified agent profile
-        self.assertContains(resp, "1 live listing")          # trust bar uses real counts
+        self.assertContains(resp, "1 live listing")          # trustline uses real counts
         self.assertContains(resp, "1 verified partner")
         self.assertContains(resp, 'action="/contact/"')      # contact form
 

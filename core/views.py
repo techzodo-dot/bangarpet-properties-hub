@@ -62,7 +62,9 @@ def home(request):
     )
     context = {
         "search_form": PropertySearchForm(),
-        "categories": Category.objects.filter(is_active=True),
+        "categories": Category.objects.filter(is_active=True).annotate(
+            live_count=Count("properties", filter=Q(properties__in=public), distinct=True)
+        ),
         "featured": featured,
         "recent": recent,
         "areas": areas,

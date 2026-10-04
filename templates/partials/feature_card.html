@@ -1,0 +1,22 @@
+{% load static bph %}
+<article class="feature-card">
+  {% with img=prop.primary_image %}
+    {% if img %}<img class="fc-img" src="{{ img.image.url }}" alt="{{ img.alt_text }}" loading="lazy" decoding="async">
+    {% else %}<img class="fc-img" src="{% static 'img/property-placeholder.svg' %}" alt="" loading="lazy">{% endif %}
+  {% endwith %}
+  <div class="fc-top">
+    <span class="glass-chip">{% if prop.purpose == 'rent' %}For rent{% else %}For sale{% endif %}</span>
+    {% if prop.is_featured %}<span class="glass-chip yellow"><i class="bi bi-star-fill"></i> Featured</span>{% endif %}
+  </div>
+  {% include "partials/fav_button.html" %}
+  <div class="fc-body">
+    <div class="fc-price">{% if prop.price %}{% if prop.purpose == 'rent' %}{{ prop.price|inr }}<small> / month</small>{% else %}{{ prop.price|inr_short }}{% endif %}{% else %}Price on request{% endif %}</div>
+    <h3 class="fc-title"><a href="{{ prop.get_absolute_url }}">{{ prop.title }}</a></h3>
+    <div class="fc-meta">
+      <span><i class="bi bi-geo-alt"></i> {{ prop.location_label|default:"Bangarpet" }}</span>
+      {% if prop.bedrooms %}<span>{{ prop.bedrooms }} {% if prop.category.slug == 'pg-rooms' %}room{{ prop.bedrooms|pluralize }}{% else %}BHK{% endif %}</span>{% endif %}
+      {% if prop.built_up_area %}<span>{{ prop.built_up_area }} sq.ft</span>{% elif prop.land_area %}<span>{{ prop.land_area|floatformat:"-2" }} {{ prop.get_land_area_unit_display }}</span>{% endif %}
+      {% if prop.is_owner_verified %}<span><i class="bi bi-patch-check-fill"></i> Verified {% if prop.listed_by_broker %}broker{% else %}owner{% endif %}</span>{% endif %}
+    </div>
+  </div>
+</article>
