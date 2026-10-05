@@ -647,6 +647,11 @@ KN = {
     "or": "ಅಥವಾ",
     "send a new code": "ಹೊಸ ಕೋಡ್ ಕಳುಹಿಸಿ",
     "send a new code in": "ಹೊಸ ಕೋಡ್ ಕಳುಹಿಸಲು ಇನ್ನು",
+    # ---- Floating WhatsApp button ----
+    "Chat with us on WhatsApp": "ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ನಮ್ಮೊಂದಿಗೆ ಚಾಟ್ ಮಾಡಿ",
+    "WhatsApp us": "ವಾಟ್ಸಾಪ್ ಮಾಡಿ",
+    "Hello Bangarpet Property Hub, I need help finding a property.":
+        "ನಮಸ್ಕಾರ ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್, ಆಸ್ತಿ ಹುಡುಕಲು ನನಗೆ ಸಹಾಯ ಬೇಕು.",
 }
 
 # Django's own relative-time phrases ("5 minutes ago", "today"), which Django does not ship in Kannada.

@@ -257,6 +257,8 @@
 {% endif %}
 {% endblock %}
 
+{# The page has its own WhatsApp button for the owner, so no support button here. #}
+{% block whatsapp_fab %}{% endblock %}
 {% block tabbar %}
 {% if prop.is_public and not is_owner %}
 <nav class="mobile-tabbar detail-actions" aria-label="{% translate "Contact actions" %}">

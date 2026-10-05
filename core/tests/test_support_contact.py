@@ -21,3 +21,31 @@ class SupportContactTests(TestCase):
             self.assertContains(resp, "+91 94453 30547")
             self.assertContains(resp, 'href="https://wa.me/919445330547"')
             self.assertContains(resp, 'href="mailto:bangarpetpropertyhub@gmail.com"')
+
+
+class WhatsAppButtonTests(TestCase):
+    def setUp(self):
+        site = PlatformSetting.load()
+        site.whatsapp_number = "+919445330547"
+        site.save()
+
+    def test_floating_button_on_public_pages(self):
+        for url in ("/", "/contact/", "/properties/", "/faq/"):
+            resp = self.client.get(url)
+            self.assertContains(resp, 'class="wa-fab', msg_prefix=url)
+            self.assertContains(resp, "https://wa.me/919445330547?text=Hello%20Bangarpet", msg_prefix=url)
+            self.assertContains(resp, 'aria-label="Chat with us on WhatsApp"', msg_prefix=url)
+
+    def test_not_on_sign_in_pages(self):
+        for url in ("/login/", "/register/", "/admin-login/"):
+            self.assertNotContains(self.client.get(url), 'class="wa-fab', msg_prefix=url)
+
+    def test_hidden_without_a_whatsapp_number(self):
+        site = PlatformSetting.load()
+        site.whatsapp_number = ""
+        site.save()
+        self.assertNotContains(self.client.get("/"), 'class="wa-fab')
+
+    def test_kannada_label(self):
+        resp = self.client.get("/", HTTP_ACCEPT_LANGUAGE="kn")
+        self.assertContains(resp, "ವಾಟ್ಸಾಪ್ ಮಾಡಿ")

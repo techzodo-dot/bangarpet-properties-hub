@@ -226,6 +226,17 @@ img { max-width: 100%; }
 @media (max-width: 991.98px) { .site-header .offcanvas .nav-link { font-size: 1.05rem; padding: .85rem .5rem !important; border-bottom: 1px solid var(--border); border-radius: 0; } .site-header .nav-link.active::after { display: none; } }
 .notif-dot { position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px; font-size: .66rem; line-height: 18px; padding: 0 5px; border-radius: 9px; background: #D92D20; color: #fff; font-weight: 800; text-align: center; }
 
+/* Floating WhatsApp support button */
+.wa-fab { position: fixed; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 1025; display: inline-flex; align-items: center; gap: .5rem; height: 56px; padding: 0 1.15rem 0 1rem; border-radius: 999px; background: #25D366; color: #fff; font-weight: 700; font-size: .95rem; text-decoration: none; box-shadow: 0 8px 24px rgba(23, 43, 77, .22); transition: transform .2s var(--ease), box-shadow .2s var(--ease), background-color .2s var(--ease); }
+.wa-fab i { font-size: 1.6rem; line-height: 1; }
+.wa-fab:hover, .wa-fab:focus-visible { background: #1EBE5A; color: #fff; transform: translateY(-2px); box-shadow: 0 12px 28px rgba(23, 43, 77, .28); }
+.wa-fab:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
+@media (max-width: 991.98px) {
+  .wa-fab { width: 56px; padding: 0; justify-content: center; right: 16px; }
+  .wa-fab-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .has-tabbar .wa-fab { bottom: calc(76px + env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) { .wa-fab { transition: none; } .wa-fab:hover { transform: none; } }
 .mobile-tabbar { display: none; }
 @media (max-width: 991.98px) {
   .mobile-tabbar { display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1030; background: rgba(255, 255, 255, .97); border-top: 1px solid var(--border); box-shadow: 0 -4px 16px rgba(23, 43, 77, .06); padding: .35rem .25rem calc(.35rem + env(safe-area-inset-bottom)); justify-content: space-around; }
@@ -666,7 +677,7 @@ a:hover > .stat-card { border-color: var(--border-strong); box-shadow: var(--sha
 
 /* ---------- Print ---------- */
 @media print {
-  .no-print, .site-header, .site-footer, .mobile-tabbar, .admin-sidebar, .dash-sidebar { display: none !important; }
+  .no-print, .wa-fab, .site-header, .site-footer, .mobile-tabbar, .admin-sidebar, .dash-sidebar { display: none !important; }
   body { background: #fff; color: #000; }
 }
 

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Bangarpet Property Hub\n"
-"PO-Revision-Date: 2026-10-05\n"
+"PO-Revision-Date: 2026-10-06\n"
 "Language: kn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -277,6 +277,9 @@ msgstr "ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ಚಾಟ್ ಮಾಡಿ"
 msgid "Chat with support"
 msgstr "ಸಹಾಯ ತಂಡದೊಂದಿಗೆ ಚಾಟ್ ಮಾಡಿ"
 
+msgid "Chat with us on WhatsApp"
+msgstr "ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ನಮ್ಮೊಂದಿಗೆ ಚಾಟ್ ಮಾಡಿ"
+
 msgid "Check documents, agree terms directly with the owner and move in."
 msgstr ""
 "ದಾಖಲೆಗಳನ್ನು ಪರಿಶೀಲಿಸಿ, ಮಾಲೀಕರೊಂದಿಗೆ ನೇರವಾಗಿ ನಿಯಮಗಳನ್ನು ಒಪ್ಪಿ ವಾಸ ಆರಂಭಿಸಿ."
@@ -540,6 +543,9 @@ msgstr "ಜಿಮ್"
 msgid "Hand-picked, reviewed listings promoted by their owners and brokers."
 msgstr ""
 "ಮಾಲೀಕರು ಮತ್ತು ಬ್ರೋಕರ್‌ಗಳು ಪ್ರಚಾರ ಮಾಡಿರುವ, ಆಯ್ದ ಮತ್ತು ಪರಿಶೀಲಿಸಿದ ಜಾಹೀರಾತುಗಳು."
+
+msgid "Hello Bangarpet Property Hub, I need help finding a property."
+msgstr "ನಮಸ್ಕಾರ ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್, ಆಸ್ತಿ ಹುಡುಕಲು ನನಗೆ ಸಹಾಯ ಬೇಕು."
 
 msgid "Home"
 msgstr "ಮುಖಪುಟ"
@@ -1686,6 +1692,9 @@ msgstr "ವಾಟ್ಸಾಪ್"
 
 msgid "WhatsApp enquiry"
 msgstr "ವಾಟ್ಸಾಪ್ ಮೂಲಕ ವಿಚಾರಿಸಿ"
+
+msgid "WhatsApp us"
+msgstr "ವಾಟ್ಸಾಪ್ ಮಾಡಿ"
 
 msgid "Which areas do you cover?"
 msgstr "ನೀವು ಯಾವ ಪ್ರದೇಶಗಳಲ್ಲಿ ಸೇವೆ ನೀಡುತ್ತೀರಿ?"

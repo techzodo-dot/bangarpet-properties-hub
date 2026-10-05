@@ -1,0 +1,5 @@
+{% load i18n %}{% if site.whatsapp_digits %}{% translate "Hello Bangarpet Property Hub, I need help finding a property." as wa_text %}
+<a class="wa-fab no-print" href="https://wa.me/{{ site.whatsapp_digits }}?text={{ wa_text|urlencode }}" target="_blank" rel="noopener" aria-label="{% translate 'Chat with us on WhatsApp' %}" title="{% translate 'Chat with us on WhatsApp' %}">
+  <i class="bi bi-whatsapp" aria-hidden="true"></i><span class="wa-fab-label">{% translate "WhatsApp us" %}</span>
+</a>
+{% endif %}
