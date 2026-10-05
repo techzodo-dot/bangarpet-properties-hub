@@ -1,4 +1,4 @@
-{% load i18n %}{% load static %}
+{% load bph %}{% load i18n %}{% load static %}
 <footer class="site-footer" role="contentinfo">
   <div class="container">
     <div class="row g-4 g-lg-5">
@@ -39,7 +39,7 @@
         <h6>{% translate "Visit & contact" %}</h6>
         <ul class="list-unstyled footer-links">
           {% if site.office_address %}<li>{{ site.office_address|linebreaksbr }}</li>{% else %}<li>{% translate "Bangarpet, Kolar district, Karnataka" %}</li>{% endif %}
-          {% if site.support_phone %}<li><a href="tel:{{ site.support_phone }}">{{ site.support_phone }}</a></li>{% endif %}
+          {% if site.support_phone %}<li><a href="tel:{{ site.support_phone }}">{{ site.support_phone|phone }}</a></li>{% endif %}
           {% if site.contact_email %}<li><a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></li>{% endif %}
         </ul>
         <p class="small mb-0"><i class="bi bi-shield-check me-1" style="color:var(--yellow)"></i>{% translate "Never pay a token or deposit before visiting the property and checking the owner's documents." %}</p>

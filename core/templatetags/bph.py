@@ -97,3 +97,14 @@ def tr(value):
     from django.utils.translation import gettext
 
     return gettext(str(value)) if value not in (None, "") else value
+
+
+@register.filter
+def phone(value):
+    """Show an Indian mobile number readably: +919445330547 -> +91 94453 30547."""
+    digits = "".join(ch for ch in str(value or "") if ch.isdigit())
+    if len(digits) == 12 and digits.startswith("91"):
+        digits = digits[2:]
+    if len(digits) == 10:
+        return f"+91 {digits[:5]} {digits[5:]}"
+    return value
