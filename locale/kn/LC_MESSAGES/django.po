@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Bangarpet Property Hub\n"
-"PO-Revision-Date: 2026-10-04\n"
+"PO-Revision-Date: 2026-10-05\n"
 "Language: kn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,11 +34,17 @@ msgstr "10 ಅಂಕಿಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ"
 msgid "2+"
 msgstr "2+"
 
+msgid "2-step sign-in"
+msgstr "2-ಹಂತದ ಸೈನ್ ಇನ್"
+
 msgid "3+"
 msgstr "3+"
 
 msgid "4+"
 msgstr "4+"
+
+msgid "6-digit code"
+msgstr "6-ಅಂಕಿಯ ಕೋಡ್"
 
 msgid "A real team in Kolar district"
 msgstr "ಕೋಲಾರ ಜಿಲ್ಲೆಯಲ್ಲೇ ಇರುವ ನಿಜವಾದ ತಂಡ"
@@ -145,6 +151,12 @@ msgstr "ಈ ದಿನಾಂಕದೊಳಗೆ ಲಭ್ಯ"
 
 msgid "Available from a date"
 msgstr "ನಿರ್ದಿಷ್ಟ ದಿನಾಂಕದಿಂದ ಲಭ್ಯ"
+
+msgid "Back to home"
+msgstr "ಮುಖಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಿ"
+
+msgid "Back to sign in"
+msgstr "ಸೈನ್ ಇನ್‌ಗೆ ಹಿಂತಿರುಗಿ"
 
 msgid "Balconies"
 msgstr "ಬಾಲ್ಕನಿಗಳು"
@@ -278,6 +290,9 @@ msgstr "ಪ್ರಕಟವಾಗುವ ಮೊದಲು ನಮ್ಮ ತಂಡ �
 msgid "Children's play area"
 msgstr "ಮಕ್ಕಳ ಆಟದ ಸ್ಥಳ"
 
+msgid "Choose a new password"
+msgstr "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಆಯ್ಕೆಮಾಡಿ"
+
 msgid "Clear all"
 msgstr "ಎಲ್ಲವನ್ನೂ ತೆರವುಗೊಳಿಸಿ"
 
@@ -301,6 +316,9 @@ msgstr "ಸಂಸ್ಥೆ"
 
 msgid "Completed"
 msgstr "ಪೂರ್ಣಗೊಂಡಿದೆ"
+
+msgid "Confirm new password"
+msgstr "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ"
 
 msgid "Confirm password"
 msgstr "ಪಾಸ್‌ವರ್ಡ್ ಖಚಿತಪಡಿಸಿ"
@@ -350,6 +368,9 @@ msgstr "ಮುಂಗಡ ಠೇವಣಿ"
 msgid "Details"
 msgstr "ವಿವರಗಳು"
 
+msgid "Didn't get the email? Check your spam folder or"
+msgstr "ಇಮೇಲ್ ಬರಲಿಲ್ಲವೇ? ಸ್ಪ್ಯಾಮ್ ಫೋಲ್ಡರ್ ನೋಡಿ ಅಥವಾ"
+
 msgid "Direct owner contact"
 msgstr "ಮಾಲೀಕರೊಂದಿಗೆ ನೇರ ಸಂಪರ್ಕ"
 
@@ -367,11 +388,45 @@ msgstr ""
 msgid "Email"
 msgstr "ಇಮೇಲ್"
 
+msgid "Email address"
+msgstr "ಇಮೇಲ್ ವಿಳಾಸ"
+
 msgid "Email or username"
 msgstr "ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರು"
 
+msgid "Email verification is not available right now. Please try again later."
+msgstr "ಇಮೇಲ್ ದೃಢೀಕರಣ ಈಗ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ನಂತರ ಪ್ರಯತ್ನಿಸಿ."
+
 msgid "Enquire"
 msgstr "ವಿಚಾರಿಸಿ"
+
+msgid "Enter the 6-digit code from the email."
+msgstr "ಇಮೇಲ್‌ನಲ್ಲಿರುವ 6-ಅಂಕಿಯ ಕೋಡ್ ನಮೂದಿಸಿ."
+
+msgid "Enter the 6-digit code we emailed to %(email)s to finish signing in."
+msgstr "ಸೈನ್ ಇನ್ ಪೂರ್ಣಗೊಳಿಸಲು %(email)s ಗೆ ಕಳುಹಿಸಿದ 6-ಅಂಕಿಯ ಕೋಡ್ ನಮೂದಿಸಿ."
+
+msgid ""
+"Enter the 6-digit code we emailed to %(email)s. It is valid for 10 minutes."
+msgstr ""
+"%(email)s ಗೆ ಕಳುಹಿಸಿದ 6-ಅಂಕಿಯ ಕೋಡ್ ನಮೂದಿಸಿ. ಇದು 10 ನಿಮಿಷಗಳವರೆಗೆ ಮಾನ್ಯ."
+
+msgid ""
+"Enter the email address you registered with. If an account exists, we'll "
+"email you a 6-digit code to set a new password."
+msgstr ""
+"ನೀವು ನೋಂದಾಯಿಸಿದ ಇಮೇಲ್ ವಿಳಾಸ ನಮೂದಿಸಿ. ಖಾತೆ ಇದ್ದರೆ, ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದಿಸಲು "
+"6-ಅಂಕಿಯ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡುತ್ತೇವೆ."
+
+msgid ""
+"Enter the email address you registered with. If an account exists, we'll "
+"email you a secure reset link."
+msgstr ""
+"ನೀವು ನೋಂದಾಯಿಸಿದ ಇಮೇಲ್ ವಿಳಾಸ ನಮೂದಿಸಿ. ಖಾತೆ ಇದ್ದರೆ, ಸುರಕ್ಷಿತ ಮರುಹೊಂದಿಸುವ ಲಿಂಕ್"
+" ಇಮೇಲ್ ಮಾಡುತ್ತೇವೆ."
+
+msgid "Enter your sign-in code"
+msgstr "ನಿಮ್ಮ ಸೈನ್ ಇನ್ ಕೋಡ್ ನಮೂದಿಸಿ"
 
 msgid "Evening (4 pm - 7 pm)"
 msgstr "ಸಂಜೆ (4 ರಿಂದ 7)"
@@ -550,6 +605,9 @@ msgstr "ಬಾಡಿಗೆ ಅಥವಾ ಮಾರಾಟಕ್ಕೆ ನನ್ನ
 msgid "I'd like to visit this property"
 msgstr "ನಾನು ಈ ಆಸ್ತಿಗೆ ಭೇಟಿ ನೀಡಲು ಬಯಸುತ್ತೇನೆ"
 
+msgid "I'll do this later"
+msgstr "ನಂತರ ಮಾಡುತ್ತೇನೆ"
+
 msgid "I'm a real estate broker / agent"
 msgstr "ನಾನು ರಿಯಲ್ ಎಸ್ಟೇಟ್ ಬ್ರೋಕರ್ / ಏಜೆಂಟ್"
 
@@ -565,6 +623,26 @@ msgstr ""
 
 msgid "ID-checked owners & brokers"
 msgstr "ಗುರುತು ಪರಿಶೀಲಿಸಿದ ಮಾಲೀಕರು ಮತ್ತು ಬ್ರೋಕರ್‌ಗಳು"
+
+msgid "If an account exists for %(email)s, we've emailed it a 6-digit code."
+msgstr "%(email)s ಗೆ ಖಾತೆ ಇದ್ದರೆ, ಅದಕ್ಕೆ 6-ಅಂಕಿಯ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡಿದ್ದೇವೆ."
+
+msgid ""
+"If an account exists for %(email)s, we've emailed it a 6-digit code. Enter "
+"it below with your new password."
+msgstr ""
+"%(email)s ಗೆ ಖಾತೆ ಇದ್ದರೆ, ಅದಕ್ಕೆ 6-ಅಂಕಿಯ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡಿದ್ದೇವೆ. ಅದನ್ನು ನಿಮ್ಮ"
+" ಹೊಸ ಪಾಸ್‌ವರ್ಡ್‌ನೊಂದಿಗೆ ಕೆಳಗೆ ನಮೂದಿಸಿ."
+
+msgid ""
+"If an account exists for %(email)s, we've emailed it a 6-digit code. It is "
+"valid for 10 minutes."
+msgstr ""
+"%(email)s ಗೆ ಖಾತೆ ಇದ್ದರೆ, ಅದಕ್ಕೆ 6-ಅಂಕಿಯ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡಿದ್ದೇವೆ. ಇದು 10 "
+"ನಿಮಿಷಗಳವರೆಗೆ ಮಾನ್ಯ."
+
+msgid "If an account exists for %(email)s, we've emailed it a new code."
+msgstr "%(email)s ಗೆ ಖಾತೆ ಇದ್ದರೆ, ಅದಕ್ಕೆ ಹೊಸ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡಿದ್ದೇವೆ."
 
 msgid "Incorrect price or details"
 msgstr "ತಪ್ಪಾದ ಬೆಲೆ ಅಥವಾ ವಿವರಗಳು"
@@ -792,6 +870,9 @@ msgstr "ಹೊಸಬರೇ?"
 msgid "New in Bangarpet"
 msgstr "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಹೊಸದು"
 
+msgid "New password"
+msgstr "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್"
+
 msgid "Newest first"
 msgstr "ಹೊಸದು ಮೊದಲು"
 
@@ -815,6 +896,13 @@ msgstr "ಕನಿಷ್ಠ ಮಿತಿ ಇಲ್ಲ"
 
 msgid "No parking"
 msgstr "ಪಾರ್ಕಿಂಗ್ ಇಲ್ಲ"
+
+msgid ""
+"No password needed. Enter your email and we'll send you a 6-digit code to "
+"sign in."
+msgstr ""
+"ಪಾಸ್‌ವರ್ಡ್ ಬೇಕಿಲ್ಲ. ನಿಮ್ಮ ಇಮೇಲ್ ನಮೂದಿಸಿ, ಸೈನ್ ಇನ್ ಮಾಡಲು 6-ಅಂಕಿಯ ಕೋಡ್ "
+"ಕಳುಹಿಸುತ್ತೇವೆ."
 
 msgid "No properties match your filters"
 msgstr "ನಿಮ್ಮ ಫಿಲ್ಟರ್‌ಗಳಿಗೆ ಹೊಂದುವ ಆಸ್ತಿಗಳಿಲ್ಲ"
@@ -920,6 +1008,9 @@ msgstr "ಪಾರ್ಕಿಂಗ್ ಲಭ್ಯ"
 msgid "Password"
 msgstr "ಪಾಸ್‌ವರ್ಡ್"
 
+msgid "Password updated"
+msgstr "ಪಾಸ್‌ವರ್ಡ್ ಬದಲಾಗಿದೆ"
+
 msgid "Pause tour"
 msgstr "ಪ್ರವಾಸ ನಿಲ್ಲಿಸಿ"
 
@@ -955,6 +1046,12 @@ msgid "Pins are approximate unless the owner chose to show the exact address."
 msgstr ""
 "ಮಾಲೀಕರು ನಿಖರ ವಿಳಾಸ ತೋರಿಸಲು ಆಯ್ಕೆ ಮಾಡದ ಹೊರತು ನಕ್ಷೆಯ ಗುರುತುಗಳು ಅಂದಾಜು ಮಾತ್ರ."
 
+msgid "Please ask for a new password reset code."
+msgstr "ದಯವಿಟ್ಟು ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸುವ ಕೋಡ್ ಕೇಳಿ."
+
+msgid "Please ask for a new sign-in code."
+msgstr "ದಯವಿಟ್ಟು ಹೊಸ ಸೈನ್ ಇನ್ ಕೋಡ್ ಕೇಳಿ."
+
 msgid "Please choose a reason for the report."
 msgstr "ದಯವಿಟ್ಟು ವರದಿಗೆ ಕಾರಣ ಆಯ್ಕೆ ಮಾಡಿ."
 
@@ -963,6 +1060,12 @@ msgstr "ಕೆಳಗೆ ಗುರುತಿಸಿದ ಕ್ಷೇತ್ರಗಳ�
 
 msgid "Please give your search a name."
 msgstr "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹುಡುಕಾಟಕ್ಕೆ ಹೆಸರು ನೀಡಿ."
+
+msgid "Please sign in again."
+msgstr "ದಯವಿಟ್ಟು ಮತ್ತೆ ಸೈನ್ ಇನ್ ಮಾಡಿ."
+
+msgid "Please wait %(seconds)s seconds before asking for another code."
+msgstr "ಇನ್ನೊಂದು ಕೋಡ್ ಕೇಳುವ ಮೊದಲು ದಯವಿಟ್ಟು %(seconds)s ಸೆಕೆಂಡು ಕಾಯಿರಿ."
 
 msgid "Plots"
 msgstr "ನಿವೇಶನಗಳು"
@@ -1125,6 +1228,12 @@ msgstr "ಭೇಟಿಗೆ ವಿನಂತಿಸಿ"
 msgid "Required for brokers."
 msgstr "ಬ್ರೋಕರ್‌ಗಳಿಗೆ ಕಡ್ಡಾಯ."
 
+msgid "Reset password"
+msgstr "ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸಿ"
+
+msgid "Reset your password"
+msgstr "ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸಿ"
+
 msgid "Residential Plot"
 msgstr "ವಸತಿ ನಿವೇಶನ"
 
@@ -1200,8 +1309,14 @@ msgstr "ಭಾಗಶಃ ಪೀಠೋಪಕರಣ"
 msgid "Send"
 msgstr "ಕಳುಹಿಸಿ"
 
+msgid "Send code"
+msgstr "ಕೋಡ್ ಕಳುಹಿಸಿ"
+
 msgid "Send message"
 msgstr "ಸಂದೇಶ ಕಳುಹಿಸಿ"
+
+msgid "Send reset link"
+msgstr "ಮರುಹೊಂದಿಸುವ ಲಿಂಕ್ ಕಳುಹಿಸಿ"
 
 msgid "Share"
 msgstr "ಹಂಚಿಕೊಳ್ಳಿ"
@@ -1243,8 +1358,20 @@ msgstr "ವಿಚಾರಣೆ ಕಳುಹಿಸಲು ಸೈನ್ ಇನ್ �
 msgid "Sign in to view phone number"
 msgstr "ಫೋನ್ ನಂಬರ್ ನೋಡಲು ಸೈನ್ ಇನ್ ಮಾಡಿ"
 
+msgid "Sign in with an email code"
+msgstr "ಇಮೇಲ್ ಕೋಡ್ ಮೂಲಕ ಸೈನ್ ಇನ್"
+
+msgid "Sign in with password instead"
+msgstr "ಬದಲಿಗೆ ಪಾಸ್‌ವರ್ಡ್‌ನೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ"
+
 msgid "Sign out"
 msgstr "ಸೈನ್ ಔಟ್"
+
+msgid ""
+"Sign-in with an email code is not available right now. Please use your "
+"password."
+msgstr ""
+"ಇಮೇಲ್ ಕೋಡ್ ಮೂಲಕ ಸೈನ್ ಇನ್ ಈಗ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ಬಳಸಿ."
 
 msgid "Similar"
 msgstr "ಇದೇ ರೀತಿಯವು"
@@ -1318,8 +1445,17 @@ msgstr "ಧನ್ಯವಾದಗಳು! ನಿಮ್ಮ ಸಂದೇಶ ತಲ�
 msgid "Thank you. Our team will review this listing."
 msgstr "ಧನ್ಯವಾದಗಳು. ನಮ್ಮ ತಂಡ ಈ ಜಾಹೀರಾತನ್ನು ಪರಿಶೀಲಿಸುತ್ತದೆ."
 
+msgid "That code is not correct."
+msgstr "ಆ ಕೋಡ್ ಸರಿಯಿಲ್ಲ."
+
+msgid "That code is not correct. Tries left: %(left)s."
+msgstr "ಆ ಕೋಡ್ ಸರಿಯಿಲ್ಲ. ಉಳಿದ ಪ್ರಯತ್ನಗಳು: %(left)s."
+
 msgid "The map view is not available yet. Results are shown below."
 msgstr "ನಕ್ಷೆ ನೋಟ ಇನ್ನೂ ಲಭ್ಯವಿಲ್ಲ. ಫಲಿತಾಂಶಗಳನ್ನು ಕೆಳಗೆ ತೋರಿಸಲಾಗಿದೆ."
+
+msgid "The two passwords do not match."
+msgstr "ಎರಡು ಪಾಸ್‌ವರ್ಡ್‌ಗಳು ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ."
 
 msgid ""
 "The verified badge confirms identity documents were reviewed by our team; it"
@@ -1327,6 +1463,15 @@ msgid ""
 msgstr ""
 "ಪರಿಶೀಲಿತ ಗುರುತು ಎಂದರೆ ಗುರುತಿನ ದಾಖಲೆಗಳನ್ನು ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸಿದೆ ಎಂದರ್ಥ; ಇದು "
 "ಆಸ್ತಿಯ ಮಾಲೀಕತ್ವದ ಕಾನೂನು ಪರಿಶೀಲನೆ ಅಲ್ಲ."
+
+msgid "There is no email address on this account to send a code to."
+msgstr "ಈ ಖಾತೆಯಲ್ಲಿ ಕೋಡ್ ಕಳುಹಿಸಲು ಇಮೇಲ್ ವಿಳಾಸವಿಲ್ಲ."
+
+msgid "This code has already been used. Ask for a new code."
+msgstr "ಈ ಕೋಡ್ ಈಗಾಗಲೇ ಬಳಸಲಾಗಿದೆ. ಹೊಸ ಕೋಡ್ ಕೇಳಿ."
+
+msgid "This code has expired. Ask for a new code."
+msgstr "ಈ ಕೋಡ್‌ನ ಅವಧಿ ಮುಗಿದಿದೆ. ಹೊಸ ಕೋಡ್ ಕೇಳಿ."
 
 msgid "This property has been rented out"
 msgstr "ಈ ಆಸ್ತಿಯನ್ನು ಬಾಡಿಗೆಗೆ ನೀಡಲಾಗಿದೆ"
@@ -1336,6 +1481,23 @@ msgstr "ಈ ಆಸ್ತಿ ಮಾರಾಟವಾಗಿದೆ"
 
 msgid "This property is not accepting enquiries."
 msgstr "ಈ ಆಸ್ತಿಗೆ ವಿಚಾರಣೆಗಳನ್ನು ಸ್ವೀಕರಿಸಲಾಗುತ್ತಿಲ್ಲ."
+
+msgid "Too many code requests from your network. Please try again later."
+msgstr ""
+"ನಿಮ್ಮ ನೆಟ್‌ವರ್ಕ್‌ನಿಂದ ಹೆಚ್ಚು ಕೋಡ್ ವಿನಂತಿಗಳು ಬಂದಿವೆ. ದಯವಿಟ್ಟು ನಂತರ "
+"ಪ್ರಯತ್ನಿಸಿ."
+
+msgid "Too many codes requested. Please try again in an hour."
+msgstr "ಹೆಚ್ಚು ಕೋಡ್‌ಗಳನ್ನು ಕೇಳಲಾಗಿದೆ. ದಯವಿಟ್ಟು ಒಂದು ಗಂಟೆಯ ನಂತರ ಪ್ರಯತ್ನಿಸಿ."
+
+msgid ""
+"Too many tries from your network. Please wait 15 minutes and try again."
+msgstr ""
+"ನಿಮ್ಮ ನೆಟ್‌ವರ್ಕ್‌ನಿಂದ ಹೆಚ್ಚು ಪ್ರಯತ್ನಗಳು ಆಗಿವೆ. ದಯವಿಟ್ಟು 15 ನಿಮಿಷ ಕಾಯ್ದು "
+"ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+
+msgid "Too many wrong tries. Ask for a new code."
+msgstr "ಹಲವು ತಪ್ಪು ಪ್ರಯತ್ನಗಳು. ಹೊಸ ಕೋಡ್ ಕೇಳಿ."
 
 msgid "Tour"
 msgstr "ನೋಡಿ"
@@ -1397,6 +1559,15 @@ msgstr "ಪರಿಶೀಲಿತ ಮಾಲೀಕರು/ಬ್ರೋಕರ್‌�
 
 msgid "Verified partners"
 msgstr "ಪರಿಶೀಲಿತ ಪಾಲುದಾರರು"
+
+msgid "Verify and sign in"
+msgstr "ದೃಢೀಕರಿಸಿ ಸೈನ್ ಇನ್ ಮಾಡಿ"
+
+msgid "Verify email"
+msgstr "ಇಮೇಲ್ ದೃಢೀಕರಿಸಿ"
+
+msgid "Verify your email"
+msgstr "ನಿಮ್ಮ ಇಮೇಲ್ ದೃಢೀಕರಿಸಿ"
 
 msgid "Video tour"
 msgstr "ವೀಡಿಯೊ ಪ್ರವಾಸ"
@@ -1462,6 +1633,10 @@ msgid "Watch video walkthrough"
 msgstr "ವೀಡಿಯೊ ನೋಡಿ"
 
 msgid ""
+"We couldn't send the email right now. Please try again in a few minutes."
+msgstr "ಈಗ ಇಮೇಲ್ ಕಳುಹಿಸಲು ಆಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಕೆಲವು ನಿಮಿಷಗಳ ನಂತರ ಪ್ರಯತ್ನಿಸಿ."
+
+msgid ""
 "We focus on Bangarpet and nearby towns in Kolar district such as KGF, Kolar,"
 " Malur, Budikote and Kamasamudra."
 msgstr ""
@@ -1478,11 +1653,27 @@ msgstr ""
 "ಬಂಗಾರಪೇಟೆಯ ಮಾಲೀಕರು ಮತ್ತು ಬ್ರೋಕರ್‌ಗಳನ್ನು ನಾವು ಸೇರಿಸುತ್ತಿದ್ದೇವೆ. ನಿಮ್ಮ "
 "ಆಸ್ತಿಯನ್ನು ಮೊದಲು ಪಟ್ಟಿ ಮಾಡುವವರಲ್ಲಿ ಒಬ್ಬರಾಗಿ - ಪ್ರಾರಂಭಿಸುವುದು ಉಚಿತ."
 
+msgid "We've emailed a 6-digit code to %(email)s."
+msgstr "%(email)s ಗೆ 6-ಅಂಕಿಯ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡಿದ್ದೇವೆ."
+
+msgid "We've emailed a new code to %(email)s."
+msgstr "%(email)s ಗೆ ಹೊಸ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡಿದ್ದೇವೆ."
+
 msgid "Website enquiry"
 msgstr "ವೆಬ್‌ಸೈಟ್ ಮೂಲಕ ವಿಚಾರಣೆ"
 
 msgid "Welcome back"
 msgstr "ಮತ್ತೆ ಸ್ವಾಗತ"
+
+msgid "Welcome to Bangarpet Property Hub!"
+msgstr "ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್‌ಗೆ ಸ್ವಾಗತ!"
+
+msgid ""
+"Welcome to Bangarpet Property Hub! We've emailed a 6-digit code to "
+"%(email)s."
+msgstr ""
+"ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್‌ಗೆ ಸ್ವಾಗತ! %(email)s ಗೆ 6-ಅಂಕಿಯ ಕೋಡ್ ಇಮೇಲ್ "
+"ಮಾಡಿದ್ದೇವೆ."
 
 msgid "What are you looking for?"
 msgstr "ನೀವು ಏನನ್ನು ಹುಡುಕುತ್ತಿದ್ದೀರಿ?"
@@ -1537,6 +1728,9 @@ msgstr ""
 msgid "You can keep up to 20 saved searches. Delete one to add another."
 msgstr "ನೀವು 20 ಹುಡುಕಾಟಗಳವರೆಗೆ ಉಳಿಸಬಹುದು. ಹೊಸದನ್ನು ಸೇರಿಸಲು ಒಂದನ್ನು ಅಳಿಸಿ."
 
+msgid "You can now sign in with your new password."
+msgstr "ಈಗ ನಿಮ್ಮ ಹೊಸ ಪಾಸ್‌ವರ್ಡ್‌ನೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಬಹುದು."
+
 msgid "You cannot enquire about your own listing."
 msgstr "ನಿಮ್ಮದೇ ಜಾಹೀರಾತಿನ ಬಗ್ಗೆ ವಿಚಾರಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ."
 
@@ -1564,6 +1758,12 @@ msgstr ""
 msgid "You've sent several reports recently. Please try again later."
 msgstr ""
 "ನೀವು ಇತ್ತೀಚೆಗೆ ಹಲವು ವರದಿಗಳನ್ನು ಕಳುಹಿಸಿದ್ದೀರಿ. ದಯವಿಟ್ಟು ನಂತರ ಪ್ರಯತ್ನಿಸಿ."
+
+msgid "Your email address has been verified."
+msgstr "ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸ ದೃಢೀಕರಿಸಲಾಗಿದೆ."
+
+msgid "Your email address is already verified."
+msgstr "ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸ ಈಗಾಗಲೇ ದೃಢೀಕರಿಸಲಾಗಿದೆ."
 
 msgid "Your enquiry has been sent. The owner/broker will contact you soon."
 msgstr ""
@@ -1618,6 +1818,9 @@ msgstr ""
 msgid "no longer available"
 msgstr "ಇನ್ನು ಲಭ್ಯವಿಲ್ಲ"
 
+msgid "or"
+msgstr "ಅಥವಾ"
+
 msgid "page %(n)s"
 msgstr "ಪುಟ %(n)s"
 
@@ -1629,6 +1832,12 @@ msgstr "ರೂಮ್"
 
 msgid "rooms"
 msgstr "ರೂಮುಗಳು"
+
+msgid "send a new code"
+msgstr "ಹೊಸ ಕೋಡ್ ಕಳುಹಿಸಿ"
+
+msgid "send a new code in"
+msgstr "ಹೊಸ ಕೋಡ್ ಕಳುಹಿಸಲು ಇನ್ನು"
 
 msgid "sq. ft"
 msgstr "ಚ.ಅಡಿ"
@@ -1645,6 +1854,9 @@ msgid ""
 msgstr ""
 "“ಪರಿಶೀಲಿತ” ಎಂದರೆ ಗುರುತಿನ ದಾಖಲೆಗಳನ್ನು ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸಿದೆ ಎಂದರ್ಥ. ಇದು ಆಸ್ತಿಯ"
 " ಮಾಲೀಕತ್ವದ ಕಾನೂನು ಪರಿಶೀಲನೆ ಅಲ್ಲ."
+
+msgid "••••••"
+msgstr "••••••"
 
 msgid "%(counter)s listing"
 msgid_plural "%(counter)s listings"

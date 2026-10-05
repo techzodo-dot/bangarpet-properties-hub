@@ -292,3 +292,33 @@ class VerificationDocument(TimeStampedModel):
         self.file = ""
         self.file_purged_at = timezone.now()
         self.save(update_fields=["file", "file_purged_at", "updated_at"])
+
+
+class EmailOTP(models.Model):
+    """A one-time code emailed to a user. Only a keyed hash of the code is stored."""
+
+    class Purpose(models.TextChoices):
+        VERIFY_EMAIL = "verify_email", "Verify email"
+        LOGIN = "login", "Sign in with a code"
+        PASSWORD_RESET = "password_reset", "Reset password"
+        ADMIN_LOGIN = "admin_login", "Admin 2-step sign-in"
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="email_otps")
+    purpose = models.CharField(max_length=20, choices=Purpose.choices)
+    sent_to = models.CharField(max_length=254)
+    code_hash = models.CharField(max_length=64)
+    attempts = models.PositiveSmallIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    used_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [models.Index(fields=["user", "purpose", "created_at"])]
+
+    def __str__(self):
+        return f"{self.get_purpose_display()} code for {self.user_id}"
+
+    @property
+    def is_usable(self):
+        return self.used_at is None and self.expires_at > timezone.now()

@@ -18,9 +18,14 @@ PUBLIC_TEMPLATES = [
     "core/home.html", "core/page_base.html", "core/contact.html", "core/faq.html",
     "properties/search.html", "properties/detail.html", "properties/unavailable.html", "properties/partner_profile.html",
     "accounts/auth_base.html", "accounts/login.html", "accounts/register.html",
+    "accounts/login_code.html", "accounts/otp_verify.html",
+    "accounts/password_reset_form.html", "accounts/password_reset_complete.html",
     "enquiries/_form.html",
 ]
-PYTHON_FILES = ["properties/views.py", "enquiries/views.py", "core/views.py"]
+PYTHON_FILES = [
+    "properties/views.py", "enquiries/views.py", "core/views.py",
+    "accounts/views.py", "accounts/otp.py", "accounts/forms.py",
+]
 
 _GETTEXT = re.compile(r"""\b(?:gettext|_)\(\s*u?(?P<q>['"])(?P<msg>(?:\\.|(?!(?P=q)).)*)(?P=q)\s*\)""")
 _NGETTEXT = re.compile(
@@ -55,13 +60,21 @@ def python_messages():
 
 def form_messages():
     """Labels, help texts, placeholders and choices of the public forms."""
-    from accounts.forms import LoginForm, RegistrationForm
+    from accounts.forms import (
+        EmailCodeRequestForm,
+        LoginForm,
+        OTPCodeForm,
+        PasswordResetCodeForm,
+        RegistrationForm,
+        ThrottledPasswordResetForm,
+    )
     from core.forms import ContactForm
     from enquiries.forms import EnquiryForm
     from properties.forms import PropertySearchForm, ReportForm, SaveSearchForm
 
     found = set()
-    forms = [PropertySearchForm(), SaveSearchForm(), ReportForm(), ContactForm(), LoginForm(), RegistrationForm()]
+    forms = [PropertySearchForm(), SaveSearchForm(), ReportForm(), ContactForm(), LoginForm(), RegistrationForm(),
+             OTPCodeForm(), EmailCodeRequestForm(), PasswordResetCodeForm(), ThrottledPasswordResetForm()]
     try:
         forms.append(EnquiryForm())
     except TypeError:

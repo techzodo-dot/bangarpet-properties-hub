@@ -321,6 +321,21 @@
     if (document.readyState === "complete") focusIt(); else window.addEventListener("load", function () { setTimeout(focusIt, 0); });
   }
 
+  // "Send a new code" buttons stay disabled until the resend wait is over.
+  document.querySelectorAll("[data-countdown]").forEach(function (btn) {
+    let left = parseInt(btn.dataset.countdown, 10) || 0;
+    if (left <= 0) return;
+    const label = btn.textContent;
+    const tick = function () {
+      if (left <= 0) { btn.disabled = false; btn.textContent = label; return; }
+      btn.disabled = true;
+      btn.textContent = (btn.dataset.countdownLabel || label) + " " + left + "s";
+      left -= 1;
+      setTimeout(tick, 1000);
+    };
+    tick();
+  });
+
   // Installable web app: register the service worker (HTTPS or localhost only).
   const swUrl = document.documentElement.dataset.sw;
   const secure = location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";

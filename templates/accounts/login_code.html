@@ -1,0 +1,16 @@
+{% extends "accounts/auth_base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Sign in with an email code" %} - {{ site.site_name }}{% endblock %}
+{% block auth_content %}
+<span class="otp-badge mb-3" aria-hidden="true"><i class="bi bi-envelope-paper"></i></span>
+<h1 class="mb-2">{% translate "Sign in with an email code" %}</h1>
+<p class="text-muted mb-4">{% translate "No password needed. Enter your email and we'll send you a 6-digit code to sign in." %}</p>
+{% include "partials/form_errors.html" %}
+<form method="post" novalidate data-once>
+  {% csrf_token %}
+  {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+  {% include "partials/field.html" with field=form.email %}
+  <button class="btn btn-primary btn-lg w-100" type="submit">{% translate "Send code" %} <span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
+</form>
+<p class="text-center mt-4 mb-0"><a href="{% url 'accounts:login' %}{% if next %}?next={{ next|urlencode }}{% endif %}"><i class="bi bi-arrow-left" aria-hidden="true"></i> {% translate "Sign in with password instead" %}</a></p>
+{% endblock %}

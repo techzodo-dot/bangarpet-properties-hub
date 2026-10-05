@@ -1,5 +1,6 @@
 from django.conf import settings
 
+from accounts.otp import otp_enabled
 from core.models import PlatformSetting
 
 
@@ -10,6 +11,7 @@ def platform(request):
         "SITE_URL": settings.SITE_URL,
         "GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY,
         "ONLINE_PAYMENTS": bool(settings.RAZORPAY_KEY_ID and settings.RAZORPAY_KEY_SECRET),
+        "EMAIL_OTP": otp_enabled(),
     }
     user = getattr(request, "user", None)
     if user is not None and user.is_authenticated:

@@ -219,4 +219,7 @@ class PricingPageTests(TestCase):
             "phone": "9876543211", "password1": "Strong#Pass2024", "password2": "Strong#Pass2024",
             "accept_terms": "on", "next": "/partner/subscription/",
         })
-        self.assertRedirects(resp, "/partner/subscription/", fetch_redirect_response=False)
+        # Sign-up first asks for the emailed code, then carries on to the plan page.
+        self.assertRedirects(resp, "/accounts/verify/?next=%2Fpartner%2Fsubscription%2F", fetch_redirect_response=False)
+        page = self.client.get(resp["Location"])
+        self.assertContains(page, 'href="/partner/subscription/"')

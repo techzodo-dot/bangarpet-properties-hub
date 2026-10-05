@@ -221,6 +221,14 @@ else:
 # True only when a real SMTP server is configured; used for honest status reporting.
 EMAIL_DELIVERY_CONFIGURED = bool(EMAIL_HOST)
 
+# One-time codes sent by email: sign-up verification, sign-in with a code,
+# password reset and the admin 2-step sign-in. Codes are only used once an SMTP
+# server is configured (e.g. Gmail with an app password), so nobody is locked
+# out while email is not set up.
+EMAIL_OTP_ENABLED = env_bool("EMAIL_OTP_ENABLED", True)
+# Admin logins such as "bph@admin" are not real mailboxes: their 2-step codes go here.
+ADMIN_OTP_EMAIL = env("ADMIN_OTP_EMAIL", "").strip()
+
 # ---------------------------------------------------------------------------
 # Third-party integrations (all optional; features degrade gracefully)
 # ---------------------------------------------------------------------------
@@ -245,6 +253,9 @@ RATE_LIMITS = {
     "login": (5, 15 * 60),
     "register": (10, 60 * 60),
     "password_reset": (5, 60 * 60),
+    "otp_send": (5, 60 * 60),       # codes emailed per account
+    "otp_request": (10, 60 * 60),   # code requests per network
+    "otp_verify": (20, 15 * 60),    # code guesses per network
     "enquiry": (10, 60 * 60),
     "report": (10, 60 * 60),
     "contact": (5, 60 * 60),

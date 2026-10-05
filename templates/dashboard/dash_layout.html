@@ -15,10 +15,10 @@
       </div>
     </aside>
     <section class="min-w-0">
-      {% if not user.email_verified %}
+      {% if not user.email_verified and EMAIL_OTP %}
       <div class="alert alert-warning rounded-4 d-flex flex-wrap align-items-center justify-content-between gap-2">
-        <span><i class="bi bi-envelope-exclamation me-1"></i>Please verify your email address ({{ user.email }}).</span>
-        <form method="post" action="{% url 'accounts:resend_verification' %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="btn btn-sm btn-outline-dark" type="submit">Resend link</button></form>
+        <span><i class="bi bi-envelope-exclamation me-1" aria-hidden="true"></i>Please verify your email address ({{ user.email }}).</span>
+        <a class="btn btn-sm btn-outline-dark" href="{% url 'accounts:verify_email_code' %}?next={{ request.path|urlencode }}">Verify with a code</a>
       </div>
       {% endif %}
       {% block dash_content %}{% endblock %}

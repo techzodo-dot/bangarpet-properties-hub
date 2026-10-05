@@ -1,6 +1,6 @@
 from django.core import mail
 from django.core.cache import cache
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from accounts.models import BrokerProfile, OwnerProfile, Role, User, UserProfile, VerificationDocument
@@ -20,14 +20,15 @@ class RegistrationTests(TestCase):
 
     def test_customer_registration_creates_profile_and_logs_in(self):
         resp = self.client.post(reverse("accounts:register"), self._data())
-        self.assertRedirects(resp, reverse("accounts:post_login"), fetch_redirect_response=False)
+        self.assertRedirects(resp, reverse("accounts:verify_email_code"), fetch_redirect_response=False)
         user = User.objects.get(email="asha@example.com")
         self.assertEqual(user.role, Role.CUSTOMER)
         self.assertEqual(user.phone, "+919845012345")
         self.assertTrue(UserProfile.objects.filter(user=user).exists())
         self.assertNotEqual(user.password, "Bangarpet#Home2024")  # hashed
         self.assertTrue(user.check_password("Bangarpet#Home2024"))
-        self.assertEqual(len(mail.outbox), 1)  # verification email
+        self.assertEqual(len(mail.outbox), 1)  # verification code
+        self.assertIn("is your Bangarpet Property Hub code", mail.outbox[0].subject)
         self.assertEqual(int(self.client.session["_auth_user_id"]), user.pk)
 
     def test_broker_requires_agency_name(self):
@@ -103,7 +104,10 @@ class LoginTests(TestCase):
         self.assertNotIn("evil", resp["Location"])
 
 
-class PasswordResetTests(TestCase):
+@override_settings(EMAIL_OTP_ENABLED=False)
+class PasswordResetLinkTests(TestCase):
+    """The link-based reset, used while email codes are switched off (and for links already sent)."""
+
     def setUp(self):
         cache.clear()
 

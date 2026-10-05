@@ -569,6 +569,84 @@ KN = {
     "Budikote Road, Bangarpet": "ಬೂದಿಕೋಟೆ ರಸ್ತೆ, ಬಂಗಾರಪೇಟೆ",
     "Kamasamudra": "ಕಾಮಸಮುದ್ರ",
     "Bethamangala": "ಬೇತಮಂಗಲ",
+    # ---- Email codes (OTP) and password reset ----
+    "2-step sign-in": "2-ಹಂತದ ಸೈನ್ ಇನ್",
+    "6-digit code": "6-ಅಂಕಿಯ ಕೋಡ್",
+    "••••••": "••••••",
+    "Back to home": "ಮುಖಪುಟಕ್ಕೆ ಹಿಂತಿರುಗಿ",
+    "Back to sign in": "ಸೈನ್ ಇನ್‌ಗೆ ಹಿಂತಿರುಗಿ",
+    "Choose a new password": "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಆಯ್ಕೆಮಾಡಿ",
+    "Confirm new password": "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ",
+    "Didn't get the email? Check your spam folder or": "ಇಮೇಲ್ ಬರಲಿಲ್ಲವೇ? ಸ್ಪ್ಯಾಮ್ ಫೋಲ್ಡರ್ ನೋಡಿ ಅಥವಾ",
+    "Email address": "ಇಮೇಲ್ ವಿಳಾಸ",
+    "Email verification is not available right now. Please try again later.":
+        "ಇಮೇಲ್ ದೃಢೀಕರಣ ಈಗ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ನಂತರ ಪ್ರಯತ್ನಿಸಿ.",
+    "Enter the 6-digit code from the email.": "ಇಮೇಲ್‌ನಲ್ಲಿರುವ 6-ಅಂಕಿಯ ಕೋಡ್ ನಮೂದಿಸಿ.",
+    "Enter the 6-digit code we emailed to %(email)s to finish signing in.":
+        "ಸೈನ್ ಇನ್ ಪೂರ್ಣಗೊಳಿಸಲು %(email)s ಗೆ ಕಳುಹಿಸಿದ 6-ಅಂಕಿಯ ಕೋಡ್ ನಮೂದಿಸಿ.",
+    "Enter the 6-digit code we emailed to %(email)s. It is valid for 10 minutes.":
+        "%(email)s ಗೆ ಕಳುಹಿಸಿದ 6-ಅಂಕಿಯ ಕೋಡ್ ನಮೂದಿಸಿ. ಇದು 10 ನಿಮಿಷಗಳವರೆಗೆ ಮಾನ್ಯ.",
+    "Enter the email address you registered with. If an account exists, we'll email you a 6-digit code to set a new password.":
+        "ನೀವು ನೋಂದಾಯಿಸಿದ ಇಮೇಲ್ ವಿಳಾಸ ನಮೂದಿಸಿ. ಖಾತೆ ಇದ್ದರೆ, ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಹೊಂದಿಸಲು 6-ಅಂಕಿಯ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡುತ್ತೇವೆ.",
+    "Enter the email address you registered with. If an account exists, we'll email you a secure reset link.":
+        "ನೀವು ನೋಂದಾಯಿಸಿದ ಇಮೇಲ್ ವಿಳಾಸ ನಮೂದಿಸಿ. ಖಾತೆ ಇದ್ದರೆ, ಸುರಕ್ಷಿತ ಮರುಹೊಂದಿಸುವ ಲಿಂಕ್ ಇಮೇಲ್ ಮಾಡುತ್ತೇವೆ.",
+    "Enter your sign-in code": "ನಿಮ್ಮ ಸೈನ್ ಇನ್ ಕೋಡ್ ನಮೂದಿಸಿ",
+    "I'll do this later": "ನಂತರ ಮಾಡುತ್ತೇನೆ",
+    "If an account exists for %(email)s, we've emailed it a 6-digit code.":
+        "%(email)s ಗೆ ಖಾತೆ ಇದ್ದರೆ, ಅದಕ್ಕೆ 6-ಅಂಕಿಯ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡಿದ್ದೇವೆ.",
+    "If an account exists for %(email)s, we've emailed it a 6-digit code. Enter it below with your new password.":
+        "%(email)s ಗೆ ಖಾತೆ ಇದ್ದರೆ, ಅದಕ್ಕೆ 6-ಅಂಕಿಯ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡಿದ್ದೇವೆ. ಅದನ್ನು ನಿಮ್ಮ ಹೊಸ ಪಾಸ್‌ವರ್ಡ್‌ನೊಂದಿಗೆ ಕೆಳಗೆ ನಮೂದಿಸಿ.",
+    "If an account exists for %(email)s, we've emailed it a 6-digit code. It is valid for 10 minutes.":
+        "%(email)s ಗೆ ಖಾತೆ ಇದ್ದರೆ, ಅದಕ್ಕೆ 6-ಅಂಕಿಯ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡಿದ್ದೇವೆ. ಇದು 10 ನಿಮಿಷಗಳವರೆಗೆ ಮಾನ್ಯ.",
+    "If an account exists for %(email)s, we've emailed it a new code.":
+        "%(email)s ಗೆ ಖಾತೆ ಇದ್ದರೆ, ಅದಕ್ಕೆ ಹೊಸ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡಿದ್ದೇವೆ.",
+    "New password": "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್",
+    "No password needed. Enter your email and we'll send you a 6-digit code to sign in.":
+        "ಪಾಸ್‌ವರ್ಡ್ ಬೇಕಿಲ್ಲ. ನಿಮ್ಮ ಇಮೇಲ್ ನಮೂದಿಸಿ, ಸೈನ್ ಇನ್ ಮಾಡಲು 6-ಅಂಕಿಯ ಕೋಡ್ ಕಳುಹಿಸುತ್ತೇವೆ.",
+    "Password updated": "ಪಾಸ್‌ವರ್ಡ್ ಬದಲಾಗಿದೆ",
+    "Please ask for a new password reset code.": "ದಯವಿಟ್ಟು ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸುವ ಕೋಡ್ ಕೇಳಿ.",
+    "Please ask for a new sign-in code.": "ದಯವಿಟ್ಟು ಹೊಸ ಸೈನ್ ಇನ್ ಕೋಡ್ ಕೇಳಿ.",
+    "Please sign in again.": "ದಯವಿಟ್ಟು ಮತ್ತೆ ಸೈನ್ ಇನ್ ಮಾಡಿ.",
+    "Please wait %(seconds)s seconds before asking for another code.":
+        "ಇನ್ನೊಂದು ಕೋಡ್ ಕೇಳುವ ಮೊದಲು ದಯವಿಟ್ಟು %(seconds)s ಸೆಕೆಂಡು ಕಾಯಿರಿ.",
+    "Reset password": "ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸಿ",
+    "Reset your password": "ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸಿ",
+    "Send code": "ಕೋಡ್ ಕಳುಹಿಸಿ",
+    "Send reset link": "ಮರುಹೊಂದಿಸುವ ಲಿಂಕ್ ಕಳುಹಿಸಿ",
+    "Sign in with an email code": "ಇಮೇಲ್ ಕೋಡ್ ಮೂಲಕ ಸೈನ್ ಇನ್",
+    "Sign in with password instead": "ಬದಲಿಗೆ ಪಾಸ್‌ವರ್ಡ್‌ನೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿ",
+    "Sign-in with an email code is not available right now. Please use your password.":
+        "ಇಮೇಲ್ ಕೋಡ್ ಮೂಲಕ ಸೈನ್ ಇನ್ ಈಗ ಲಭ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ಬಳಸಿ.",
+    "That code is not correct.": "ಆ ಕೋಡ್ ಸರಿಯಿಲ್ಲ.",
+    "That code is not correct. Tries left: %(left)s.": "ಆ ಕೋಡ್ ಸರಿಯಿಲ್ಲ. ಉಳಿದ ಪ್ರಯತ್ನಗಳು: %(left)s.",
+    "The two passwords do not match.": "ಎರಡು ಪಾಸ್‌ವರ್ಡ್‌ಗಳು ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ.",
+    "There is no email address on this account to send a code to.":
+        "ಈ ಖಾತೆಯಲ್ಲಿ ಕೋಡ್ ಕಳುಹಿಸಲು ಇಮೇಲ್ ವಿಳಾಸವಿಲ್ಲ.",
+    "This code has already been used. Ask for a new code.": "ಈ ಕೋಡ್ ಈಗಾಗಲೇ ಬಳಸಲಾಗಿದೆ. ಹೊಸ ಕೋಡ್ ಕೇಳಿ.",
+    "This code has expired. Ask for a new code.": "ಈ ಕೋಡ್‌ನ ಅವಧಿ ಮುಗಿದಿದೆ. ಹೊಸ ಕೋಡ್ ಕೇಳಿ.",
+    "Too many code requests from your network. Please try again later.":
+        "ನಿಮ್ಮ ನೆಟ್‌ವರ್ಕ್‌ನಿಂದ ಹೆಚ್ಚು ಕೋಡ್ ವಿನಂತಿಗಳು ಬಂದಿವೆ. ದಯವಿಟ್ಟು ನಂತರ ಪ್ರಯತ್ನಿಸಿ.",
+    "Too many codes requested. Please try again in an hour.":
+        "ಹೆಚ್ಚು ಕೋಡ್‌ಗಳನ್ನು ಕೇಳಲಾಗಿದೆ. ದಯವಿಟ್ಟು ಒಂದು ಗಂಟೆಯ ನಂತರ ಪ್ರಯತ್ನಿಸಿ.",
+    "Too many tries from your network. Please wait 15 minutes and try again.":
+        "ನಿಮ್ಮ ನೆಟ್‌ವರ್ಕ್‌ನಿಂದ ಹೆಚ್ಚು ಪ್ರಯತ್ನಗಳು ಆಗಿವೆ. ದಯವಿಟ್ಟು 15 ನಿಮಿಷ ಕಾಯ್ದು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+    "Too many wrong tries. Ask for a new code.": "ಹಲವು ತಪ್ಪು ಪ್ರಯತ್ನಗಳು. ಹೊಸ ಕೋಡ್ ಕೇಳಿ.",
+    "Verify and sign in": "ದೃಢೀಕರಿಸಿ ಸೈನ್ ಇನ್ ಮಾಡಿ",
+    "Verify email": "ಇಮೇಲ್ ದೃಢೀಕರಿಸಿ",
+    "Verify your email": "ನಿಮ್ಮ ಇಮೇಲ್ ದೃಢೀಕರಿಸಿ",
+    "We couldn't send the email right now. Please try again in a few minutes.":
+        "ಈಗ ಇಮೇಲ್ ಕಳುಹಿಸಲು ಆಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಕೆಲವು ನಿಮಿಷಗಳ ನಂತರ ಪ್ರಯತ್ನಿಸಿ.",
+    "We've emailed a 6-digit code to %(email)s.": "%(email)s ಗೆ 6-ಅಂಕಿಯ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡಿದ್ದೇವೆ.",
+    "We've emailed a new code to %(email)s.": "%(email)s ಗೆ ಹೊಸ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡಿದ್ದೇವೆ.",
+    "Welcome to Bangarpet Property Hub!": "ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್‌ಗೆ ಸ್ವಾಗತ!",
+    "Welcome to Bangarpet Property Hub! We've emailed a 6-digit code to %(email)s.":
+        "ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್‌ಗೆ ಸ್ವಾಗತ! %(email)s ಗೆ 6-ಅಂಕಿಯ ಕೋಡ್ ಇಮೇಲ್ ಮಾಡಿದ್ದೇವೆ.",
+    "You can now sign in with your new password.": "ಈಗ ನಿಮ್ಮ ಹೊಸ ಪಾಸ್‌ವರ್ಡ್‌ನೊಂದಿಗೆ ಸೈನ್ ಇನ್ ಮಾಡಬಹುದು.",
+    "Your email address has been verified.": "ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸ ದೃಢೀಕರಿಸಲಾಗಿದೆ.",
+    "Your email address is already verified.": "ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸ ಈಗಾಗಲೇ ದೃಢೀಕರಿಸಲಾಗಿದೆ.",
+    "or": "ಅಥವಾ",
+    "send a new code": "ಹೊಸ ಕೋಡ್ ಕಳುಹಿಸಿ",
+    "send a new code in": "ಹೊಸ ಕೋಡ್ ಕಳುಹಿಸಲು ಇನ್ನು",
 }
 
 # Django's own relative-time phrases ("5 minutes ago", "today"), which Django does not ship in Kannada.

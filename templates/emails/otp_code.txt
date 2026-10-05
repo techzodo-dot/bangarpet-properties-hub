@@ -1,0 +1,16 @@
+Hello {{ user.get_short_name }},
+
+{% if purpose == "verify_email" %}Use this code to verify your email address:{% elif purpose == "login" %}Use this code to sign in:{% elif purpose == "password_reset" %}Use this code to reset your password:{% else %}Use this code to finish signing in to the admin panel:{% endif %}
+
+    {{ code }}
+
+The code is valid for {{ minutes }} minutes and works only once. Never share it with anyone; our team will never ask for it.
+{% if purpose == "admin_login" %}If you did not just sign in, change the admin password now.{% else %}If you didn't ask for this code, you can ignore this email.{% endif %}
+
+----
+{% if purpose == "verify_email" %}ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ದೃಢೀಕರಿಸಲು ಈ ಕೋಡ್ ಬಳಸಿ:{% elif purpose == "login" %}ಸೈನ್ ಇನ್ ಮಾಡಲು ಈ ಕೋಡ್ ಬಳಸಿ:{% elif purpose == "password_reset" %}ನಿಮ್ಮ ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸಲು ಈ ಕೋಡ್ ಬಳಸಿ:{% else %}ಆಡಳಿತ ಫಲಕಕ್ಕೆ ಸೈನ್ ಇನ್ ಪೂರ್ಣಗೊಳಿಸಲು ಈ ಕೋಡ್ ಬಳಸಿ:{% endif %} {{ code }}
+ಈ ಕೋಡ್ {{ minutes }} ನಿಮಿಷಗಳವರೆಗೆ ಮಾತ್ರ ಮಾನ್ಯ ಮತ್ತು ಒಮ್ಮೆ ಮಾತ್ರ ಬಳಸಬಹುದು. ಇದನ್ನು ಯಾರೊಂದಿಗೂ ಹಂಚಿಕೊಳ್ಳಬೇಡಿ; ನಮ್ಮ ತಂಡ ಎಂದಿಗೂ ಇದನ್ನು ಕೇಳುವುದಿಲ್ಲ.
+ನೀವು ಈ ಕೋಡ್ ಕೇಳದಿದ್ದರೆ, ಈ ಇಮೇಲ್ ಅನ್ನು ನಿರ್ಲಕ್ಷಿಸಿ.
+
+- Bangarpet Property Hub
+{{ site_url }}

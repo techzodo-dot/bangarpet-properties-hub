@@ -545,6 +545,11 @@ img { max-width: 100%; }
 .auth-wrap { display: grid; place-items: center; padding: 3rem 1rem; }
 .auth-card { width: 100%; max-width: 460px; }
 .auth-card h1 { font-size: 2rem; }
+.auth-divider { display: flex; align-items: center; gap: .75rem; margin: 1.25rem 0; color: var(--muted); font-size: .875rem; }
+.auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.otp-badge { display: inline-grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: var(--yellow-50); border: 1px solid var(--yellow-200); color: var(--navy); font-size: 1.6rem; }
+.form-control.otp-input { font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; font-size: 1.75rem; font-weight: 700; letter-spacing: .5em; text-align: center; padding: .6rem .5rem .6rem 1rem; }
+.form-control.otp-input::placeholder { letter-spacing: .5em; color: var(--border-strong); }
 
 /* ---------- Static pages ---------- */
 .page-hero { padding: 3rem 0 2.25rem; background: radial-gradient(600px 300px at 95% 0%, rgba(255, 214, 0, .2), transparent 70%), #fff; border-bottom: 1px solid var(--border); }

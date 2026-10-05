@@ -7,6 +7,7 @@ from django.contrib.auth.forms import (
     PasswordResetForm,
     SetPasswordForm,
 )
+from django.utils.translation import gettext as _
 
 from accounts.models import BrokerProfile, OwnerProfile, Role, User, UserProfile, VerificationDocument
 from core import ratelimit
@@ -129,8 +130,71 @@ class AdminLoginForm(LoginForm):
             )
 
 
+class OTPCodeForm(BootstrapFormMixin, forms.Form):
+    """The 6-digit code from an email."""
+
+    code = forms.CharField(
+        label="6-digit code", max_length=12,
+        widget=forms.TextInput(attrs={
+            "class": "otp-input", "inputmode": "numeric", "autocomplete": "one-time-code", "autofocus": True,
+            "pattern": "[0-9 ]*", "placeholder": "••••••",
+        }),
+    )
+
+    def clean_code(self):
+        code = "".join(ch for ch in self.cleaned_data["code"] if ch.isdigit())
+        if len(code) != 6:
+            raise forms.ValidationError(_("Enter the 6-digit code from the email."))
+        return code
+
+
+class EmailCodeRequestForm(BootstrapFormMixin, forms.Form):
+    """Ask for a code by email address (a plain text field so admin logins are accepted too)."""
+
+    email = forms.CharField(
+        label="Email address", max_length=254,
+        widget=forms.EmailInput(attrs={"autocomplete": "email", "autofocus": True, "autocapitalize": "none", "spellcheck": "false"}),
+    )
+
+    def clean_email(self):
+        return self.cleaned_data["email"].strip().lower()
+
+
+class PasswordResetCodeForm(OTPCodeForm):
+    """Code from the email plus the new password."""
+
+    new_password1 = forms.CharField(
+        label="New password", strip=False, widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+        help_text="At least 8 characters. Avoid common or purely numeric passwords.",
+    )
+    new_password2 = forms.CharField(
+        label="Confirm new password", strip=False, widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
+    )
+
+    def __init__(self, *args, user=None, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+        self.fields["code"].widget.attrs.pop("autofocus", None)
+
+    def clean(self):
+        data = super().clean()
+        p1, p2 = data.get("new_password1"), data.get("new_password2")
+        if p1 and p2 and p1 != p2:
+            self.add_error("new_password2", _("The two passwords do not match."))
+        elif p1:
+            try:
+                password_validation.validate_password(p1, self.user)
+            except forms.ValidationError as exc:
+                self.add_error("new_password1", exc)
+        return data
+
+
 class ThrottledPasswordResetForm(BootstrapFormMixin, PasswordResetForm):
-    pass
+    # A plain text field so admin logins such as "bph@admin" can reset by code too.
+    email = forms.CharField(
+        label="Email address", max_length=254,
+        widget=forms.EmailInput(attrs={"autocomplete": "email", "autofocus": True, "autocapitalize": "none", "spellcheck": "false"}),
+    )
 
 
 class StyledSetPasswordForm(BootstrapFormMixin, SetPasswordForm):

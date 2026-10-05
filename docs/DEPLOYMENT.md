@@ -225,6 +225,32 @@ The PostgreSQL driver (`psycopg`) is already in `requirements.txt`.
   emails about server errors (needs SMTP).
 * Uptime monitoring: point any monitor (UptimeRobot, Better Stack…) at `https://<domain>/healthz/`.
 
+## 12a. Email codes (OTP) with Gmail
+
+The site emails 6-digit one-time codes for: verifying the email address at sign-up, signing in
+without a password, resetting a forgotten password, and the admin 2-step sign-in. Codes are valid
+for 10 minutes, work once, allow 5 wrong tries and are rate limited. They switch on automatically
+once SMTP is configured; until then sign-up and sign-in work without them.
+
+1. On the Gmail account, turn on 2-Step Verification, then create an app password at
+   https://myaccount.google.com/apppasswords (16 letters).
+2. Set these environment variables (on Vercel: Project → Settings → Environment Variables, mark the
+   password as Sensitive) and redeploy:
+
+   | Variable | Value |
+   | --- | --- |
+   | `EMAIL_HOST` | `smtp.gmail.com` |
+   | `EMAIL_PORT` | `587` |
+   | `EMAIL_USE_TLS` | `True` |
+   | `EMAIL_HOST_USER` | the Gmail address |
+   | `EMAIL_HOST_PASSWORD` | the app password |
+   | `DEFAULT_FROM_EMAIL` | `Bangarpet Property Hub <the Gmail address>` |
+   | `ADMIN_OTP_EMAIL` | inbox for the admin's 2-step codes (needed when the admin login is a username such as `bph@admin`) |
+
+Without `ADMIN_OTP_EMAIL`, a username-style admin login skips the second step instead of being
+locked out. Set `EMAIL_OTP_ENABLED=False` to turn all codes off (for example if Gmail stops sending).
+Gmail allows about 500 emails a day; use a transactional email service if you need more.
+
 ## 13. Go-live checklist
 
 - [ ] Section 1 variables set, `DEBUG=False`, `scripts/release.sh` finished without errors
@@ -232,7 +258,7 @@ The PostgreSQL driver (`psycopg`) is already in `requirements.txt`.
 - [ ] Signed in as the admin and **changed the admin password** (Management → Change password)
 - [ ] Management → Settings filled in (contact phone/email, WhatsApp, office address, social links)
 - [ ] Locations, categories and plan prices reviewed
-- [ ] Email working (try password reset); Razorpay test payment + webhook verified, then live keys
+- [ ] Email working (sign in with an email code, try a password reset); Razorpay test payment + webhook verified, then live keys
 - [ ] WhatsApp templates approved before enabling WhatsApp notifications
 - [ ] Hourly cron (`run_scheduled_tasks`) installed; first backup taken and a restore tested
 - [ ] "Install app" works on a phone (Chrome → menu → Install app)
