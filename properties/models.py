@@ -313,6 +313,11 @@ class Property(TimeStampedModel):
 
     # ---- presentation helpers -------------------------------------------
     @property
+    def whatsapp_digits(self):
+        """Number for WhatsApp links: the WhatsApp number, or the phone when none was given."""
+        return "".join(ch for ch in (self.whatsapp_number or self.contact_phone or "") if ch.isdigit())
+
+    @property
     def location_label(self):
         parts = [p for p in [self.area.name if self.area_id else self.locality, self.town.name if self.town_id else ""] if p]
         return ", ".join(parts)

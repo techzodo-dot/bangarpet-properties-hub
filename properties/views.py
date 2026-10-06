@@ -1,3 +1,5 @@
+from urllib.parse import urlencode
+
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -199,6 +201,10 @@ def unlock_contact(request, slug):
     if result == "free":
         messages.success(request, _("Owner contact unlocked. Free contacts left this month: %(n)s.")
                          % {"n": contacts.free_left(request.user)})
+    if request.POST.get("open") == "whatsapp" and prop.whatsapp_digits:
+        text = _("Hi, I am interested in your property %(ref)s on Bangarpet Property Hub: %(url)s") % {
+            "ref": prop.reference, "url": request.build_absolute_uri(prop.get_absolute_url())}
+        return redirect(f"https://wa.me/{prop.whatsapp_digits}?{urlencode({'text': text})}")
     return redirect(back)
 
 

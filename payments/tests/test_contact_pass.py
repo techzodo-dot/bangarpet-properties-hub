@@ -272,3 +272,29 @@ class OneTimeFallbackTests(TestCase):
         sub = Subscription.objects.get(user=self.customer)
         self.assertTrue(sub.is_current)
         self.assertFalse(sub.auto_renew)
+
+
+class OwnerWhatsAppButtonTests(TestCase):
+    def setUp(self):
+        cache.clear()
+        self.customer = make_user(Role.CUSTOMER)
+        self.client.force_login(self.customer)
+
+    def test_locked_listing_offers_call_and_whatsapp(self):
+        prop = make_property(contact_visibility="public")
+        page = self.client.get(prop.get_absolute_url())
+        self.assertContains(page, 'name="open" value="phone"')
+        self.assertContains(page, 'name="open" value="whatsapp"')
+
+    def test_whatsapp_button_opens_chat_after_unlocking(self):
+        prop = make_property(contact_visibility="public")
+        resp = self.client.post(unlock_url(prop), {"open": "whatsapp"})
+        self.assertTrue(resp["Location"].startswith("https://wa.me/919876500000?text="))
+        self.assertTrue(ContactUnlock.objects.filter(user=self.customer, property=prop).exists())
+
+    def test_phone_is_used_for_whatsapp_when_no_whatsapp_number(self):
+        prop = make_property(contact_visibility="public", whatsapp_number="", contact_phone="+919845012345")
+        self.client.post(unlock_url(prop))
+        page = self.client.get(prop.get_absolute_url())
+        self.assertContains(page, "https://wa.me/919845012345?text=")
+        self.assertContains(page, "tel:+919845012345")

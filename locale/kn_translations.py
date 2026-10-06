@@ -669,6 +669,10 @@ KN = {
         "ಈ ತಿಂಗಳ ಎಲ್ಲಾ %(n)s ಉಚಿತ ಮಾಲೀಕರ ಸಂಪರ್ಕಗಳನ್ನು ಬಳಸಿದ್ದೀರಿ. ಅನಿಯಮಿತ ಸಂಪರ್ಕಗಳಿಗೆ ಕಾಂಟ್ಯಾಕ್ಟ್ ಪಾಸ್ ಪಡೆಯಿರಿ.",
     "You have used your %(n)s free owner contacts this month.":
         "ಈ ತಿಂಗಳ ನಿಮ್ಮ %(n)s ಉಚಿತ ಮಾಲೀಕರ ಸಂಪರ್ಕಗಳನ್ನು ಬಳಸಿದ್ದೀರಿ.",
+    "Show phone number": "ಫೋನ್ ನಂಬರ್ ತೋರಿಸಿ",
+    "WhatsApp owner": "ಮಾಲೀಕರಿಗೆ ವಾಟ್ಸಾಪ್ ಮಾಡಿ",
+    "Hi, I am interested in your property %(ref)s on Bangarpet Property Hub: %(url)s":
+        "ನಮಸ್ಕಾರ, ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್‌ನಲ್ಲಿರುವ ನಿಮ್ಮ ಆಸ್ತಿ %(ref)s ಬಗ್ಗೆ ನನಗೆ ಆಸಕ್ತಿ ಇದೆ: %(url)s",
 }
 
 # Django's own relative-time phrases ("5 minutes ago", "today"), which Django does not ship in Kannada.

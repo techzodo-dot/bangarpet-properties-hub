@@ -559,6 +559,13 @@ msgstr ""
 msgid "Hello Bangarpet Property Hub, I need help finding a property."
 msgstr "ನಮಸ್ಕಾರ ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್, ಆಸ್ತಿ ಹುಡುಕಲು ನನಗೆ ಸಹಾಯ ಬೇಕು."
 
+msgid ""
+"Hi, I am interested in your property %(ref)s on Bangarpet Property Hub: "
+"%(url)s"
+msgstr ""
+"ನಮಸ್ಕಾರ, ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್‌ನಲ್ಲಿರುವ ನಿಮ್ಮ ಆಸ್ತಿ %(ref)s ಬಗ್ಗೆ ನನಗೆ "
+"ಆಸಕ್ತಿ ಇದೆ: %(url)s"
+
 msgid "Home"
 msgstr "ಮುಖಪುಟ"
 
@@ -1356,6 +1363,9 @@ msgstr "ಫೋನ್ ತೋರಿಸಿ"
 msgid "Show phone & WhatsApp"
 msgstr "ಫೋನ್ ಮತ್ತು ವಾಟ್ಸಾಪ್ ತೋರಿಸಿ"
 
+msgid "Show phone number"
+msgstr "ಫೋನ್ ನಂಬರ್ ತೋರಿಸಿ"
+
 msgid "Show results"
 msgstr "ಫಲಿತಾಂಶಗಳನ್ನು ತೋರಿಸಿ"
 
@@ -1720,6 +1730,9 @@ msgstr "ವಾಟ್ಸಾಪ್"
 
 msgid "WhatsApp enquiry"
 msgstr "ವಾಟ್ಸಾಪ್ ಮೂಲಕ ವಿಚಾರಿಸಿ"
+
+msgid "WhatsApp owner"
+msgstr "ಮಾಲೀಕರಿಗೆ ವಾಟ್ಸಾಪ್ ಮಾಡಿ"
 
 msgid "WhatsApp us"
 msgstr "ವಾಟ್ಸಾಪ್ ಮಾಡಿ"
