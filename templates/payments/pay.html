@@ -8,9 +8,20 @@
   <dl class="row mb-4">
     <dt class="col-5 text-muted fw-normal">Plan</dt><dd class="col-7 fw-semibold">{{ payment.plan.name }} ({{ payment.plan.billing_period_days }} days)</dd>
     <dt class="col-5 text-muted fw-normal">Amount</dt><dd class="col-7 fw-semibold">{{ payment.amount|inr }}</dd>
-    <dt class="col-5 text-muted fw-normal">Order</dt><dd class="col-7 small">{{ payment.gateway_order_id }}</dd>
+    {% if recurring %}<dt class="col-5 text-muted fw-normal">Renews</dt><dd class="col-7">Automatically every {{ payment.plan.billing_period_days }} days. Cancel anytime from the Contact Pass page.</dd>
+    {% else %}<dt class="col-5 text-muted fw-normal">Order</dt><dd class="col-7 small">{{ payment.gateway_order_id }}</dd>{% endif %}
   </dl>
-  <button id="rzp-button" class="btn btn-accent btn-lg w-100" type="button"><i class="bi bi-lock me-1"></i>Pay {{ payment.amount|inr }} securely</button>
+  <button id="rzp-button" class="btn btn-accent btn-lg w-100" type="button"><i class="bi bi-lock me-1"></i>{% if recurring %}Start {{ payment.amount|inr }} / month{% else %}Pay {{ payment.amount|inr }} securely{% endif %}</button>
+  {% if recurring %}
+  <p class="small text-muted mt-3 mb-0">Pay with UPI Autopay or a card. You approve the auto-debit once; Razorpay then charges {{ payment.amount|inr }} each period. We never see or store your card details.</p>
+  <form id="rzp-success" method="post" action="{{ verify_url }}" hidden>{% csrf_token %}
+    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+    <input type="hidden" name="razorpay_subscription_id"><input type="hidden" name="razorpay_payment_id"><input type="hidden" name="razorpay_signature">
+  </form>
+  <form id="rzp-failed" method="post" action="{{ failed_url }}" hidden>{% csrf_token %}
+    <input type="hidden" name="razorpay_subscription_id" value="{{ payment.gateway_subscription_id }}"><input type="hidden" name="description">
+  </form>
+  {% else %}
   <p class="small text-muted mt-3 mb-0">UPI, cards, net banking and wallets are supported via Razorpay. We never see or store your card details.</p>
   <form id="rzp-success" method="post" action="{% url 'payments:verify' %}" hidden>{% csrf_token %}
     <input type="hidden" name="razorpay_order_id"><input type="hidden" name="razorpay_payment_id"><input type="hidden" name="razorpay_signature">
@@ -18,7 +29,8 @@
   <form id="rzp-failed" method="post" action="{% url 'payments:failed' %}" hidden>{% csrf_token %}
     <input type="hidden" name="razorpay_order_id" value="{{ payment.gateway_order_id }}"><input type="hidden" name="description">
   </form>
-  <div id="rzp-config" hidden data-key="{{ key_id }}" data-amount="{{ payment.amount_paise }}" data-order="{{ payment.gateway_order_id }}" data-name="{{ site.site_name }}" data-description="{{ payment.plan.name }} plan" data-prefill-name="{{ user.full_name }}" data-prefill-email="{{ user.email }}" data-prefill-contact="{{ user.phone }}"></div>
+  {% endif %}
+  <div id="rzp-config" hidden data-key="{{ key_id }}" data-amount="{{ payment.amount_paise }}" data-order="{{ payment.gateway_order_id|default:'' }}"{% if recurring %} data-subscription="{{ payment.gateway_subscription_id }}"{% endif %} data-name="{{ site.site_name }}" data-description="{{ payment.plan.name }} plan" data-prefill-name="{{ user.full_name }}" data-prefill-email="{{ user.email }}" data-prefill-contact="{{ user.phone }}"></div>
 </div>
 {% endblock %}
 {% block extra_js %}

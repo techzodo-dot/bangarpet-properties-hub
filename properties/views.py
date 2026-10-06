@@ -17,7 +17,9 @@ from enquiries.forms import EnquiryForm
 from moderation.models import Report
 from properties.forms import PropertySearchForm, ReportForm, SaveSearchForm
 from properties.models import Category, Favourite, Property, SavedSearch
+from properties import contacts
 from properties.services import record_view, search_properties, similar_properties
+from subscriptions.services import contact_pass_plan
 
 PAGE_SIZE = 12
 
@@ -147,9 +149,11 @@ def property_detail(request, slug):
     if prop.is_public:
         record_view(request, prop)
 
-    can_see_phone = prop.contact_visibility == Property.ContactVisibility.PUBLIC or (
+    allowed = prop.contact_visibility == Property.ContactVisibility.PUBLIC or (
         prop.contact_visibility == Property.ContactVisibility.REGISTERED and user.is_authenticated
     ) or is_owner or is_admin
+    contact = contacts.contact_state(user, prop, allowed=allowed)
+    can_see_phone = contact["visible"]
     enquiry_form = None
     existing_enquiry = None
     if user.is_authenticated and not is_owner and user.role != Role.ADMIN:
@@ -162,6 +166,8 @@ def property_detail(request, slug):
         "is_owner": is_owner,
         "is_admin": is_admin,
         "can_see_phone": can_see_phone,
+        "contact": contact,
+        "contact_pass_plan": contact_pass_plan() if contact["metered"] and not contact["visible"] else None,
         "enquiry_form": enquiry_form,
         "existing_enquiry": existing_enquiry,
         "report_form": ReportForm(),
@@ -172,6 +178,28 @@ def property_detail(request, slug):
         "absolute_url": request.build_absolute_uri(prop.get_absolute_url()),
     }
     return render(request, "properties/detail.html", context)
+
+
+@login_required
+@require_POST
+def unlock_contact(request, slug):
+    """Reveal a listing's phone/WhatsApp, using one of the customer's free monthly contacts."""
+    prop = get_object_or_404(Property.objects.public(), slug=slug)
+    back = prop.get_absolute_url() + "#contact"
+    if not contacts.is_metered(request.user) or not contacts.has_contact_details(prop):
+        return redirect(back)
+    if not ratelimit.check_and_hit("contact_unlock", f"user:{request.user.pk}"):
+        messages.error(request, _("Too many requests. Please try again in a while."))
+        return redirect(back)
+    result = contacts.unlock(request.user, prop)
+    if result is None:
+        messages.info(request, _("You have used all %(n)s free owner contacts for this month. Get the Contact Pass for unlimited contacts.")
+                      % {"n": contacts.free_limit()})
+        return redirect(f"{reverse('payments:contact_pass')}?next={prop.get_absolute_url()}")
+    if result == "free":
+        messages.success(request, _("Owner contact unlocked. Free contacts left this month: %(n)s.")
+                         % {"n": contacts.free_left(request.user)})
+    return redirect(back)
 
 
 @require_POST

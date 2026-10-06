@@ -7,7 +7,8 @@ from subscriptions.models import SubscriptionPlan
 def pricing(request):
     user = request.user
     is_partner = user.is_authenticated and user.is_partner
-    plans = list(SubscriptionPlan.objects.filter(is_active=True))
+    # The customer Contact Pass has its own page; this page lists the listing plans.
+    plans = list(SubscriptionPlan.objects.filter(is_active=True, unlimited_contacts=False))
     for plan in plans:
         roles = {r.strip() for r in plan.for_roles.split(",") if r.strip()}
         # Visitors sign up as an owner unless the plan is only for brokers.

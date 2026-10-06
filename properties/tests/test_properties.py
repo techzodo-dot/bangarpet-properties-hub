@@ -284,6 +284,8 @@ class DetailVisibilityTests(TestCase):
     def test_signed_in_user_sees_phone_and_hidden_never_shown(self):
         prop = make_property()
         self.client.force_login(make_user())
+        self.assertNotContains(self.client.get(prop.get_absolute_url()), "tel:" + prop.contact_phone)
+        self.client.post(reverse("properties:unlock_contact", args=[prop.slug]))  # uses a free monthly contact
         self.assertContains(self.client.get(prop.get_absolute_url()), prop.contact_phone)
         prop.contact_visibility = "hidden"
         prop.save()

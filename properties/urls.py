@@ -13,6 +13,7 @@ urlpatterns = [
     path("pg-rooms/", views.property_search, {"preset": "pg_rooms"}, name="pg_rooms"),
     path("commercial/", views.property_search, {"preset": "commercial"}, name="commercial"),
     path("property/<slug:slug>/", views.property_detail, name="detail"),
+    path("property/<slug:slug>/contact/", views.unlock_contact, name="unlock_contact"),
     path("property/<int:pk>/favourite/", views.toggle_favourite, name="toggle_favourite"),
     path("property/<int:pk>/report/", views.report_property, name="report"),
     path("partners/<int:pk>/", views.partner_profile, name="partner_profile"),

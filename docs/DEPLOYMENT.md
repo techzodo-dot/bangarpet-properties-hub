@@ -251,6 +251,23 @@ Without `ADMIN_OTP_EMAIL`, a username-style admin login skips the second step in
 locked out. Set `EMAIL_OTP_ENABLED=False` to turn all codes off (for example if Gmail stops sending).
 Gmail allows about 500 emails a day; use a transactional email service if you need more.
 
+## 12b. Customer Contact Pass (recurring payments)
+
+Customers can unlock a limited number of owner phone/WhatsApp contacts for free each month
+(Management → Settings → "Limit free owner contacts" and "Free contacts per month", default 5).
+After that they buy the **Contact Pass** (a customer plan with "Unlimited contacts", default
+₹99 every 30 days, editable under Management → Plans). It renews automatically through
+Razorpay Subscriptions (UPI Autopay or card); customers can cancel from Dashboard → Contact Pass.
+
+* Razorpay creates the matching Razorpay plan automatically on the first sale (and again if the
+  price changes or you switch from test to live keys).
+* Live mode: ask Razorpay to enable **Subscriptions** on your account.
+* Webhook (recommended): Razorpay → Settings → Webhooks → URL
+  `https://<domain>/payments/razorpay/webhook/`, events `payment.captured`, `order.paid`,
+  `payment.failed`, `subscription.charged`, `subscription.cancelled`, `subscription.halted`,
+  `subscription.completed`; set the same secret as `RAZORPAY_WEBHOOK_SECRET`. Without a webhook the
+  daily scheduled task still picks up renewal payments from Razorpay before passes expire.
+
 ## 13. Go-live checklist
 
 - [ ] Section 1 variables set, `DEBUG=False`, `scripts/release.sh` finished without errors

@@ -18,6 +18,9 @@ msgstr "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ %(category)s"
 msgid "%(count)s selected"
 msgstr "%(count)s ಆಯ್ಕೆ ಮಾಡಲಾಗಿದೆ"
 
+msgid "%(left)s of %(limit)s free owner contacts left this month"
+msgstr "ಈ ತಿಂಗಳು %(limit)s ರಲ್ಲಿ %(left)s ಉಚಿತ ಮಾಲೀಕರ ಸಂಪರ್ಕಗಳು ಉಳಿದಿವೆ"
+
 msgid "%(n)s years experience"
 msgstr "%(n)s ವರ್ಷಗಳ ಅನುಭವ"
 
@@ -329,6 +332,12 @@ msgstr "ಪಾಸ್‌ವರ್ಡ್ ಖಚಿತಪಡಿಸಿ"
 msgid "Contact"
 msgstr "ಸಂಪರ್ಕ"
 
+msgid "Contact Pass"
+msgstr "ಕಾಂಟ್ಯಾಕ್ಟ್ ಪಾಸ್"
+
+msgid "Contact Pass active"
+msgstr "ಕಾಂಟ್ಯಾಕ್ಟ್ ಪಾಸ್ ಸಕ್ರಿಯವಾಗಿದೆ"
+
 msgid "Contact about %(ref)s"
 msgstr "%(ref)s ಬಗ್ಗೆ ಸಂಪರ್ಕಿಸಿ"
 
@@ -527,6 +536,9 @@ msgstr "ತೋಟ"
 
 msgid "Gated community"
 msgstr "ಗೇಟೆಡ್ ಸಮುದಾಯ"
+
+msgid "Get Contact Pass - %(price)s/month"
+msgstr "ಕಾಂಟ್ಯಾಕ್ಟ್ ಪಾಸ್ ಪಡೆಯಿರಿ - %(price)s/ತಿಂಗಳು"
 
 msgid "Geyser"
 msgstr "ಗೀಸರ್"
@@ -963,6 +975,9 @@ msgstr "ಸಾರಾಂಶ"
 msgid "Owner"
 msgstr "ಮಾಲೀಕರು"
 
+msgid "Owner contact unlocked. Free contacts left this month: %(n)s."
+msgstr "ಮಾಲೀಕರ ಸಂಪರ್ಕ ತೆರೆಯಲಾಗಿದೆ. ಈ ತಿಂಗಳು ಉಳಿದ ಉಚಿತ ಸಂಪರ್ಕಗಳು: %(n)s."
+
 msgid "Owner listing"
 msgstr "ಮಾಲೀಕರ ಜಾಹೀರಾತು"
 
@@ -1335,6 +1350,12 @@ msgstr ""
 "ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಬಾಡಿಗೆ ಅಥವಾ ಮಾರಾಟಕ್ಕೆ ಅಂಗಡಿಗಳು, ಕಚೇರಿಗಳು ಮತ್ತು ವಾಣಿಜ್ಯ "
 "ಸ್ಥಳಗಳು."
 
+msgid "Show phone"
+msgstr "ಫೋನ್ ತೋರಿಸಿ"
+
+msgid "Show phone & WhatsApp"
+msgstr "ಫೋನ್ ಮತ್ತು ವಾಟ್ಸಾಪ್ ತೋರಿಸಿ"
+
 msgid "Show results"
 msgstr "ಫಲಿತಾಂಶಗಳನ್ನು ತೋರಿಸಿ"
 
@@ -1496,6 +1517,9 @@ msgstr ""
 msgid "Too many codes requested. Please try again in an hour."
 msgstr "ಹೆಚ್ಚು ಕೋಡ್‌ಗಳನ್ನು ಕೇಳಲಾಗಿದೆ. ದಯವಿಟ್ಟು ಒಂದು ಗಂಟೆಯ ನಂತರ ಪ್ರಯತ್ನಿಸಿ."
 
+msgid "Too many requests. Please try again in a while."
+msgstr "ಹೆಚ್ಚು ವಿನಂತಿಗಳು. ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ಪ್ರಯತ್ನಿಸಿ."
+
 msgid ""
 "Too many tries from your network. Please wait 15 minutes and try again."
 msgstr ""
@@ -1538,6 +1562,10 @@ msgstr "ನಿರ್ಮಾಣ ಹಂತದಲ್ಲಿದೆ"
 
 msgid "Unfurnished"
 msgstr "ಪೀಠೋಪಕರಣ ಇಲ್ಲ"
+
+msgid "Unlimited owner contacts. Renews monthly, cancel anytime."
+msgstr ""
+"ಅನಿಯಮಿತ ಮಾಲೀಕರ ಸಂಪರ್ಕಗಳು. ಪ್ರತಿ ತಿಂಗಳು ನವೀಕರಣ, ಯಾವಾಗ ಬೇಕಾದರೂ ರದ್ದುಮಾಡಿ."
 
 msgid "Used only to reply to you"
 msgstr "ನಿಮಗೆ ಉತ್ತರಿಸಲು ಮಾತ್ರ ಬಳಸಲಾಗುತ್ತದೆ"
@@ -1751,6 +1779,16 @@ msgstr "ನೀವು ಈಗಾಗಲೇ ಈ ಜಾಹೀರಾತನ್ನು �
 
 msgid "You have an open enquiry (%(status)s)."
 msgstr "ನಿಮ್ಮ ವಿಚಾರಣೆ ಚಾಲ್ತಿಯಲ್ಲಿದೆ (%(status)s)."
+
+msgid ""
+"You have used all %(n)s free owner contacts for this month. Get the Contact "
+"Pass for unlimited contacts."
+msgstr ""
+"ಈ ತಿಂಗಳ ಎಲ್ಲಾ %(n)s ಉಚಿತ ಮಾಲೀಕರ ಸಂಪರ್ಕಗಳನ್ನು ಬಳಸಿದ್ದೀರಿ. ಅನಿಯಮಿತ ಸಂಪರ್ಕಗಳಿಗೆ"
+" ಕಾಂಟ್ಯಾಕ್ಟ್ ಪಾಸ್ ಪಡೆಯಿರಿ."
+
+msgid "You have used your %(n)s free owner contacts this month."
+msgstr "ಈ ತಿಂಗಳ ನಿಮ್ಮ %(n)s ಉಚಿತ ಮಾಲೀಕರ ಸಂಪರ್ಕಗಳನ್ನು ಬಳಸಿದ್ದೀರಿ."
 
 msgid "You may also like"
 msgstr "ನಿಮಗೆ ಇವೂ ಇಷ್ಟವಾಗಬಹುದು"

@@ -1,0 +1,77 @@
+{% extends "dashboard/customer_base.html" %}
+{% load bph %}
+{% block title %}Contact Pass - {{ site.site_name }}{% endblock %}
+{% block dash_content %}
+<div class="page-head"><h1>Contact Pass</h1>{% if next %}<a class="btn btn-soft" href="{{ next }}"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to the property</a>{% endif %}</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    {% if current %}
+    <div class="surface p-4 h-100">
+      <span class="badge badge-verified mb-2"><i class="bi bi-patch-check-fill me-1" aria-hidden="true"></i>Active</span>
+      <h2 class="h4 mb-1">{{ current.plan.name }}</h2>
+      <p class="text-muted mb-3">You can see every owner's phone number and WhatsApp.</p>
+      <dl class="row mb-3">
+        <dt class="col-sm-5 text-muted fw-normal">Active until</dt><dd class="col-sm-7 fw-semibold">{{ current.ends_at|date:"d M Y" }} ({{ current.days_remaining }} days left)</dd>
+        <dt class="col-sm-5 text-muted fw-normal">Auto-renewal</dt>
+        <dd class="col-sm-7">{% if current.auto_renew %}<span class="text-verified fw-semibold">On</span> &middot; {{ current.plan.effective_price|inr }} is charged every {{ current.plan.billing_period_days }} days{% else %}Off &middot; the pass ends on {{ current.ends_at|date:"d M Y" }}{% endif %}</dd>
+      </dl>
+      {% if current.auto_renew %}
+      <form method="post" action="{% url 'payments:contact_pass_cancel' %}" data-confirm="Turn off auto-renewal? Your pass stays active until {{ current.ends_at|date:'d M Y' }}.">{% csrf_token %}
+        <button class="btn btn-outline-danger btn-sm" type="submit">Cancel auto-renewal</button>
+      </form>
+      {% elif plan %}
+      <form method="post" action="{% url 'payments:contact_pass_subscribe' %}">{% csrf_token %}
+        <button class="btn btn-accent" type="submit"><i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>Turn on auto-renewal ({{ plan.effective_price|inr }}/month)</button>
+      </form>
+      {% endif %}
+    </div>
+    {% elif plan %}
+    <div class="surface p-4 h-100">
+      <h2 class="h4 mb-1">{{ plan.name }}</h2>
+      <p class="text-muted mb-3">{{ plan.description }}</p>
+      <div class="display-6 fw-bold text-navy mb-1">{{ plan.effective_price|inr }}<small class="fs-6 text-muted fw-normal"> / month</small></div>
+      <ul class="list-unstyled d-grid gap-2 my-4">
+        {% for f in plan.feature_list %}<li><i class="bi bi-check-circle-fill text-verified me-2" aria-hidden="true"></i>{{ f }}</li>{% endfor %}
+      </ul>
+      {% if online %}
+      <form method="post" action="{% url 'payments:contact_pass_subscribe' %}" data-once>{% csrf_token %}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        <button class="btn btn-accent btn-lg w-100" type="submit"><i class="bi bi-unlock me-1" aria-hidden="true"></i>Get Contact Pass - {{ plan.effective_price|inr }}/month <span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
+      </form>
+      <p class="small text-muted mt-3 mb-0"><i class="bi bi-shield-lock me-1" aria-hidden="true"></i>Secure payment by Razorpay with UPI Autopay or card. Renews automatically every month; cancel anytime here.</p>
+      {% else %}
+      <div class="alert alert-info rounded-4 mb-0">Online payment is not available yet.{% if site.whatsapp_digits %} <a href="https://wa.me/{{ site.whatsapp_digits }}" target="_blank" rel="noopener">Message us on WhatsApp</a> to get the Contact Pass.{% endif %}</div>
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="surface p-4">The Contact Pass is not available right now.</div>
+    {% endif %}
+  </div>
+  <div class="col-lg-5">
+    <div class="surface p-4 h-100">
+      <h2 class="h5">Free contacts this month</h2>
+      {% if metering %}
+      <div class="display-6 fw-bold text-navy">{{ free_left }} <small class="fs-6 text-muted fw-normal">of {{ free_limit }} left</small></div>
+      <p class="small text-muted mb-0">Every account gets {{ free_limit }} free owner contacts each month; the count resets on the 1st. A property you have unlocked stays unlocked.</p>
+      {% else %}
+      <p class="mb-0">Owner contacts are currently free for everyone.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% if recent_unlocks %}
+<h2 class="h5 mt-4">Owner contacts you unlocked</h2>
+<div class="table-card"><div class="table-responsive"><table class="table"><thead><tr><th>Property</th><th>Unlocked</th><th>Using</th></tr></thead><tbody>
+{% for u in recent_unlocks %}<tr><td><a href="{{ u.property.get_absolute_url }}#contact">{{ u.property.title|truncatechars:60 }}</a></td><td class="small">{{ u.created_at|date:"d M Y" }}</td><td class="small">{{ u.get_via_display }}</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endif %}
+
+{% if payments %}
+<h2 class="h5 mt-4">Payments</h2>
+<div class="table-card"><div class="table-responsive"><table class="table"><thead><tr><th>Date</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody>
+{% for p in payments %}<tr><td class="small">{{ p.paid_at|default:p.created_at|date:"d M Y" }}</td><td>{{ p.amount|inr }}</td><td>{% status_badge p %}</td><td>{% if p.status == 'paid' %}<a class="small" href="{% url 'payments:receipt' p.uid %}">Receipt</a>{% endif %}</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endif %}
+{% endblock %}

@@ -253,6 +253,7 @@ RATE_LIMITS = {
     "login": (5, 15 * 60),
     "register": (10, 60 * 60),
     "password_reset": (5, 60 * 60),
+    "contact_unlock": (30, 60 * 60),  # owner contacts unlocked per customer
     "otp_send": (5, 60 * 60),       # codes emailed per account
     "otp_request": (10, 60 * 60),   # code requests per network
     "otp_verify": (20, 15 * 60),    # code guesses per network

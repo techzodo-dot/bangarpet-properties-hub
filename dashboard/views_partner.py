@@ -535,7 +535,7 @@ def visit_action(request, pk, action):
 @partner_required
 def subscription(request):
     user = request.user
-    plans = [p for p in SubscriptionPlan.objects.filter(is_active=True) if p.available_for(user)]
+    plans = [p for p in SubscriptionPlan.objects.filter(is_active=True, unlimited_contacts=False) if p.available_for(user)]
     return render(request, "dashboard/partner/subscription.html", _ctx(
         "subscription", plans=plans, current=subs.current_subscription(user), plan=subs.current_plan(user),
         used_slots=subs.used_listing_slots(user), history=user.subscriptions.select_related("plan")[:10],

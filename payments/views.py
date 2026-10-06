@@ -21,7 +21,7 @@ from notifications.services import notify_admins
 from payments import razorpay
 from payments.forms import ManualPaymentForm, PlanRequestForm
 from payments.models import Invoice, Payment, WebhookEvent
-from payments.services import mark_failed, mark_paid
+from payments.services import mark_failed, mark_paid, record_subscription_charge, stop_auto_renewal
 from subscriptions.models import SubscriptionPlan
 
 logger = logging.getLogger("bph")
@@ -206,6 +206,17 @@ def razorpay_webhook(request):
         return HttpResponse("duplicate")
 
     entity = ((data.get("payload") or {}).get("payment") or {}).get("entity") or {}
+    if event_type.startswith("subscription."):
+        sub_entity = ((data.get("payload") or {}).get("subscription") or {}).get("entity") or {}
+        sub_id = sub_entity.get("id", "")
+        if event_type == "subscription.charged" and sub_id:
+            record.result = record_subscription_charge(sub_id, entity, source="webhook")
+        elif event_type in ("subscription.cancelled", "subscription.completed", "subscription.halted") and sub_id:
+            record.result = f"auto-renew stopped ({stop_auto_renewal(sub_id)})"
+        else:
+            record.result = "ignored"
+        record.save(update_fields=["result"])
+        return HttpResponse("ok")
     order_id = entity.get("order_id")
     payment = Payment.objects.filter(gateway_order_id=order_id).first() if order_id else None
     result = "ignored"

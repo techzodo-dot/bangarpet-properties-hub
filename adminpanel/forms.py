@@ -50,7 +50,7 @@ class PlanForm(BootstrapFormMixin, forms.ModelForm):
         fields = [
             "name", "slug", "description", "price", "billing_period_days", "listing_limit", "listing_duration_days",
             "has_performance_stats", "has_priority_visibility", "has_advanced_enquiry_tools", "visibility_priority",
-            "features", "for_roles", "discount_percent", "discount_label", "discount_ends_at", "is_default",
+            "features", "for_roles", "unlimited_contacts", "discount_percent", "discount_label", "discount_ends_at", "is_default",
             "is_active", "display_order",
         ]
         widgets = {"features": forms.Textarea(attrs={"rows": 4}), "discount_ends_at": DT_WIDGET}

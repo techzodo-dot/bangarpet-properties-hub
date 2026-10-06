@@ -490,6 +490,26 @@ class SavedSearch(models.Model):
         return f"{reverse('properties:search')}?{self.query_string}"
 
 
+class ContactUnlock(models.Model):
+    """A customer revealed a listing's phone/WhatsApp. Each listing counts once."""
+
+    class Via(models.TextChoices):
+        FREE = "free", "Free monthly contact"
+        PASS = "pass", "Contact Pass"
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="contact_unlocks")
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="contact_unlocks")
+    via = models.CharField(max_length=8, choices=Via.choices, default=Via.FREE)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        constraints = [models.UniqueConstraint(fields=["user", "property"], name="unique_contact_unlock")]
+
+    def __str__(self):
+        return f"{self.user_id} unlocked {self.property_id}"
+
+
 class RecentlyViewed(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="recently_viewed")
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="+")

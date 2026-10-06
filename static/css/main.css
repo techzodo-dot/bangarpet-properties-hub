@@ -526,6 +526,7 @@ img { max-width: 100%; }
 .cc-price { font-weight: 800; font-size: 1.65rem; color: var(--navy); letter-spacing: -.02em; }
 .cc-price small { font-size: .85rem; font-weight: 600; color: var(--muted); }
 .contact-card { position: sticky; top: calc(var(--nav-h) + 72px); border-radius: var(--r-xl); padding: 1.5rem; background: #fff; border: 1px solid var(--border); box-shadow: var(--shadow-lg); }
+.contact-limit { padding: 1rem; border-radius: var(--r); background: var(--yellow-50); border: 1px solid var(--yellow-200); color: var(--text); }
 .avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; background: var(--navy); color: var(--yellow); display: inline-grid; place-items: center; font-weight: 800; font-size: 1.1rem; flex: none; }
 .avatar-sm { width: 36px; height: 36px; font-size: .85rem; }
 .avatar-lg { width: 84px; height: 84px; font-size: 1.7rem; }

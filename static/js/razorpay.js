@@ -11,20 +11,23 @@
       if (!window.Razorpay) { alert("Payment service could not load. Check your connection and try again."); return; }
       const success = document.getElementById("rzp-success");
       const failed = document.getElementById("rzp-failed");
-      const rzp = new window.Razorpay({
-        key: d.key, amount: d.amount, currency: "INR", order_id: d.order,
-        name: d.name, description: d.description,
+      const options = {
+        key: d.key, name: d.name, description: d.description,
         prefill: { name: d.prefillName, email: d.prefillEmail, contact: d.prefillContact },
         theme: { color: "#172B4D" },
         handler: function (resp) {
-          success.razorpay_order_id.value = resp.razorpay_order_id;
-          success.razorpay_payment_id.value = resp.razorpay_payment_id;
-          success.razorpay_signature.value = resp.razorpay_signature;
+          // One-time payments return an order ID; auto-renewing ones a subscription ID.
+          ["razorpay_order_id", "razorpay_subscription_id", "razorpay_payment_id", "razorpay_signature"].forEach(function (k) {
+            if (success[k]) success[k].value = resp[k] || "";
+          });
           btn.setAttribute("aria-busy", "true");
           success.submit();
         },
         modal: { ondismiss: function () { btn.removeAttribute("aria-busy"); } },
-      });
+      };
+      if (d.subscription) { options.subscription_id = d.subscription; }
+      else { options.order_id = d.order; options.amount = d.amount; options.currency = "INR"; }
+      const rzp = new window.Razorpay(options);
       rzp.on("payment.failed", function (resp) {
         failed.description.value = (resp.error && resp.error.description) || "Payment failed";
         failed.submit();

@@ -60,6 +60,13 @@ class PlatformSetting(models.Model):
         default=False, help_text="Allow partners to submit UPI/bank transfer references for manual verification."
     )
     manual_payment_instructions = models.TextField(blank=True)
+    contact_limit_enabled = models.BooleanField(
+        "Limit free owner contacts", default=True,
+        help_text="Customers see a limited number of owner phone numbers each month, then need the Contact Pass.",
+    )
+    free_contacts_per_month = models.PositiveSmallIntegerField(
+        default=5, help_text="Owner contacts a customer can unlock for free each month.",
+    )
     gstin = models.CharField("GSTIN", max_length=20, blank=True, help_text="Shown on invoices when set.")
     invoice_business_name = models.CharField(max_length=160, blank=True)
 

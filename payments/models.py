@@ -32,6 +32,9 @@ class Payment(TimeStampedModel):
     gateway_order_id = models.CharField(max_length=64, blank=True, null=True, unique=True)
     gateway_payment_id = models.CharField(max_length=64, blank=True, null=True, unique=True)
     gateway_signature = models.CharField(max_length=128, blank=True)
+    gateway_subscription_id = models.CharField(
+        max_length=64, blank=True, db_index=True, help_text="Razorpay subscription this payment belongs to (auto-renewal).",
+    )
     manual_reference = models.CharField(max_length=80, blank=True, help_text="UPI transaction ID / bank reference.")
     failure_reason = models.CharField(max_length=255, blank=True)
     paid_at = models.DateTimeField(null=True, blank=True)

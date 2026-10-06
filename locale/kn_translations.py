@@ -652,6 +652,23 @@ KN = {
     "WhatsApp us": "ವಾಟ್ಸಾಪ್ ಮಾಡಿ",
     "Hello Bangarpet Property Hub, I need help finding a property.":
         "ನಮಸ್ಕಾರ ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್, ಆಸ್ತಿ ಹುಡುಕಲು ನನಗೆ ಸಹಾಯ ಬೇಕು.",
+    # ---- Owner contacts and Contact Pass ----
+    "%(left)s of %(limit)s free owner contacts left this month":
+        "ಈ ತಿಂಗಳು %(limit)s ರಲ್ಲಿ %(left)s ಉಚಿತ ಮಾಲೀಕರ ಸಂಪರ್ಕಗಳು ಉಳಿದಿವೆ",
+    "Contact Pass": "ಕಾಂಟ್ಯಾಕ್ಟ್ ಪಾಸ್",
+    "Contact Pass active": "ಕಾಂಟ್ಯಾಕ್ಟ್ ಪಾಸ್ ಸಕ್ರಿಯವಾಗಿದೆ",
+    "Get Contact Pass - %(price)s/month": "ಕಾಂಟ್ಯಾಕ್ಟ್ ಪಾಸ್ ಪಡೆಯಿರಿ - %(price)s/ತಿಂಗಳು",
+    "Owner contact unlocked. Free contacts left this month: %(n)s.":
+        "ಮಾಲೀಕರ ಸಂಪರ್ಕ ತೆರೆಯಲಾಗಿದೆ. ಈ ತಿಂಗಳು ಉಳಿದ ಉಚಿತ ಸಂಪರ್ಕಗಳು: %(n)s.",
+    "Show phone": "ಫೋನ್ ತೋರಿಸಿ",
+    "Show phone & WhatsApp": "ಫೋನ್ ಮತ್ತು ವಾಟ್ಸಾಪ್ ತೋರಿಸಿ",
+    "Too many requests. Please try again in a while.": "ಹೆಚ್ಚು ವಿನಂತಿಗಳು. ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಸಮಯದ ನಂತರ ಪ್ರಯತ್ನಿಸಿ.",
+    "Unlimited owner contacts. Renews monthly, cancel anytime.":
+        "ಅನಿಯಮಿತ ಮಾಲೀಕರ ಸಂಪರ್ಕಗಳು. ಪ್ರತಿ ತಿಂಗಳು ನವೀಕರಣ, ಯಾವಾಗ ಬೇಕಾದರೂ ರದ್ದುಮಾಡಿ.",
+    "You have used all %(n)s free owner contacts for this month. Get the Contact Pass for unlimited contacts.":
+        "ಈ ತಿಂಗಳ ಎಲ್ಲಾ %(n)s ಉಚಿತ ಮಾಲೀಕರ ಸಂಪರ್ಕಗಳನ್ನು ಬಳಸಿದ್ದೀರಿ. ಅನಿಯಮಿತ ಸಂಪರ್ಕಗಳಿಗೆ ಕಾಂಟ್ಯಾಕ್ಟ್ ಪಾಸ್ ಪಡೆಯಿರಿ.",
+    "You have used your %(n)s free owner contacts this month.":
+        "ಈ ತಿಂಗಳ ನಿಮ್ಮ %(n)s ಉಚಿತ ಮಾಲೀಕರ ಸಂಪರ್ಕಗಳನ್ನು ಬಳಸಿದ್ದೀರಿ.",
 }
 
 # Django's own relative-time phrases ("5 minutes ago", "today"), which Django does not ship in Kannada.

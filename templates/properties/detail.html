@@ -188,7 +188,7 @@
 
     {# ---------- Contact card ---------- #}
     <aside class="col-lg-4">
-      <div class="contact-card">
+      <div class="contact-card" id="contact">
         <div class="cc-price">
           {% if prop.purpose == 'rent' %}{{ prop.monthly_rent|inr }}<small> / {% translate "month" %}</small>{% elif prop.sale_price %}{{ prop.sale_price|inr_short }}{% else %}{% translate "Price on request" %}{% endif %}
         </div>
@@ -221,14 +221,26 @@
             {% endif %}
             {% if can_see_phone and prop.contact_phone and prop.contact_visibility != 'hidden' %}
               <a class="btn btn-soft" href="tel:{{ prop.contact_phone }}"><i class="bi bi-telephone me-1"></i>{% translate "Call" %} {{ prop.contact_phone }}</a>
-            {% elif prop.contact_visibility == 'registered' and not user.is_authenticated %}
+            {% elif contact.needs_login or prop.contact_visibility == 'registered' and not user.is_authenticated %}
               <a class="btn btn-soft" href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}"><i class="bi bi-telephone me-1"></i>{% translate "Sign in to view phone number" %}</a>
+            {% elif contact.metered and contact.needs_pass %}
+              <div class="contact-limit">
+                <p class="small mb-2"><i class="bi bi-lock me-1" aria-hidden="true"></i>{% blocktranslate with n=contact.free_limit %}You have used your {{ n }} free owner contacts this month.{% endblocktranslate %}</p>
+                <a class="btn btn-accent w-100" href="{% url 'payments:contact_pass' %}?next={{ request.path|urlencode }}"><i class="bi bi-unlock me-1" aria-hidden="true"></i>{% blocktranslate with price=contact_pass_plan.effective_price|inr %}Get Contact Pass - {{ price }}/month{% endblocktranslate %}</a>
+                <p class="small text-muted mt-2 mb-0">{% translate "Unlimited owner contacts. Renews monthly, cancel anytime." %}</p>
+              </div>
+            {% elif contact.metered %}
+              <form method="post" action="{% url 'properties:unlock_contact' prop.slug %}" data-once>{% csrf_token %}
+                <button class="btn btn-soft w-100" type="submit"><i class="bi bi-telephone me-1" aria-hidden="true"></i>{% translate "Show phone & WhatsApp" %}</button>
+              </form>
+              <p class="small text-muted mb-0 text-center">{% blocktranslate with left=contact.free_left limit=contact.free_limit %}{{ left }} of {{ limit }} free owner contacts left this month{% endblocktranslate %}</p>
             {% endif %}
             {% if prop.whatsapp_number and can_see_phone and prop.contact_visibility != 'hidden' %}
               <a class="btn btn-whatsapp" target="_blank" rel="noopener" href="https://wa.me/{{ prop.whatsapp_number|cut:'+' }}?text={{ 'Hi, I am interested in your property '|urlencode }}{{ prop.reference|urlencode }}{{ ' on Bangarpet Property Hub: '|urlencode }}{{ absolute_url|urlencode }}"><i class="bi bi-whatsapp me-1"></i>{% translate "WhatsApp enquiry" %}</a>
-            {% elif prop.whatsapp_number and not user.is_authenticated and prop.contact_visibility == 'registered' %}
+            {% elif prop.whatsapp_number and not user.is_authenticated and prop.contact_visibility == 'registered' and not contact.needs_login %}
               <a class="btn btn-whatsapp" href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}"><i class="bi bi-whatsapp me-1"></i>{% translate "Sign in for WhatsApp" %}</a>
             {% endif %}
+            {% if contact.has_pass %}<p class="small text-verified mb-0 text-center"><i class="bi bi-patch-check-fill me-1" aria-hidden="true"></i>{% translate "Contact Pass active" %}</p>{% endif %}
           </div>
           <p class="small text-muted mt-3 mb-0"><i class="bi bi-chat-dots me-1"></i>{% translate "Preferred contact:" %} {{ prop.get_preferred_contact_display|tr }}</p>
         {% endif %}
@@ -264,6 +276,7 @@
 <nav class="mobile-tabbar detail-actions" aria-label="{% translate "Contact actions" %}">
   {% if can_see_phone and prop.contact_phone and prop.contact_visibility != 'hidden' %}<a class="btn btn-primary btn-sm" href="tel:{{ prop.contact_phone }}"><i class="bi bi-telephone"></i> {% translate "Call" %}</a>{% endif %}
   {% if prop.whatsapp_number and can_see_phone and prop.contact_visibility != 'hidden' %}<a class="btn btn-whatsapp btn-sm" target="_blank" rel="noopener" href="https://wa.me/{{ prop.whatsapp_number|cut:'+' }}?text={{ 'Hi, I am interested in your property '|urlencode }}{{ prop.reference|urlencode }}"><i class="bi bi-whatsapp"></i> WhatsApp</a>{% endif %}
+  {% if not can_see_phone and contact.metered %}{% if contact.needs_pass %}<a class="btn btn-primary btn-sm" href="{% url 'payments:contact_pass' %}?next={{ request.path|urlencode }}"><i class="bi bi-unlock"></i> {% translate "Contact Pass" %}</a>{% else %}<form method="post" action="{% url 'properties:unlock_contact' prop.slug %}" class="d-flex flex-fill" data-once>{% csrf_token %}<button class="btn btn-primary btn-sm w-100" type="submit"><i class="bi bi-telephone"></i> {% translate "Show phone" %}</button></form>{% endif %}{% endif %}
   {% if enquiry_form and not existing_enquiry %}<button class="btn btn-accent btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#enquiryModal"><i class="bi bi-chat-text"></i> {% translate "Enquire" %}</button>
   {% elif not user.is_authenticated %}<a class="btn btn-accent btn-sm" href="{% url 'accounts:login' %}?next={{ request.path|urlencode }}"><i class="bi bi-box-arrow-in-right"></i> {% translate "Sign in to contact" %}</a>{% endif %}
 </nav>

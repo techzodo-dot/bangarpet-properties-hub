@@ -19,6 +19,7 @@ from notifications.services import notify
 from properties.forms import PropertySearchForm
 from properties.models import Property, SavedSearch
 from properties.services import search_properties
+from payments.services import plan_home_url, sync_auto_renewals
 from subscriptions.models import Subscription
 
 TASKS = ["listings", "subscriptions", "verifications", "documents", "saved_searches"]
@@ -62,27 +63,34 @@ class Command(BaseCommand):
 
     # -- subscriptions ------------------------------------------------------
     def task_subscriptions(self):
+        # Record auto-renewal charges first so renewed plans are not expired.
+        renewals = sync_auto_renewals()
         now = timezone.now()
         expired = 0
         for sub in Subscription.objects.filter(status=Subscription.Status.ACTIVE, ends_at__lte=now).select_related("user", "plan"):
             sub.status = Subscription.Status.EXPIRED
             sub.save(update_fields=["status", "updated_at"])
             expired += 1
-            notify(sub.user, Notification.Event.SUBSCRIPTION_EXPIRED, f"{sub.plan.name} plan expired",
-                   "Your plan has expired and your account is back on the free plan. Existing live listings stay "
-                   "live until they expire; renew your plan to add more.",
-                   reverse("dashboard:partner_subscription"))
+            if sub.plan.unlimited_contacts:
+                body = ("Your Contact Pass has ended. You still get free owner contacts every month; "
+                        "get the pass again for unlimited contacts.")
+            else:
+                body = ("Your plan has expired and your account is back on the free plan. Existing live listings stay "
+                        "live until they expire; renew your plan to add more.")
+            notify(sub.user, Notification.Event.SUBSCRIPTION_EXPIRED, f"{sub.plan.name} expired", body,
+                   plan_home_url(sub.plan))
         reminded = 0
         for sub in Subscription.objects.filter(status=Subscription.Status.ACTIVE, ends_at__gt=now,
-                                               ends_at__lte=now + timedelta(days=5),
+                                               ends_at__lte=now + timedelta(days=5), auto_renew=False,
                                                expiry_reminder_sent_at__isnull=True).select_related("user", "plan"):
-            notify(sub.user, Notification.Event.SUBSCRIPTION_EXPIRING, f"{sub.plan.name} plan ends soon",
-                   f"Your {sub.plan.name} plan ends on {timezone.localtime(sub.ends_at):%d %b %Y}. Renew to keep your listing limit.",
-                   reverse("dashboard:partner_subscription"))
+            keep = "unlimited owner contacts" if sub.plan.unlimited_contacts else "your listing limit"
+            notify(sub.user, Notification.Event.SUBSCRIPTION_EXPIRING, f"{sub.plan.name} ends soon",
+                   f"Your {sub.plan.name} ends on {timezone.localtime(sub.ends_at):%d %b %Y}. Renew to keep {keep}.",
+                   plan_home_url(sub.plan))
             sub.expiry_reminder_sent_at = now
             sub.save(update_fields=["expiry_reminder_sent_at"])
             reminded += 1
-        return f"{expired} expired, {reminded} reminders"
+        return f"{expired} expired, {reminded} reminders; renewals: {renewals}"
 
     # -- verifications ------------------------------------------------------
     def task_verifications(self):

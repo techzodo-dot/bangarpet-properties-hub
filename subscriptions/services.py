@@ -14,12 +14,22 @@ def default_plan():
     return plan
 
 
+def contact_pass_plan():
+    """The customer plan with unlimited owner contacts (cheapest active one)."""
+    return (
+        SubscriptionPlan.objects.filter(is_active=True, unlimited_contacts=True)
+        .order_by("display_order", "price").first()
+    )
+
+
 def current_subscription(user):
     return user.subscriptions.current().select_related("plan").order_by("-ends_at").first()
 
 
 def current_plan(user):
     sub = current_subscription(user)
+    if sub and sub.plan.unlimited_contacts:  # the customer Contact Pass is not a listing plan
+        sub = user.subscriptions.current().filter(plan__unlimited_contacts=False).select_related("plan").order_by("-ends_at").first()
     return sub.plan if sub else default_plan()
 
 

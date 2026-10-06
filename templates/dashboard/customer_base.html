@@ -7,6 +7,7 @@
 <a class="nav-link {% if active == 'favourites' %}active{% endif %}" href="{% url 'dashboard:customer_favourites' %}"><i class="bi bi-heart"></i>Saved properties</a>
 <a class="nav-link {% if active == 'searches' %}active{% endif %}" href="{% url 'dashboard:customer_saved_searches' %}"><i class="bi bi-bookmark"></i>Saved searches</a>
 <a class="nav-link {% if active == 'recent' %}active{% endif %}" href="{% url 'dashboard:customer_recent' %}"><i class="bi bi-clock-history"></i>Recently viewed</a>
+<a class="nav-link {% if active == 'contact_pass' %}active{% endif %}" href="{% url 'payments:contact_pass' %}"><i class="bi bi-unlock"></i>Contact Pass</a>
 <a class="nav-link {% if active == 'notifications' %}active{% endif %}" href="{% url 'notifications:list' %}"><i class="bi bi-bell"></i>Notifications{% if unread_notifications %} <span class="badge bg-danger ms-auto">{{ unread_notifications }}</span>{% endif %}</a>
 <span class="side-label">Settings</span>
 <a class="nav-link {% if active == 'profile' %}active{% endif %}" href="{% url 'dashboard:customer_profile' %}"><i class="bi bi-person"></i>My profile</a>

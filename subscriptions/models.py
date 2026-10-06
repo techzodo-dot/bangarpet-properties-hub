@@ -30,6 +30,12 @@ class SubscriptionPlan(TimeStampedModel):
     discount_percent = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(90)])
     discount_label = models.CharField(max_length=60, blank=True)
     discount_ends_at = models.DateTimeField(null=True, blank=True)
+    unlimited_contacts = models.BooleanField(
+        default=False, help_text="Customer plan: unlimited owner phone/WhatsApp contacts (the Contact Pass).",
+    )
+    razorpay_plan_id = models.CharField(
+        max_length=64, blank=True, help_text="Set automatically when the plan is first sold with auto-renewal.",
+    )
     is_default = models.BooleanField(default=False, help_text="Plan applied to partners without a paid subscription.")
     is_active = models.BooleanField(default=True)
     display_order = models.PositiveSmallIntegerField(default=0)
@@ -59,6 +65,10 @@ class SubscriptionPlan(TimeStampedModel):
             value = self.price * (Decimal(100 - self.discount_percent) / Decimal(100))
             return value.quantize(Decimal("1.00"), rounding=ROUND_HALF_UP)
         return self.price
+
+    @property
+    def is_customer_plan(self):
+        return self.unlimited_contacts
 
     @property
     def feature_list(self):
@@ -95,6 +105,10 @@ class Subscription(TimeStampedModel):
         help_text="Admin who granted this subscription manually, if any.",
     )
     notes = models.CharField(max_length=255, blank=True)
+    gateway_subscription_id = models.CharField(
+        max_length=64, null=True, blank=True, unique=True, help_text="Razorpay subscription (auto-renewal) ID.",
+    )
+    auto_renew = models.BooleanField(default=False)
 
     objects = SubscriptionQuerySet.as_manager()
 
