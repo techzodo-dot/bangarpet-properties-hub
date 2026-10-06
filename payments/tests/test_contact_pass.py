@@ -244,3 +244,31 @@ class ContactPassAccessTests(TestCase):
         resp = self.client.get(reverse("payments:contact_pass"))
         self.assertEqual(resp.status_code, 302)
         self.assertIn(reverse("accounts:login"), resp["Location"])
+
+
+class OneTimeFallbackTests(TestCase):
+    """While Razorpay Subscriptions are not enabled, the pass is sold one month at a time."""
+
+    def setUp(self):
+        cache.clear()
+        self.customer = make_user(Role.CUSTOMER)
+        self.client.force_login(self.customer)
+
+    @mock.patch("payments.razorpay.create_order", return_value={"id": "order_ONCE1", "amount": 9900})
+    @mock.patch("payments.razorpay.create_plan", side_effect=__import__("payments.razorpay", fromlist=["x"]).RazorpayError("401"))
+    def test_one_time_payment_when_subscriptions_unavailable(self, *_):
+        self.client.post(reverse("payments:contact_pass_subscribe"))
+        payment = Payment.objects.get(user=self.customer)
+        self.assertEqual(payment.gateway_order_id, "order_ONCE1")
+        self.assertEqual(payment.gateway_subscription_id, "")
+        page = self.client.get(reverse("payments:contact_pass_pay", args=[payment.uid]))
+        self.assertContains(page, 'data-order="order_ONCE1"')
+        self.assertNotContains(page, "data-subscription")
+        self.assertContains(page, reverse("payments:contact_pass_verify_once"))
+        sig = hmac.new(settings.RAZORPAY_KEY_SECRET.encode(), b"order_ONCE1|pay_ONCE", hashlib.sha256).hexdigest()
+        self.client.post(reverse("payments:contact_pass_verify_once"), {
+            "razorpay_order_id": "order_ONCE1", "razorpay_payment_id": "pay_ONCE", "razorpay_signature": sig,
+        })
+        sub = Subscription.objects.get(user=self.customer)
+        self.assertTrue(sub.is_current)
+        self.assertFalse(sub.auto_renew)

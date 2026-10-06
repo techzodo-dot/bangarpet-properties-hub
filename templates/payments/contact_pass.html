@@ -22,7 +22,7 @@
       </form>
       {% elif plan %}
       <form method="post" action="{% url 'payments:contact_pass_subscribe' %}">{% csrf_token %}
-        <button class="btn btn-accent" type="submit"><i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>Turn on auto-renewal ({{ plan.effective_price|inr }}/month)</button>
+        <button class="btn btn-accent" type="submit"><i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>Renew now ({{ plan.effective_price|inr }} for {{ plan.billing_period_days }} more days)</button>
       </form>
       {% endif %}
     </div>

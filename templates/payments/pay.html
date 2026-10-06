@@ -23,10 +23,11 @@
   </form>
   {% else %}
   <p class="small text-muted mt-3 mb-0">UPI, cards, net banking and wallets are supported via Razorpay. We never see or store your card details.</p>
-  <form id="rzp-success" method="post" action="{% url 'payments:verify' %}" hidden>{% csrf_token %}
+  <form id="rzp-success" method="post" action="{% if verify_url %}{{ verify_url }}{% else %}{% url 'payments:verify' %}{% endif %}" hidden>{% csrf_token %}
+    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
     <input type="hidden" name="razorpay_order_id"><input type="hidden" name="razorpay_payment_id"><input type="hidden" name="razorpay_signature">
   </form>
-  <form id="rzp-failed" method="post" action="{% url 'payments:failed' %}" hidden>{% csrf_token %}
+  <form id="rzp-failed" method="post" action="{% if failed_url %}{{ failed_url }}{% else %}{% url 'payments:failed' %}{% endif %}" hidden>{% csrf_token %}
     <input type="hidden" name="razorpay_order_id" value="{{ payment.gateway_order_id }}"><input type="hidden" name="description">
   </form>
   {% endif %}

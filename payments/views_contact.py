@@ -81,20 +81,33 @@ def subscribe(request):
     if not ratelimit.check_and_hit("payment", f"user:{user.pk}"):
         messages.error(request, _("Too many payment attempts. Please try again later."))
         return redirect(here)
+    notes = {"user_id": str(user.pk), "plan": plan.slug}
     try:
-        rzp_plan = razorpay_plan_for(plan)
-        rzp_sub = razorpay.create_subscription(
-            rzp_plan, plan.billing_period_days, notes={"user_id": str(user.pk), "plan": plan.slug},
-        )
+        rzp_sub = razorpay.create_subscription(razorpay_plan_for(plan), plan.billing_period_days, notes=notes)
     except razorpay.RazorpayError as exc:
-        logger.warning("Razorpay subscription creation failed: %s", exc)
-        messages.error(request, _("We couldn't start the payment. Please try again in a few minutes."))
-        return redirect(here)
-    payment = Payment.objects.create(
-        user=user, plan=plan, amount=plan.effective_price, gateway=Payment.Gateway.RAZORPAY,
-        gateway_subscription_id=rzp_sub["id"], raw_response={"subscription": rzp_sub},
-    )
-    log_action(request, "payment.subscription_started", payment, subscription=rzp_sub["id"])
+        # Auto-renewal needs Razorpay Subscriptions on the account; until then sell one period at a time.
+        logger.warning("Razorpay subscription unavailable, falling back to a one-time payment: %s", exc)
+        rzp_sub = None
+    if rzp_sub:
+        payment = Payment.objects.create(
+            user=user, plan=plan, amount=plan.effective_price, gateway=Payment.Gateway.RAZORPAY,
+            gateway_subscription_id=rzp_sub["id"], raw_response={"subscription": rzp_sub},
+        )
+        log_action(request, "payment.subscription_started", payment, subscription=rzp_sub["id"])
+    else:
+        payment = Payment.objects.create(user=user, plan=plan, amount=plan.effective_price, gateway=Payment.Gateway.RAZORPAY)
+        try:
+            order = razorpay.create_order(payment.amount_paise, receipt=f"bph-{payment.uid.hex[:24]}",
+                                          notes={**notes, "payment_uid": payment.uid.hex})
+        except razorpay.RazorpayError as exc:
+            logger.warning("Razorpay order creation failed: %s", exc)
+            payment.status = Payment.Status.FAILED
+            payment.failure_reason = "Could not create payment order"
+            payment.save(update_fields=["status", "failure_reason", "updated_at"])
+            messages.error(request, _("We couldn't start the payment. Please try again in a few minutes."))
+            return redirect(here)
+        payment.gateway_order_id = order["id"]
+        payment.save(update_fields=["gateway_order_id", "updated_at"])
     url = reverse("payments:contact_pass_pay", args=[payment.uid])
     nxt = _next(request)
     return redirect(f"{url}?next={nxt}" if nxt else url)
@@ -105,14 +118,15 @@ def pay(request, uid):
     payment = get_object_or_404(Payment.objects.select_related("plan"), uid=uid, user=request.user)
     if payment.status == Payment.Status.PAID:
         return redirect("payments:receipt", uid=payment.uid)
-    if payment.status != Payment.Status.CREATED or not payment.gateway_subscription_id:
+    if payment.status != Payment.Status.CREATED or not (payment.gateway_subscription_id or payment.gateway_order_id):
         messages.info(request, _("This payment session has ended. Please start again."))
         return redirect("payments:contact_pass")
+    recurring = bool(payment.gateway_subscription_id)
     return render(request, "payments/pay.html", {
         "payment": payment, "key_id": settings.RAZORPAY_KEY_ID, "test_mode": razorpay.is_test_mode(),
-        "base_template": "dashboard/customer_base.html", "active": "contact_pass", "recurring": True,
-        "verify_url": reverse("payments:contact_pass_verify"), "failed_url": reverse("payments:contact_pass_failed"),
-        "next": _next(request),
+        "base_template": "dashboard/customer_base.html", "active": "contact_pass", "recurring": recurring,
+        "verify_url": reverse("payments:contact_pass_verify" if recurring else "payments:contact_pass_verify_once"),
+        "failed_url": reverse("payments:contact_pass_failed"), "next": _next(request),
     })
 
 
@@ -142,9 +156,34 @@ def verify(request):
 
 @login_required
 @require_POST
+def verify_once(request):
+    """One-time payment for a single period (used while auto-renewal is unavailable)."""
+    order_id = request.POST.get("razorpay_order_id", "")
+    payment_id = request.POST.get("razorpay_payment_id", "")
+    signature = request.POST.get("razorpay_signature", "")
+    payment = get_object_or_404(Payment, gateway_order_id=order_id, user=request.user, plan__unlimited_contacts=True)
+    if not razorpay.verify_payment_signature(order_id, payment_id, signature):
+        log_action(request, "payment.signature_invalid", payment)
+        messages.error(request, _("We could not verify this payment. If money was deducted, it will be confirmed automatically or refunded by Razorpay."))
+        return redirect("payments:contact_pass")
+    try:
+        mark_paid(payment.pk, gateway_payment_id=payment_id, signature=signature, source="checkout")
+    except IntegrityError:
+        pass  # already recorded by the webhook
+    messages.success(request, _("Payment successful. Your Contact Pass is active - you can now see every owner's phone and WhatsApp."))
+    return redirect(_next(request) or "payments:contact_pass")
+
+
+@login_required
+@require_POST
 def failed(request):
     subscription_id = request.POST.get("razorpay_subscription_id", "")
-    payment = Payment.objects.filter(gateway_subscription_id=subscription_id, user=request.user).first()
+    order_id = request.POST.get("razorpay_order_id", "")
+    payments = Payment.objects.filter(user=request.user, plan__unlimited_contacts=True)
+    if subscription_id:
+        payment = payments.filter(gateway_subscription_id=subscription_id).first()
+    else:
+        payment = payments.filter(gateway_order_id=order_id).first() if order_id else None
     if payment:
         mark_failed(payment.pk, request.POST.get("description", "")[:200] or "Payment was not completed")
     messages.error(request, _("The payment was not completed. No money was taken. You can try again."))

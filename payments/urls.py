@@ -15,6 +15,7 @@ urlpatterns = [
     path("contact-pass/subscribe/", views_contact.subscribe, name="contact_pass_subscribe"),
     path("contact-pass/pay/<uuid:uid>/", views_contact.pay, name="contact_pass_pay"),
     path("contact-pass/verify/", views_contact.verify, name="contact_pass_verify"),
+    path("contact-pass/verify-once/", views_contact.verify_once, name="contact_pass_verify_once"),
     path("contact-pass/failed/", views_contact.failed, name="contact_pass_failed"),
     path("contact-pass/cancel/", views_contact.cancel, name="contact_pass_cancel"),
     path("receipt/<uuid:uid>/", views.receipt, name="receipt"),
