@@ -234,10 +234,11 @@ ADMIN_OTP_EMAIL = env("ADMIN_OTP_EMAIL", "").strip()
 # ---------------------------------------------------------------------------
 GOOGLE_MAPS_API_KEY = env("GOOGLE_MAPS_API_KEY", "")
 
-RAZORPAY_KEY_ID = env("RAZORPAY_KEY_ID", "")
-RAZORPAY_KEY_SECRET = env("RAZORPAY_KEY_SECRET", "")
-RAZORPAY_WEBHOOK_SECRET = env("RAZORPAY_WEBHOOK_SECRET", "")
-RAZORPAY_API_BASE = "https://api.razorpay.com/v1"
+# PayU India (hosted checkout). Get the key and salt from the PayU dashboard;
+# PAYU_MODE=test uses test.payu.in, PAYU_MODE=live uses secure.payu.in.
+PAYU_MERCHANT_KEY = env("PAYU_MERCHANT_KEY", "").strip()
+PAYU_MERCHANT_SALT = env("PAYU_MERCHANT_SALT", "").strip()
+PAYU_MODE = env("PAYU_MODE", "test").strip().lower()
 
 WHATSAPP_ACCESS_TOKEN = env("WHATSAPP_ACCESS_TOKEN", "")
 WHATSAPP_PHONE_NUMBER_ID = env("WHATSAPP_PHONE_NUMBER_ID", "")

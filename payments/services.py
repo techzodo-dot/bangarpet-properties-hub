@@ -92,111 +92,98 @@ def mark_failed(payment_id, reason="", raw=None):
 
 
 # ---------------------------------------------------------------------------
-# Auto-renewing plans (Razorpay Subscriptions), used by the customer Contact Pass
+# PayU hosted checkout
 # ---------------------------------------------------------------------------
-def razorpay_plan_for(plan):
-    """Razorpay plan ID for ``plan`` at its current price, created on first use.
-
-    Stored as "<mode>:<amount_paise>:<plan_id>" so a price change or a switch
-    between test and live keys creates a fresh Razorpay plan.
-    """
-    from payments import razorpay
-
-    amount = int(plan.effective_price * 100)
-    mode = "test" if razorpay.is_test_mode() else "live"
-    parts = (plan.razorpay_plan_id or "").split(":")
-    if len(parts) == 3 and parts[0] == mode and parts[1] == str(amount):
-        return parts[2]
-    plan_id = razorpay.create_plan(f"{plan.name} - Bangarpet Property Hub", amount, plan.billing_period_days)
-    plan.razorpay_plan_id = f"{mode}:{amount}:{plan_id}"
-    plan.save(update_fields=["razorpay_plan_id", "updated_at"])
-    return plan_id
-
-
-def link_auto_renewal(sub, gateway_subscription_id):
-    """Attach the Razorpay subscription to the plan period it pays for."""
-    from subscriptions.models import Subscription
-
-    Subscription.objects.filter(gateway_subscription_id=gateway_subscription_id).exclude(pk=sub.pk).update(
-        gateway_subscription_id=None, auto_renew=False
+def start_payu_payment(user, plan, next_url=""):
+    """Create a payment and the PayU transaction ID it will be paid under."""
+    payment = Payment.objects.create(
+        user=user, plan=plan, amount=plan.effective_price, gateway=Payment.Gateway.PAYU,
+        raw_response={"next": next_url} if next_url else {},
     )
-    sub.gateway_subscription_id = gateway_subscription_id
-    sub.auto_renew = True
-    sub.save(update_fields=["gateway_subscription_id", "auto_renew", "updated_at"])
-    return sub
+    payment.gateway_order_id = f"BPH{payment.uid.hex[:20].upper()}"  # PayU allows up to 25 characters
+    payment.save(update_fields=["gateway_order_id", "updated_at"])
+    return payment
 
 
-@transaction.atomic
-def record_subscription_charge(gateway_subscription_id, payment_entity, source="webhook"):
-    """Record one successful charge of an auto-renewing subscription (idempotent).
+def payu_checkout_fields(payment):
+    from django.conf import settings
 
-    The first charge normally arrives through checkout; later charges extend the
-    plan by one billing period each.
+    from payments import payu
+
+    user = payment.user
+    return_url = settings.SITE_URL + reverse("payments:payu_return")
+    return payu.checkout_fields(
+        txnid=payment.gateway_order_id, amount=payment.amount, productinfo=f"{payment.plan.name} plan",
+        firstname=user.get_short_name(), email=user.email, phone=user.phone,
+        surl=return_url, furl=return_url, udf1=payment.uid.hex,
+    )
+
+
+def process_payu_result(data, source="return"):
+    """Apply a result posted by PayU (return URL or webhook). Returns (payment or None, result).
+
+    Nothing changes unless PayU's reverse hash is valid and the amount matches.
     """
+    from decimal import Decimal, InvalidOperation
+
+    from payments import payu
+
+    if not payu.response_hash_valid(data):
+        logger.warning("PayU %s with an invalid hash for txnid %s", source, data.get("txnid"))
+        return None, "invalid hash"
+    payment = Payment.objects.filter(gateway_order_id=data.get("txnid"), gateway=Payment.Gateway.PAYU).select_related("plan").first()
+    if payment is None:
+        return None, "no matching payment"
+    status = (data.get("status") or "").lower()
+    if status == "success":
+        try:
+            amount = Decimal(data.get("amount") or "0")
+        except InvalidOperation:
+            amount = Decimal("0")
+        if amount != payment.amount:
+            logger.error("PayU amount mismatch for payment %s: %s != %s", payment.pk, amount, payment.amount)
+            return payment, "amount mismatch"
+        payment, processed = mark_paid(payment.pk, gateway_payment_id=data.get("mihpayid") or None,
+                                       raw=_merged_raw(payment, data), source=source)
+        return payment, "paid" if processed else "already paid"
+    if status in ("failure", "failed", "usercancelled", "dropped", "bounced"):
+        reason = data.get("error_Message") or data.get("field9") or "Payment was not completed"
+        return mark_failed(payment.pk, reason[:200], raw=_merged_raw(payment, data)), "failed"
+    return payment, "pending"
+
+
+def _merged_raw(payment, data):
+    """Keep what we stored at checkout (e.g. where to send the customer back) next to PayU's reply."""
+    return {**(payment.raw_response or {}), "payu": {k: v for k, v in data.items() if k != "hash"}}
+
+
+def reconcile_payu_payments():
+    """Ask PayU about recent unfinished payments (covers a closed browser or a missed webhook)."""
+    from datetime import timedelta
     from decimal import Decimal
 
-    from subscriptions.models import Subscription
+    from payments import payu
 
-    gateway_payment_id = payment_entity.get("id")
-    if not gateway_payment_id:
-        return "no payment id"
-    if Payment.objects.filter(gateway_payment_id=gateway_payment_id, status=Payment.Status.PAID).exists():
-        return "already recorded"
-    pending = (
-        Payment.objects.select_for_update()
-        .filter(gateway_subscription_id=gateway_subscription_id, status__in=[Payment.Status.CREATED, Payment.Status.FAILED])
-        .order_by("created_at").first()
-    )
-    if pending is None:
-        current = Subscription.objects.filter(gateway_subscription_id=gateway_subscription_id).select_related("plan", "user").first()
-        if current is None:
-            return "no matching subscription"
-        amount = Decimal(payment_entity.get("amount") or int(current.plan.effective_price * 100)) / 100
-        pending = Payment.objects.create(
-            user=current.user, plan=current.plan, amount=amount, gateway=Payment.Gateway.RAZORPAY,
-            gateway_subscription_id=gateway_subscription_id,
-        )
-    payment, _ = mark_paid(pending.pk, gateway_payment_id=gateway_payment_id, raw=payment_entity, source=source)
-    link_auto_renewal(payment.subscription, gateway_subscription_id)
-    return "renewed"
-
-
-def stop_auto_renewal(gateway_subscription_id):
-    from subscriptions.models import Subscription
-
-    return Subscription.objects.filter(gateway_subscription_id=gateway_subscription_id, auto_renew=True).update(auto_renew=False)
-
-
-def sync_auto_renewals():
-    """Pick up renewal charges straight from Razorpay (a backup for missed webhooks).
-
-    Checks auto-renewing plans that end within a day or ended in the last 3 days.
-    """
-    from datetime import timedelta
-
-    from payments import razorpay
-    from subscriptions.models import Subscription
-
-    if not razorpay.is_configured():
-        return "razorpay not configured"
+    if not payu.is_configured():
+        return "payu not configured"
     now = timezone.now()
-    subs = Subscription.objects.filter(
-        auto_renew=True, gateway_subscription_id__isnull=False,
-        ends_at__lte=now + timedelta(days=1), ends_at__gte=now - timedelta(days=3),
-    )
-    renewed = stopped = 0
-    for sub in subs:
-        gid = sub.gateway_subscription_id
+    pending = Payment.objects.filter(
+        gateway=Payment.Gateway.PAYU, status=Payment.Status.CREATED,
+        created_at__lte=now - timedelta(minutes=30), created_at__gte=now - timedelta(days=3),
+    ).exclude(gateway_order_id__isnull=True)
+    paid = failed = 0
+    for payment in pending:
         try:
-            for invoice in razorpay.subscription_invoices(gid):
-                if invoice.get("status") == "paid" and invoice.get("payment_id"):
-                    entity = {"id": invoice["payment_id"], "amount": invoice.get("amount_paid") or invoice.get("amount")}
-                    if record_subscription_charge(gid, entity, source="sync") == "renewed":
-                        renewed += 1
-            status = razorpay.fetch_subscription(gid).get("status")
-        except razorpay.RazorpayError as exc:
-            logger.warning("Could not sync Razorpay subscription %s: %s", gid, exc)
+            details = payu.verify_payment(payment.gateway_order_id)
+        except payu.PayUError as exc:
+            logger.info("PayU verify for %s: %s", payment.gateway_order_id, exc)
             continue
-        if status in ("cancelled", "completed", "expired", "halted"):
-            stopped += stop_auto_renewal(gid)
-    return f"{renewed} renewed, {stopped} stopped"
+        status = (details.get("status") or "").lower()
+        if status == "success" and Decimal(str(details.get("amt") or details.get("amount") or "0")) == payment.amount:
+            mark_paid(payment.pk, gateway_payment_id=details.get("mihpayid") or None,
+                      raw=_merged_raw(payment, details), source="reconcile")
+            paid += 1
+        elif status in ("failure", "failed", "usercancelled", "dropped", "bounced"):
+            mark_failed(payment.pk, details.get("error_Message") or "Payment was not completed", raw=_merged_raw(payment, details))
+            failed += 1
+    return f"{paid} paid, {failed} failed"

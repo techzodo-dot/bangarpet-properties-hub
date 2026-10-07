@@ -418,8 +418,8 @@ KN = {
     "Each plan has a listing duration (for example 30 days on the Free plan). You will get a reminder before your listing expires and can renew it from your dashboard.":
         "ಪ್ರತಿ ಯೋಜನೆಗೆ ಒಂದು ಅವಧಿ ಇದೆ (ಉದಾಹರಣೆಗೆ ಉಚಿತ ಯೋಜನೆಯಲ್ಲಿ 30 ದಿನಗಳು). ಜಾಹೀರಾತು ಮುಗಿಯುವ ಮೊದಲು ನಿಮಗೆ ನೆನಪಿಸಲಾಗುತ್ತದೆ ಮತ್ತು ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಿಂದ ನವೀಕರಿಸಬಹುದು.",
     "How do I pay for a plan?": "ಯೋಜನೆಗೆ ಹೇಗೆ ಪಾವತಿಸುವುದು?",
-    "Paid plans are purchased securely through Razorpay using UPI, cards or net banking. Your plan is activated only after the payment is verified on our server. We never store your card details.":
-        "ಪಾವತಿಸುವ ಯೋಜನೆಗಳನ್ನು Razorpay ಮೂಲಕ UPI, ಕಾರ್ಡ್ ಅಥವಾ ನೆಟ್ ಬ್ಯಾಂಕಿಂಗ್ ಬಳಸಿ ಸುರಕ್ಷಿತವಾಗಿ ಖರೀದಿಸಬಹುದು. ಪಾವತಿ ಪರಿಶೀಲನೆಯಾದ ನಂತರವೇ ಯೋಜನೆ ಸಕ್ರಿಯವಾಗುತ್ತದೆ. ನಿಮ್ಮ ಕಾರ್ಡ್ ವಿವರಗಳನ್ನು ನಾವು ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ.",
+    "Paid plans are purchased securely through PayU using UPI, cards, net banking or wallets. Your plan is activated only after the payment is verified on our server. We never store your card details.":
+        "ಪಾವತಿಸುವ ಯೋಜನೆಗಳನ್ನು PayU ಮೂಲಕ UPI, ಕಾರ್ಡ್, ನೆಟ್ ಬ್ಯಾಂಕಿಂಗ್ ಅಥವಾ ವಾಲೆಟ್ ಬಳಸಿ ಸುರಕ್ಷಿತವಾಗಿ ಖರೀದಿಸಬಹುದು. ಪಾವತಿ ಪರಿಶೀಲನೆಯಾದ ನಂತರವೇ ಯೋಜನೆ ಸಕ್ರಿಯವಾಗುತ್ತದೆ. ನಿಮ್ಮ ಕಾರ್ಡ್ ವಿವರಗಳನ್ನು ನಾವು ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ.",
     "How do I report a suspicious listing?": "ಅನುಮಾನಾಸ್ಪದ ಜಾಹೀರಾತನ್ನು ಹೇಗೆ ವರದಿ ಮಾಡುವುದು?",
     "Open the listing and use 'Report listing'. Our team reviews every report. Never pay a token amount before visiting the property and meeting the owner.":
         "ಜಾಹೀರಾತನ್ನು ತೆರೆದು 'ವರದಿ ಮಾಡಿ' ಬಳಸಿ. ಪ್ರತಿ ವರದಿಯನ್ನು ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸುತ್ತದೆ. ಆಸ್ತಿಯನ್ನು ನೋಡಿ ಮಾಲೀಕರನ್ನು ಭೇಟಿಯಾಗುವ ಮೊದಲು ಟೋಕನ್ ಹಣ ಪಾವತಿಸಬೇಡಿ.",
@@ -673,6 +673,8 @@ KN = {
     "WhatsApp owner": "ಮಾಲೀಕರಿಗೆ ವಾಟ್ಸಾಪ್ ಮಾಡಿ",
     "Hi, I am interested in your property %(ref)s on Bangarpet Property Hub: %(url)s":
         "ನಮಸ್ಕಾರ, ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್‌ನಲ್ಲಿರುವ ನಿಮ್ಮ ಆಸ್ತಿ %(ref)s ಬಗ್ಗೆ ನನಗೆ ಆಸಕ್ತಿ ಇದೆ: %(url)s",
+    "Unlimited owner contacts for %(days)s days. Pay by UPI, card or net banking.":
+        "%(days)s ದಿನಗಳವರೆಗೆ ಅನಿಯಮಿತ ಮಾಲೀಕರ ಸಂಪರ್ಕಗಳು. UPI, ಕಾರ್ಡ್ ಅಥವಾ ನೆಟ್ ಬ್ಯಾಂಕಿಂಗ್ ಮೂಲಕ ಪಾವತಿಸಿ.",
 }
 
 # Django's own relative-time phrases ("5 minutes ago", "today"), which Django does not ship in Kannada.

@@ -227,7 +227,7 @@
               <div class="contact-limit">
                 <p class="small mb-2"><i class="bi bi-lock me-1" aria-hidden="true"></i>{% blocktranslate with n=contact.free_limit %}You have used your {{ n }} free owner contacts this month.{% endblocktranslate %}</p>
                 <a class="btn btn-accent w-100" href="{% url 'payments:contact_pass' %}?next={{ request.path|urlencode }}"><i class="bi bi-unlock me-1" aria-hidden="true"></i>{% blocktranslate with price=contact_pass_plan.effective_price|inr %}Get Contact Pass - {{ price }}/month{% endblocktranslate %}</a>
-                <p class="small text-muted mt-2 mb-0">{% translate "Unlimited owner contacts. Renews monthly, cancel anytime." %}</p>
+                <p class="small text-muted mt-2 mb-0">{% blocktranslate with days=contact_pass_plan.billing_period_days %}Unlimited owner contacts for {{ days }} days. Pay by UPI, card or net banking.{% endblocktranslate %}</p>
               </div>
             {% elif contact.metered %}
               <form method="post" action="{% url 'properties:unlock_contact' prop.slug %}" class="d-grid gap-2" data-once>{% csrf_token %}

@@ -10,7 +10,7 @@ def platform(request):
         "site": site,
         "SITE_URL": settings.SITE_URL,
         "GOOGLE_MAPS_API_KEY": settings.GOOGLE_MAPS_API_KEY,
-        "ONLINE_PAYMENTS": bool(settings.RAZORPAY_KEY_ID and settings.RAZORPAY_KEY_SECRET),
+        "ONLINE_PAYMENTS": bool(settings.PAYU_MERCHANT_KEY and settings.PAYU_MERCHANT_SALT),
         "EMAIL_OTP": otp_enabled(),
     }
     user = getattr(request, "user", None)

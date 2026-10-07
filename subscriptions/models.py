@@ -33,9 +33,6 @@ class SubscriptionPlan(TimeStampedModel):
     unlimited_contacts = models.BooleanField(
         default=False, help_text="Customer plan: unlimited owner phone/WhatsApp contacts (the Contact Pass).",
     )
-    razorpay_plan_id = models.CharField(
-        max_length=64, blank=True, help_text="Set automatically when the plan is first sold with auto-renewal.",
-    )
     is_default = models.BooleanField(default=False, help_text="Plan applied to partners without a paid subscription.")
     is_active = models.BooleanField(default=True)
     display_order = models.PositiveSmallIntegerField(default=0)
@@ -106,7 +103,7 @@ class Subscription(TimeStampedModel):
     )
     notes = models.CharField(max_length=255, blank=True)
     gateway_subscription_id = models.CharField(
-        max_length=64, null=True, blank=True, unique=True, help_text="Razorpay subscription (auto-renewal) ID.",
+        max_length=64, null=True, blank=True, unique=True, help_text="Payment gateway mandate/subscription ID (auto-renewal).",
     )
     auto_renew = models.BooleanField(default=False)
 

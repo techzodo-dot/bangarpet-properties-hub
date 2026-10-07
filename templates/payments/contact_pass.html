@@ -13,17 +13,12 @@
       <p class="text-muted mb-3">You can see every owner's phone number and WhatsApp.</p>
       <dl class="row mb-3">
         <dt class="col-sm-5 text-muted fw-normal">Active until</dt><dd class="col-sm-7 fw-semibold">{{ current.ends_at|date:"d M Y" }} ({{ current.days_remaining }} days left)</dd>
-        <dt class="col-sm-5 text-muted fw-normal">Auto-renewal</dt>
-        <dd class="col-sm-7">{% if current.auto_renew %}<span class="text-verified fw-semibold">On</span> &middot; {{ current.plan.effective_price|inr }} is charged every {{ current.plan.billing_period_days }} days{% else %}Off &middot; the pass ends on {{ current.ends_at|date:"d M Y" }}{% endif %}</dd>
       </dl>
-      {% if current.auto_renew %}
-      <form method="post" action="{% url 'payments:contact_pass_cancel' %}" data-confirm="Turn off auto-renewal? Your pass stays active until {{ current.ends_at|date:'d M Y' }}.">{% csrf_token %}
-        <button class="btn btn-outline-danger btn-sm" type="submit">Cancel auto-renewal</button>
+      {% if plan and online %}
+      <form method="post" action="{% url 'payments:contact_pass_subscribe' %}" data-once>{% csrf_token %}
+        <button class="btn btn-accent" type="submit"><i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>Extend now ({{ plan.effective_price|inr }} for {{ plan.billing_period_days }} more days)</button>
       </form>
-      {% elif plan %}
-      <form method="post" action="{% url 'payments:contact_pass_subscribe' %}">{% csrf_token %}
-        <button class="btn btn-accent" type="submit"><i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>Renew now ({{ plan.effective_price|inr }} for {{ plan.billing_period_days }} more days)</button>
-      </form>
+      <p class="small text-muted mt-2 mb-0">We'll remind you before your pass ends.</p>
       {% endif %}
     </div>
     {% elif plan %}
@@ -39,7 +34,7 @@
         {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
         <button class="btn btn-accent btn-lg w-100" type="submit"><i class="bi bi-unlock me-1" aria-hidden="true"></i>Get Contact Pass - {{ plan.effective_price|inr }}/month <span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
       </form>
-      <p class="small text-muted mt-3 mb-0"><i class="bi bi-shield-lock me-1" aria-hidden="true"></i>Secure payment by Razorpay with UPI Autopay or card. Renews automatically every month; cancel anytime here.</p>
+      <p class="small text-muted mt-3 mb-0"><i class="bi bi-shield-lock me-1" aria-hidden="true"></i>Secure payment through PayU by UPI, card, net banking or wallet. The pass lasts {{ plan.billing_period_days }} days; we remind you before it ends, and nothing is charged automatically.</p>
       {% else %}
       <div class="alert alert-info rounded-4 mb-0">Online payment is not available yet.{% if site.whatsapp_digits %} <a href="https://wa.me/{{ site.whatsapp_digits }}" target="_blank" rel="noopener">Message us on WhatsApp</a> to get the Contact Pass.{% endif %}</div>
       {% endif %}

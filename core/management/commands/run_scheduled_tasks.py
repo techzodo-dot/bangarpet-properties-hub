@@ -19,7 +19,7 @@ from notifications.services import notify
 from properties.forms import PropertySearchForm
 from properties.models import Property, SavedSearch
 from properties.services import search_properties
-from payments.services import plan_home_url, sync_auto_renewals
+from payments.services import plan_home_url, reconcile_payu_payments
 from subscriptions.models import Subscription
 
 TASKS = ["listings", "subscriptions", "verifications", "documents", "saved_searches"]
@@ -63,8 +63,8 @@ class Command(BaseCommand):
 
     # -- subscriptions ------------------------------------------------------
     def task_subscriptions(self):
-        # Record auto-renewal charges first so renewed plans are not expired.
-        renewals = sync_auto_renewals()
+        # Confirm payments PayU finished but never reported back (closed browser, missed webhook).
+        renewals = reconcile_payu_payments()
         now = timezone.now()
         expired = 0
         for sub in Subscription.objects.filter(status=Subscription.Status.ACTIVE, ends_at__lte=now).select_related("user", "plan"):
@@ -90,7 +90,7 @@ class Command(BaseCommand):
             sub.expiry_reminder_sent_at = now
             sub.save(update_fields=["expiry_reminder_sent_at"])
             reminded += 1
-        return f"{expired} expired, {reminded} reminders; renewals: {renewals}"
+        return f"{expired} expired, {reminded} reminders; payments: {renewals}"
 
     # -- verifications ------------------------------------------------------
     def task_verifications(self):

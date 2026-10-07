@@ -18,8 +18,8 @@ PRIVATE_MEDIA_ROOT = _tmp / "private"
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
 
 GOOGLE_MAPS_API_KEY = ""
-RAZORPAY_KEY_ID = "rzp_test_dummy"
-RAZORPAY_KEY_SECRET = "test_secret"
-RAZORPAY_WEBHOOK_SECRET = "webhook_secret"
+PAYU_MERCHANT_KEY = "testKey1"
+PAYU_MERCHANT_SALT = "testSalt1"
+PAYU_MODE = "test"
 WHATSAPP_ACCESS_TOKEN = ""
 WHATSAPP_PHONE_NUMBER_ID = ""

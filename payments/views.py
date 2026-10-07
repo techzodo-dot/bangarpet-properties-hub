@@ -1,9 +1,8 @@
-import hashlib
 import json
 import logging
 
-from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError, transaction
 from django.http import HttpResponse, HttpResponseBadRequest
@@ -18,10 +17,10 @@ from core.models import PlatformSetting
 from core.permissions import partner_required
 from notifications.models import Notification
 from notifications.services import notify_admins
-from payments import razorpay
+from payments import payu
 from payments.forms import ManualPaymentForm, PlanRequestForm
 from payments.models import Invoice, Payment, WebhookEvent
-from payments.services import mark_failed, mark_paid, record_subscription_charge, stop_auto_renewal
+from payments.services import payu_checkout_fields, plan_home_url, process_payu_result, start_payu_payment
 from subscriptions.models import SubscriptionPlan
 
 logger = logging.getLogger("bph")
@@ -38,7 +37,7 @@ def _get_plan(user, slug):
 @require_POST
 def checkout(request, slug):
     plan = _get_plan(request.user, slug)
-    if not razorpay.is_configured():
+    if not payu.is_configured():
         # No online gateway yet: fall back to UPI/bank transfer or a plan request.
         if PlatformSetting.load().allow_manual_payments:
             return redirect("payments:manual", slug=plan.slug)
@@ -46,68 +45,87 @@ def checkout(request, slug):
     if not ratelimit.check_and_hit("payment", f"user:{request.user.pk}"):
         messages.error(request, "Too many payment attempts. Please try again later.")
         return redirect("dashboard:partner_subscription")
-    payment = Payment.objects.create(user=request.user, plan=plan, amount=plan.effective_price, gateway=Payment.Gateway.RAZORPAY)
-    try:
-        order = razorpay.create_order(
-            payment.amount_paise, receipt=f"bph-{payment.uid.hex[:24]}",
-            notes={"payment_uid": payment.uid.hex, "user_id": str(request.user.pk), "plan": plan.slug},
-        )
-    except razorpay.RazorpayError as exc:
-        logger.warning("Razorpay order creation failed: %s", exc)
-        payment.status = Payment.Status.FAILED
-        payment.failure_reason = "Could not create payment order"
-        payment.save(update_fields=["status", "failure_reason", "updated_at"])
-        messages.error(request, "We couldn't start the payment. Please try again in a few minutes.")
-        return redirect("dashboard:partner_subscription")
-    payment.gateway_order_id = order["id"]
-    payment.save(update_fields=["gateway_order_id", "updated_at"])
+    payment = start_payu_payment(request.user, plan)
+    log_action(request, "payment.started", payment, gateway="payu")
     return redirect("payments:pay", uid=payment.uid)
 
 
-@partner_required
+@login_required
 def pay(request, uid):
-    payment = get_object_or_404(Payment.objects.select_related("plan"), uid=uid, user=request.user)
+    """Confirm the amount, then hand over to PayU's secure payment page."""
+    payment = get_object_or_404(Payment.objects.select_related("plan", "user"), uid=uid, user=request.user)
     if payment.status == Payment.Status.PAID:
         return redirect("payments:receipt", uid=payment.uid)
-    if payment.status != Payment.Status.CREATED or not payment.gateway_order_id:
+    home = plan_home_url(payment.plan)
+    if payment.status != Payment.Status.CREATED or payment.gateway != Payment.Gateway.PAYU or not payu.is_configured():
         messages.info(request, "This payment session has ended. Please start again.")
-        return redirect("dashboard:partner_subscription")
+        return redirect(home)
+    customer = payment.plan.unlimited_contacts
     return render(request, "payments/pay.html", {
-        "payment": payment, "key_id": settings.RAZORPAY_KEY_ID, "test_mode": razorpay.is_test_mode(),
-        "base_template": "dashboard/partner_base.html", "active": "subscription",
+        "payment": payment, "fields": payu_checkout_fields(payment), "payu_url": payu.payment_url(),
+        "test_mode": payu.is_test_mode(), "cancel_url": home,
+        "base_template": "dashboard/customer_base.html" if customer else "dashboard/partner_base.html",
+        "active": "contact_pass" if customer else "subscription",
     })
 
 
-@partner_required
+def _result_redirect(request, payment, result):
+    if payment is None:
+        messages.error(request, "We could not confirm this payment. If money was deducted, it will be confirmed shortly or refunded by PayU.")
+        return redirect("core:home")
+    home = plan_home_url(payment.plan)
+    if result in ("paid", "already paid"):
+        if payment.plan.unlimited_contacts:
+            messages.success(request, "Payment successful. Your Contact Pass is active - you can now see every owner's phone and WhatsApp.")
+            return redirect((payment.raw_response or {}).get("next") or home)
+        messages.success(request, f"Payment successful. Your {payment.plan.name} plan is now active.")
+        return redirect("payments:receipt", uid=payment.uid)
+    if result == "pending":
+        messages.info(request, "Your payment is being confirmed by the bank. Your plan activates as soon as it is confirmed.")
+        return redirect(home)
+    messages.error(request, "The payment was not completed. No plan change was made. You can try again.")
+    return redirect(home)
+
+
+@csrf_exempt
 @require_POST
-def verify(request):
-    order_id = request.POST.get("razorpay_order_id", "")
-    payment_id = request.POST.get("razorpay_payment_id", "")
-    signature = request.POST.get("razorpay_signature", "")
-    payment = get_object_or_404(Payment, gateway_order_id=order_id, user=request.user)
-    if not razorpay.verify_payment_signature(order_id, payment_id, signature):
-        log_action(request, "payment.signature_invalid", payment)
-        messages.error(request, "We could not verify this payment. If money was deducted, it will be confirmed automatically or refunded by Razorpay. Contact support with your payment ID.")
-        return redirect("dashboard:partner_payments")
+def payu_return(request):
+    """PayU sends the customer back here (success and failure). The result is trusted only after the hash check.
+
+    This is a cross-site POST, so the visitor's session cookie may be missing: the
+    payment is found by its transaction ID, never by the signed-in user.
+    """
+    payment, result = process_payu_result(request.POST.dict(), source="return")
+    if payment is not None:
+        log_action(payment.user, "payment.payu_return", payment, result=result)
+    return _result_redirect(request, payment, result)
+
+
+@csrf_exempt
+@require_POST
+def payu_webhook(request):
+    """Server-to-server result from PayU (Dashboard -> Webhooks). Hash-verified and idempotent."""
+    if request.content_type == "application/json":
+        try:
+            data = {k: str(v) for k, v in json.loads(request.body or b"{}").items()}
+        except (ValueError, AttributeError):
+            return HttpResponseBadRequest("invalid json")
+    else:
+        data = request.POST.dict()
+    if not payu.response_hash_valid(data):
+        return HttpResponseBadRequest("invalid hash")
+    event_id = f"{data.get('txnid')}:{data.get('status')}:{data.get('mihpayid')}"
     try:
-        mark_paid(payment.pk, gateway_payment_id=payment_id, signature=signature, source="checkout")
+        with transaction.atomic():
+            record = WebhookEvent.objects.create(gateway="payu", event_id=event_id[:100],
+                                                 event_type=(data.get("status") or "")[:60],
+                                                 payload={k: v for k, v in data.items() if k != "hash"})
     except IntegrityError:
-        messages.error(request, "This payment has already been recorded.")
-        return redirect("dashboard:partner_payments")
-    messages.success(request, f"Payment successful. Your {payment.plan.name} plan is now active.")
-    return redirect("payments:receipt", uid=payment.uid)
-
-
-@partner_required
-@require_POST
-def failed(request):
-    order_id = request.POST.get("razorpay_order_id", "")
-    payment = Payment.objects.filter(gateway_order_id=order_id, user=request.user).first()
-    if payment:
-        reason = request.POST.get("description", "")[:200] or "Payment was not completed"
-        mark_failed(payment.pk, reason)
-    messages.error(request, "The payment was not completed. No money was taken for a plan change. You can try again.")
-    return redirect("dashboard:partner_subscription")
+        return HttpResponse("duplicate")
+    _payment, result = process_payu_result(data, source="webhook")
+    record.result = result
+    record.save(update_fields=["result"])
+    return HttpResponse("ok")
 
 
 @partner_required
@@ -184,56 +202,3 @@ def receipt(request, uid):
         raise PermissionDenied
     invoice = Invoice.objects.filter(payment=payment).first()
     return render(request, "payments/receipt.html", {"payment": payment, "invoice": invoice, "site": PlatformSetting.load()})
-
-
-@csrf_exempt
-@require_POST
-def razorpay_webhook(request):
-    """Server-to-server confirmation from Razorpay. Signature-verified and idempotent."""
-    body = request.body
-    if not razorpay.verify_webhook_signature(body, request.headers.get("X-Razorpay-Signature", "")):
-        return HttpResponseBadRequest("invalid signature")
-    try:
-        data = json.loads(body)
-    except ValueError:
-        return HttpResponseBadRequest("invalid json")
-    event_type = data.get("event", "")
-    event_id = request.headers.get("X-Razorpay-Event-Id") or hashlib.sha256(body).hexdigest()
-    try:
-        with transaction.atomic():
-            record = WebhookEvent.objects.create(gateway="razorpay", event_id=event_id[:100], event_type=event_type[:60], payload=data)
-    except IntegrityError:
-        return HttpResponse("duplicate")
-
-    entity = ((data.get("payload") or {}).get("payment") or {}).get("entity") or {}
-    if event_type.startswith("subscription."):
-        sub_entity = ((data.get("payload") or {}).get("subscription") or {}).get("entity") or {}
-        sub_id = sub_entity.get("id", "")
-        if event_type == "subscription.charged" and sub_id:
-            record.result = record_subscription_charge(sub_id, entity, source="webhook")
-        elif event_type in ("subscription.cancelled", "subscription.completed", "subscription.halted") and sub_id:
-            record.result = f"auto-renew stopped ({stop_auto_renewal(sub_id)})"
-        else:
-            record.result = "ignored"
-        record.save(update_fields=["result"])
-        return HttpResponse("ok")
-    order_id = entity.get("order_id")
-    payment = Payment.objects.filter(gateway_order_id=order_id).first() if order_id else None
-    result = "ignored"
-    if payment is None:
-        result = "no matching payment"
-    elif event_type in ("payment.captured", "order.paid"):
-        if entity.get("amount") != payment.amount_paise or entity.get("currency") != "INR":
-            result = "amount mismatch"
-            logger.error("Webhook amount mismatch for payment %s", payment.pk)
-        elif entity.get("status") not in ("captured", None) and event_type == "payment.captured":
-            result = f"status {entity.get('status')}"
-        else:
-            _, processed = mark_paid(payment.pk, gateway_payment_id=entity.get("id"), raw=entity, source="webhook")
-            result = "paid" if processed else "already paid"
-    elif event_type == "payment.failed":
-        mark_failed(payment.pk, (entity.get("error_description") or "Payment failed"), raw=entity)
-        result = "failed"
-    record.result = result
-    record.save(update_fields=["result"])
-    return HttpResponse("ok")

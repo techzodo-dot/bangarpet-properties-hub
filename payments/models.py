@@ -16,7 +16,8 @@ class Payment(TimeStampedModel):
         REFUNDED = "refunded", "Refunded"
 
     class Gateway(models.TextChoices):
-        RAZORPAY = "razorpay", "Razorpay"
+        PAYU = "payu", "PayU"
+        RAZORPAY = "razorpay", "Razorpay"  # earlier payments only
         MANUAL = "manual", "Manual (UPI / bank transfer)"
 
     uid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
@@ -25,7 +26,7 @@ class Payment(TimeStampedModel):
     subscription = models.ForeignKey(
         "subscriptions.Subscription", null=True, blank=True, on_delete=models.SET_NULL, related_name="payments"
     )
-    gateway = models.CharField(max_length=10, choices=Gateway.choices, default=Gateway.RAZORPAY)
+    gateway = models.CharField(max_length=10, choices=Gateway.choices, default=Gateway.PAYU)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     currency = models.CharField(max_length=3, default="INR")
     status = models.CharField(max_length=24, choices=Status.choices, default=Status.CREATED, db_index=True)
@@ -33,7 +34,7 @@ class Payment(TimeStampedModel):
     gateway_payment_id = models.CharField(max_length=64, blank=True, null=True, unique=True)
     gateway_signature = models.CharField(max_length=128, blank=True)
     gateway_subscription_id = models.CharField(
-        max_length=64, blank=True, db_index=True, help_text="Razorpay subscription this payment belongs to (auto-renewal).",
+        max_length=64, blank=True, db_index=True, help_text="Gateway mandate/subscription this payment belongs to (auto-renewal).",
     )
     manual_reference = models.CharField(max_length=80, blank=True, help_text="UPI transaction ID / bank reference.")
     failure_reason = models.CharField(max_length=255, blank=True)
@@ -76,7 +77,7 @@ class Invoice(models.Model):
 class WebhookEvent(models.Model):
     """Stores processed gateway webhook IDs so retries are handled idempotently."""
 
-    gateway = models.CharField(max_length=20, default="razorpay")
+    gateway = models.CharField(max_length=20, default="payu")
     event_id = models.CharField(max_length=100)
     event_type = models.CharField(max_length=60)
     payload = models.JSONField(default=dict)

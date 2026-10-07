@@ -37,7 +37,7 @@ ADMIN_PASSWORD=<the admin password>
   To reset a forgotten password, run `python manage.py ensure_admin` once with the new `ADMIN_PASSWORD`.
 * On Render and Railway the platform hostname is added to `ALLOWED_HOSTS` automatically; add your own
   domain once it is connected.
-* Optional integrations (email, Razorpay, WhatsApp, Google Maps) are listed in `.env.example` and the README.
+* Optional integrations (email, PayU, WhatsApp, Google Maps) are listed in `.env.example` and the README.
 * `chmod 600 .env` and never commit it.
 
 ## 2. The release script
@@ -251,22 +251,26 @@ Without `ADMIN_OTP_EMAIL`, a username-style admin login skips the second step in
 locked out. Set `EMAIL_OTP_ENABLED=False` to turn all codes off (for example if Gmail stops sending).
 Gmail allows about 500 emails a day; use a transactional email service if you need more.
 
-## 12b. Customer Contact Pass (recurring payments)
+## 12b. Payments with PayU, and the customer Contact Pass
 
-Customers can unlock a limited number of owner phone/WhatsApp contacts for free each month
-(Management → Settings → "Limit free owner contacts" and "Free contacts per month", default 5).
-After that they buy the **Contact Pass** (a customer plan with "Unlimited contacts", default
-₹99 every 30 days, editable under Management → Plans). It renews automatically through
-Razorpay Subscriptions (UPI Autopay or card); customers can cancel from Dashboard → Contact Pass.
+Online payments use PayU's hosted checkout: the customer pays on PayU's page (UPI, cards, net
+banking, wallets) and is sent back to the site. A plan is activated only after PayU's reply hash
+(signed with your merchant salt) and the amount have been checked on the server.
 
-* Razorpay creates the matching Razorpay plan automatically on the first sale (and again if the
-  price changes or you switch from test to live keys).
-* Live mode: ask Razorpay to enable **Subscriptions** on your account.
-* Webhook (recommended): Razorpay → Settings → Webhooks → URL
-  `https://<domain>/payments/razorpay/webhook/`, events `payment.captured`, `order.paid`,
-  `payment.failed`, `subscription.charged`, `subscription.cancelled`, `subscription.halted`,
-  `subscription.completed`; set the same secret as `RAZORPAY_WEBHOOK_SECRET`. Without a webhook the
-  daily scheduled task still picks up renewal payments from Razorpay before passes expire.
+1. PayU dashboard → Developers → API keys: copy the **Merchant key** and **Salt (v1)**. Test mode and
+   live mode have different keys.
+2. Set `PAYU_MERCHANT_KEY`, `PAYU_MERCHANT_SALT` (mark it Sensitive on Vercel) and `PAYU_MODE`
+   (`test` or `live`), then redeploy. The site shows a "test mode" note on the payment page in test mode.
+3. Recommended: PayU dashboard → Webhooks → add `https://<domain>/payments/payu/webhook/` for successful
+   and failed payments. Without it, the daily scheduled task asks PayU about unfinished payments.
+4. Allow your domain in PayU if asked (the return URL is `https://<domain>/payments/payu/return/`).
+
+**Contact Pass.** Customers can unlock a limited number of owner phone/WhatsApp contacts for free
+each month (Management → Settings → "Limit free owner contacts" and "Free contacts per month", default 5).
+After that they buy the **Contact Pass** (a customer plan with "Unlimited contacts", default ₹99 for
+30 days, editable under Management → Plans). It is a one-time payment per period; customers are
+reminded before it ends and buying again extends it. (Automatic monthly debits would need PayU's
+recurring-payments product enabled on the account.)
 
 ## 13. Go-live checklist
 
@@ -275,7 +279,7 @@ Razorpay Subscriptions (UPI Autopay or card); customers can cancel from Dashboar
 - [ ] Signed in as the admin and **changed the admin password** (Management → Change password)
 - [ ] Management → Settings filled in (contact phone/email, WhatsApp, office address, social links)
 - [ ] Locations, categories and plan prices reviewed
-- [ ] Email working (sign in with an email code, try a password reset); Razorpay test payment + webhook verified, then live keys
+- [ ] Email working (sign in with an email code, try a password reset); PayU test payment + webhook verified, then live keys and PAYU_MODE=live
 - [ ] WhatsApp templates approved before enabling WhatsApp notifications
 - [ ] Hourly cron (`run_scheduled_tasks`) installed; first backup taken and a restore tested
 - [ ] "Install app" works on a phone (Chrome → menu → Install app)

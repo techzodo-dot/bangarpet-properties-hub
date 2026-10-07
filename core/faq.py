@@ -17,8 +17,8 @@ FAQS = [
      "Each plan has a listing duration (for example 30 days on the Free plan). You will get a reminder before your "
      "listing expires and can renew it from your dashboard."),
     ("How do I pay for a plan?",
-     "Paid plans are purchased securely through Razorpay using UPI, cards or net banking. Your plan is activated only "
-     "after the payment is verified on our server. We never store your card details."),
+     "Paid plans are purchased securely through PayU using UPI, cards, net banking or wallets. Your plan is activated "
+     "only after the payment is verified on our server. We never store your card details."),
     ("How do I report a suspicious listing?",
      "Open the listing and use 'Report listing'. Our team reviews every report. Never pay a token amount before "
      "visiting the property and meeting the owner."),

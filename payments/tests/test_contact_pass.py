@@ -1,12 +1,8 @@
-import hashlib
-import hmac
-import json
 from datetime import timedelta
-from unittest import mock
 
 from django.conf import settings
 from django.core.cache import cache
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
@@ -14,7 +10,7 @@ from accounts.models import Role
 from core.models import PlatformSetting
 from core.tests.factories import make_property, make_user
 from payments.models import Payment
-from payments.services import record_subscription_charge, sync_auto_renewals
+from payments.tests.payu_helpers import payu_reply
 from properties.models import ContactUnlock
 from subscriptions.models import Subscription
 from subscriptions.services import activate_subscription, contact_pass_plan
@@ -98,137 +94,84 @@ class FreeContactLimitTests(TestCase):
             self.assertContains(self.client.get(prop.get_absolute_url()), "tel:" + prop.contact_phone)
 
 
-def fake_rzp_subscription(plan_id, days, notes=None):
-    return {"id": "sub_TEST123", "status": "created", "plan_id": plan_id}
+class ContactPassPaymentTests(TestCase):
+    """The Contact Pass is bought through PayU for one billing period at a time."""
 
-
-def signature(payment_id, subscription_id):
-    return hmac.new(settings.RAZORPAY_KEY_SECRET.encode(), f"{payment_id}|{subscription_id}".encode(), hashlib.sha256).hexdigest()
-
-
-def webhook_body(event, sub_id, payment_id, amount=9900):
-    return json.dumps({
-        "event": event,
-        "payload": {"subscription": {"entity": {"id": sub_id}},
-                    "payment": {"entity": {"id": payment_id, "amount": amount, "currency": "INR", "status": "captured"}}},
-    }).encode()
-
-
-def webhook_headers(body, event_id):
-    sig = hmac.new(settings.RAZORPAY_WEBHOOK_SECRET.encode(), body, hashlib.sha256).hexdigest()
-    return {"HTTP_X_RAZORPAY_SIGNATURE": sig, "HTTP_X_RAZORPAY_EVENT_ID": event_id}
-
-
-@mock.patch("payments.razorpay.create_subscription", side_effect=fake_rzp_subscription)
-@mock.patch("payments.razorpay.create_plan", return_value="plan_TEST99")
-class RecurringContactPassTests(TestCase):
     def setUp(self):
         cache.clear()
         self.customer = make_user(Role.CUSTOMER)
         self.client.force_login(self.customer)
         self.plan = contact_pass_plan()
 
-    def start(self):
-        resp = self.client.post(reverse("payments:contact_pass_subscribe"))
-        payment = Payment.objects.get(user=self.customer)
-        self.assertRedirects(resp, reverse("payments:contact_pass_pay", args=[payment.uid]), fetch_redirect_response=False)
+    def start(self, next_url=""):
+        data = {"next": next_url} if next_url else {}
+        resp = self.client.post(reverse("payments:contact_pass_subscribe"), data)
+        payment = Payment.objects.get(user=self.customer, status="created")
+        self.assertRedirects(resp, reverse("payments:pay", args=[payment.uid]), fetch_redirect_response=False)
         return payment
 
-    def test_plan_is_99_a_month_for_customers(self, *_):
+    def test_plan_is_99_for_30_days_for_customers(self):
         self.assertEqual(self.plan.price, 99)
         self.assertEqual(self.plan.billing_period_days, 30)
         page = self.client.get(reverse("payments:contact_pass"))
         self.assertContains(page, "Get Contact Pass")
-        self.assertContains(page, "5 <small")
+        self.assertContains(page, "PayU")
 
-    def test_subscribe_pay_and_verify(self, create_plan, create_sub):
+    def test_pay_page_posts_signed_form_to_payu(self):
         payment = self.start()
-        self.assertEqual(payment.gateway_subscription_id, "sub_TEST123")
-        self.assertEqual(create_plan.call_args[0][1], 9900)
-        page = self.client.get(reverse("payments:contact_pass_pay", args=[payment.uid]))
-        self.assertContains(page, 'data-subscription="sub_TEST123"')
-        self.plan.refresh_from_db()
-        self.assertTrue(self.plan.razorpay_plan_id.endswith(":9900:plan_TEST99"))
-        resp = self.client.post(reverse("payments:contact_pass_verify"), {
-            "razorpay_subscription_id": "sub_TEST123", "razorpay_payment_id": "pay_FIRST",
-            "razorpay_signature": signature("pay_FIRST", "sub_TEST123"),
-        })
-        self.assertRedirects(resp, reverse("payments:contact_pass"), fetch_redirect_response=False)
-        sub = Subscription.objects.get(user=self.customer)
-        self.assertTrue(sub.is_current and sub.auto_renew)
-        self.assertEqual(sub.gateway_subscription_id, "sub_TEST123")
+        self.assertEqual(payment.gateway, Payment.Gateway.PAYU)
+        self.assertTrue(payment.gateway_order_id.startswith("BPH") and len(payment.gateway_order_id) <= 25)
+        page = self.client.get(reverse("payments:pay", args=[payment.uid]))
+        self.assertContains(page, 'action="https://test.payu.in/_payment"')
+        self.assertContains(page, 'name="amount" value="99.00"')
+        self.assertContains(page, f'name="txnid" value="{payment.gateway_order_id}"')
+        self.assertContains(page, 'name="surl" value="http://localhost:8000/payments/payu/return/"')
+        self.assertContains(page, 'name="hash"')
+        self.assertNotContains(page, settings.PAYU_MERCHANT_SALT)
+
+    def test_successful_payment_activates_pass_and_returns_to_the_property(self):
+        prop = make_property(contact_visibility="public")
+        payment = self.start(next_url=prop.get_absolute_url())
+        self.client.logout()  # PayU posts back cross-site, usually without our session cookie
+        resp = self.client.post(reverse("payments:payu_return"), payu_reply(payment))
+        self.assertRedirects(resp, prop.get_absolute_url(), fetch_redirect_response=False)
         payment.refresh_from_db()
         self.assertEqual(payment.status, Payment.Status.PAID)
-        prop = make_property(contact_visibility="public")
-        self.assertContains(self.client.get(prop.get_absolute_url()), "tel:" + prop.contact_phone)
-        # A second subscribe reuses the cached Razorpay plan.
-        self.client.post(reverse("payments:contact_pass_subscribe"))
-        self.assertEqual(create_plan.call_count, 1)
-
-    def test_bad_signature_does_not_activate(self, *_):
-        self.start()
-        self.client.post(reverse("payments:contact_pass_verify"), {
-            "razorpay_subscription_id": "sub_TEST123", "razorpay_payment_id": "pay_FIRST", "razorpay_signature": "bad",
-        })
-        self.assertFalse(Subscription.objects.filter(user=self.customer).exists())
-
-    def test_monthly_renewal_by_webhook_is_idempotent(self, *_):
-        self.start()
-        self.client.post(reverse("payments:contact_pass_verify"), {
-            "razorpay_subscription_id": "sub_TEST123", "razorpay_payment_id": "pay_FIRST",
-            "razorpay_signature": signature("pay_FIRST", "sub_TEST123"),
-        })
-        first_end = Subscription.objects.get(user=self.customer).ends_at
-        body = webhook_body("subscription.charged", "sub_TEST123", "pay_SECOND")
-        url = reverse("payments:razorpay_webhook")
-        self.assertEqual(self.client.post(url, body, content_type="application/json", **webhook_headers(body, "evt_2")).status_code, 200)
-        self.client.post(url, body, content_type="application/json", **webhook_headers(body, "evt_2b"))  # retried
-        sub = Subscription.objects.get(user=self.customer, status="active")
-        self.assertEqual(sub.ends_at, first_end + timedelta(days=30))
-        self.assertEqual(Payment.objects.filter(user=self.customer, status="paid").count(), 2)
-
-    def test_webhook_before_checkout_return_activates_once(self, *_):
-        self.start()
-        body = webhook_body("subscription.charged", "sub_TEST123", "pay_FIRST")
-        self.client.post(reverse("payments:razorpay_webhook"), body, content_type="application/json", **webhook_headers(body, "evt_1"))
-        self.client.post(reverse("payments:contact_pass_verify"), {
-            "razorpay_subscription_id": "sub_TEST123", "razorpay_payment_id": "pay_FIRST",
-            "razorpay_signature": signature("pay_FIRST", "sub_TEST123"),
-        })
-        self.assertEqual(Payment.objects.filter(user=self.customer, status="paid").count(), 1)
-        self.assertTrue(Subscription.objects.get(user=self.customer).auto_renew)
-
-    @mock.patch("payments.razorpay.cancel_subscription", return_value={"status": "cancelled"})
-    def test_cancel_auto_renewal_keeps_paid_time(self, cancel, *_):
-        self.start()
-        self.client.post(reverse("payments:contact_pass_verify"), {
-            "razorpay_subscription_id": "sub_TEST123", "razorpay_payment_id": "pay_FIRST",
-            "razorpay_signature": signature("pay_FIRST", "sub_TEST123"),
-        })
-        self.client.post(reverse("payments:contact_pass_cancel"))
-        cancel.assert_called_once_with("sub_TEST123")
+        self.assertEqual(payment.gateway_payment_id, "403993715500000001")
         sub = Subscription.objects.get(user=self.customer)
-        self.assertFalse(sub.auto_renew)
         self.assertTrue(sub.is_current)
+        self.client.force_login(self.customer)
+        self.assertContains(self.client.get(prop.get_absolute_url()), "tel:" + prop.contact_phone)
 
-    def test_daily_sync_records_missed_renewals(self, *_):
-        self.start()
-        self.client.post(reverse("payments:contact_pass_verify"), {
-            "razorpay_subscription_id": "sub_TEST123", "razorpay_payment_id": "pay_FIRST",
-            "razorpay_signature": signature("pay_FIRST", "sub_TEST123"),
-        })
-        sub = Subscription.objects.get(user=self.customer)
-        Subscription.objects.filter(pk=sub.pk).update(ends_at=timezone.now() + timedelta(hours=2))
-        invoices = [{"status": "paid", "payment_id": "pay_FIRST", "amount_paid": 9900},
-                    {"status": "paid", "payment_id": "pay_SECOND", "amount_paid": 9900}]
-        with mock.patch("payments.razorpay.subscription_invoices", return_value=invoices), \
-                mock.patch("payments.razorpay.fetch_subscription", return_value={"status": "active"}):
-            self.assertEqual(sync_auto_renewals(), "1 renewed, 0 stopped")
-        sub.refresh_from_db()
-        self.assertGreater(sub.ends_at, timezone.now() + timedelta(days=29))
+    def test_buying_again_extends_the_pass(self):
+        payment = self.start()
+        self.client.post(reverse("payments:payu_return"), payu_reply(payment))
+        first_end = Subscription.objects.get(user=self.customer).ends_at
+        second = self.start()
+        self.client.post(reverse("payments:payu_return"), payu_reply(second, mihpayid="403993715500000002"))
+        self.assertEqual(Subscription.objects.get(user=self.customer).ends_at, first_end + timedelta(days=30))
 
-    def test_unknown_subscription_charge_is_ignored(self, *_):
-        self.assertEqual(record_subscription_charge("sub_UNKNOWN", {"id": "pay_X", "amount": 9900}), "no matching subscription")
+    def test_forged_or_wrong_amount_reply_does_not_activate(self):
+        payment = self.start()
+        self.client.post(reverse("payments:payu_return"), payu_reply(payment, salt="not-the-salt"))
+        self.client.post(reverse("payments:payu_return"), payu_reply(payment, amount="1.00"))
+        payment.refresh_from_db()
+        self.assertEqual(payment.status, Payment.Status.CREATED)
+        self.assertFalse(Subscription.objects.exists())
+
+    def test_failed_payment_is_recorded(self):
+        payment = self.start()
+        resp = self.client.post(reverse("payments:payu_return"), payu_reply(payment, status="failure", error_Message="Bank declined"))
+        self.assertRedirects(resp, reverse("payments:contact_pass"), fetch_redirect_response=False)
+        payment.refresh_from_db()
+        self.assertEqual(payment.status, Payment.Status.FAILED)
+        self.assertEqual(payment.failure_reason, "Bank declined")
+
+    @override_settings(PAYU_MERCHANT_KEY="", PAYU_MERCHANT_SALT="")
+    def test_without_payu_customers_are_sent_to_whatsapp(self):
+        self.client.post(reverse("payments:contact_pass_subscribe"))
+        self.assertFalse(Payment.objects.exists())
+        self.assertContains(self.client.get(reverse("payments:contact_pass")), "Online payment is not available yet")
 
 
 class ContactPassAccessTests(TestCase):
@@ -244,34 +187,6 @@ class ContactPassAccessTests(TestCase):
         resp = self.client.get(reverse("payments:contact_pass"))
         self.assertEqual(resp.status_code, 302)
         self.assertIn(reverse("accounts:login"), resp["Location"])
-
-
-class OneTimeFallbackTests(TestCase):
-    """While Razorpay Subscriptions are not enabled, the pass is sold one month at a time."""
-
-    def setUp(self):
-        cache.clear()
-        self.customer = make_user(Role.CUSTOMER)
-        self.client.force_login(self.customer)
-
-    @mock.patch("payments.razorpay.create_order", return_value={"id": "order_ONCE1", "amount": 9900})
-    @mock.patch("payments.razorpay.create_plan", side_effect=__import__("payments.razorpay", fromlist=["x"]).RazorpayError("401"))
-    def test_one_time_payment_when_subscriptions_unavailable(self, *_):
-        self.client.post(reverse("payments:contact_pass_subscribe"))
-        payment = Payment.objects.get(user=self.customer)
-        self.assertEqual(payment.gateway_order_id, "order_ONCE1")
-        self.assertEqual(payment.gateway_subscription_id, "")
-        page = self.client.get(reverse("payments:contact_pass_pay", args=[payment.uid]))
-        self.assertContains(page, 'data-order="order_ONCE1"')
-        self.assertNotContains(page, "data-subscription")
-        self.assertContains(page, reverse("payments:contact_pass_verify_once"))
-        sig = hmac.new(settings.RAZORPAY_KEY_SECRET.encode(), b"order_ONCE1|pay_ONCE", hashlib.sha256).hexdigest()
-        self.client.post(reverse("payments:contact_pass_verify_once"), {
-            "razorpay_order_id": "order_ONCE1", "razorpay_payment_id": "pay_ONCE", "razorpay_signature": sig,
-        })
-        sub = Subscription.objects.get(user=self.customer)
-        self.assertTrue(sub.is_current)
-        self.assertFalse(sub.auto_renew)
 
 
 class OwnerWhatsAppButtonTests(TestCase):

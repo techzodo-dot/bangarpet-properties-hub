@@ -80,7 +80,7 @@ python manage.py test          # uses config.settings.test automatically (in-mem
 The tests cover registration/login/throttling, password reset, email verification, role permissions,
 cross-user access protection, the listing wizard, image upload validation (type, size, dimensions,
 EXIF stripping), search filters/sorting/pagination, favourites, reports, enquiries and visit scheduling,
-moderation, user suspension, subscriptions and expiry, Razorpay checkout/signature verification/webhooks
+moderation, user suspension, subscriptions and expiry, PayU checkout/hash verification/webhooks
 (idempotency, amount mismatch), manual payments, notifications, SEO (sitemap/robots), the admin login command and the installable-app files.
 
 ## Feature overview
@@ -93,7 +93,7 @@ moderation, user suspension, subscriptions and expiry, Razorpay checkout/signatu
 | Customer dashboard | `/dashboard/` — overview, profile, enquiries with status history, visits (cancel pending), saved properties, saved searches (daily alerts), recently viewed, notification settings, password change. |
 | Owner/broker dashboard | `/partner/` — stats overview, listings table, 7-step add/edit wizard (basics, location, details, pricing, photos, contact, review & submit), pause/resume, mark rented/sold, renew, duplicate, delete with typed confirmation, per-listing performance (daily views chart on Pro/Broker), enquiry inbox with status updates and private notes, CSV export (Broker plan), visit scheduling, subscription and payment history with receipts, profile and verification document upload. |
 | Management panel | `/management/` — live metrics and charts, approval queue, listing review with photos/edit-history/reports, approve/reject/request changes/remove/flag/feature, users (search, suspend/reactivate, role change, verification decisions, audit history), verification queue, enquiries overview, plans (create/edit/discounts), subscriptions (grant manually, renewals due), payments (manual verification), reports, banners and sponsored placements, locations/categories/amenities, platform settings with integration status, contact messages, broadcast notices, audit logs. |
-| Payments | Razorpay orders created server-side, signatures verified server-side, signed & idempotent webhooks, amount checks, receipts/invoices, optional manual UPI/bank payments verified by an admin. A plan is never activated because the browser says so. |
+| Payments | PayU hosted checkout with server-side request hashes, reply hashes and amounts verified server-side, idempotent webhooks, daily reconciliation, amount checks, receipts/invoices, optional manual UPI/bank payments verified by an admin. A plan is never activated because the browser says so. |
 | Notifications | In-app notifications always; email and WhatsApp Business (Cloud API templates) according to user preferences. Every delivery attempt is logged as `sent`, `failed`, `skipped` or `not_configured` — nothing is reported as delivered unless the provider accepted it. |
 
 ## Project structure
@@ -108,7 +108,7 @@ properties/        locations, categories, amenities, properties, images, favouri
                    revisions, daily stats; search service; public views
 enquiries/         enquiries, status history, property visits and workflow services
 subscriptions/     plans, subscriptions and entitlement rules (listing limits, durations, priority)
-payments/          payments, invoices, webhook log; Razorpay client and payment state machine
+payments/          payments, invoices, webhook log; PayU client and payment state machine
 notifications/     in-app notifications, delivery log, email/WhatsApp dispatch
 moderation/        reports and listing review decisions; moderation & verification services
 dashboard/         customer (/dashboard/) and owner/broker (/partner/) views
@@ -138,8 +138,8 @@ management panel lists them as **Not configured**.
 | Integration | Environment variables | Notes |
 |---|---|---|
 | Google Maps | `GOOGLE_MAPS_API_KEY` | Enable "Maps JavaScript API"; restrict the key to your domain (HTTP referrers). Without it, "Open in Google Maps" links still work. |
-| Razorpay | `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` | Start with `rzp_test_` keys (test mode banner is shown). Switch to live keys after KYC. |
-| Razorpay webhooks | `RAZORPAY_WEBHOOK_SECRET` | Dashboard → Webhooks → URL `https://<domain>/payments/razorpay/webhook/`, events `payment.captured`, `order.paid`, `payment.failed`. |
+| PayU | `PAYU_MERCHANT_KEY`, `PAYU_MERCHANT_SALT`, `PAYU_MODE` | Start with test-mode keys and `PAYU_MODE=test` (a test mode note is shown). Switch to live keys and `PAYU_MODE=live` after KYC. |
+| PayU webhook | — | PayU dashboard → Webhooks → `https://<domain>/payments/payu/webhook/` for successful and failed payments (verified with the same salt). |
 | Email | `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `DEFAULT_FROM_EMAIL` | Any SMTP provider. Also needed for password reset in production. |
 | WhatsApp | `WHATSAPP_ACCESS_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID` | Meta WhatsApp Cloud API. Create and get approved the templates listed in `notifications/services.py` (`bph_new_enquiry`, `bph_visit_request`, …), each with one body variable `{{1}}`. Then enable WhatsApp in Management → Settings. |
 
@@ -161,7 +161,7 @@ saved-search alerts and purges verification documents past their retention date.
 2. **Public site** — homepage, search, details, listing submission wizard.
 3. **Dashboards** — customer, owner and broker dashboards; enquiries; visit scheduling.
 4. **Management panel** — moderation, verification, banners/ads, configuration, audit logs.
-5. **Subscriptions, payments, notifications** — plans, Razorpay, manual payments, email/WhatsApp.
+5. **Subscriptions, payments, notifications** — plans, PayU, manual payments, email/WhatsApp.
 6. **SEO, security, tests, performance, deployment** — sitemap/robots/JSON-LD, security headers,
    rate limiting, automated tests, query optimisation and caching, production settings and docs.
 
@@ -170,4 +170,4 @@ saved-search alerts and purges verification documents past their retention date.
 Read **docs/DEPLOYMENT.md** and **docs/SECURITY.md**. Have the privacy policy, terms and listing policy
 reviewed by a lawyer, verify the seeded locality list with local knowledge (Management → Locations), set
 real contact details in Management → Settings, change the admin password from the default you set,
-and test payments end-to-end in Razorpay test mode.
+and test payments end-to-end in PayU test mode.

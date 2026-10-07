@@ -19,6 +19,6 @@
 <div class="text-center mt-4">
   {% if user.is_authenticated and user.is_partner %}<a class="btn btn-primary btn-lg" href="{% url 'dashboard:partner_subscription' %}">Manage my plan</a>
   {% else %}<a class="btn btn-accent btn-lg" href="{% url 'accounts:register' %}?type=owner">Get started free</a>{% endif %}
-  <p class="small text-muted mt-3">Prices in Indian Rupees. {% if ONLINE_PAYMENTS %}Payments are processed securely by Razorpay.{% else %}Pay by UPI, bank transfer or cash; your plan starts as soon as the payment is confirmed.{% endif %} "Priority visibility" moves your listings higher in the default sort order; it is not a guarantee of placement.</p>
+  <p class="small text-muted mt-3">Prices in Indian Rupees. {% if ONLINE_PAYMENTS %}Payments are processed securely by PayU.{% else %}Pay by UPI, bank transfer or cash; your plan starts as soon as the payment is confirmed.{% endif %} "Priority visibility" moves your listings higher in the default sort order; it is not a guarantee of placement.</p>
 </div>
 {% endblock %}

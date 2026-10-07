@@ -9,7 +9,7 @@
 | Password reset | Django signed one-time tokens (2-hour expiry), identical response for unknown emails, rate limited. |
 | Email verification | Signed, expiring tokens (3 days). |
 | Sessions & cookies | HttpOnly, SameSite=Lax, Secure in production; session invalidated on suspension. |
-| CSRF | Django CSRF middleware on all forms; logout and all state changes are POST-only. The Razorpay webhook is the only CSRF-exempt endpoint and requires an HMAC signature. |
+| CSRF | Django CSRF middleware on all forms; logout and all state changes are POST-only. The PayU return URL and webhook are the only CSRF-exempt endpoints; both require PayU's SHA-512 reply hash (made with the merchant salt) and a matching amount. |
 | Authorization | Role checks in every view (`core/permissions.py`); querysets scoped to the signed-in user; admin panel requires the admin role on every request; tests cover cross-user access. |
 | Input validation | Django forms/model validation server-side; Indian phone/PIN validators; price sanity limits; date rules for visits. |
 | Uploads | Size limits; Pillow verification of real image content (JPEG/PNG/WEBP only), dimension limits (decompression-bomb guard); images re-encoded and resized, removing EXIF/GPS metadata; random file names; documents limited to verified PDF/JPG/PNG. |
@@ -41,8 +41,8 @@
 - [ ] `python manage.py createcachetable` run (shared cache for throttling)
 - [ ] `.env` permissions `600`; `private_media/` permissions `700` and not web-accessible
 - [ ] Web server denies script execution in `/media/`
-- [ ] Google Maps key restricted by HTTP referrer; Razorpay and WhatsApp secrets only on the server
-- [ ] Razorpay webhook secret set and tested
+- [ ] Google Maps key restricted by HTTP referrer; PayU salt and WhatsApp secrets only on the server
+- [ ] PayU webhook added and a test payment confirmed
 - [ ] Admin accounts use strong unique passwords; remove unused admins; review audit logs regularly
 - [ ] OS and Python packages updated; `pip list --outdated` checked monthly
 - [ ] Backups automated, encrypted off-site and restore-tested
