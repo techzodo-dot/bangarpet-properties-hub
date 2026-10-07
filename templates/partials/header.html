@@ -22,6 +22,7 @@
           </ul>
           <div class="d-flex flex-column flex-lg-row gap-2 mt-3 mt-lg-0 align-items-lg-center">
             {% include "partials/lang_switch.html" with extra_class="d-none d-lg-block" %}
+            <button class="btn btn-soft btn-install d-lg-none" type="button" data-install-app hidden><i class="bi bi-download me-1" aria-hidden="true"></i>{% translate "Install app" %}</button>
             {% if user.is_authenticated %}
               <a class="btn btn-soft btn-icon position-relative d-none d-lg-inline-flex" href="{% url 'notifications:list' %}" aria-label="{% translate "Notifications" %}{% if unread_notifications %} ({{ unread_notifications }}){% endif %}">
                 <i class="bi bi-bell"></i>{% if unread_notifications %}<span class="notif-dot">{{ unread_notifications|stringformat:"d" }}</span>{% endif %}

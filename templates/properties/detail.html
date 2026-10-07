@@ -272,6 +272,7 @@
 
 {# The page has its own WhatsApp button for the owner, so no support button here. #}
 {% block whatsapp_fab %}{% endblock %}
+{% block install_app %}{% include "partials/install_app.html" with no_banner=True %}{% endblock %}
 {% block tabbar %}
 {% if prop.is_public and not is_owner %}
 <nav class="mobile-tabbar detail-actions" aria-label="{% translate "Contact actions" %}">

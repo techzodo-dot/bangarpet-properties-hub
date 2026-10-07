@@ -64,6 +64,13 @@ msgstr "ಆಯ್ದ ಫಿಲ್ಟರ್‌ಗಳು"
 msgid "Active listings"
 msgstr "ಸಕ್ರಿಯ ಜಾಹೀರಾತುಗಳು"
 
+msgid ""
+"Add Bangarpet Property Hub to your home screen. It opens like an app, full "
+"screen, and takes almost no space."
+msgstr ""
+"ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್ ಅನ್ನು ನಿಮ್ಮ ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ. ಇದು ಆ್ಯಪ್‌ನಂತೆ "
+"ಪೂರ್ಣ ಪರದೆಯಲ್ಲಿ ತೆರೆಯುತ್ತದೆ ಮತ್ತು ಬಹುತೇಕ ಜಾಗ ಬಳಸುವುದಿಲ್ಲ."
+
 msgid "Add a listing"
 msgstr "ಜಾಹೀರಾತು ಸೇರಿಸಿ"
 
@@ -108,6 +115,9 @@ msgstr "ಈಗಾಗಲೇ ನೋಂದಾಯಿಸಿದ್ದೀರಾ?"
 
 msgid "Amenities"
 msgstr "ಸೌಲಭ್ಯಗಳು"
+
+msgid "Android (Chrome)"
+msgstr "ಆಂಡ್ರಾಯ್ಡ್ (Chrome)"
 
 msgid "Any"
 msgstr "ಯಾವುದಾದರೂ"
@@ -302,6 +312,14 @@ msgstr "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಆಯ್ಕೆಮಾಡಿ"
 msgid "Clear all"
 msgstr "ಎಲ್ಲವನ್ನೂ ತೆರವುಗೊಳಿಸಿ"
 
+msgid ""
+"Click the install icon <i class=\"bi bi-download\" aria-hidden=\"true\"></i>"
+" at the right end of the address bar, then click <strong>Install</strong>."
+msgstr ""
+"ವಿಳಾಸ ಪಟ್ಟಿಯ ಬಲ ತುದಿಯಲ್ಲಿರುವ ಇನ್‌ಸ್ಟಾಲ್ ಐಕಾನ್ <i class=\"bi bi-download\" "
+"aria-hidden=\"true\"></i> ಕ್ಲಿಕ್ ಮಾಡಿ, ನಂತರ <strong>Install</strong> ಕ್ಲಿಕ್ "
+"ಮಾಡಿ."
+
 msgid "Close"
 msgstr "ಮುಚ್ಚಿ"
 
@@ -322,6 +340,9 @@ msgstr "ಸಂಸ್ಥೆ"
 
 msgid "Completed"
 msgstr "ಪೂರ್ಣಗೊಂಡಿದೆ"
+
+msgid "Computer (Chrome or Edge)"
+msgstr "ಕಂಪ್ಯೂಟರ್ (Chrome ಅಥವಾ Edge)"
 
 msgid "Confirm new password"
 msgstr "ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ"
@@ -510,6 +531,9 @@ msgstr ""
 "ಬಾಡಿಗೆದಾರರು ಮತ್ತು ಖರೀದಿದಾರರಿಗೆ ಉಚಿತ. ನೋಂದಾಯಿಸಿದ ನಂತರ ಮಾಲೀಕರು ಮತ್ತು "
 "ಬ್ರೋಕರ್‌ಗಳು ಆಸ್ತಿಗಳನ್ನು ಪಟ್ಟಿ ಮಾಡಬಹುದು."
 
+msgid "Free, quick to open, no Play Store needed."
+msgstr "ಉಚಿತ, ಬೇಗ ತೆರೆಯುತ್ತದೆ, Play Store ಬೇಕಿಲ್ಲ."
+
 msgid "Frequently asked questions"
 msgstr "ಹೆಚ್ಚಾಗಿ ಕೇಳುವ ಪ್ರಶ್ನೆಗಳು"
 
@@ -539,6 +563,9 @@ msgstr "ಗೇಟೆಡ್ ಸಮುದಾಯ"
 
 msgid "Get Contact Pass - %(price)s/month"
 msgstr "ಕಾಂಟ್ಯಾಕ್ಟ್ ಪಾಸ್ ಪಡೆಯಿರಿ - %(price)s/ತಿಂಗಳು"
+
+msgid "Get our app"
+msgstr "ನಮ್ಮ ಆ್ಯಪ್ ಪಡೆಯಿರಿ"
 
 msgid "Geyser"
 msgstr "ಗೀಸರ್"
@@ -681,6 +708,15 @@ msgid ""
 msgstr ""
 "ಕೋಲಾರ ಜಿಲ್ಲೆಯ ಬಂಗಾರಪೇಟೆಯಲ್ಲಿ ಮಾರಾಟಕ್ಕೆ ಸ್ವತಂತ್ರ ಮನೆಗಳು, ಅಪಾರ್ಟ್‌ಮೆಂಟ್‌ಗಳು, "
 "ನಿವೇಶನಗಳು ಮತ್ತು ಜಮೀನು."
+
+msgid "Install"
+msgstr "ಇನ್‌ಸ್ಟಾಲ್"
+
+msgid "Install app"
+msgstr "ಆ್ಯಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ"
+
+msgid "Install the app"
+msgstr "ಆ್ಯಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ"
 
 msgid "Is it free to search for properties?"
 msgstr "ಆಸ್ತಿಗಳನ್ನು ಹುಡುಕುವುದು ಉಚಿತವೇ?"
@@ -931,6 +967,9 @@ msgstr ""
 
 msgid "No properties match your filters"
 msgstr "ನಿಮ್ಮ ಫಿಲ್ಟರ್‌ಗಳಿಗೆ ಹೊಂದುವ ಆಸ್ತಿಗಳಿಲ್ಲ"
+
+msgid "Not now"
+msgstr "ಈಗ ಬೇಡ"
 
 msgid "Note for the visit (optional)"
 msgstr "ಭೇಟಿಗೆ ಟಿಪ್ಪಣಿ (ಐಚ್ಛಿಕ)"
@@ -1298,6 +1337,13 @@ msgstr "ಉಳಿಸಿದ ಆಸ್ತಿಗಳು"
 msgid "Saved to your favourites."
 msgstr "ನಿಮ್ಮ ಮೆಚ್ಚಿನವುಗಳಿಗೆ ಉಳಿಸಲಾಗಿದೆ."
 
+msgid ""
+"Scroll down and tap <strong>Add to Home Screen</strong> <i class=\"bi bi-"
+"plus-square\" aria-hidden=\"true\"></i>."
+msgstr ""
+"ಕೆಳಗೆ ಸ್ಕ್ರಾಲ್ ಮಾಡಿ <strong>Add to Home Screen</strong> <i class=\"bi bi-"
+"plus-square\" aria-hidden=\"true\"></i> ಒತ್ತಿ."
+
 msgid "Search"
 msgstr "ಹುಡುಕಿ"
 
@@ -1462,6 +1508,31 @@ msgstr "ಮಧ್ಯವರ್ತಿಗಳಿಲ್ಲದೆ ಮಾಲೀಕರ�
 
 msgid "Talk to us"
 msgstr "ನಮ್ಮೊಂದಿಗೆ ಮಾತನಾಡಿ"
+
+msgid "Tap <strong>Add</strong>."
+msgstr "<strong>Add</strong> ಒತ್ತಿ."
+
+msgid ""
+"Tap <strong>Install app</strong> or <strong>Add to Home screen</strong>."
+msgstr ""
+"<strong>Install app</strong> ಅಥವಾ <strong>Add to Home screen</strong> ಒತ್ತಿ."
+
+msgid "Tap <strong>Install</strong>."
+msgstr "<strong>Install</strong> ಒತ್ತಿ."
+
+msgid ""
+"Tap the <strong>Share</strong> button <i class=\"bi bi-box-arrow-up\" aria-"
+"hidden=\"true\"></i> at the bottom of Safari."
+msgstr ""
+"Safari ಕೆಳಭಾಗದಲ್ಲಿರುವ <strong>Share</strong> ಬಟನ್ <i class=\"bi bi-box-"
+"arrow-up\" aria-hidden=\"true\"></i> ಒತ್ತಿ."
+
+msgid ""
+"Tap the menu <i class=\"bi bi-three-dots-vertical\" aria-"
+"hidden=\"true\"></i> at the top right of Chrome."
+msgstr ""
+"Chrome ಮೇಲಿನ ಬಲಭಾಗದಲ್ಲಿರುವ ಮೆನು <i class=\"bi bi-three-dots-vertical\" aria-"
+"hidden=\"true\"></i> ಒತ್ತಿ."
 
 msgid "Tell us what's wrong (optional)"
 msgstr "ಏನು ತಪ್ಪಾಗಿದೆ ಎಂದು ತಿಳಿಸಿ (ಐಚ್ಛಿಕ)"
@@ -1870,6 +1941,9 @@ msgstr "ವಿನಂತಿಸಿದರೆ ಮಾಲೀಕರು ನಿಖರ ವ
 
 msgid "gunta"
 msgstr "ಗುಂಟೆ"
+
+msgid "iPhone / iPad (Safari)"
+msgstr "ಐಫೋನ್ / ಐಪ್ಯಾಡ್ (Safari)"
 
 msgid "month"
 msgstr "ತಿಂಗಳು"

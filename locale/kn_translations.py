@@ -15,6 +15,24 @@ PLURALS = {
 }
 
 KN = {
+    # Install app (PWA)
+    "Add Bangarpet Property Hub to your home screen. It opens like an app, full screen, and takes almost no space.": "ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್ ಅನ್ನು ನಿಮ್ಮ ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ. ಇದು ಆ್ಯಪ್‌ನಂತೆ ಪೂರ್ಣ ಪರದೆಯಲ್ಲಿ ತೆರೆಯುತ್ತದೆ ಮತ್ತು ಬಹುತೇಕ ಜಾಗ ಬಳಸುವುದಿಲ್ಲ.",
+    "Android (Chrome)": "ಆಂಡ್ರಾಯ್ಡ್ (Chrome)",
+    "Click the install icon <i class=\"bi bi-download\" aria-hidden=\"true\"></i> at the right end of the address bar, then click <strong>Install</strong>.": "ವಿಳಾಸ ಪಟ್ಟಿಯ ಬಲ ತುದಿಯಲ್ಲಿರುವ ಇನ್‌ಸ್ಟಾಲ್ ಐಕಾನ್ <i class=\"bi bi-download\" aria-hidden=\"true\"></i> ಕ್ಲಿಕ್ ಮಾಡಿ, ನಂತರ <strong>Install</strong> ಕ್ಲಿಕ್ ಮಾಡಿ.",
+    "Computer (Chrome or Edge)": "ಕಂಪ್ಯೂಟರ್ (Chrome ಅಥವಾ Edge)",
+    "Free, quick to open, no Play Store needed.": "ಉಚಿತ, ಬೇಗ ತೆರೆಯುತ್ತದೆ, Play Store ಬೇಕಿಲ್ಲ.",
+    "Get our app": "ನಮ್ಮ ಆ್ಯಪ್ ಪಡೆಯಿರಿ",
+    "Install": "ಇನ್‌ಸ್ಟಾಲ್",
+    "Install app": "ಆ್ಯಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ",
+    "Install the app": "ಆ್ಯಪ್ ಇನ್‌ಸ್ಟಾಲ್ ಮಾಡಿ",
+    "Not now": "ಈಗ ಬೇಡ",
+    "Scroll down and tap <strong>Add to Home Screen</strong> <i class=\"bi bi-plus-square\" aria-hidden=\"true\"></i>.": "ಕೆಳಗೆ ಸ್ಕ್ರಾಲ್ ಮಾಡಿ <strong>Add to Home Screen</strong> <i class=\"bi bi-plus-square\" aria-hidden=\"true\"></i> ಒತ್ತಿ.",
+    "Tap <strong>Add</strong>.": "<strong>Add</strong> ಒತ್ತಿ.",
+    "Tap <strong>Install app</strong> or <strong>Add to Home screen</strong>.": "<strong>Install app</strong> ಅಥವಾ <strong>Add to Home screen</strong> ಒತ್ತಿ.",
+    "Tap <strong>Install</strong>.": "<strong>Install</strong> ಒತ್ತಿ.",
+    "Tap the <strong>Share</strong> button <i class=\"bi bi-box-arrow-up\" aria-hidden=\"true\"></i> at the bottom of Safari.": "Safari ಕೆಳಭಾಗದಲ್ಲಿರುವ <strong>Share</strong> ಬಟನ್ <i class=\"bi bi-box-arrow-up\" aria-hidden=\"true\"></i> ಒತ್ತಿ.",
+    "Tap the menu <i class=\"bi bi-three-dots-vertical\" aria-hidden=\"true\"></i> at the top right of Chrome.": "Chrome ಮೇಲಿನ ಬಲಭಾಗದಲ್ಲಿರುವ ಮೆನು <i class=\"bi bi-three-dots-vertical\" aria-hidden=\"true\"></i> ಒತ್ತಿ.",
+    "iPhone / iPad (Safari)": "ಐಫೋನ್ / ಐಪ್ಯಾಡ್ (Safari)",
     # ---- Navigation, header, footer ----
     "Main navigation": "ಮುಖ್ಯ ಮೆನು",
     "Open menu": "ಮೆನು ತೆರೆಯಿರಿ",

@@ -356,6 +356,71 @@
     window.addEventListener("load", function () { navigator.serviceWorker.register(swUrl, { scope: "/" }).catch(function () {}); });
   }
 
+  // "Install app": the browser's own install prompt where it exists (Android,
+  // Chrome/Edge on computers), step-by-step help elsewhere (iPhone Safari).
+  const standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  const installTriggers = document.querySelectorAll("[data-install-app]");
+  const installBanner = document.getElementById("installBanner");
+  const DISMISS_KEY = "bph-install-dismissed";
+  let installPrompt = null;
+  const recentlyDismissed = function () {
+    try { return Date.now() - Number(localStorage.getItem(DISMISS_KEY) || 0) < 14 * 864e5; } catch (e) { return false; }
+  };
+  const showBanner = function () {
+    if (installBanner && !standalone && !recentlyDismissed()) {
+      installBanner.hidden = false;
+      document.body.classList.add("has-install-banner");
+    }
+  };
+  const hideBanner = function () {
+    if (installBanner) installBanner.hidden = true;
+    document.body.classList.remove("has-install-banner");
+  };
+  const ua = navigator.userAgent;
+  const isIOS = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (!standalone) {
+    installTriggers.forEach(function (el) { if (!el.closest("#installBanner")) el.hidden = false; });
+    // iPhone Safari never fires beforeinstallprompt, so offer the how-to after a short delay.
+    if (isIOS) setTimeout(showBanner, 4000);
+  }
+  window.addEventListener("beforeinstallprompt", function (event) {
+    event.preventDefault();
+    installPrompt = event;
+    setTimeout(showBanner, 2500);
+  });
+  window.addEventListener("appinstalled", function () {
+    installPrompt = null;
+    hideBanner();
+    installTriggers.forEach(function (el) { el.hidden = true; });
+  });
+  document.addEventListener("click", function (event) {
+    if (event.target.closest("[data-install-dismiss]")) {
+      try { localStorage.setItem(DISMISS_KEY, String(Date.now())); } catch (e) { /* private mode */ }
+      hideBanner();
+      return;
+    }
+    const trigger = event.target.closest("[data-install-app]");
+    if (!trigger) return;
+    event.preventDefault();
+    if (installPrompt) {
+      installPrompt.prompt();
+      installPrompt.userChoice.then(function (choice) {
+        if (choice.outcome === "accepted") hideBanner();
+        installPrompt = null;
+      }).catch(function () {});
+      return;
+    }
+    const modalEl = document.getElementById("installModal");
+    if (!modalEl || !window.bootstrap) return;
+    const platform = isIOS ? "ios" : (/android/i.test(ua) ? "android" : "desktop");
+    modalEl.querySelectorAll("[data-install-steps]").forEach(function (block) {
+      block.hidden = block.getAttribute("data-install-steps") !== platform;
+    });
+    const menu = trigger.closest(".offcanvas");
+    if (menu) window.bootstrap.Offcanvas.getOrCreateInstance(menu).hide();
+    window.bootstrap.Modal.getOrCreateInstance(modalEl).show();
+  });
+
   // On phones the dashboard nav is a horizontal strip: keep the active tab in view.
   const dashNav = document.querySelector(".dash-nav");
   const activeLink = dashNav && dashNav.querySelector(".nav-link.active");

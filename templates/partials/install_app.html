@@ -1,0 +1,45 @@
+{% load i18n %}{% load static %}
+{# "Install app" prompt for the installable web app (PWA). Shown by main.js only when the site is not already installed. #}
+{% if not no_banner %}<div class="install-banner no-print" id="installBanner" role="region" aria-label="{% translate 'Install app' %}" hidden>
+  <img src="{% static 'img/icon-192.png' %}" alt="" width="44" height="44" class="install-banner-icon">
+  <div class="install-banner-text">
+    <strong>{% translate "Get our app" %}</strong>
+    <span>{% translate "Free, quick to open, no Play Store needed." %}</span>
+  </div>
+  <button class="btn btn-accent btn-sm" type="button" data-install-app>{% translate "Install" %}</button>
+  <button class="btn-close" type="button" data-install-dismiss aria-label="{% translate 'Not now' %}"></button>
+</div>{% endif %}
+
+<div class="modal fade" id="installModal" tabindex="-1" aria-labelledby="installModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4">
+      <div class="modal-header border-0 pb-0">
+        <h2 class="modal-title h5 d-flex align-items-center gap-2" id="installModalLabel"><img src="{% static 'img/icon-192.png' %}" alt="" width="36" height="36" class="rounded-3">{% translate "Install the app" %}</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% translate 'Close' %}"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted small">{% translate "Add Bangarpet Property Hub to your home screen. It opens like an app, full screen, and takes almost no space." %}</p>
+        <div data-install-steps="ios">
+          <h3 class="h6">{% translate "iPhone / iPad (Safari)" %}</h3>
+          <ol class="small ps-3 mb-3">
+            <li>{% blocktranslate %}Tap the <strong>Share</strong> button <i class="bi bi-box-arrow-up" aria-hidden="true"></i> at the bottom of Safari.{% endblocktranslate %}</li>
+            <li>{% blocktranslate %}Scroll down and tap <strong>Add to Home Screen</strong> <i class="bi bi-plus-square" aria-hidden="true"></i>.{% endblocktranslate %}</li>
+            <li>{% blocktranslate %}Tap <strong>Add</strong>.{% endblocktranslate %}</li>
+          </ol>
+        </div>
+        <div data-install-steps="android">
+          <h3 class="h6">{% translate "Android (Chrome)" %}</h3>
+          <ol class="small ps-3 mb-3">
+            <li>{% blocktranslate %}Tap the menu <i class="bi bi-three-dots-vertical" aria-hidden="true"></i> at the top right of Chrome.{% endblocktranslate %}</li>
+            <li>{% blocktranslate %}Tap <strong>Install app</strong> or <strong>Add to Home screen</strong>.{% endblocktranslate %}</li>
+            <li>{% blocktranslate %}Tap <strong>Install</strong>.{% endblocktranslate %}</li>
+          </ol>
+        </div>
+        <div data-install-steps="desktop">
+          <h3 class="h6">{% translate "Computer (Chrome or Edge)" %}</h3>
+          <p class="small mb-0">{% blocktranslate %}Click the install icon <i class="bi bi-download" aria-hidden="true"></i> at the right end of the address bar, then click <strong>Install</strong>.{% endblocktranslate %}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

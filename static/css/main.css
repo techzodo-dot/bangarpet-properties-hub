@@ -237,6 +237,24 @@ img { max-width: 100%; }
   .has-tabbar .wa-fab { bottom: calc(76px + env(safe-area-inset-bottom)); }
 }
 @media (prefers-reduced-motion: reduce) { .wa-fab { transition: none; } .wa-fab:hover { transform: none; } }
+.install-banner { position: fixed; left: 20px; bottom: calc(20px + env(safe-area-inset-bottom)); z-index: 1026; display: flex; align-items: center; gap: .75rem; width: min(400px, calc(100vw - 40px)); padding: .75rem .75rem .75rem .85rem; background: var(--surface, #fff); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 12px 32px rgba(23, 43, 77, .18); animation: install-in .3s var(--ease) both; }
+.install-banner[hidden] { display: none; }
+.install-banner-icon { border-radius: 12px; flex: none; }
+.install-banner-text { display: flex; flex-direction: column; min-width: 0; flex: 1; line-height: 1.25; }
+.install-banner-text strong { font-size: .95rem; color: var(--navy); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.install-banner-text span { font-size: .8rem; color: var(--muted); }
+.install-banner .btn { flex: none; min-height: 40px; padding-left: 1rem; padding-right: 1rem; }
+.install-banner .btn-close { flex: none; width: 1.5rem; height: 1.5rem; padding: .25rem; }
+@keyframes install-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .install-banner { animation: none; } }
+@media (max-width: 991.98px) {
+  .install-banner { left: 12px; width: auto; right: 84px; padding: .6rem .6rem .6rem .7rem; gap: .6rem; }
+  .has-tabbar .install-banner { bottom: calc(76px + env(safe-area-inset-bottom)); }
+  .install-banner-icon { width: 38px; height: 38px; }
+  .install-banner-text span { display: none; }
+}
+@media (max-width: 359.98px) { .install-banner-icon { display: none; } }
+.btn-install[hidden], [data-install-app][hidden] { display: none !important; }
 .mobile-tabbar { display: none; }
 @media (max-width: 991.98px) {
   .mobile-tabbar { display: flex; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1030; background: rgba(255, 255, 255, .97); border-top: 1px solid var(--border); box-shadow: 0 -4px 16px rgba(23, 43, 77, .06); padding: .35rem .25rem calc(.35rem + env(safe-area-inset-bottom)); justify-content: space-around; }
