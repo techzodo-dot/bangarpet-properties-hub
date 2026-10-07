@@ -11,6 +11,7 @@ from django.views.decorators.http import require_POST
 from accounts.models import Role
 from core import ratelimit
 from core.audit import log_action
+from core.models import PlatformSetting
 from payments import payu
 from payments.models import Payment
 from payments.services import start_payu_payment
@@ -64,6 +65,8 @@ def subscribe(request):
         messages.error(request, _("The Contact Pass is not available right now."))
         return redirect(here)
     if not payu.is_configured():
+        if PlatformSetting.load().allow_manual_payments:
+            return redirect("payments:manual", slug=plan.slug)
         messages.info(request, _("Online payment is not available yet. Please contact us on WhatsApp to get the Contact Pass."))
         return redirect(here)
     if not ratelimit.check_and_hit("payment", f"user:{user.pk}"):

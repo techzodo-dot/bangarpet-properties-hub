@@ -42,6 +42,8 @@
       <h2 class="h6 text-uppercase text-muted">Subscriptions &amp; billing</h2>
       <div class="row g-3 mb-4">
         <div class="col-12">{% include "partials/field.html" with field=form.allow_manual_payments wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.upi_id wrapper_class="" %}</div>
+        <div class="col-md-6">{% include "partials/field.html" with field=form.upi_payee_name wrapper_class="" %}</div>
         <div class="col-12">{% include "partials/field.html" with field=form.manual_payment_instructions wrapper_class="" %}</div>
         <div class="col-md-6">{% include "partials/field.html" with field=form.invoice_business_name wrapper_class="" %}</div>
         <div class="col-md-6">{% include "partials/field.html" with field=form.gstin wrapper_class="" %}</div>

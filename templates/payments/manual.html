@@ -1,15 +1,48 @@
 {% extends base_template %}
 {% load bph %}
-{% block title %}Pay by UPI / bank transfer - {{ site.site_name }}{% endblock %}
+{% block title %}Pay by UPI - {{ site.site_name }}{% endblock %}
 {% block dash_content %}
-<div class="page-head"><h1>Pay by UPI / bank transfer</h1></div>
-<div class="surface p-4" style="max-width:640px">
-  <p>Plan: <strong>{{ plan.name }}</strong> &middot; Amount: <strong>{{ plan.effective_price|inr }}</strong></p>
-  {% if site.manual_payment_instructions %}<div class="bg-soft rounded-4 p-3 mb-3 prose small">{{ site.manual_payment_instructions }}</div>{% endif %}
+<div class="page-head"><h1>Pay by UPI</h1><a class="btn btn-soft" href="{{ cancel_url }}"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back</a></div>
+<div class="surface p-4" style="max-width:720px">
+  <dl class="row mb-3">
+    <dt class="col-5 col-sm-4 text-muted fw-normal">{% if plan.unlimited_contacts %}Pass{% else %}Plan{% endif %}</dt><dd class="col-7 col-sm-8 fw-semibold">{{ plan.name }} ({{ plan.billing_period_days }} days)</dd>
+    <dt class="col-5 col-sm-4 text-muted fw-normal">Amount to pay</dt><dd class="col-7 col-sm-8 fw-bold fs-5 text-navy">{{ plan.effective_price|inr }}</dd>
+  </dl>
+
+  <h2 class="h6 mb-2"><span class="badge rounded-pill text-bg-primary me-1">1</span>Pay {{ plan.effective_price|inr }} from any UPI app</h2>
+  {% if site.upi_id %}
+  <div class="row g-3 align-items-center mb-4">
+    <div class="col-sm-auto text-center">
+      <div class="d-inline-block bg-white border rounded-4 p-2 lh-1">{{ upi_qr }}</div>
+      <div class="small text-muted mt-1 d-none d-md-block">Scan with GPay, PhonePe, Paytm or BHIM</div>
+    </div>
+    <div class="col-sm">
+      <div class="small text-muted">UPI ID</div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <span class="fw-semibold fs-5 text-break" id="upi-id">{{ site.upi_id }}</span>
+        <button class="btn btn-soft btn-sm" type="button" data-copy-text="{{ site.upi_id }}" aria-label="Copy UPI ID"><i class="bi bi-copy me-1" aria-hidden="true"></i><span>Copy</span></button>
+      </div>
+      <div class="small text-muted mb-3">Payee: {{ site.upi_payee_name|default:site.site_name }}</div>
+      <a class="btn btn-accent w-100 d-md-none" href="{{ upi_link }}"><i class="bi bi-phone me-1" aria-hidden="true"></i>Open UPI app to pay {{ plan.effective_price|inr }}</a>
+      <p class="small text-muted mt-2 mb-0">Pay exactly {{ plan.effective_price|inr }}. The amount and note are filled in when you scan the code or tap the button.</p>
+    </div>
+  </div>
+  {% else %}
+  <div class="alert alert-info rounded-4 small mb-4">
+    {% if site.whatsapp_digits %}<a href="https://wa.me/{{ site.whatsapp_digits }}?text={{ 'Please send your UPI ID to pay for '|urlencode }}{{ plan.name|urlencode }}" target="_blank" rel="noopener">Message us on WhatsApp</a> and we'll send our UPI ID right away.
+    {% elif site.support_phone %}Call us on <a href="tel:{{ site.support_phone }}">{{ site.support_phone|phone }}</a> for our UPI ID.
+    {% else %}Contact us for our UPI ID.{% endif %}
+  </div>
+  {% endif %}
+  {% if site.manual_payment_instructions %}<div class="bg-soft rounded-4 p-3 mb-4 small" style="white-space:pre-line">{{ site.manual_payment_instructions }}</div>{% endif %}
+
+  <h2 class="h6 mb-2"><span class="badge rounded-pill text-bg-primary me-1">2</span>Enter the UPI reference</h2>
+  <p class="small text-muted">After paying, copy the 12-digit UPI reference (UTR / transaction ID) from your UPI app's payment details.</p>
   <form method="post" data-once novalidate>{% csrf_token %}
     {% include "partials/field.html" with field=form.manual_reference %}
     <button class="btn btn-primary" type="submit">Submit for verification</button>
-    <a class="btn btn-link" href="{% url 'dashboard:partner_subscription' %}">Cancel</a>
+    <a class="btn btn-link" href="{{ cancel_url }}">Cancel</a>
   </form>
+  <p class="small text-muted mt-3 mb-0"><i class="bi bi-clock-history me-1" aria-hidden="true"></i>Our team checks the payment and activates your {% if plan.unlimited_contacts %}Contact Pass{% else %}plan{% endif %}, usually within a few hours. You'll get a notification and an email.{% if site.whatsapp_digits %} Need it sooner? <a href="https://wa.me/{{ site.whatsapp_digits }}" target="_blank" rel="noopener">WhatsApp us</a> the reference.{% endif %}</p>
 </div>
 {% endblock %}

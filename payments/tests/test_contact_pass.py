@@ -168,7 +168,10 @@ class ContactPassPaymentTests(TestCase):
         self.assertEqual(payment.failure_reason, "Bank declined")
 
     @override_settings(PAYU_MERCHANT_KEY="", PAYU_MERCHANT_SALT="")
-    def test_without_payu_customers_are_sent_to_whatsapp(self):
+    def test_without_payu_or_upi_customers_are_sent_to_whatsapp(self):
+        site = PlatformSetting.load()
+        site.allow_manual_payments = False
+        site.save()
         self.client.post(reverse("payments:contact_pass_subscribe"))
         self.assertFalse(Payment.objects.exists())
         self.assertContains(self.client.get(reverse("payments:contact_pass")), "Online payment is not available yet")

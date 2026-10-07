@@ -99,18 +99,25 @@ class CheckoutTests(TestCase):
     def test_owners_can_always_choose_to_pay_offline(self):
         page = self.client.get(reverse("dashboard:partner_subscription"))
         self.assertContains(page, reverse("payments:checkout", args=["basic"]))
-        self.assertContains(page, reverse("payments:request", args=["basic"]))
+        self.assertContains(page, reverse("payments:manual", args=["basic"]))
         payment = self._checkout()
         pay_page = self.client.get(reverse("payments:pay", args=[payment.uid]))
         self.assertContains(pay_page, "Trouble paying online?")
-        self.assertContains(pay_page, reverse("payments:request", args=["basic"]))
+        self.assertContains(pay_page, reverse("payments:manual", args=["basic"]))
         # The offline request works while an online attempt is still open.
         resp = self.client.post(reverse("payments:request", args=["basic"]), {"phone": "9845012345", "note": "PayU failed"})
         self.assertRedirects(resp, reverse("dashboard:partner_payments"), fetch_redirect_response=False)
         self.assertTrue(Payment.objects.filter(user=self.owner, status=Payment.Status.PENDING_VERIFICATION).exists())
 
     @override_settings(PAYU_MERCHANT_KEY="", PAYU_MERCHANT_SALT="")
-    def test_not_configured_falls_back_to_plan_request(self):
+    def test_not_configured_falls_back_to_upi_or_plan_request(self):
+        self.assertRedirects(self.client.post(reverse("payments:checkout", args=["basic"])),
+                             reverse("payments:manual", args=["basic"]))
+        from core.models import PlatformSetting
+
+        site = PlatformSetting.load()
+        site.allow_manual_payments = False
+        site.save()
         resp = self.client.post(reverse("payments:checkout", args=["basic"]))
         self.assertRedirects(resp, reverse("payments:request", args=["basic"]))
         self.assertFalse(Payment.objects.exists())
@@ -202,10 +209,15 @@ class ManualPaymentTests(TestCase):
 
 @override_settings(PAYU_MERCHANT_KEY="", PAYU_MERCHANT_SALT="")
 class PlanRequestTests(TestCase):
-    """Without an online gateway, partners can still choose a paid plan."""
+    """Without an online gateway or UPI, partners can still choose a paid plan."""
 
     def setUp(self):
         cache.clear()
+        from core.models import PlatformSetting
+
+        site = PlatformSetting.load()
+        site.allow_manual_payments = False
+        site.save()
         self.owner = make_user(Role.OWNER)
         self.client.force_login(self.owner)
 

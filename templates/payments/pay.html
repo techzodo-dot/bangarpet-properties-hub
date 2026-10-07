@@ -17,10 +17,10 @@
   <p class="small text-muted mt-3 mb-2">You'll be taken to PayU's secure page to pay by UPI, card, net banking or wallet, then brought back here. Your plan activates only after PayU confirms the payment to our server. We never see or store your card details.</p>
   <div class="border-top pt-3 mt-3 small">
     <strong>Trouble paying online?</strong>
-    {% if payment.plan.unlimited_contacts %}
+    {% if site.allow_manual_payments %}
+      <a href="{% url 'payments:manual' payment.plan.slug %}">Pay directly by UPI</a> from any UPI app; we activate your {% if payment.plan.unlimited_contacts %}Contact Pass{% else %}plan{% endif %} after checking the payment.
+    {% elif payment.plan.unlimited_contacts %}
       {% if site.whatsapp_digits %}<a href="https://wa.me/{{ site.whatsapp_digits }}?text={{ 'I want to buy the Contact Pass. Reference: '|urlencode }}{{ payment.gateway_order_id|urlencode }}" target="_blank" rel="noopener">Message us on WhatsApp</a> and we'll help you pay by UPI.{% elif site.support_phone %}Call us on <a href="tel:{{ site.support_phone }}">{{ site.support_phone|phone }}</a>.{% endif %}
-    {% elif site.allow_manual_payments %}
-      <a href="{% url 'payments:manual' payment.plan.slug %}">Pay by UPI / bank transfer</a> and our team will activate your plan after checking the payment.
     {% else %}
       <a href="{% url 'payments:request' payment.plan.slug %}">Request a call</a> and our team will help you pay by UPI, bank transfer or cash, then activate your plan.
     {% endif %}

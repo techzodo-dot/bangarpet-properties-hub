@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.cache import cache
-from django.core.validators import FileExtensionValidator
+from django.core.validators import FileExtensionValidator, RegexValidator
 from django.db import models
 from django.utils import timezone
 
@@ -57,9 +57,21 @@ class PlatformSetting(models.Model):
     require_listing_approval = models.BooleanField(default=True)
     expiry_reminder_days = models.PositiveSmallIntegerField(default=5)
     allow_manual_payments = models.BooleanField(
-        default=False, help_text="Allow partners to submit UPI/bank transfer references for manual verification."
+        "Allow UPI / bank transfer payments", default=True,
+        help_text="Owners, brokers and Contact Pass buyers can pay to your UPI ID and submit the UPI reference; "
+                  "the plan activates when you approve it in Payments.",
     )
-    manual_payment_instructions = models.TextField(blank=True)
+    upi_id = models.CharField(
+        "UPI ID", max_length=100, blank=True, validators=[RegexValidator(
+            r"^[A-Za-z0-9.\-_]{2,256}@[A-Za-z][A-Za-z0-9]{1,63}$", "Enter a UPI ID like name@okhdfcbank.")],
+        help_text="Shown with a QR code and a pay-by-UPI-app link on the payment page, e.g. bangarpetproperty@okhdfcbank.",
+    )
+    upi_payee_name = models.CharField(
+        "UPI payee name", max_length=60, blank=True, help_text="The name UPI apps show when paying, e.g. Bangarpet Property Hub.",
+    )
+    manual_payment_instructions = models.TextField(
+        blank=True, help_text="Optional extra steps, e.g. bank account details for NEFT/IMPS.",
+    )
     contact_limit_enabled = models.BooleanField(
         "Limit free owner contacts", default=True,
         help_text="Customers see a limited number of owner phone numbers each month, then need the Contact Pass.",

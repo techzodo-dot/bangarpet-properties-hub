@@ -23,7 +23,7 @@ from moderation.models import Report
 from notifications.models import Notification
 from notifications.services import integration_status, notify
 from payments.models import Payment
-from payments.services import mark_paid
+from payments.services import mark_paid, plan_payments_url
 from properties.models import Amenity, Category, Location, Property
 from subscriptions.models import Subscription, SubscriptionPlan
 from subscriptions.services import activate_subscription
@@ -436,7 +436,7 @@ def payment_action(request, pk, action):
         log_action(request, "payment.manual_rejected", payment, reason=payment.failure_reason)
         notify(payment.user, Notification.Event.PAYMENT_FAILED, "Payment could not be verified",
                f"We could not verify your payment reference {payment.manual_reference}: {payment.failure_reason}",
-               reverse("dashboard:partner_payments"))
+               plan_payments_url(payment.plan))
         messages.success(request, "Payment rejected.")
     else:
         raise Http404

@@ -283,6 +283,19 @@
     }
   });
 
+  // Copy buttons (e.g. the UPI ID on the payment page).
+  document.addEventListener("click", function (event) {
+    const btn = event.target.closest("[data-copy-text]");
+    if (!btn || !navigator.clipboard) return;
+    navigator.clipboard.writeText(btn.getAttribute("data-copy-text")).then(function () {
+      const label = btn.querySelector("span");
+      if (!label) return;
+      const original = label.textContent;
+      label.textContent = "Copied";
+      setTimeout(function () { label.textContent = original; }, 2000);
+    });
+  });
+
   // Auto-submit filter controls marked data-autosubmit (e.g. sort select).
   document.addEventListener("change", function (event) {
     const el = event.target;

@@ -17,10 +17,12 @@ from core.models import PlatformSetting
 from core.permissions import partner_required
 from notifications.models import Notification
 from notifications.services import notify_admins
-from payments import payu
+from payments import payu, upi
 from payments.forms import ManualPaymentForm, PlanRequestForm
 from payments.models import Invoice, Payment, WebhookEvent
-from payments.services import payu_checkout_fields, plan_home_url, process_payu_result, start_payu_payment
+from payments.services import (
+    payu_checkout_fields, plan_home_url, plan_payments_url, process_payu_result, start_payu_payment,
+)
 from subscriptions.models import SubscriptionPlan
 
 logger = logging.getLogger("bph")
@@ -128,29 +130,50 @@ def payu_webhook(request):
     return HttpResponse("ok")
 
 
-@partner_required
+MAX_PENDING_MANUAL = 3
+
+
+@login_required
 def manual_payment(request, slug):
+    """Pay straight to our UPI ID (or by bank transfer), then submit the UPI reference.
+
+    Works for listing plans (owners/brokers) and the Contact Pass (customers).
+    The plan activates when an admin approves the payment in Management -> Payments.
+    """
     site = PlatformSetting.load()
     if not site.allow_manual_payments:
         raise PermissionDenied("Manual payments are not enabled.")
     plan = _get_plan(request.user, slug)
+    customer = plan.unlimited_contacts
+    payments_url = plan_payments_url(plan)
     form = ManualPaymentForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
-        if Payment.objects.filter(user=request.user, status=Payment.Status.PENDING_VERIFICATION).count() >= 3:
+        pending = Payment.objects.filter(user=request.user, status=Payment.Status.PENDING_VERIFICATION)
+        reference = form.cleaned_data["manual_reference"]
+        if pending.filter(manual_reference__iexact=reference).exists():
+            messages.info(request, "You have already submitted this reference. We'll activate your plan once it is verified.")
+            return redirect(payments_url)
+        if pending.count() >= MAX_PENDING_MANUAL:
             messages.error(request, "You already have payments awaiting verification.")
-            return redirect("dashboard:partner_payments")
+            return redirect(payments_url)
         payment = Payment.objects.create(
             user=request.user, plan=plan, amount=plan.effective_price, gateway=Payment.Gateway.MANUAL,
-            status=Payment.Status.PENDING_VERIFICATION, manual_reference=form.cleaned_data["manual_reference"],
+            status=Payment.Status.PENDING_VERIFICATION, manual_reference=reference,
         )
         log_action(request, "payment.manual_submitted", payment)
-        notify_admins(Notification.Event.ADMIN_NOTICE, "Manual payment to verify",
-                      f"{request.user.display_name} submitted reference {payment.manual_reference} for {plan.name}.",
+        notify_admins(Notification.Event.ADMIN_NOTICE, "UPI payment to verify",
+                      f"{request.user.display_name} paid {plan.effective_price} INR for {plan.name}. "
+                      f"UPI reference: {payment.manual_reference}. Check it in the bank/UPI app, then approve it.",
                       reverse("adminpanel:payments") + "?status=pending_verification")
-        messages.success(request, "Thank you. Your plan will be activated once our team verifies the payment.")
-        return redirect("dashboard:partner_payments")
+        what = "Contact Pass" if customer else f"{plan.name} plan"
+        messages.success(request, f"Thank you. Your {what} will be activated as soon as our team verifies the payment.")
+        return redirect(payments_url)
+    link = upi.pay_link(site, plan.effective_price, upi.reference_note(request.user, plan))
     return render(request, "payments/manual.html", {
-        "form": form, "plan": plan, "site": site, "base_template": "dashboard/partner_base.html", "active": "subscription",
+        "form": form, "plan": plan, "site": site, "upi_link": link, "upi_qr": upi.qr_svg(link),
+        "cancel_url": plan_home_url(plan),
+        "base_template": "dashboard/customer_base.html" if customer else "dashboard/partner_base.html",
+        "active": "contact_pass" if customer else "subscription",
     })
 
 

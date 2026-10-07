@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 export DJANGO_SETTINGS_MODULE="${DJANGO_SETTINGS_MODULE:-config.settings.production}"
 
 PY="$(command -v python3 || command -v python)"
-if ! "$PY" -c "import django, PIL, psycopg, dj_database_url, whitenoise, requests" 2>/dev/null; then
+if ! "$PY" -c "import django, PIL, psycopg, dj_database_url, whitenoise, requests, segno" 2>/dev/null; then
   echo "==> Installing dependencies for the build step"
   DEPS="${TMPDIR:-/tmp}/bph-build-deps"
   "$PY" -m pip install --quiet --disable-pip-version-check --target "$DEPS" -r requirements.txt

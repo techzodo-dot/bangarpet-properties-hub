@@ -272,6 +272,22 @@ After that they buy the **Contact Pass** (a customer plan with "Unlimited contac
 reminded before it ends and buying again extends it. (Automatic monthly debits would need PayU's
 recurring-payments product enabled on the account.)
 
+## 12c. Direct UPI payments (no gateway)
+
+UPI / bank transfer payments are on by default and work with or without PayU.
+
+1. Management -> Settings -> Subscriptions & billing: enter your **UPI ID** (e.g. `name@okhdfcbank`)
+   and **UPI payee name**, then Save. Optionally add bank details in "Manual payment instructions".
+2. Owners, brokers (plans) and customers (Contact Pass) see "Pay directly by UPI": a QR code, the UPI ID
+   with a copy button, and an "Open UPI app" button on phones. Amount and a note like `BPH basic U12`
+   are pre-filled.
+3. After paying, they enter the 12-digit UPI reference (UTR). Admins get a notification.
+4. Check the reference in your bank / UPI app, then Management -> Payments -> Approve. That activates
+   the plan or Contact Pass and sends the receipt. Reject if it can't be found.
+
+Until a UPI ID is set, the page asks people to WhatsApp you for it. Untick "Allow UPI / bank transfer
+payments" to switch it off.
+
 ## 13. Go-live checklist
 
 - [ ] Section 1 variables set, `DEBUG=False`, `scripts/release.sh` finished without errors
