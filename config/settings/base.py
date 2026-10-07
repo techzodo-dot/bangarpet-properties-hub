@@ -210,7 +210,13 @@ EMAIL_HOST = env("EMAIL_HOST", "")
 EMAIL_PORT = env_int("EMAIL_PORT", 587)
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", "")
-EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
+# Port 465 is implicit SSL; every other port (587, 25, 2525) needs STARTTLS before
+# servers such as Gmail accept a login, so TLS cannot be switched off there.
+EMAIL_USE_SSL = EMAIL_PORT == 465
+EMAIL_USE_TLS = not EMAIL_USE_SSL and (env_bool("EMAIL_USE_TLS", True) or EMAIL_PORT == 587)
+if EMAIL_HOST.lower() == "smtp.gmail.com":
+    # Google shows app passwords as "abcd efgh ijkl mnop"; the spaces are not part of it.
+    EMAIL_HOST_PASSWORD = "".join(EMAIL_HOST_PASSWORD.split())
 EMAIL_TIMEOUT = 10
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", "Bangarpet Property Hub <no-reply@localhost>")
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
