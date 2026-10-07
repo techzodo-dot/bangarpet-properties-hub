@@ -5,7 +5,8 @@
     {% csrf_token %}
     <button class="btn {% if is_current %}btn-outline-primary{% else %}btn-primary{% endif %} w-100" type="submit">{% if is_current %}Extend by {{ plan.billing_period_days }} days{% else %}Choose {{ plan.name }}{% endif %}</button>
   </form>
-  {% if site.allow_manual_payments %}<a class="btn btn-link btn-sm w-100 mt-1" href="{% url 'payments:manual' plan.slug %}">Pay by UPI / bank transfer</a>{% endif %}
+  {% if site.allow_manual_payments %}<a class="btn btn-link btn-sm w-100 mt-1" href="{% url 'payments:manual' plan.slug %}">Pay by UPI / bank transfer</a>
+  {% else %}<a class="btn btn-link btn-sm w-100 mt-1" href="{% url 'payments:request' plan.slug %}">Or request a call to pay by UPI / cash</a>{% endif %}
 {% elif site.allow_manual_payments %}
   <a class="btn {% if is_current %}btn-outline-primary{% else %}btn-primary{% endif %} w-100" href="{% url 'payments:manual' plan.slug %}">{% if is_current %}Extend by {{ plan.billing_period_days }} days{% else %}Choose {{ plan.name }}{% endif %}</a>
   <div class="small text-muted text-center mt-1">Pay by UPI / bank transfer</div>

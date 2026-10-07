@@ -96,6 +96,19 @@ class CheckoutTests(TestCase):
         self.client.force_login(self.owner)
         self.assertEqual(self.client.post(reverse("payments:checkout", args=["broker"])).status_code, 403)
 
+    def test_owners_can_always_choose_to_pay_offline(self):
+        page = self.client.get(reverse("dashboard:partner_subscription"))
+        self.assertContains(page, reverse("payments:checkout", args=["basic"]))
+        self.assertContains(page, reverse("payments:request", args=["basic"]))
+        payment = self._checkout()
+        pay_page = self.client.get(reverse("payments:pay", args=[payment.uid]))
+        self.assertContains(pay_page, "Trouble paying online?")
+        self.assertContains(pay_page, reverse("payments:request", args=["basic"]))
+        # The offline request works while an online attempt is still open.
+        resp = self.client.post(reverse("payments:request", args=["basic"]), {"phone": "9845012345", "note": "PayU failed"})
+        self.assertRedirects(resp, reverse("dashboard:partner_payments"), fetch_redirect_response=False)
+        self.assertTrue(Payment.objects.filter(user=self.owner, status=Payment.Status.PENDING_VERIFICATION).exists())
+
     @override_settings(PAYU_MERCHANT_KEY="", PAYU_MERCHANT_SALT="")
     def test_not_configured_falls_back_to_plan_request(self):
         resp = self.client.post(reverse("payments:checkout", args=["basic"]))
