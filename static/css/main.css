@@ -548,6 +548,22 @@ img { max-width: 100%; }
 .avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; background: var(--navy); color: var(--yellow); display: inline-grid; place-items: center; font-weight: 800; font-size: 1.1rem; flex: none; }
 .avatar-sm { width: 36px; height: 36px; font-size: .85rem; }
 .avatar-lg { width: 84px; height: 84px; font-size: 1.7rem; }
+.video-card { height: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column; transition: box-shadow .2s var(--ease), transform .2s var(--ease); }
+.video-card:hover { box-shadow: 0 12px 28px rgba(23, 43, 77, .12); transform: translateY(-2px); }
+.video-thumb { position: relative; display: block; width: 100%; padding: 0; border: 0; background: #000; aspect-ratio: 16 / 9; overflow: hidden; cursor: pointer; }
+.video-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: .92; transition: transform .3s var(--ease), opacity .2s; }
+.video-thumb:hover img, .video-thumb:focus-visible img { transform: scale(1.04); opacity: 1; }
+.video-thumb:focus-visible { outline: 3px solid var(--yellow); outline-offset: -3px; }
+.video-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 64px; height: 46px; border-radius: 14px; background: #FF0033; color: #fff; display: grid; place-items: center; font-size: 1.9rem; box-shadow: 0 6px 18px rgba(0, 0, 0, .35); transition: transform .2s var(--ease); }
+.video-thumb:hover .video-play { transform: translate(-50%, -50%) scale(1.08); }
+.video-body { padding: .9rem 1rem 1rem; }
+.video-title { font-size: 1rem; font-weight: 700; margin: 0; line-height: 1.35; }
+.video-title a { color: var(--navy); text-decoration: none; }
+.video-title a:hover { text-decoration: underline; }
+.video-sub { font-size: .85rem; color: var(--muted); margin: .3rem 0 0; }
+.btn-youtube { background: #FF0033; border-color: #FF0033; color: #fff; font-weight: 700; }
+.btn-youtube:hover, .btn-youtube:focus-visible { background: #D9002B; border-color: #D9002B; color: #fff; }
+@media (prefers-reduced-motion: reduce) { .video-card, .video-thumb img, .video-play { transition: none; } .video-card:hover, .video-thumb:hover img { transform: none; } }
 .video-frame { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-lg); overflow: hidden; background: #000; }
 .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .map-embed { height: 340px; border-radius: var(--r-lg); overflow: hidden; }

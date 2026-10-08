@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Bangarpet Property Hub\n"
-"PO-Revision-Date: 2026-10-07\n"
+"PO-Revision-Date: 2026-10-08\n"
 "Language: kn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -109,6 +109,9 @@ msgstr "ಎಲ್ಲಾ ಆಸ್ತಿ ಪ್ರಕಾರಗಳು"
 
 msgid "All questions"
 msgstr "ಎಲ್ಲಾ ಪ್ರಶ್ನೆಗಳು"
+
+msgid "All videos"
+msgstr "ಎಲ್ಲಾ ವೀಡಿಯೊಗಳು"
 
 msgid "Already registered?"
 msgstr "ಈಗಾಗಲೇ ನೋಂದಾಯಿಸಿದ್ದೀರಾ?"
@@ -292,6 +295,10 @@ msgstr "ಸಹಾಯ ತಂಡದೊಂದಿಗೆ ಚಾಟ್ ಮಾಡಿ"
 
 msgid "Chat with us on WhatsApp"
 msgstr "ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ನಮ್ಮೊಂದಿಗೆ ಚಾಟ್ ಮಾಡಿ"
+
+msgid "Check back soon for property walkthroughs and local guides."
+msgstr ""
+"ಆಸ್ತಿ ವೀಕ್ಷಣೆ ಮತ್ತು ಸ್ಥಳೀಯ ಮಾರ್ಗದರ್ಶಿ ವೀಡಿಯೊಗಳಿಗಾಗಿ ಶೀಘ್ರದಲ್ಲೇ ಮತ್ತೆ ನೋಡಿ."
 
 msgid "Check documents, agree terms directly with the owner and move in."
 msgstr ""
@@ -813,6 +820,9 @@ msgstr "ಜಾಹೀರಾತುಗಳು ಶೀಘ್ರದಲ್ಲೇ ಬರ�
 msgid "Listings checked by our team before they go live"
 msgstr "ಪ್ರಕಟವಾಗುವ ಮೊದಲು ಜಾಹೀರಾತುಗಳನ್ನು ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸುತ್ತದೆ"
 
+msgid "Listings with a video walkthrough from the owner or broker."
+msgstr "ಮಾಲೀಕರು ಅಥವಾ ಬ್ರೋಕರ್ ನೀಡಿದ ವೀಡಿಯೊ ವೀಕ್ಷಣೆ ಇರುವ ಜಾಹೀರಾತುಗಳು."
+
 msgid "Local experts you can rely on"
 msgstr "ನೀವು ನಂಬಬಹುದಾದ ಸ್ಥಳೀಯ ತಜ್ಞರು"
 
@@ -998,6 +1008,9 @@ msgstr "ಪೂರ್ಣ ಪ್ರವಾಸ ಮತ್ತು ವಿವರಗಳನ
 msgid "Open in Google Maps"
 msgstr "ಗೂಗಲ್ ಮ್ಯಾಪ್ಸ್‌ನಲ್ಲಿ ತೆರೆಯಿರಿ"
 
+msgid "Open in YouTube"
+msgstr "YouTube ನಲ್ಲಿ ತೆರೆಯಿರಿ"
+
 msgid "Open menu"
 msgstr "ಮೆನು ತೆರೆಯಿರಿ"
 
@@ -1113,6 +1126,9 @@ msgid "Pins are approximate unless the owner chose to show the exact address."
 msgstr ""
 "ಮಾಲೀಕರು ನಿಖರ ವಿಳಾಸ ತೋರಿಸಲು ಆಯ್ಕೆ ಮಾಡದ ಹೊರತು ನಕ್ಷೆಯ ಗುರುತುಗಳು ಅಂದಾಜು ಮಾತ್ರ."
 
+msgid "Play video: %(title)s"
+msgstr "ವೀಡಿಯೊ ಪ್ಲೇ ಮಾಡಿ: %(title)s"
+
 msgid "Please ask for a new password reset code."
 msgstr "ದಯವಿಟ್ಟು ಹೊಸ ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸುವ ಕೋಡ್ ಕೇಳಿ."
 
@@ -1225,6 +1241,9 @@ msgstr "ಆಸ್ತಿಯ ಪ್ರಕಾರ"
 
 msgid "Property types"
 msgstr "ಆಸ್ತಿಯ ಪ್ರಕಾರಗಳು"
+
+msgid "Property video tours"
+msgstr "ಆಸ್ತಿ ವೀಡಿಯೊ ಪ್ರವಾಸಗಳು"
 
 msgid "Questions, answered"
 msgstr "ನಿಮ್ಮ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಗಳು"
@@ -1500,6 +1519,12 @@ msgstr "ವಿಷಯ"
 msgid "Submit report"
 msgstr "ವರದಿ ಸಲ್ಲಿಸಿ"
 
+msgid "Subscribe"
+msgstr "ಸಬ್‌ಸ್ಕ್ರೈಬ್"
+
+msgid "Subscribe on YouTube"
+msgstr "YouTube ನಲ್ಲಿ ಸಬ್‌ಸ್ಕ್ರೈಬ್ ಮಾಡಿ"
+
 msgid "Suspected fraud or scam"
 msgstr "ವಂಚನೆ ಅಥವಾ ಮೋಸದ ಅನುಮಾನ"
 
@@ -1690,6 +1715,9 @@ msgstr "ಇಮೇಲ್ ದೃಢೀಕರಿಸಿ"
 msgid "Verify your email"
 msgstr "ನಿಮ್ಮ ಇಮೇಲ್ ದೃಢೀಕರಿಸಿ"
 
+msgid "Video"
+msgstr "ವೀಡಿಯೊ"
+
 msgid "Video tour"
 msgstr "ವೀಡಿಯೊ ಪ್ರವಾಸ"
 
@@ -1701,6 +1729,12 @@ msgstr "%(title)s ವೀಡಿಯೊ ಪ್ರವಾಸ"
 
 msgid "Video walkthrough"
 msgstr "ವೀಡಿಯೊ ಪ್ರವಾಸ"
+
+msgid "Videos"
+msgstr "ವೀಡಿಯೊಗಳು"
+
+msgid "Videos are coming soon"
+msgstr "ವೀಡಿಯೊಗಳು ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿವೆ"
 
 msgid "View %(n)s listings by this broker"
 msgstr "ಈ ಬ್ರೋಕರ್‌ನ %(n)s ಜಾಹೀರಾತುಗಳನ್ನು ನೋಡಿ"
@@ -1744,11 +1778,26 @@ msgstr "ಭೇಟಿ ನಿಗದಿಯಾಗಿದೆ"
 msgid "Walk through before you visit"
 msgstr "ಭೇಟಿ ನೀಡುವ ಮೊದಲು ಒಳಗೆ ನೋಡಿ"
 
+msgid "Walk through homes, plots and shops in Bangarpet before you visit."
+msgstr ""
+"ಭೇಟಿ ನೀಡುವ ಮೊದಲು ಬಂಗಾರಪೇಟೆಯ ಮನೆಗಳು, ನಿವೇಶನಗಳು ಮತ್ತು ಅಂಗಡಿಗಳನ್ನು ವೀಡಿಯೊದಲ್ಲಿ "
+"ನೋಡಿ."
+
 msgid "Walk through photo and video tours to shortlist without wasted trips."
 msgstr "ಫೋಟೋ ಮತ್ತು ವೀಡಿಯೊ ಪ್ರವಾಸಗಳ ಮೂಲಕ ನೋಡಿ, ಅನಗತ್ಯ ಓಡಾಟವಿಲ್ಲದೆ ಆಯ್ಕೆ ಮಾಡಿ."
 
 msgid "Wardrobes"
 msgstr "ವಾರ್ಡ್‌ರೋಬ್‌ಗಳು"
+
+msgid "Watch our videos"
+msgstr "ನಮ್ಮ ವೀಡಿಯೊಗಳನ್ನು ನೋಡಿ"
+
+msgid ""
+"Watch property video tours and videos from Bangarpet Property Hub on "
+"YouTube."
+msgstr ""
+"ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್‌ನ ಆಸ್ತಿ ವೀಡಿಯೊ ಪ್ರವಾಸಗಳು ಮತ್ತು ವೀಡಿಯೊಗಳನ್ನು YouTube "
+"ನಲ್ಲಿ ನೋಡಿ."
 
 msgid "Watch video walkthrough"
 msgstr "ವೀಡಿಯೊ ನೋಡಿ"
@@ -1895,6 +1944,9 @@ msgstr ""
 msgid "You've sent several reports recently. Please try again later."
 msgstr ""
 "ನೀವು ಇತ್ತೀಚೆಗೆ ಹಲವು ವರದಿಗಳನ್ನು ಕಳುಹಿಸಿದ್ದೀರಿ. ದಯವಿಟ್ಟು ನಂತರ ಪ್ರಯತ್ನಿಸಿ."
+
+msgid "YouTube"
+msgstr "YouTube"
 
 msgid "Your email address has been verified."
 msgstr "ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸ ದೃಢೀಕರಿಸಲಾಗಿದೆ."

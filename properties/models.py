@@ -361,6 +361,12 @@ class Property(TimeStampedModel):
         return youtube_embed_url(self.video_url)
 
     @property
+    def youtube_id(self):
+        from properties.utils import youtube_video_id
+
+        return youtube_video_id(self.video_url)
+
+    @property
     def days_to_expiry(self):
         if not self.expires_at:
             return None

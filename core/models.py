@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.cache import cache
+from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator, RegexValidator
 from django.db import models
 from django.utils import timezone
@@ -152,6 +153,45 @@ class Banner(TimeStampedModel):
 
     def __str__(self):
         return self.title
+
+
+def validate_youtube_url(value):
+    from properties.utils import youtube_video_id
+
+    if not youtube_video_id(value):
+        raise ValidationError("Paste a YouTube video link, e.g. https://youtu.be/abc123XYZ_0 or a youtube.com/watch or /shorts link.")
+
+
+class Video(TimeStampedModel):
+    """A YouTube video shown on the homepage and the Videos page (managed in Management)."""
+
+    title = models.CharField(max_length=120)
+    youtube_url = models.URLField("YouTube link", validators=[validate_youtube_url],
+                                  help_text="Any YouTube video or Shorts link.")
+    description = models.CharField(max_length=240, blank=True)
+    show_on_home = models.BooleanField("Show on homepage", default=True)
+    display_order = models.PositiveSmallIntegerField(default=0, help_text="Lower numbers show first.")
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["display_order", "-created_at"]
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def video_id(self):
+        from properties.utils import youtube_video_id
+
+        return youtube_video_id(self.youtube_url)
+
+    @property
+    def thumbnail_url(self):
+        return f"https://i.ytimg.com/vi/{self.video_id}/hqdefault.jpg" if self.video_id else ""
+
+    @property
+    def watch_url(self):
+        return f"https://www.youtube.com/watch?v={self.video_id}" if self.video_id else self.youtube_url
 
 
 class Advertisement(TimeStampedModel):

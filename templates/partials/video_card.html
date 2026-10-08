@@ -1,0 +1,11 @@
+{% load i18n %}{# A YouTube video that plays in the shared player only when clicked (nothing loads from YouTube before that). #}
+<article class="video-card">
+  <button class="video-thumb" type="button" data-yt-play="{{ vid }}" data-yt-title="{{ title }}" aria-label="{% blocktranslate %}Play video: {{ title }}{% endblocktranslate %}">
+    <img src="https://i.ytimg.com/vi/{{ vid }}/hqdefault.jpg" alt="" loading="lazy" decoding="async" width="480" height="360">
+    <span class="video-play" aria-hidden="true"><i class="bi bi-play-fill"></i></span>
+  </button>
+  <div class="video-body">
+    <h3 class="video-title">{% if link %}<a href="{{ link }}">{{ title }}</a>{% else %}{{ title }}{% endif %}</h3>
+    {% if subtitle %}<p class="video-sub">{{ subtitle }}</p>{% endif %}
+  </div>
+</article>

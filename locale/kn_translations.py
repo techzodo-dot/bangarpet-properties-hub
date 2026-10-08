@@ -15,6 +15,22 @@ PLURALS = {
 }
 
 KN = {
+    # YouTube videos
+    "All videos": "ಎಲ್ಲಾ ವೀಡಿಯೊಗಳು",
+    "Check back soon for property walkthroughs and local guides.": "ಆಸ್ತಿ ವೀಕ್ಷಣೆ ಮತ್ತು ಸ್ಥಳೀಯ ಮಾರ್ಗದರ್ಶಿ ವೀಡಿಯೊಗಳಿಗಾಗಿ ಶೀಘ್ರದಲ್ಲೇ ಮತ್ತೆ ನೋಡಿ.",
+    "Listings with a video walkthrough from the owner or broker.": "ಮಾಲೀಕರು ಅಥವಾ ಬ್ರೋಕರ್ ನೀಡಿದ ವೀಡಿಯೊ ವೀಕ್ಷಣೆ ಇರುವ ಜಾಹೀರಾತುಗಳು.",
+    "Open in YouTube": "YouTube ನಲ್ಲಿ ತೆರೆಯಿರಿ",
+    "Play video: %(title)s": "ವೀಡಿಯೊ ಪ್ಲೇ ಮಾಡಿ: %(title)s",
+    "Property video tours": "ಆಸ್ತಿ ವೀಡಿಯೊ ಪ್ರವಾಸಗಳು",
+    "Subscribe": "ಸಬ್‌ಸ್ಕ್ರೈಬ್",
+    "Subscribe on YouTube": "YouTube ನಲ್ಲಿ ಸಬ್‌ಸ್ಕ್ರೈಬ್ ಮಾಡಿ",
+    "Video": "ವೀಡಿಯೊ",
+    "Videos": "ವೀಡಿಯೊಗಳು",
+    "Videos are coming soon": "ವೀಡಿಯೊಗಳು ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿವೆ",
+    "Walk through homes, plots and shops in Bangarpet before you visit.": "ಭೇಟಿ ನೀಡುವ ಮೊದಲು ಬಂಗಾರಪೇಟೆಯ ಮನೆಗಳು, ನಿವೇಶನಗಳು ಮತ್ತು ಅಂಗಡಿಗಳನ್ನು ವೀಡಿಯೊದಲ್ಲಿ ನೋಡಿ.",
+    "Watch our videos": "ನಮ್ಮ ವೀಡಿಯೊಗಳನ್ನು ನೋಡಿ",
+    "Watch property video tours and videos from Bangarpet Property Hub on YouTube.": "ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್‌ನ ಆಸ್ತಿ ವೀಡಿಯೊ ಪ್ರವಾಸಗಳು ಮತ್ತು ವೀಡಿಯೊಗಳನ್ನು YouTube ನಲ್ಲಿ ನೋಡಿ.",
+    "YouTube": "YouTube",
     # Install app (PWA)
     "Add Bangarpet Property Hub to your home screen. It opens like an app, full screen, and takes almost no space.": "ಬಂಗಾರಪೇಟೆ ಪ್ರಾಪರ್ಟಿ ಹಬ್ ಅನ್ನು ನಿಮ್ಮ ಹೋಮ್ ಸ್ಕ್ರೀನ್‌ಗೆ ಸೇರಿಸಿ. ಇದು ಆ್ಯಪ್‌ನಂತೆ ಪೂರ್ಣ ಪರದೆಯಲ್ಲಿ ತೆರೆಯುತ್ತದೆ ಮತ್ತು ಬಹುತೇಕ ಜಾಗ ಬಳಸುವುದಿಲ್ಲ.",
     "Android (Chrome)": "ಆಂಡ್ರಾಯ್ಡ್ (Chrome)",

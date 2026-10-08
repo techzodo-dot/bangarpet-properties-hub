@@ -421,6 +421,28 @@
     window.bootstrap.Modal.getOrCreateInstance(modalEl).show();
   });
 
+  // YouTube videos: load the player only when a video is clicked, stop it on close.
+  document.addEventListener("error", function (event) {
+    if (event.target.matches && event.target.matches(".video-thumb img")) event.target.style.visibility = "hidden";
+  }, true);
+  const ytModal = document.getElementById("ytPlayerModal");
+  if (ytModal) {
+    const ytFrame = ytModal.querySelector("iframe");
+    document.addEventListener("click", function (event) {
+      const btn = event.target.closest("[data-yt-play]");
+      if (!btn || !window.bootstrap) return;
+      const id = btn.getAttribute("data-yt-play");
+      if (!/^[A-Za-z0-9_-]{11}$/.test(id)) return;
+      const title = btn.getAttribute("data-yt-title") || "";
+      ytModal.querySelector("#ytPlayerTitle").textContent = title;
+      ytModal.querySelector("[data-yt-open]").href = "https://www.youtube.com/watch?v=" + id;
+      ytFrame.title = title;
+      ytFrame.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&rel=0&playsinline=1";
+      window.bootstrap.Modal.getOrCreateInstance(ytModal).show();
+    });
+    ytModal.addEventListener("hidden.bs.modal", function () { ytFrame.removeAttribute("src"); });
+  }
+
   // On phones the dashboard nav is a horizontal strip: keep the active tab in view.
   const dashNav = document.querySelector(".dash-nav");
   const activeLink = dashNav && dashNav.querySelector(".nav-link.active");

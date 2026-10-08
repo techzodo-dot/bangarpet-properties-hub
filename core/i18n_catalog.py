@@ -14,7 +14,7 @@ PUBLIC_TEMPLATES = [
     "base.html",
     "partials/header.html", "partials/footer.html", "partials/mobile_tabbar.html", "partials/lang_switch.html",
     "partials/property_card.html", "partials/fav_button.html", "partials/pagination.html",
-    "partials/form_errors.html", "partials/field.html", "partials/whatsapp_fab.html", "partials/install_app.html",
+    "partials/form_errors.html", "partials/field.html", "partials/whatsapp_fab.html", "partials/install_app.html", "partials/video_card.html", "partials/video_player.html", "core/videos.html",
     "core/home.html", "core/page_base.html", "core/contact.html", "core/faq.html",
     "properties/search.html", "properties/detail.html", "properties/unavailable.html", "properties/partner_profile.html",
     "accounts/auth_base.html", "accounts/login.html", "accounts/register.html",

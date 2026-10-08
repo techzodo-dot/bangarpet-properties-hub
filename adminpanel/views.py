@@ -15,7 +15,7 @@ from django.views.decorators.http import require_POST
 from accounts.models import BrokerProfile, OwnerProfile, Role, VerificationDocument, VerificationStatus
 from adminpanel import forms as f
 from core.audit import log_action
-from core.models import Advertisement, AuditLog, Banner, ContactMessage, PlatformSetting
+from core.models import Advertisement, AuditLog, Banner, ContactMessage, PlatformSetting, Video
 from core.permissions import admin_required
 from enquiries.models import Enquiry
 from moderation import services as mod
@@ -488,6 +488,11 @@ CRUD = {
         "columns": [("Title", "title"), ("Placement", "get_placement_display"), ("Order", "display_order"),
                     ("Starts", "starts_at"), ("Ends", "ends_at"), ("Active", "is_active")],
         "image": "image",
+    },
+    "videos": {
+        "model": Video, "form": f.VideoForm, "title": "YouTube videos", "singular": "video", "active": "banners",
+        "columns": [("Title", "title"), ("YouTube link", "youtube_url"), ("Order", "display_order"),
+                    ("On homepage", "show_on_home"), ("Active", "is_active")],
     },
     "ads": {
         "model": Advertisement, "form": f.AdvertisementForm, "title": "Sponsored placements", "singular": "sponsored placement",

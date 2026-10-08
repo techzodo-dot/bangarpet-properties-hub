@@ -1,0 +1,15 @@
+{% load i18n %}
+<div class="modal fade" id="ytPlayerModal" tabindex="-1" aria-labelledby="ytPlayerTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content bg-black border-0 rounded-4 overflow-hidden">
+      <div class="d-flex align-items-center justify-content-between gap-2 px-3 py-2">
+        <h2 class="h6 text-white mb-0 text-truncate" id="ytPlayerTitle">{% translate "Video" %}</h2>
+        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+          <a class="btn btn-sm btn-outline-light" href="#" target="_blank" rel="noopener" data-yt-open><i class="bi bi-youtube me-1" aria-hidden="true"></i>{% translate "Open in YouTube" %}</a>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="{% translate 'Close' %}"></button>
+        </div>
+      </div>
+      <div class="video-frame rounded-0"><iframe title="{% translate 'Video' %}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    </div>
+  </div>
+</div>

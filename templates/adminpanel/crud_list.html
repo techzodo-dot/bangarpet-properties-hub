@@ -15,6 +15,7 @@
 <ul class="nav nav-pills mb-3 gap-1">
   <li class="nav-item"><a class="nav-link {% if kind == 'banners' %}active{% endif %}" href="{% url 'adminpanel:crud_list' 'banners' %}">Homepage banners</a></li>
   <li class="nav-item"><a class="nav-link {% if kind == 'ads' %}active{% endif %}" href="{% url 'adminpanel:crud_list' 'ads' %}">Sponsored placements</a></li>
+  <li class="nav-item"><a class="nav-link {% if kind == 'videos' %}active{% endif %}" href="{% url 'adminpanel:crud_list' 'videos' %}"><i class="bi bi-youtube me-1" aria-hidden="true"></i>YouTube videos</a></li>
 </ul>
 {% endif %}
 {% if rows %}

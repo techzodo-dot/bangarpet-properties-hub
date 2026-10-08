@@ -14,7 +14,7 @@ from accounts.models import BrokerProfile, OwnerProfile, Role, VerificationStatu
 from core import ratelimit
 from core.faq import translated_faqs
 from core.forms import ContactForm
-from core.models import Advertisement, Banner
+from core.models import Advertisement, Banner, Video
 from notifications.models import Notification
 from notifications.services import notify_admins
 from properties.forms import PropertySearchForm
@@ -75,6 +75,7 @@ def home(request):
         "more_tours": tour_list[1:],
         "hero_property": hero_property,
         "agents": agents,
+        "home_videos": [v for v in Video.objects.filter(is_active=True, show_on_home=True)[:6] if v.video_id][:3],
         "banners_top": Banner.objects.live().filter(placement=Banner.Placement.HOME_TOP)[:3],
         "banners_middle": Banner.objects.live().filter(placement=Banner.Placement.HOME_MIDDLE)[:2],
         "faqs": translated_faqs()[:6],
@@ -88,6 +89,24 @@ def home(request):
         },
     }
     return render(request, "core/home.html", context)
+
+
+def _video_tours(limit):
+    """Live listings that have a playable YouTube walkthrough, newest first."""
+    tours = []
+    for prop in Property.objects.public().exclude(video_url="").with_card_data().order_by("-published_at")[: limit * 2]:
+        if prop.youtube_id:
+            tours.append(prop)
+        if len(tours) == limit:
+            break
+    return tours
+
+
+def videos(request):
+    return render(request, "core/videos.html", {
+        "videos": [v for v in Video.objects.filter(is_active=True) if v.video_id],
+        "tours": _video_tours(24),
+    })
 
 
 def about(request):

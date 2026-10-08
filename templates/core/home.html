@@ -189,6 +189,29 @@
 {% endif %}
 {% endif %}
 
+{# ======================= YOUTUBE VIDEOS ======================= #}
+{% if home_videos %}
+<section class="section section-white" aria-labelledby="videos-title">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+      <div>
+        <span class="section-eyebrow"><i class="bi bi-youtube" aria-hidden="true"></i> {% translate "YouTube" %}</span>
+        <h2 id="videos-title" class="section-title mb-1">{% translate "Watch our videos" %}</h2>
+        <p class="section-lead mb-0">{% translate "Walk through homes, plots and shops in Bangarpet before you visit." %}</p>
+      </div>
+      <div class="d-flex flex-wrap gap-2">
+        {% if site.youtube_url %}<a class="btn btn-youtube" href="{{ site.youtube_url }}" target="_blank" rel="noopener"><i class="bi bi-youtube me-1" aria-hidden="true"></i>{% translate "Subscribe" %}</a>{% endif %}
+        <a class="btn btn-soft" href="{% url 'core:videos' %}">{% translate "All videos" %} <i class="bi bi-arrow-right ms-1" aria-hidden="true"></i></a>
+      </div>
+    </div>
+    <div class="row g-4">
+      {% for v in home_videos %}<div class="col-sm-6 col-lg-4">{% include "partials/video_card.html" with vid=v.video_id title=v.title subtitle=v.description link="" %}</div>{% endfor %}
+    </div>
+  </div>
+</section>
+{% include "partials/video_player.html" %}
+{% endif %}
+
 {# ======================= NEW LISTINGS ======================= #}
 <section class="section {% if tour and tour_images %}pt-0{% else %}section-white{% endif %}" aria-labelledby="recent-title">
   <div class="container">

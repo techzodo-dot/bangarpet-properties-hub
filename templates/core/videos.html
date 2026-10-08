@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% translate "Videos" %} - {{ site.site_name }}{% endblock %}
+{% block meta_description %}{% translate "Watch property video tours and videos from Bangarpet Property Hub on YouTube." %}{% endblock %}
+{% block content %}
+<section class="section pb-4" aria-labelledby="videos-title">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+      <div>
+        <span class="section-eyebrow"><i class="bi bi-youtube" aria-hidden="true"></i> {% translate "YouTube" %}</span>
+        <h1 id="videos-title" class="section-title mb-1">{% translate "Videos" %}</h1>
+        <p class="section-lead mb-0">{% translate "Walk through homes, plots and shops in Bangarpet before you visit." %}</p>
+      </div>
+      {% if site.youtube_url %}<a class="btn btn-youtube" href="{{ site.youtube_url }}" target="_blank" rel="noopener"><i class="bi bi-youtube me-1" aria-hidden="true"></i>{% translate "Subscribe on YouTube" %}</a>{% endif %}
+    </div>
+    {% if videos %}
+    <div class="row g-4">
+      {% for v in videos %}<div class="col-sm-6 col-lg-4">{% include "partials/video_card.html" with vid=v.video_id title=v.title subtitle=v.description link="" %}</div>{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% if tours %}
+<section class="section pt-2" aria-labelledby="tours-title">
+  <div class="container">
+    <h2 id="tours-title" class="h4 mb-1">{% translate "Property video tours" %}</h2>
+    <p class="text-muted mb-4">{% translate "Listings with a video walkthrough from the owner or broker." %}</p>
+    <div class="row g-4">
+      {% for p in tours %}<div class="col-sm-6 col-lg-4">{% include "partials/video_card.html" with vid=p.youtube_id title=p.title subtitle=p.location_label|default:"Bangarpet" link=p.get_absolute_url %}</div>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if not videos and not tours %}
+<section class="section pt-0"><div class="container">
+  {% translate "Videos are coming soon" as es_title %}{% translate "Check back soon for property walkthroughs and local guides." as es_text %}
+  {% include "partials/empty_state.html" with icon="youtube" title=es_title text=es_text %}
+</div></section>
+{% endif %}
+{% include "partials/video_player.html" %}
+{% endblock %}

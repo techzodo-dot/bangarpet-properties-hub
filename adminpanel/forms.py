@@ -4,7 +4,7 @@ from django.utils.text import slugify
 
 from accounts.models import Role
 from core.forms import BootstrapFormMixin, PhoneField
-from core.models import Advertisement, Banner, PlatformSetting
+from core.models import Advertisement, Banner, PlatformSetting, Video
 from properties.models import Amenity, Category, Location, Property
 from subscriptions.models import SubscriptionPlan
 
@@ -82,6 +82,13 @@ class BannerForm(BootstrapFormMixin, forms.ModelForm):
         if data.get("starts_at") and data.get("ends_at") and data["ends_at"] <= data["starts_at"]:
             self.add_error("ends_at", "End must be after start.")
         return data
+
+
+class VideoForm(BootstrapFormMixin, forms.ModelForm):
+    class Meta:
+        model = Video
+        fields = ["title", "youtube_url", "description", "show_on_home", "display_order", "is_active"]
+        widgets = {"youtube_url": forms.URLInput(attrs={"placeholder": "https://youtu.be/..."})}
 
 
 class AdvertisementForm(BootstrapFormMixin, forms.ModelForm):
