@@ -193,8 +193,6 @@ def property_step(request, pk, step):
                 moved = record_changes(obj, before, request.user, extra_changes=extra, extra_moderated=False)
         if moved:
             messages.warning(request, "Your changes will be reviewed by our team before they go live. The listing is hidden until approved.")
-            notify_admins(Notification.Event.ADMIN_NOTICE, f"Listing edited: {obj.reference}", f"{obj.title} was edited and needs review.",
-                          reverse("adminpanel:property_review", args=[obj.pk]))
         else:
             messages.success(request, "Saved.")
         if request.POST.get("save_and_exit"):
@@ -289,7 +287,8 @@ def _review_step(request, prop):
                     return redirect("dashboard:partner_properties")
                 locked.policy_accepted_at = now
                 locked.submitted_at = now
-                if PlatformSetting.load().require_listing_approval and not request.user.is_platform_admin:
+                # Every listing is checked by an admin before it goes live; admins' own listings are published directly.
+                if not request.user.is_platform_admin:
                     locked.status = Property.Status.PENDING
                 else:
                     duration, priority = subs.listing_terms(request.user)

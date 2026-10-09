@@ -55,7 +55,6 @@ class PlatformSetting(models.Model):
             "Listings are reviewed before publishing and may be removed if they violate these rules."
         )
     )
-    require_listing_approval = models.BooleanField(default=True)
     expiry_reminder_days = models.PositiveSmallIntegerField(default=5)
     allow_manual_payments = models.BooleanField(
         "Allow UPI / bank transfer payments", default=True,

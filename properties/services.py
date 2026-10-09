@@ -184,13 +184,20 @@ def record_changes(prop, before, user, extra_changes=None, extra_moderated=True)
                     and not getattr(user, "is_platform_admin", False))
     PropertyRevision.objects.create(property=prop, user=user, changes=changes, requires_moderation=needs_review)
     if needs_review:
-        from core.models import PlatformSetting
+        # Every change to what visitors see is approved by an admin before the listing is live again.
+        from django.urls import reverse
 
-        if PlatformSetting.load().require_listing_approval:
-            prop.status = Property.Status.PENDING
-            prop.submitted_at = timezone.now()
-            prop.save(update_fields=["status", "submitted_at", "updated_at"])
-            return True
+        from notifications.models import Notification
+        from notifications.services import notify_admins
+
+        prop.status = Property.Status.PENDING
+        prop.submitted_at = timezone.now()
+        prop.save(update_fields=["status", "submitted_at", "updated_at"])
+        what = ", ".join(sorted(k.replace("_id", "").replace("_", " ") for k in changes))[:200]
+        notify_admins(Notification.Event.ADMIN_NOTICE, f"Listing edited: {prop.reference}",
+                      f"\"{prop.title}\" was changed ({what}) and needs approval before it is live again.",
+                      reverse("adminpanel:property_review", args=[prop.pk]))
+        return True
     return False
 
 

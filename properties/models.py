@@ -175,6 +175,7 @@ class Property(TimeStampedModel):
     MODERATED_FIELDS = (
         "title", "description", "purpose", "category_id", "town_id", "area_id", "locality",
         "street_address", "monthly_rent", "sale_price", "security_deposit", "video_url",
+        "contact_phone", "whatsapp_number",
     )
 
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="properties")

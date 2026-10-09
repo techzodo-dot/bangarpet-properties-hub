@@ -36,8 +36,8 @@
       <h2 class="h6 text-uppercase text-muted">Listings</h2>
       <div class="row g-3 mb-4">
         <div class="col-12">{% include "partials/field.html" with field=form.listing_policy wrapper_class="" %}</div>
-        <div class="col-md-6">{% include "partials/field.html" with field=form.require_listing_approval wrapper_class="" %}</div>
         <div class="col-md-6">{% include "partials/field.html" with field=form.expiry_reminder_days wrapper_class="" %}</div>
+        <div class="col-md-6"><p class="small text-muted mb-0 mt-md-4"><i class="bi bi-shield-check me-1" aria-hidden="true"></i>Every new listing, and every change to a live listing's details, price, location, contact number or photos, is checked by an admin before it goes live.</p></div>
       </div>
       <h2 class="h6 text-uppercase text-muted">Subscriptions &amp; billing</h2>
       <div class="row g-3 mb-4">
