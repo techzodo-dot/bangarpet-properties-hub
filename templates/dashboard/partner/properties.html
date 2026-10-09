@@ -36,7 +36,10 @@
     <td class="small text-nowrap">{% if p.expires_at %}{{ p.expires_at|date:"d M Y" }}{% else %}-{% endif %}</td>
     <td class="text-end text-nowrap">
       {% if p.status == 'draft' %}<a class="btn btn-sm btn-primary" href="{% url 'dashboard:partner_property_step' p.pk p.wizard_step|default:1 %}">Continue</a>
-      {% else %}<a class="btn btn-sm btn-soft" href="{% url 'dashboard:partner_property_manage' p.pk %}">Manage</a>{% endif %}
+      {% else %}
+        {% if p.can_close %}<form class="d-inline" method="post" action="{% url 'dashboard:partner_property_action' p.pk 'close' %}" data-confirm="{% if p.purpose == 'rent' %}Mark {{ p.reference }} as rented out?{% else %}Mark {{ p.reference }} as sold out?{% endif %} It will be taken off the website. You can undo this later.">{% csrf_token %}<button class="btn btn-sm btn-outline-success" type="submit"><i class="bi bi-house-check me-1"></i>{% if p.purpose == 'rent' %}Rented out{% else %}Sold out{% endif %}</button></form>{% endif %}
+        <a class="btn btn-sm btn-soft" href="{% url 'dashboard:partner_property_manage' p.pk %}">Manage</a>
+      {% endif %}
     </td>
   </tr>
   {% endfor %}

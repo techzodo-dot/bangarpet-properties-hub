@@ -25,6 +25,7 @@ from notifications.services import integration_status, notify
 from payments.models import Payment
 from payments.services import mark_paid, plan_payments_url
 from properties.models import Amenity, Category, Location, Property
+from properties.services import ClosingError, mark_closed, reopen
 from subscriptions.models import Subscription, SubscriptionPlan
 from subscriptions.services import activate_subscription
 
@@ -348,9 +349,15 @@ def property_action(request, pk, action):
                 raise mod.ModerationError("Enter a number of days between 0 and 365.")
             mod.set_featured(request, prop, form.cleaned_data["days"])
             messages.success(request, "Featured setting updated.")
+        elif action == "close":
+            prop = mark_closed(prop, request.user, request)
+            messages.success(request, f"{prop.reference} marked as {prop.get_status_display().lower()}. The owner has been notified.")
+        elif action == "reopen":
+            prop = reopen(prop, request.user, request)
+            messages.success(request, f"{prop.reference} is available again ({prop.get_status_display().lower()}).")
         else:
             raise Http404
-    except mod.ModerationError as exc:
+    except (mod.ModerationError, ClosingError) as exc:
         messages.error(request, str(exc))
     return redirect("adminpanel:property_review", pk=pk)
 

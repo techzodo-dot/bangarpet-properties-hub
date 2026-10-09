@@ -35,7 +35,9 @@ from properties.forms import (
     listing_completeness,
 )
 from properties.models import Property, PropertyDailyStat, PropertyImage
-from properties.services import add_images, record_changes, remove_image, set_primary_image, snapshot
+from properties.services import (
+    ClosingError, add_images, mark_closed, record_changes, remove_image, reopen, set_primary_image, snapshot,
+)
 from subscriptions import services as subs
 from subscriptions.models import SubscriptionPlan
 
@@ -325,15 +327,24 @@ def property_action(request, pk, action):
             prop.status = S.ACTIVE
             messages.success(request, "Listing is live again.")
         prop.save(update_fields=["status", "updated_at"])
-    elif action in ("rented", "sold") and prop.can_close:
-        if (action == "rented") != (prop.purpose == Property.Purpose.RENT):
-            messages.error(request, "That status doesn't match the listing purpose.")
-            return redirect("dashboard:partner_properties")
-        prop.status = S.RENTED if action == "rented" else S.SOLD
-        prop.closed_at = timezone.now()
-        prop.save(update_fields=["status", "closed_at", "updated_at"])
-        _close_open_enquiries(prop, user, f"The property has been {action} out." if action == "rented" else "The property has been sold.")
-        messages.success(request, f"Marked as {prop.get_status_display().lower()}. Congratulations!")
+    elif action in ("close", "rented", "sold") and prop.can_close:
+        try:
+            prop = mark_closed(prop, user, request)
+        except ClosingError as exc:
+            messages.error(request, str(exc))
+        else:
+            messages.success(request, f"Marked as {prop.get_status_display().lower()}. Congratulations! "
+                                      "It's off the market and open enquiries are closed.")
+    elif action == "reopen":
+        try:
+            prop = reopen(prop, user, request)
+        except ClosingError as exc:
+            messages.error(request, str(exc))
+        else:
+            if prop.status == S.ACTIVE:
+                messages.success(request, "The listing is available and live again.")
+            else:
+                messages.warning(request, "The listing is available again but has expired. Renew it to make it live.")
     elif action == "renew" and prop.can_renew:
         if not subs.can_occupy_slot(user, prop):
             messages.error(request, "You've reached your plan's active listing limit. Upgrade your plan to renew this listing.")

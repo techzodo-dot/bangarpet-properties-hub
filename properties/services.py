@@ -192,3 +192,69 @@ def record_changes(prop, before, user, extra_changes=None, extra_moderated=True)
             prop.save(update_fields=["status", "submitted_at", "updated_at"])
             return True
     return False
+
+
+# ---------------------------------------------------------------------------
+# Sold out / rented out
+# ---------------------------------------------------------------------------
+class ClosingError(Exception):
+    pass
+
+
+def closed_status(prop):
+    """Sale listings close as Sold, rental listings as Rented out."""
+    return Property.Status.SOLD if prop.purpose == Property.Purpose.SALE else Property.Status.RENTED
+
+
+@transaction.atomic
+def mark_closed(prop, by_user, request=None):
+    """Take a live or paused listing off the market as sold / rented out. Open enquiries are closed."""
+    from core.audit import log_action
+    from core.models import Advertisement
+    from enquiries.models import Enquiry
+    from enquiries.services import EnquiryError, change_enquiry_status
+
+    prop = Property.objects.select_for_update().get(pk=prop.pk)
+    if not prop.can_close:
+        raise ClosingError("Only live or paused listings can be marked as sold or rented out.")
+    prop.status = closed_status(prop)
+    prop.closed_at = timezone.now()
+    prop.featured_until = None
+    prop.save(update_fields=["status", "closed_at", "featured_until", "updated_at"])
+    Advertisement.objects.filter(property=prop).update(is_active=False)
+    note = "The property has been sold." if prop.status == Property.Status.SOLD else "The property has been rented out."
+    for enquiry in prop.enquiries.filter(status__in=Enquiry.OPEN_STATUSES):
+        try:
+            change_enquiry_status(enquiry, Enquiry.Status.CLOSED, by_user, note)
+        except EnquiryError:
+            continue
+    log_action(request or by_user, "property.closed", prop, status=prop.status)
+    if by_user.pk != prop.owner_id:
+        from django.urls import reverse
+
+        from notifications.models import Notification
+        from notifications.services import notify
+
+        notify(prop.owner, Notification.Event.ADMIN_NOTICE, f"{prop.reference} marked as {prop.get_status_display().lower()}",
+               f"Our team marked \"{prop.title}\" as {prop.get_status_display().lower()}. If this is wrong, open the "
+               "listing and choose \"Available again\".", reverse("dashboard:partner_property_manage", args=[prop.pk]))
+    return prop
+
+
+@transaction.atomic
+def reopen(prop, by_user, request=None):
+    """Undo "sold / rented out": the listing goes live again (or expired, if its time has run out)."""
+    from core.audit import log_action
+    from subscriptions import services as subs
+
+    prop = Property.objects.select_for_update().get(pk=prop.pk)
+    if prop.status not in (Property.Status.SOLD, Property.Status.RENTED):
+        raise ClosingError("Only sold or rented-out listings can be made available again.")
+    still_running = prop.expires_at and prop.expires_at > timezone.now()
+    if still_running and not by_user.is_platform_admin and not subs.can_occupy_slot(prop.owner, prop):
+        raise ClosingError("You've reached your plan's active listing limit. Pause another listing or upgrade your plan.")
+    prop.status = Property.Status.ACTIVE if still_running else Property.Status.EXPIRED
+    prop.closed_at = None
+    prop.save(update_fields=["status", "closed_at", "updated_at"])
+    log_action(request or by_user, "property.reopened", prop, status=prop.status)
+    return prop

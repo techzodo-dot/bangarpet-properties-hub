@@ -60,6 +60,11 @@
         <button class="btn btn-sm btn-danger w-100" type="submit">Remove listing</button>
       </form>
       {% endif %}
+      {% if prop.can_close %}
+      <form method="post" action="{% url 'adminpanel:property_action' prop.pk 'close' %}" class="mb-2" data-confirm="{% if prop.purpose == 'rent' %}Mark as rented out?{% else %}Mark as sold out?{% endif %} It will be taken off the website, open enquiries closed and the owner notified.">{% csrf_token %}<button class="btn btn-sm btn-success w-100" type="submit"><i class="bi bi-house-check me-1"></i>{% if prop.purpose == 'rent' %}Mark as rented out{% else %}Mark as sold out{% endif %}</button></form>
+      {% elif prop.status == 'sold' or prop.status == 'rented' %}
+      <form method="post" action="{% url 'adminpanel:property_action' prop.pk 'reopen' %}" class="mb-2">{% csrf_token %}<button class="btn btn-sm btn-soft w-100" type="submit"><i class="bi bi-arrow-counterclockwise me-1"></i>{{ prop.get_status_display }} &middot; make available again</button></form>
+      {% endif %}
       <form method="post" action="{% url 'adminpanel:property_action' prop.pk prop.is_suspicious|yesno:'unflag,flag' %}" class="mb-2">{% csrf_token %}<button class="btn btn-sm btn-soft w-100" type="submit"><i class="bi bi-exclamation-triangle me-1"></i>{% if prop.is_suspicious %}Clear suspicious flag{% else %}Mark as suspicious{% endif %}</button></form>
       {% if prop.is_public %}
       <form method="post" action="{% url 'adminpanel:property_action' prop.pk 'feature' %}" class="d-flex gap-2 align-items-end">{% csrf_token %}
