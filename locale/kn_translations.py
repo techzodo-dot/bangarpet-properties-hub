@@ -446,8 +446,8 @@ KN = {
     "It means our team has reviewed the identity (and, for brokers, business) documents submitted by the owner or broker. It is not a legal verification of property title. Always check ownership documents yourself, or with a lawyer, before paying any money.":
         "ಮಾಲೀಕರು ಅಥವಾ ಬ್ರೋಕರ್ ಸಲ್ಲಿಸಿದ ಗುರುತಿನ (ಬ್ರೋಕರ್‌ಗಳಿಗೆ ವ್ಯವಹಾರದ) ದಾಖಲೆಗಳನ್ನು ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸಿದೆ ಎಂದರ್ಥ. ಇದು ಆಸ್ತಿಯ ಮಾಲೀಕತ್ವದ ಕಾನೂನು ಪರಿಶೀಲನೆ ಅಲ್ಲ. ಯಾವುದೇ ಹಣ ಪಾವತಿಸುವ ಮೊದಲು ಮಾಲೀಕತ್ವದ ದಾಖಲೆಗಳನ್ನು ನೀವೇ ಅಥವಾ ವಕೀಲರ ಮೂಲಕ ಪರಿಶೀಲಿಸಿ.",
     "Who can see my phone number?": "ನನ್ನ ಫೋನ್ ನಂಬರ್ ಯಾರು ನೋಡಬಹುದು?",
-    "Owners and brokers choose who can see their phone number: everyone, signed-in users only, or nobody (enquiries through the website only). Exact street addresses are shown only when the owner allows it.":
-        "ತಮ್ಮ ಫೋನ್ ನಂಬರ್ ಯಾರು ನೋಡಬಹುದು ಎಂದು ಮಾಲೀಕರು ಮತ್ತು ಬ್ರೋಕರ್‌ಗಳೇ ಆಯ್ಕೆ ಮಾಡುತ್ತಾರೆ: ಎಲ್ಲರೂ, ಸೈನ್ ಇನ್ ಆದವರು ಮಾತ್ರ, ಅಥವಾ ಯಾರೂ ಇಲ್ಲ (ವೆಬ್‌ಸೈಟ್ ಮೂಲಕ ವಿಚಾರಣೆ ಮಾತ್ರ). ಮಾಲೀಕರು ಅನುಮತಿಸಿದಾಗ ಮಾತ್ರ ನಿಖರ ವಿಳಾಸ ತೋರಿಸಲಾಗುತ್ತದೆ.",
+    "Phone numbers are never shown to visitors who are not signed in. Owners and brokers choose whether signed-in users can see their number, or nobody (enquiries through the website only). Exact street addresses are shown only when the owner allows it.":
+        "ಸೈನ್ ಇನ್ ಆಗದ ಸಂದರ್ಶಕರಿಗೆ ಫೋನ್ ನಂಬರ್ ಎಂದಿಗೂ ತೋರಿಸಲಾಗುವುದಿಲ್ಲ. ಸೈನ್ ಇನ್ ಆದವರು ತಮ್ಮ ನಂಬರ್ ನೋಡಬಹುದೇ ಅಥವಾ ಯಾರೂ ನೋಡಬಾರದೇ (ವೆಬ್‌ಸೈಟ್ ಮೂಲಕ ವಿಚಾರಣೆ ಮಾತ್ರ) ಎಂದು ಮಾಲೀಕರು ಮತ್ತು ಬ್ರೋಕರ್‌ಗಳೇ ಆಯ್ಕೆ ಮಾಡುತ್ತಾರೆ. ಮಾಲೀಕರು ಅನುಮತಿಸಿದಾಗ ಮಾತ್ರ ನಿಖರ ವಿಳಾಸ ತೋರಿಸಲಾಗುತ್ತದೆ.",
     "How long does a listing stay live?": "ಜಾಹೀರಾತು ಎಷ್ಟು ದಿನ ಪ್ರಕಟವಾಗಿರುತ್ತದೆ?",
     "Each plan has a listing duration (for example 30 days on the Free plan). You will get a reminder before your listing expires and can renew it from your dashboard.":
         "ಪ್ರತಿ ಯೋಜನೆಗೆ ಒಂದು ಅವಧಿ ಇದೆ (ಉದಾಹರಣೆಗೆ ಉಚಿತ ಯೋಜನೆಯಲ್ಲಿ 30 ದಿನಗಳು). ಜಾಹೀರಾತು ಮುಗಿಯುವ ಮೊದಲು ನಿಮಗೆ ನೆನಪಿಸಲಾಗುತ್ತದೆ ಮತ್ತು ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನಿಂದ ನವೀಕರಿಸಬಹುದು.",

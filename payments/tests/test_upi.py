@@ -98,7 +98,7 @@ class ManualUpiTests(TestCase):
         self.assertFalse(contacts.active_pass(customer))
         self.approve(payment)
         self.assertTrue(contacts.active_pass(customer))
-        prop = make_property(contact_visibility="public")
+        prop = make_property(contact_visibility="registered")
         self.client.force_login(customer)
         self.assertContains(self.client.get(prop.get_absolute_url()), "tel:" + prop.contact_phone)
 

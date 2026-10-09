@@ -151,7 +151,8 @@ def property_detail(request, slug):
     if prop.is_public:
         record_view(request, prop)
 
-    allowed = prop.contact_visibility == Property.ContactVisibility.PUBLIC or (
+    # Phone numbers are never shown to signed-out visitors.
+    allowed = (
         prop.contact_visibility == Property.ContactVisibility.REGISTERED and user.is_authenticated
     ) or is_owner or is_admin
     contact = contacts.contact_state(user, prop, allowed=allowed)

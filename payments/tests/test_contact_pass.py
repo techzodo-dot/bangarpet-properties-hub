@@ -24,7 +24,7 @@ class FreeContactLimitTests(TestCase):
     def setUp(self):
         cache.clear()
         self.customer = make_user(Role.CUSTOMER)
-        self.props = [make_property(contact_visibility="public") for _ in range(6)]
+        self.props = [make_property(contact_visibility="registered") for _ in range(6)]
 
     def test_visitors_must_sign_in_to_see_contacts(self):
         resp = self.client.get(self.props[0].get_absolute_url())
@@ -76,8 +76,9 @@ class FreeContactLimitTests(TestCase):
         site.save()
         self.client.force_login(self.customer)
         self.assertContains(self.client.get(self.props[0].get_absolute_url()), "tel:" + self.props[0].contact_phone)
+        # Signed-out visitors never see the phone number.
         self.client.logout()
-        self.assertContains(self.client.get(self.props[0].get_absolute_url()), "tel:" + self.props[0].contact_phone)
+        self.assertNotContains(self.client.get(self.props[0].get_absolute_url()), "tel:" + self.props[0].contact_phone)
 
     def test_free_contact_count_is_editable(self):
         site = PlatformSetting.load()
@@ -130,7 +131,7 @@ class ContactPassPaymentTests(TestCase):
         self.assertNotContains(page, settings.PAYU_MERCHANT_SALT)
 
     def test_successful_payment_activates_pass_and_returns_to_the_property(self):
-        prop = make_property(contact_visibility="public")
+        prop = make_property(contact_visibility="registered")
         payment = self.start(next_url=prop.get_absolute_url())
         self.client.logout()  # PayU posts back cross-site, usually without our session cookie
         resp = self.client.post(reverse("payments:payu_return"), payu_reply(payment))
@@ -199,19 +200,19 @@ class OwnerWhatsAppButtonTests(TestCase):
         self.client.force_login(self.customer)
 
     def test_locked_listing_offers_call_and_whatsapp(self):
-        prop = make_property(contact_visibility="public")
+        prop = make_property(contact_visibility="registered")
         page = self.client.get(prop.get_absolute_url())
         self.assertContains(page, 'name="open" value="phone"')
         self.assertContains(page, 'name="open" value="whatsapp"')
 
     def test_whatsapp_button_opens_chat_after_unlocking(self):
-        prop = make_property(contact_visibility="public")
+        prop = make_property(contact_visibility="registered")
         resp = self.client.post(unlock_url(prop), {"open": "whatsapp"})
         self.assertTrue(resp["Location"].startswith("https://wa.me/919876500000?text="))
         self.assertTrue(ContactUnlock.objects.filter(user=self.customer, property=prop).exists())
 
     def test_phone_is_used_for_whatsapp_when_no_whatsapp_number(self):
-        prop = make_property(contact_visibility="public", whatsapp_number="", contact_phone="+919845012345")
+        prop = make_property(contact_visibility="registered", whatsapp_number="", contact_phone="+919845012345")
         self.client.post(unlock_url(prop))
         page = self.client.get(prop.get_absolute_url())
         self.assertContains(page, "https://wa.me/919845012345?text=")

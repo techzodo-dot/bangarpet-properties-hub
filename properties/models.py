@@ -152,7 +152,6 @@ class Property(TimeStampedModel):
         UNDER_CONSTRUCTION = "under_construction", "Under construction"
 
     class ContactVisibility(models.TextChoices):
-        PUBLIC = "public", "Show phone to everyone"
         REGISTERED = "registered", "Show phone to signed-in users only"
         HIDDEN = "hidden", "Hide phone - enquiries only"
 

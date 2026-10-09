@@ -11,8 +11,9 @@ FAQS = [
      "It is not a legal verification of property title. Always check ownership documents yourself, or with a lawyer, "
      "before paying any money."),
     ("Who can see my phone number?",
-     "Owners and brokers choose who can see their phone number: everyone, signed-in users only, or nobody "
-     "(enquiries through the website only). Exact street addresses are shown only when the owner allows it."),
+     "Phone numbers are never shown to visitors who are not signed in. Owners and brokers choose whether signed-in "
+     "users can see their number, or nobody (enquiries through the website only). Exact street addresses are shown "
+     "only when the owner allows it."),
     ("How long does a listing stay live?",
      "Each plan has a listing duration (for example 30 days on the Free plan). You will get a reminder before your "
      "listing expires and can renew it from your dashboard."),
