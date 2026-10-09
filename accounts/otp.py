@@ -59,8 +59,8 @@ def delivery_address(user):
 
 
 def admin_two_step_required(user):
-    """Admins confirm each sign-in with an emailed code once email is set up."""
-    if not (user.is_platform_admin and otp_enabled()):
+    """Admins and staff confirm each sign-in with an emailed code once email is set up."""
+    if not (user.is_management and otp_enabled()):
         return False
     if delivery_address(user) is None:
         logger.warning("Admin 2-step sign-in skipped for user %s: no email address to send codes to "

@@ -34,7 +34,7 @@
                 <ul class="dropdown-menu dropdown-menu-end shadow rounded-4 p-2">
                   <li><a class="dropdown-item rounded-3" href="{% url user.dashboard_url_name %}"><i class="bi bi-speedometer2 me-2"></i>{% translate "Dashboard" %}</a></li>
                   {% if user.is_partner %}<li><a class="dropdown-item rounded-3" href="{% url 'dashboard:partner_properties' %}"><i class="bi bi-buildings me-2"></i>{% translate "My listings" %}</a></li>{% endif %}
-                  {% if not user.is_platform_admin %}<li><a class="dropdown-item rounded-3" href="{% url 'dashboard:customer_favourites' %}"><i class="bi bi-heart me-2"></i>{% translate "Saved properties" %}</a></li>{% endif %}
+                  {% if not user.is_management %}<li><a class="dropdown-item rounded-3" href="{% url 'dashboard:customer_favourites' %}"><i class="bi bi-heart me-2"></i>{% translate "Saved properties" %}</a></li>{% endif %}
                   <li><a class="dropdown-item rounded-3" href="{% url 'notifications:list' %}"><i class="bi bi-bell me-2"></i>{% translate "Notifications" %}{% if unread_notifications %} <span class="badge bg-danger ms-1">{{ unread_notifications }}</span>{% endif %}</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li>

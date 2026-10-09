@@ -143,7 +143,7 @@ def property_detail(request, slug):
     )
     user = request.user
     is_owner = user.is_authenticated and user.pk == prop.owner_id
-    is_admin = user.is_authenticated and user.is_platform_admin
+    is_admin = user.is_authenticated and user.can_manage("listings")
     if not prop.is_public and not (is_owner or is_admin):
         if prop.status in (Property.Status.RENTED, Property.Status.SOLD):
             return render(request, "properties/unavailable.html", {"prop": prop}, status=410)

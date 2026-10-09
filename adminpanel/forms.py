@@ -1,8 +1,10 @@
 from django import forms
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, password_validation
 from django.utils.text import slugify
 
 from accounts.models import Role
+from accounts.staff import AREA_CHOICES, AREAS
+from adminpanel.models import Expense
 from core.forms import BootstrapFormMixin, PhoneField
 from core.models import Advertisement, Banner, PlatformSetting, Video
 from properties.models import Amenity, Category, Location, Property
@@ -195,3 +197,85 @@ class BroadcastForm(BootstrapFormMixin, forms.Form):
     title = forms.CharField(max_length=160)
     body = forms.CharField(max_length=2000, widget=forms.Textarea(attrs={"rows": 4}))
     send_external = forms.BooleanField(required=False, label="Also send by email/WhatsApp (respects user preferences)")
+
+
+# ---------------------------------------------------------------------------
+# Staff accounts and expenses
+# ---------------------------------------------------------------------------
+class StaffForm(BootstrapFormMixin, forms.Form):
+    full_name = forms.CharField(max_length=120)
+    email = forms.EmailField(help_text="Staff sign in with this email. Their 2-step sign-in codes are sent here.")
+    phone = PhoneField(required=False)
+    permissions = forms.MultipleChoiceField(
+        choices=AREA_CHOICES, widget=forms.CheckboxSelectMultiple, required=False,
+        label="What this staff member can do",
+    )
+    is_active = forms.BooleanField(required=False, initial=True, label="Account active",
+                                   help_text="Untick to stop this person signing in. Their history is kept.")
+    password = forms.CharField(
+        required=False, widget=forms.PasswordInput(render_value=False, attrs={"autocomplete": "new-password"}),
+        label="Password", help_text="At least 10 characters. Leave empty to keep the current password.",
+    )
+
+    def __init__(self, *args, staff=None, **kwargs):
+        self.staff = staff
+        if staff is not None:
+            kwargs.setdefault("initial", {
+                "full_name": staff.full_name, "email": staff.email, "phone": staff.phone,
+                "permissions": staff.staff_permissions, "is_active": staff.is_active,
+            })
+        super().__init__(*args, **kwargs)
+        if staff is None:
+            self.fields["password"].required = True
+            self.fields["password"].help_text = "At least 10 characters. Share it with the staff member privately."
+
+    def clean_email(self):
+        email = get_user_model().objects.normalize_email(self.cleaned_data["email"]).lower()
+        clash = get_user_model().objects.filter(email__iexact=email)
+        if self.staff is not None:
+            clash = clash.exclude(pk=self.staff.pk)
+        if clash.exists():
+            raise forms.ValidationError("Another account already uses this email.")
+        return email
+
+    def clean_password(self):
+        password = self.cleaned_data.get("password") or ""
+        if password:
+            user = self.staff or get_user_model()(email=self.data.get("email", ""), full_name=self.data.get("full_name", ""))
+            password_validation.validate_password(password, user)
+        return password
+
+    def save(self):
+        User = get_user_model()
+        data = self.cleaned_data
+        user = self.staff or User(role=Role.STAFF)
+        user.full_name = data["full_name"]
+        user.email = data["email"]
+        user.phone = data.get("phone") or ""
+        user.staff_permissions = [key for key in AREAS if key in data["permissions"]]
+        user.is_active = data["is_active"] if self.staff is not None else True
+        user.email_verified = True
+        if data.get("password"):
+            user.set_password(data["password"])
+        user.save()
+        return user
+
+
+class ExpenseForm(BootstrapFormMixin, forms.ModelForm):
+    class Meta:
+        model = Expense
+        fields = ["spent_on", "category", "description", "amount", "payment_method", "paid_to", "reference",
+                  "receipt", "notes"]
+        widgets = {
+            "spent_on": forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
+            "amount": forms.NumberInput(attrs={"inputmode": "decimal", "step": "0.01", "min": "1"}),
+            "notes": forms.Textarea(attrs={"rows": 2}),
+            "receipt": forms.ClearableFileInput(attrs={"accept": "image/*,application/pdf"}),
+        }
+
+
+class ExpenseFilterForm(forms.Form):
+    month = forms.CharField(required=False, widget=forms.TextInput(attrs={"type": "month", "class": "form-control"}))
+    category = forms.ChoiceField(required=False, choices=[("", "All categories"), *Expense.Category.choices],
+                                 widget=forms.Select(attrs={"class": "form-select"}))
+    q = forms.CharField(required=False, max_length=80, widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Search what for, paid to, reference"}))

@@ -1,0 +1,28 @@
+{% extends "adminpanel/base.html" %}
+{% block title %}Staff accounts - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head">
+  <div><h1>Staff accounts</h1><span class="small text-muted">Staff sign in at <a href="{% url 'accounts:admin_login' %}" target="_blank" rel="noopener">{{ SITE_URL }}{% url 'accounts:staff_login' %}</a> with their email, and see only the sections you tick.</span></div>
+  <a class="btn btn-primary" href="{% url 'adminpanel:staff_add' %}"><i class="bi bi-plus-lg me-1"></i>Add staff member</a>
+</div>
+{% if rows %}
+<div class="table-card"><div class="table-responsive"><table class="table">
+  <thead><tr><th>Name</th><th>Email</th><th>Can use</th><th>Last sign-in</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+  <tr>
+    <td class="fw-semibold">{{ r.user.full_name }}{% if r.user.phone %}<div class="small text-muted">{{ r.user.phone }}</div>{% endif %}</td>
+    <td class="small">{{ r.user.email }}</td>
+    <td class="small">{% for a in r.areas %}<span class="badge text-bg-light border me-1 mb-1">{{ a }}</span>{% empty %}<span class="text-muted">Nothing yet</span>{% endfor %}</td>
+    <td class="small text-nowrap">{{ r.user.last_login|date:"d M Y, H:i"|default:"Never" }}</td>
+    <td>{% if r.user.is_active %}<span class="badge badge-status status-active">Active</span>{% else %}<span class="badge badge-status status-rejected">Disabled</span>{% endif %}</td>
+    <td class="text-end"><a class="btn btn-sm btn-soft" href="{% url 'adminpanel:staff_edit' r.user.pk %}">Edit</a></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table></div></div>
+{% else %}
+<div class="surface p-4"><h2 class="h5">No staff yet</h2><p class="text-muted">Add people who help run the site. Give each one only the sections they need: for example listing approvals, UPI payments or expenses.</p><a class="btn btn-primary" href="{% url 'adminpanel:staff_add' %}"><i class="bi bi-plus-lg me-1"></i>Add staff member</a></div>
+{% endif %}
+<p class="small text-muted mt-3 mb-0"><i class="bi bi-shield-lock me-1" aria-hidden="true"></i>Settings, plans, locations, audit logs, user role changes and staff accounts stay admin-only. Everything staff do is recorded in the audit log.</p>
+{% endblock %}

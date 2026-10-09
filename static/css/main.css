@@ -763,3 +763,21 @@ a:hover > .stat-card { border-color: var(--border-strong); box-shadow: var(--sha
   .site-header .btn-accent { padding-inline: 1rem; font-size: .9rem; }
 }
 @media (max-width: 575.98px) { :lang(kn) .stat-strip { grid-template-columns: 1fr; } }
+
+/* Expenses: income vs spending bars */
+.bg-income { background: #138a3e !important; }
+.bg-spent { background: #d0473b !important; }
+.legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: .35rem; vertical-align: middle; }
+.trend-row { display: grid; grid-template-columns: 72px 1fr auto; gap: .75rem; align-items: center; padding: .45rem 0; border-bottom: 1px solid var(--border); }
+.trend-row:last-child { border-bottom: 0; }
+.trend-label { font-size: .85rem; font-weight: 600; color: var(--navy); }
+.trend-bars { display: grid; gap: 3px; }
+.trend-bar { height: 8px; border-radius: 4px; min-width: 2px; }
+.trend-values { display: grid; text-align: right; line-height: 1.25; white-space: nowrap; }
+.money-stats .stat-card .v { white-space: nowrap; }
+@media (max-width: 575.98px) {
+  .money-stats .stat-card { gap: .6rem; padding: .85rem; }
+  .money-stats .stat-card .ic { width: 34px; height: 34px; font-size: 1rem; flex: none; }
+  .money-stats .stat-card .v { font-size: 1.05rem; }
+  .money-stats .stat-card .k { font-size: .72rem; }
+}

@@ -16,7 +16,7 @@ from accounts.models import BrokerProfile, OwnerProfile, Role, VerificationDocum
 from adminpanel import forms as f
 from core.audit import log_action
 from core.models import Advertisement, AuditLog, Banner, ContactMessage, PlatformSetting, Video
-from core.permissions import admin_required
+from core.permissions import admin_required, management_required
 from enquiries.models import Enquiry
 from moderation import services as mod
 from moderation.models import Report
@@ -111,7 +111,7 @@ def dashboard(request):
 # ---------------------------------------------------------------------------
 # Users
 # ---------------------------------------------------------------------------
-@admin_required
+@management_required("users")
 def users(request):
     qs = User.objects.select_related("owner_profile", "broker_profile").order_by("-date_joined")
     q = request.GET.get("q", "").strip()
@@ -132,7 +132,7 @@ def users(request):
     ))
 
 
-@admin_required
+@management_required("users")
 def user_detail(request, pk):
     member = get_object_or_404(User.objects.select_related("profile"), pk=pk)
     partner_profile = member.partner_profile
@@ -188,7 +188,7 @@ def user_action(request, pk, action):
         messages.success(request, "Account reactivated.")
     elif action == "role":
         form = f.RoleForm(request.POST)
-        if form.is_valid() and member.role != Role.ADMIN:
+        if form.is_valid() and member.role not in (Role.ADMIN, Role.STAFF):
             old = member.role
             member.role = form.cleaned_data["role"]
             member.save(update_fields=["role"])
@@ -215,7 +215,7 @@ def user_action(request, pk, action):
 # ---------------------------------------------------------------------------
 # Verification
 # ---------------------------------------------------------------------------
-@admin_required
+@management_required("verifications")
 def verifications(request):
     status = request.GET.get("status") or VerificationStatus.PENDING
     owners = OwnerProfile.objects.filter(verification_status=status).select_related("user")
@@ -226,7 +226,7 @@ def verifications(request):
     ))
 
 
-@admin_required
+@management_required("verifications")
 @require_POST
 def verification_decide(request, pk):
     member = get_object_or_404(User, pk=pk, role__in=[Role.OWNER, Role.BROKER])
@@ -250,7 +250,7 @@ def verification_decide(request, pk):
     return redirect("adminpanel:user_detail", pk=pk)
 
 
-@admin_required
+@management_required("verifications")
 @require_POST
 def document_decide(request, pk):
     doc = get_object_or_404(VerificationDocument, pk=pk)
@@ -273,7 +273,7 @@ def document_decide(request, pk):
 # ---------------------------------------------------------------------------
 # Listings & moderation
 # ---------------------------------------------------------------------------
-@admin_required
+@management_required("listings")
 def properties(request, approvals=False):
     qs = Property.objects.exclude(status=Property.Status.DELETED).select_related("owner", "category", "town", "area")
     status = request.GET.get("status")
@@ -301,7 +301,7 @@ def properties(request, approvals=False):
     ))
 
 
-@admin_required
+@management_required("listings")
 def property_review(request, pk):
     prop = get_object_or_404(
         Property.objects.select_related("owner", "category", "town", "area").prefetch_related("images", "amenities"), pk=pk
@@ -315,7 +315,7 @@ def property_review(request, pk):
     ))
 
 
-@admin_required
+@management_required("listings")
 @require_POST
 def property_action(request, pk, action):
     prop = get_object_or_404(Property, pk=pk)
@@ -358,7 +358,7 @@ def property_action(request, pk, action):
 # ---------------------------------------------------------------------------
 # Enquiries (read-only overview)
 # ---------------------------------------------------------------------------
-@admin_required
+@management_required("enquiries")
 def enquiries(request):
     qs = Enquiry.objects.select_related("property", "customer", "partner").order_by("-created_at")
     status = request.GET.get("status")
@@ -372,7 +372,7 @@ def enquiries(request):
 # ---------------------------------------------------------------------------
 # Subscriptions & payments
 # ---------------------------------------------------------------------------
-@admin_required
+@management_required("payments")
 def subscriptions(request):
     qs = Subscription.objects.select_related("user", "plan").order_by("-created_at")
     status = request.GET.get("status")
@@ -400,7 +400,7 @@ def subscriptions(request):
     ))
 
 
-@admin_required
+@management_required("payments")
 def payments(request):
     qs = Payment.objects.select_related("user", "plan").order_by("-created_at")
     status = request.GET.get("status")
@@ -419,7 +419,7 @@ def payments(request):
     ))
 
 
-@admin_required
+@management_required("payments")
 @require_POST
 def payment_action(request, pk, action):
     payment = get_object_or_404(Payment, pk=pk)
@@ -446,7 +446,7 @@ def payment_action(request, pk, action):
 # ---------------------------------------------------------------------------
 # Reports
 # ---------------------------------------------------------------------------
-@admin_required
+@management_required("listings")
 def reports(request):
     qs = Report.objects.select_related("property", "reporter").order_by("-created_at")
     status = request.GET.get("status", "open")
@@ -457,7 +457,7 @@ def reports(request):
     ))
 
 
-@admin_required
+@management_required("listings")
 @require_POST
 def report_action(request, pk, action):
     report = get_object_or_404(Report.objects.select_related("property"), pk=pk)
@@ -524,6 +524,14 @@ CRUD = {
 }
 
 
+CONTENT_KINDS = ("banners", "ads", "videos")
+
+
+def _crud_area(kwargs):
+    """Staff with the "content" area may manage banners, ads and videos; the rest is admin-only."""
+    return "content" if kwargs.get("kind") in CONTENT_KINDS else None
+
+
 def _crud(kind):
     conf = CRUD.get(kind)
     if not conf:
@@ -536,7 +544,7 @@ def _cell(obj, attr):
     return value() if callable(value) else value
 
 
-@admin_required
+@management_required(_crud_area)
 def crud_list(request, kind):
     conf = _crud(kind)
     qs = conf["model"].objects.all()
@@ -544,7 +552,7 @@ def crud_list(request, kind):
     return render(request, "adminpanel/crud_list.html", _ctx(conf["active"], conf=conf, kind=kind, rows=rows))
 
 
-@admin_required
+@management_required(_crud_area)
 def crud_edit(request, kind, pk=None):
     conf = _crud(kind)
     obj = get_object_or_404(conf["model"], pk=pk) if pk else None
@@ -557,7 +565,7 @@ def crud_edit(request, kind, pk=None):
     return render(request, "adminpanel/crud_form.html", _ctx(conf["active"], conf=conf, kind=kind, form=form, obj=obj))
 
 
-@admin_required
+@management_required(_crud_area)
 @require_POST
 def crud_delete(request, kind, pk):
     conf = _crud(kind)
@@ -606,7 +614,7 @@ def audit_logs(request):
     ))
 
 
-@admin_required
+@management_required("enquiries")
 def contact_messages(request):
     if request.method == "POST":
         msg = get_object_or_404(ContactMessage, pk=request.POST.get("id"))

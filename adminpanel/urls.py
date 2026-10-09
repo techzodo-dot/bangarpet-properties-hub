@@ -1,6 +1,6 @@
 from django.urls import path
 
-from adminpanel import views
+from adminpanel import views, views_staff
 
 app_name = "adminpanel"
 
@@ -27,6 +27,15 @@ urlpatterns = [
     path("messages/", views.contact_messages, name="messages"),
     path("notices/", views.broadcast, name="broadcast"),
     path("banners/", views.crud_list, {"kind": "banners"}, name="banners"),
+    path("staff-home/", views_staff.staff_home, name="staff_home"),
+    path("staff/", views_staff.staff_list, name="staff"),
+    path("staff/add/", views_staff.staff_edit, name="staff_add"),
+    path("staff/<int:pk>/", views_staff.staff_edit, name="staff_edit"),
+    path("expenses/", views_staff.expenses, name="expenses"),
+    path("expenses/add/", views_staff.expense_edit, name="expense_add"),
+    path("expenses/<int:pk>/", views_staff.expense_edit, name="expense_edit"),
+    path("expenses/<int:pk>/delete/", views_staff.expense_delete, name="expense_delete"),
+    path("expenses/<int:pk>/receipt/", views_staff.expense_receipt, name="expense_receipt"),
     path("manage/<str:kind>/", views.crud_list, name="crud_list"),
     path("manage/<str:kind>/add/", views.crud_edit, name="crud_add"),
     path("manage/<str:kind>/<int:pk>/", views.crud_edit, name="crud_edit"),

@@ -16,6 +16,7 @@ class Role(models.TextChoices):
     CUSTOMER = "customer", "Customer / Tenant / Buyer"
     OWNER = "owner", "Property owner"
     BROKER = "broker", "Real estate broker"
+    STAFF = "staff", "Staff member"
     ADMIN = "admin", "Super admin"
 
 
@@ -64,6 +65,9 @@ class User(AbstractUser):
     phone_verified = models.BooleanField(default=False)
     suspended_at = models.DateTimeField(null=True, blank=True)
     suspension_reason = models.CharField(max_length=255, blank=True)
+    staff_permissions = models.JSONField(
+        default=list, blank=True, help_text="Management areas a staff member may use (see accounts.staff.AREAS).",
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["full_name"]
@@ -103,6 +107,21 @@ class User(AbstractUser):
         return self.is_active and (self.role == Role.ADMIN or self.is_superuser)
 
     @property
+    def is_staff_member(self):
+        return self.is_active and self.role == Role.STAFF and not self.is_suspended
+
+    @property
+    def is_management(self):
+        """Admins and staff members: people who use the Management panel."""
+        return self.is_platform_admin or self.is_staff_member
+
+    def can_manage(self, area):
+        """Admins can use every Management area; staff only the areas given to them."""
+        if self.is_platform_admin:
+            return True
+        return self.is_staff_member and area in (self.staff_permissions or [])
+
+    @property
     def is_suspended(self):
         return self.suspended_at is not None
 
@@ -132,6 +151,8 @@ class User(AbstractUser):
     def dashboard_url_name(self):
         if self.is_platform_admin:
             return "adminpanel:dashboard"
+        if self.is_staff_member:
+            return "adminpanel:staff_home"
         if self.is_partner:
             return "dashboard:partner_overview"
         return "dashboard:customer_overview"

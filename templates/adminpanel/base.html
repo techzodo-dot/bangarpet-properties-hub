@@ -14,32 +14,48 @@
 <div class="admin-shell">
   <aside class="admin-sidebar" aria-label="Management navigation">
     <div class="px-2 mb-3 d-flex align-items-center justify-content-between">
-      <a class="brand" href="{% url 'adminpanel:dashboard' %}"><img src="{% static 'img/logo-mark.svg' %}" alt="" width="48" height="38"><span class="brand-text"><span class="brand-name">Bangarpet</span><span class="brand-sub">Management</span></span></a>
+      <a class="brand" href="{% url user.dashboard_url_name %}"><img src="{% static 'img/logo-mark.svg' %}" alt="" width="48" height="38"><span class="brand-text"><span class="brand-name">Bangarpet</span><span class="brand-sub">Management</span></span></a>
       <button class="btn btn-sm text-white d-lg-none" data-sidebar-toggle aria-label="Close menu"><i class="bi bi-x-lg"></i></button>
     </div>
     <nav class="nav flex-column">
+      {% if user.is_platform_admin %}
       <a class="nav-link {% if active == 'dashboard' %}active{% endif %}" href="{% url 'adminpanel:dashboard' %}"><i class="bi bi-speedometer2"></i>Dashboard</a>
       <span class="side-label">Admin listings</span>
       <a class="nav-link {% if active == 'add' %}active{% endif %}" href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-square"></i>Add property</a>
       <a class="nav-link {% if active == 'properties' and request.resolver_match.app_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard:partner_properties' %}"><i class="bi bi-house-gear"></i>My listings</a>
-      <span class="side-label">Moderation</span>
+      {% else %}
+      <a class="nav-link {% if active == 'staff_home' %}active{% endif %}" href="{% url 'adminpanel:staff_home' %}"><i class="bi bi-house"></i>Staff home</a>
+      {% endif %}
+      {% if can.listings or can.verifications %}<span class="side-label">Moderation</span>{% endif %}
+      {% if can.listings %}
       <a class="nav-link {% if active == 'approvals' %}active{% endif %}" href="{% url 'adminpanel:approvals' %}"><i class="bi bi-check2-square"></i>Approvals</a>
       <a class="nav-link {% if active == 'properties' and request.resolver_match.app_name == 'adminpanel' %}active{% endif %}" href="{% url 'adminpanel:properties' %}"><i class="bi bi-buildings"></i>All listings</a>
       <a class="nav-link {% if active == 'reports' %}active{% endif %}" href="{% url 'adminpanel:reports' %}"><i class="bi bi-flag"></i>Reports</a>
-      <a class="nav-link {% if active == 'verifications' %}active{% endif %}" href="{% url 'adminpanel:verifications' %}"><i class="bi bi-patch-check"></i>Verifications</a>
-      <span class="side-label">People</span>
-      <a class="nav-link {% if active == 'users' %}active{% endif %}" href="{% url 'adminpanel:users' %}"><i class="bi bi-people"></i>Users</a>
+      {% endif %}
+      {% if can.verifications %}<a class="nav-link {% if active == 'verifications' %}active{% endif %}" href="{% url 'adminpanel:verifications' %}"><i class="bi bi-patch-check"></i>Verifications</a>{% endif %}
+      {% if can.users or can.enquiries or user.is_platform_admin %}<span class="side-label">People</span>{% endif %}
+      {% if can.users %}<a class="nav-link {% if active == 'users' %}active{% endif %}" href="{% url 'adminpanel:users' %}"><i class="bi bi-people"></i>Users</a>{% endif %}
+      {% if can.enquiries %}
       <a class="nav-link {% if active == 'enquiries' %}active{% endif %}" href="{% url 'adminpanel:enquiries' %}"><i class="bi bi-chat-left-text"></i>Enquiries</a>
       <a class="nav-link {% if active == 'messages' %}active{% endif %}" href="{% url 'adminpanel:messages' %}"><i class="bi bi-envelope"></i>Contact messages</a>
+      {% endif %}
+      {% if user.is_platform_admin %}
       <a class="nav-link {% if active == 'broadcast' %}active{% endif %}" href="{% url 'adminpanel:broadcast' %}"><i class="bi bi-megaphone"></i>Send notice</a>
-      <span class="side-label">Revenue</span>
+      <a class="nav-link {% if active == 'staff' %}active{% endif %}" href="{% url 'adminpanel:staff' %}"><i class="bi bi-person-badge"></i>Staff accounts</a>
+      {% endif %}
+      {% if can.payments or can.content or can.expenses %}<span class="side-label">Money</span>{% endif %}
+      {% if can.payments %}
       <a class="nav-link {% if active == 'subscriptions' %}active{% endif %}" href="{% url 'adminpanel:subscriptions' %}"><i class="bi bi-stars"></i>Subscriptions</a>
       <a class="nav-link {% if active == 'payments' %}active{% endif %}" href="{% url 'adminpanel:payments' %}"><i class="bi bi-credit-card"></i>Payments</a>
-      <a class="nav-link {% if active == 'banners' %}active{% endif %}" href="{% url 'adminpanel:banners' %}"><i class="bi bi-image"></i>Banners, ads &amp; videos</a>
+      {% endif %}
+      {% if can.expenses %}<a class="nav-link {% if active == 'expenses' %}active{% endif %}" href="{% url 'adminpanel:expenses' %}"><i class="bi bi-wallet2"></i>Expenses</a>{% endif %}
+      {% if can.content %}<a class="nav-link {% if active == 'banners' %}active{% endif %}" href="{% url 'adminpanel:banners' %}"><i class="bi bi-image"></i>Banners, ads &amp; videos</a>{% endif %}
+      {% if user.is_platform_admin %}
       <span class="side-label">Configuration</span>
       <a class="nav-link {% if active == 'catalog' %}active{% endif %}" href="{% url 'adminpanel:crud_list' 'locations' %}"><i class="bi bi-geo-alt"></i>Locations &amp; categories</a>
       <a class="nav-link {% if active == 'settings' %}active{% endif %}" href="{% url 'adminpanel:settings' %}"><i class="bi bi-gear"></i>Settings</a>
       <a class="nav-link {% if active == 'audit' %}active{% endif %}" href="{% url 'adminpanel:audit_logs' %}"><i class="bi bi-journal-text"></i>Audit logs</a>
+      {% endif %}
       <hr class="border-secondary">
       <a class="nav-link {% if active == 'notifications' %}active{% endif %}" href="{% url 'notifications:list' %}"><i class="bi bi-bell"></i>My notifications{% if unread_notifications %}<span class="count-pill">{{ unread_notifications }}</span>{% endif %}</a>
       <a class="nav-link {% if active == 'password' %}active{% endif %}" href="{% url 'accounts:password_change' %}"><i class="bi bi-key"></i>Change password</a>
@@ -50,7 +66,7 @@
   <div class="admin-main">
     <div class="admin-topbar">
       <button class="btn btn-soft d-lg-none" data-sidebar-toggle aria-label="Open menu"><i class="bi bi-list"></i></button>
-      <div class="small text-muted ms-auto">Signed in as <strong>{{ user.email }}</strong></div>
+      <div class="small text-muted ms-auto">Signed in as <strong>{{ user.email }}</strong>{% if user.is_staff_member %} <span class="badge text-bg-light border ms-1">Staff</span>{% endif %}</div>
     </div>
     {% include "partials/messages.html" %}
     {% block dash_content %}{% endblock %}

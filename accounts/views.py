@@ -122,8 +122,14 @@ class AdminLoginView(LoginView):
     template_name = "accounts/admin_login.html"
     form_class = AdminLoginForm
 
+    def form_valid(self, form):
+        self.signing_in = form.get_user()
+        return super().form_valid(form)
+
     def get_default_redirect_url(self):
-        return str(reverse_lazy("adminpanel:dashboard"))
+        """Admins land on the dashboard, staff on their staff home."""
+        user = getattr(self, "signing_in", None)
+        return str(reverse(user.dashboard_url_name())) if user else str(reverse_lazy("accounts:post_login"))
 
 
 @login_required
@@ -220,7 +226,7 @@ def password_change(request):
         messages.success(request, "Your password has been changed.")
         return redirect("accounts:password_change")
     base = "dashboard/partner_base.html" if request.user.is_partner else "dashboard/customer_base.html"
-    if request.user.is_platform_admin:
+    if request.user.is_management:
         base = "adminpanel/base.html"
     return render(request, "accounts/password_change.html", {"form": form, "base_template": base, "active": "password"})
 
@@ -229,11 +235,12 @@ def password_change(request):
 def verification_document(request, pk):
     """Serve a private verification document to its owner or an admin only."""
     doc = get_object_or_404(VerificationDocument, pk=pk)
-    if not (request.user.is_platform_admin or doc.user_id == request.user.pk):
+    can_review = request.user.can_manage("verifications")
+    if not (can_review or doc.user_id == request.user.pk):
         raise PermissionDenied
     if not doc.file:
         raise Http404("This document has been deleted under the retention policy.")
-    if request.user.is_platform_admin and doc.user_id != request.user.pk:
+    if can_review and doc.user_id != request.user.pk:
         log_action(request, "verification.document_viewed", doc, owner=doc.user_id)
     response = FileResponse(doc.file.open("rb"), as_attachment=False, filename=doc.original_name or doc.file.name.rsplit("/", 1)[-1])
     response["Cache-Control"] = "private, no-store"
@@ -291,7 +298,7 @@ def _code_page(request, form, *, heading, intro, submit, back_url, back_label, r
 
 
 def _can_use_login_code(user):
-    return user is not None and user.is_active and not user.is_platform_admin and not user.is_suspended
+    return user is not None and user.is_active and not user.is_management and not user.is_suspended
 
 
 @login_required
@@ -419,7 +426,7 @@ def admin_login_verify(request):
     """Second step of the admin sign-in: the code emailed after the password was accepted."""
     pending = _pending(request, Purpose.ADMIN_LOGIN)
     user = _pending_user(pending) if pending else None
-    if user is None or not user.is_platform_admin:
+    if user is None or not user.is_management:
         request.session.pop(PENDING_KEY, None)
         messages.info(request, _("Please sign in again."))
         return redirect("accounts:admin_login")
@@ -442,7 +449,7 @@ def admin_login_verify(request):
             if not pending.get("remember"):
                 request.session.set_expiry(0)
             log_action(request, "account.login", user, method="password+email_code")
-            return redirect(pending.get("next") or "adminpanel:dashboard")
+            return redirect(pending.get("next") or user.dashboard_url_name())
     return _code_page(
         request, form,
         heading=_("2-step sign-in"),

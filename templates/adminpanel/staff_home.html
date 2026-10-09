@@ -1,0 +1,24 @@
+{% extends "adminpanel/base.html" %}
+{% block title %}Staff home - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head"><div><h1>Hello, {{ user.get_short_name }}</h1><span class="small text-muted">{% now "D, d M Y" %} &middot; Staff account</span></div></div>
+{% if areas %}
+<div class="row g-3">
+  {% for a in areas %}
+  <div class="col-md-6 col-xl-4">
+    <div class="surface p-4 h-100 d-flex flex-column">
+      <h2 class="h5 mb-1">{{ a.label }}</h2>
+      <p class="small text-muted">{{ a.help }}</p>
+      {% if a.count %}<p class="mb-3"><span class="fs-3 fw-bold text-navy">{{ a.count.0 }}</span> <span class="small text-muted">{{ a.count.1 }}</span></p>{% endif %}
+      <div class="d-flex flex-wrap gap-2 mt-auto">
+        {% for label, url_name, icon in a.links %}<a class="btn btn-soft btn-sm" href="{% url url_name %}"><i class="bi {{ icon }} me-1" aria-hidden="true"></i>{{ label }}</a>{% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% if open_reports %}<p class="small text-muted mt-3"><i class="bi bi-flag me-1" aria-hidden="true"></i>{{ open_reports }} open report{{ open_reports|pluralize }} from visitors.</p>{% endif %}
+{% else %}
+<div class="surface p-4"><h2 class="h5">No sections yet</h2><p class="text-muted mb-0">An admin hasn't given your account any sections yet. Ask them to open Management &rarr; Staff accounts and tick what you should work on.</p></div>
+{% endif %}
+{% endblock %}

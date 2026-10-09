@@ -33,6 +33,7 @@
     <div class="surface p-4 mb-4">
       <div class="d-flex justify-content-between"><h2 class="h6 text-uppercase text-muted">Verification</h2><span class="badge badge-status status-{{ partner_profile.verification_status }}">{{ partner_profile.get_verification_status_display }}</span></div>
       {% if partner_profile.verification_note %}<p class="small">Note: {{ partner_profile.verification_note }}</p>{% endif %}
+      {% if can.verifications %}
       {% if documents %}
       <div class="table-responsive"><table class="table table-sm">
         <thead><tr><th>Document</th><th>Uploaded</th><th>Status</th><th></th></tr></thead>
@@ -60,6 +61,7 @@
         <p class="small text-muted mt-2 mb-0">Verify only after checking the documents. Verification confirms identity/business details, not legal title.</p>
       </form>
       {% if partner_profile.verification_status == 'verified' %}<form method="post" action="{% url 'adminpanel:verification_decide' member.pk %}" class="mt-2">{% csrf_token %}<input type="hidden" name="decision" value="expire"><button class="btn btn-sm btn-link text-danger px-0" type="submit">Mark verification as expired</button></form>{% endif %}
+      {% else %}<p class="small text-muted mb-0"><i class="bi bi-lock me-1" aria-hidden="true"></i>Documents and verification decisions need the Verifications permission.</p>{% endif %}
     </div>
     {% endif %}
 
@@ -83,7 +85,9 @@
   <div class="col-xl-4">
     <div class="surface p-4">
       <h2 class="h6 text-uppercase text-muted">Account actions</h2>
-      {% if member.role != 'admin' %}
+      {% if not user.is_platform_admin %}<p class="small text-muted mb-0"><i class="bi bi-lock me-1" aria-hidden="true"></i>Only admins can change accounts.</p>{% else %}
+      {% if member.role == 'staff' %}<p class="small"><a href="{% url 'adminpanel:staff_edit' member.pk %}">Edit this staff account and its permissions</a></p>{% endif %}
+      {% if member.role != 'admin' and member.role != 'staff' %}
       <form method="post" action="{% url 'adminpanel:user_action' member.pk 'role' %}" class="mb-3">{% csrf_token %}
         {% include "partials/field.html" with field=role_form.role wrapper_class="mb-2" %}
         <button class="btn btn-sm btn-soft" type="submit">Change role</button>
@@ -101,6 +105,7 @@
         <form method="post" action="{% url 'adminpanel:user_action' member.pk 'reactivate' %}">{% csrf_token %}<button class="btn btn-sm btn-primary w-100" type="submit">Reactivate account</button></form>
         {% endif %}
       </div>
+      {% endif %}
     </div>
   </div>
 </div>

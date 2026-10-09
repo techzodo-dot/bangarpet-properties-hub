@@ -1,5 +1,6 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
+from django.views.generic import RedirectView
 
 from accounts import views
 
@@ -9,6 +10,7 @@ urlpatterns = [
     path("login/", views.LoginView.as_view(), name="login"),
     path("admin-login/", views.AdminLoginView.as_view(), name="admin_login"),
     path("admin-login/verify/", views.admin_login_verify, name="admin_login_verify"),
+    path("staff-login/", RedirectView.as_view(pattern_name="accounts:admin_login", query_string=True), name="staff_login"),
     path("login/code/", views.LoginCodeView.as_view(), name="login_code"),
     path("login/code/verify/", views.login_code_verify, name="login_code_verify"),
     path("register/", views.RegisterView.as_view(), name="register"),

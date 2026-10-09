@@ -1,0 +1,83 @@
+{% extends "adminpanel/base.html" %}
+{% load bph %}
+{% block title %}Expenses - Management{% endblock %}
+{% block dash_content %}
+<div class="page-head">
+  <div><h1>Expenses</h1><span class="small text-muted">Money spent running the business, compared with payments received.</span></div>
+  <div class="d-flex flex-wrap gap-2">
+    <a class="btn btn-soft" href="?{{ querystring }}{% if querystring %}&amp;{% endif %}export=csv"><i class="bi bi-download me-1" aria-hidden="true"></i>Export CSV</a>
+    <a class="btn btn-primary" href="{% url 'adminpanel:expense_add' %}"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add expense</a>
+  </div>
+</div>
+
+<div class="row g-3 mb-4 money-stats">
+  <div class="col-6 col-xl-3"><div class="stat-card"><span class="ic red"><i class="bi bi-wallet2"></i></span><div><div class="v">{{ summary.this_month|inr }}</div><div class="k">Spent this month</div></div></div></div>
+  <div class="col-6 col-xl-3"><div class="stat-card"><span class="ic"><i class="bi bi-calendar-minus"></i></span><div><div class="v">{{ summary.last_month|inr }}</div><div class="k">Spent last month</div></div></div></div>
+  <div class="col-6 col-xl-3"><div class="stat-card"><span class="ic green"><i class="bi bi-currency-rupee"></i></span><div><div class="v">{{ summary.income_month|inr }}</div><div class="k">Payments received this month</div></div></div></div>
+  <div class="col-6 col-xl-3"><div class="stat-card"><span class="ic {% if summary.profit_month < 0 %}red{% else %}yellow{% endif %}"><i class="bi bi-graph-up-arrow"></i></span><div><div class="v">{% if summary.profit_month < 0 %}&minus;{% endif %}{{ summary.profit_abs|inr }}</div><div class="k">{% if summary.profit_month < 0 %}Loss{% else %}Profit{% endif %} this month</div></div></div></div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-xl-7">
+    <div class="surface p-4 h-100">
+      <div class="d-flex justify-content-between align-items-baseline mb-3"><h2 class="h6 text-uppercase text-muted mb-0">Last 6 months</h2><span class="small text-muted">{{ summary.year_label }} spent: <strong>{{ summary.year|inr }}</strong></span></div>
+      <div class="small d-flex gap-3 mb-2"><span><span class="legend-dot bg-income"></span>Received</span><span><span class="legend-dot bg-spent"></span>Spent</span></div>
+      {% for t in trend %}
+      <div class="trend-row">
+        <div class="trend-label">{{ t.month|date:"M Y" }}</div>
+        <div class="trend-bars">
+          <div class="trend-bar bg-income" style="width:{{ t.income_pct }}%" title="Received {{ t.income|inr }}"></div>
+          <div class="trend-bar bg-spent" style="width:{{ t.spent_pct }}%" title="Spent {{ t.spent|inr }}"></div>
+        </div>
+        <div class="trend-values small"><span class="text-success">{{ t.income|inr }}</span><span class="text-danger">{{ t.spent|inr }}</span></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="col-xl-5">
+    <div class="surface p-4 h-100">
+      <h2 class="h6 text-uppercase text-muted mb-3">By category{% if filtered %} (filtered){% endif %}</h2>
+      {% for c in by_category %}
+      <div class="mb-2">
+        <div class="d-flex justify-content-between small"><span>{{ c.label }}</span><strong>{{ c.total|inr }}</strong></div>
+        <div class="progress" style="height:6px" role="progressbar" aria-label="{{ c.label }}" aria-valuenow="{{ c.pct }}" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar bg-spent" style="width:{{ c.pct }}%"></div></div>
+      </div>
+      {% empty %}<p class="text-muted small mb-0">No expenses recorded{% if filtered %} for this filter{% endif %}.</p>{% endfor %}
+    </div>
+  </div>
+</div>
+
+<form method="get" class="surface p-3 mb-3"><div class="row g-2 align-items-end">
+  <div class="col-md-3"><label class="form-label small" for="{{ form.month.id_for_label }}">Month</label>{{ form.month }}</div>
+  <div class="col-md-3"><label class="form-label small" for="{{ form.category.id_for_label }}">Category</label>{{ form.category }}</div>
+  <div class="col-md-4"><label class="form-label small" for="{{ form.q.id_for_label }}">Search</label>{{ form.q }}</div>
+  <div class="col-md-2 d-flex gap-2"><button class="btn btn-primary flex-grow-1">Filter</button>{% if filtered %}<a class="btn btn-link" href="{% url 'adminpanel:expenses' %}">Clear</a>{% endif %}</div>
+</div></form>
+
+{% if page_obj.object_list %}
+<div class="table-card"><div class="table-responsive"><table class="table">
+  <thead><tr><th>Date</th><th>What for</th><th>Category</th><th class="text-end">Amount</th><th>Paid by</th><th>Recorded by</th><th></th></tr></thead>
+  <tbody>
+  {% for e in page_obj.object_list %}
+  <tr>
+    <td class="small text-nowrap">{{ e.spent_on|date:"d M Y" }}</td>
+    <td>{{ e.description }}{% if e.paid_to or e.reference %}<div class="small text-muted">{% if e.paid_to %}To {{ e.paid_to }}{% endif %}{% if e.paid_to and e.reference %} &middot; {% endif %}{% if e.reference %}Ref {{ e.reference }}{% endif %}</div>{% endif %}</td>
+    <td class="small">{{ e.get_category_display }}</td>
+    <td class="text-end fw-semibold text-nowrap">{{ e.amount|inr }}</td>
+    <td class="small">{{ e.get_payment_method_display }}</td>
+    <td class="small text-muted">{{ e.created_by.full_name|default:"-" }}</td>
+    <td class="text-end text-nowrap">
+      {% if e.receipt %}<a class="btn btn-sm btn-soft" href="{% url 'adminpanel:expense_receipt' e.pk %}" target="_blank" rel="noopener" aria-label="Open receipt"><i class="bi bi-paperclip"></i></a>{% endif %}
+      <a class="btn btn-sm btn-soft" href="{% url 'adminpanel:expense_edit' e.pk %}">Edit</a>
+      {% if user.is_platform_admin %}<form class="d-inline" method="post" action="{% url 'adminpanel:expense_delete' e.pk %}" data-confirm="Delete this expense of {{ e.amount|inr }}?">{% csrf_token %}<button class="btn btn-sm btn-outline-danger" type="submit" aria-label="Delete"><i class="bi bi-trash"></i></button></form>{% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+  <tfoot><tr><th colspan="3">{% if filtered %}Total for this filter{% else %}Total of all expenses{% endif %}</th><th class="text-end text-nowrap">{{ filtered_total|inr }}</th><th colspan="3"></th></tr></tfoot>
+</table></div></div>
+{% include "partials/pagination.html" %}
+{% else %}
+<div class="surface p-4 text-center"><i class="bi bi-wallet2 fs-1 text-muted" aria-hidden="true"></i><h2 class="h5 mt-2">{% if filtered %}No expenses match this filter{% else %}No expenses yet{% endif %}</h2><p class="text-muted">Record rent, salaries, ads, fuel and other costs to see where the money goes each month.</p><a class="btn btn-primary" href="{% url 'adminpanel:expense_add' %}"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add expense</a></div>
+{% endif %}
+{% endblock %}

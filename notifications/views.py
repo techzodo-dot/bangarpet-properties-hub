@@ -8,7 +8,7 @@ from notifications.models import Notification
 
 
 def _base_template(user):
-    if user.is_platform_admin:
+    if user.is_management:
         return "adminpanel/base.html"
     return "dashboard/partner_base.html" if user.is_partner else "dashboard/customer_base.html"
 

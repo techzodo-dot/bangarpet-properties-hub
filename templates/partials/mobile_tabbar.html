@@ -4,7 +4,7 @@
   <a href="{% url 'properties:search' %}" class="{% if path == '/properties/' %}active{% endif %}"><i class="bi bi-search"></i>{% translate "Search" %}</a>
   {% if user.is_authenticated and user.is_partner %}
     <a href="{% url 'dashboard:partner_property_add' %}"><i class="bi bi-plus-square"></i>{% translate "List" %}</a>
-  {% elif user.is_authenticated and not user.is_platform_admin %}
+  {% elif user.is_authenticated and not user.is_management %}
     <a href="{% url 'dashboard:customer_favourites' %}" class="{% if 'favourites' in path %}active{% endif %}"><i class="bi bi-heart"></i>{% translate "Saved" %}</a>
   {% else %}
     <a href="{% url 'accounts:register' %}?type=owner"><i class="bi bi-plus-square"></i>{% translate "List" %}</a>

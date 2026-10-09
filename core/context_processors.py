@@ -16,4 +16,8 @@ def platform(request):
     user = getattr(request, "user", None)
     if user is not None and user.is_authenticated:
         ctx["unread_notifications"] = user.notifications.filter(is_read=False).count()
+        if user.is_management:
+            from accounts.staff import AREAS
+
+            ctx["can"] = {area: user.can_manage(area) for area in AREAS}
     return ctx

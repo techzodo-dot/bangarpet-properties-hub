@@ -216,7 +216,7 @@ def request_plan(request, slug):
 
 
 def _can_view(user, payment):
-    return user.is_authenticated and (user.pk == payment.user_id or user.is_platform_admin)
+    return user.is_authenticated and (user.pk == payment.user_id or user.can_manage("payments"))
 
 
 def receipt(request, uid):

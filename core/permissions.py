@@ -63,3 +63,29 @@ partner_required = role_required(PARTNER_ROLES)
 # Owners, brokers and platform admins can create and manage their own listings.
 lister_required = role_required((*PARTNER_ROLES, Role.ADMIN))
 admin_required = role_required("admin")
+
+
+def management_required(area):
+    """Admins, or staff members who were given ``area``.
+
+    ``area`` may be a callable taking the view kwargs and returning the area
+    (or None for admin-only), for views shared by several areas.
+    """
+    def decorator(view):
+        @wraps(view)
+        def wrapper(request, *args, **kwargs):
+            user = request.user
+            if not user.is_authenticated:
+                return redirect_to_login(request.get_full_path())
+            needed = area(kwargs) if callable(area) else area
+            if needed == "__any__":
+                allowed = user.is_management
+            else:
+                allowed = user.is_platform_admin or (needed is not None and user.can_manage(needed))
+            if not allowed:
+                raise PermissionDenied("You do not have access to this page.")
+            return view(request, *args, **kwargs)
+
+        return wrapper
+
+    return decorator
