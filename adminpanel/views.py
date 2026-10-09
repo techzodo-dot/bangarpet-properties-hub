@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.db.models import Count, Q, Sum
 from django.db.models.functions import TruncMonth
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -23,7 +24,7 @@ from moderation.models import Report
 from notifications.models import Notification
 from notifications.services import integration_status, notify
 from payments.models import Payment
-from payments.services import mark_paid, plan_payments_url
+from payments.services import mark_paid, plan_home_url, plan_payments_url
 from properties.models import Amenity, Category, Location, Property
 from properties.services import ClosingError, mark_closed, reopen
 from subscriptions.models import Subscription, SubscriptionPlan
@@ -387,14 +388,16 @@ def subscriptions(request):
         qs = qs.current()
     elif status in Subscription.Status.values:
         qs = qs.filter(status=status)
+    if request.method == "POST" and not request.user.is_platform_admin:
+        raise PermissionDenied("Only admins can grant plans.")
     grant_form = f.GrantSubscriptionForm(request.POST or None)
     if request.method == "POST" and grant_form.is_valid():
         sub = activate_subscription(grant_form.user, grant_form.cleaned_data["plan"], amount_paid=0,
                                     granted_by=request.user, notes=grant_form.cleaned_data["notes"])
         log_action(request, "subscription.granted", sub, plan=sub.plan.slug, notes=grant_form.cleaned_data["notes"])
-        notify(grant_form.user, Notification.Event.SUBSCRIPTION_PURCHASED, f"{sub.plan.name} plan activated",
-               f"Your {sub.plan.name} plan is active until {timezone.localtime(sub.ends_at):%d %b %Y}.",
-               reverse("dashboard:partner_subscription"))
+        notify(grant_form.user, Notification.Event.SUBSCRIPTION_PURCHASED, f"{sub.plan.name} activated",
+               f"Your {sub.plan.name} is active until {timezone.localtime(sub.ends_at):%d %b %Y}.",
+               plan_home_url(sub.plan))
         messages.success(request, "Subscription granted.")
         return redirect("adminpanel:subscriptions")
     renewals_due = Subscription.objects.current().filter(ends_at__lte=timezone.now() + timedelta(days=7)).select_related("user", "plan")

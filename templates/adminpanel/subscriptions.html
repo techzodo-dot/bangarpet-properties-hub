@@ -33,6 +33,7 @@
       <h2 class="h6">Renewals due (7 days)</h2>
       <ul class="list-unstyled small mb-0">{% for s in renewals_due %}<li class="mb-1">{{ s.user.email }} &middot; {{ s.plan.name }} &middot; ends {{ s.ends_at|date:"d M" }}</li>{% empty %}<li class="text-muted">None.</li>{% endfor %}</ul>
     </div>
+    {% if user.is_platform_admin %}
     <form method="post" class="surface p-4" data-once>{% csrf_token %}
       <h2 class="h6">Grant a plan manually</h2>
       <p class="small text-muted">For offline payments, promotions or support cases. Recorded in the audit log.</p>
@@ -41,6 +42,7 @@
       {% include "partials/field.html" with field=grant_form.notes %}
       <button class="btn btn-primary" type="submit">Grant plan</button>
     </form>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

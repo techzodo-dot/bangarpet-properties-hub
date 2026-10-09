@@ -1,4 +1,5 @@
 from django import forms
+from django.db import transaction
 from django.contrib.auth import get_user_model, password_validation
 from django.utils.text import slugify
 
@@ -58,18 +59,39 @@ class PlanForm(BootstrapFormMixin, forms.ModelForm):
         widgets = {"features": forms.Textarea(attrs={"rows": 4}), "discount_ends_at": DT_WIDGET}
 
     def clean_for_roles(self):
-        roles = [r.strip() for r in self.cleaned_data["for_roles"].split(",") if r.strip()]
-        if not roles or any(r not in (Role.OWNER, Role.BROKER) for r in roles):
-            raise forms.ValidationError("Use 'owner', 'broker' or 'owner,broker'.")
-        return ",".join(roles)
+        roles = [r.strip().lower() for r in self.cleaned_data["for_roles"].split(",") if r.strip()]
+        if not roles or any(r not in (Role.OWNER, Role.BROKER, Role.CUSTOMER) for r in roles):
+            raise forms.ValidationError("Use 'owner', 'broker', 'owner,broker' (listing plans) or 'customer' (Contact Pass).")
+        return ",".join(dict.fromkeys(roles))
 
     def clean(self):
         data = super().clean()
+        roles = set((data.get("for_roles") or "").split(",")) - {""}
+        if data.get("unlimited_contacts"):
+            if roles and roles != {Role.CUSTOMER}:
+                self.add_error("for_roles", "A Contact Pass plan is for customers: set this to 'customer'.")
+            if data.get("is_default"):
+                self.add_error("is_default", "The Contact Pass cannot be the default plan.")
+            if data.get("price") is not None and data["price"] <= 0:
+                self.add_error("price", "The Contact Pass needs a price.")
+        elif Role.CUSTOMER in roles:
+            self.add_error("for_roles", "Listing plans are for owners and brokers. Tick 'Unlimited contacts' for a customer plan.")
         if data.get("is_default"):
             if data.get("price") and data["price"] > 0:
                 self.add_error("is_default", "The default plan must be free.")
-            SubscriptionPlan.objects.filter(is_default=True).exclude(pk=self.instance.pk).update(is_default=False)
+            if data.get("is_active") is False:
+                self.add_error("is_active", "The default plan must stay active.")
         return data
+
+    def save(self, commit=True):
+        plan = super().save(commit=False)
+        if commit:
+            with transaction.atomic():
+                if plan.is_default:
+                    SubscriptionPlan.objects.filter(is_default=True).exclude(pk=plan.pk).update(is_default=False)
+                plan.save()
+                self.save_m2m()
+        return plan
 
 
 class BannerForm(BootstrapFormMixin, forms.ModelForm):
@@ -178,16 +200,25 @@ class PlatformSettingForm(BootstrapFormMixin, forms.ModelForm):
 
 
 class GrantSubscriptionForm(BootstrapFormMixin, forms.Form):
-    email = forms.EmailField(label="Partner email")
-    plan = forms.ModelChoiceField(queryset=SubscriptionPlan.objects.filter(is_active=True))
+    email = forms.EmailField(label="Member email", help_text="Owners and brokers get listing plans; customers the Contact Pass.")
+    plan = forms.ModelChoiceField(queryset=SubscriptionPlan.objects.filter(is_active=True, price__gt=0))
     notes = forms.CharField(max_length=255, label="Reason / reference")
 
     def clean_email(self):
-        user = get_user_model().objects.filter(email__iexact=self.cleaned_data["email"], role__in=[Role.OWNER, Role.BROKER]).first()
+        user = get_user_model().objects.filter(
+            email__iexact=self.cleaned_data["email"], role__in=[Role.OWNER, Role.BROKER, Role.CUSTOMER], is_active=True,
+        ).first()
         if not user:
-            raise forms.ValidationError("No owner or broker account with this email.")
+            raise forms.ValidationError("No active owner, broker or customer account with this email.")
         self.user = user
         return user.email
+
+    def clean(self):
+        data = super().clean()
+        plan, user = data.get("plan"), getattr(self, "user", None)
+        if plan and user and not plan.available_for(user):
+            self.add_error("plan", f"The {plan.name} plan is not available for a {user.get_role_display().lower()} account.")
+        return data
 
 
 class BroadcastForm(BootstrapFormMixin, forms.Form):

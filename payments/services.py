@@ -47,10 +47,11 @@ def mark_paid(payment_id, gateway_payment_id=None, signature="", raw=None, verif
         billed_name=user.display_name,
         billed_email=user.email,
         billed_phone=profile_phone or "",
-        description=f"{payment.plan.name} plan - {payment.plan.billing_period_days} days",
+        description=(f"{payment.plan.name} - {payment.plan.billing_period_days} days" if payment.plan.unlimited_contacts
+                     else f"{payment.plan.name} plan - {payment.plan.billing_period_days} days"),
         amount=payment.amount,
-        period_start=sub.starts_at,
-        period_end=sub.ends_at,
+        period_start=sub.period_start,
+        period_end=sub.period_end,
     )
     log_action(verified_by or user, "payment.paid", payment, source=source, amount=str(payment.amount))
     plan = payment.plan
@@ -61,6 +62,8 @@ def mark_paid(payment_id, gateway_payment_id=None, signature="", raw=None, verif
         benefit = "You can now see owners' phone numbers and WhatsApp on every listing."
     else:
         benefit = f"You can now have up to {plan.listing_limit} active listings."
+    if getattr(sub, "carried_over_days", 0):
+        benefit += f" {sub.carried_over_days} unused days from your previous plan were added."
     notify(user, Notification.Event.SUBSCRIPTION_PURCHASED, f"{plan.name} active",
            f"Your {plan.name} is active until {timezone.localtime(sub.ends_at):%d %b %Y}. {benefit}",
            plan_home_url(plan))
