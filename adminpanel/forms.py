@@ -192,6 +192,7 @@ class PlatformSettingForm(BootstrapFormMixin, forms.ModelForm):
             "listing_policy": forms.Textarea(attrs={"rows": 6}),
             "manual_payment_instructions": forms.Textarea(attrs={"rows": 3}),
             "office_address": forms.Textarea(attrs={"rows": 2}),
+            "gst_percent": forms.NumberInput(attrs={"min": "0", "max": "100", "step": "0.01", "inputmode": "decimal"}),
         }
 
     def __init__(self, *args, **kwargs):

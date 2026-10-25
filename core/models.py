@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ValidationError
-from django.core.validators import FileExtensionValidator, RegexValidator
+from django.core.validators import FileExtensionValidator, RegexValidator, MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils import timezone
 
@@ -80,6 +80,11 @@ class PlatformSetting(models.Model):
         default=5, help_text="Owner contacts a customer can unlock for free each month.",
     )
     gstin = models.CharField("GSTIN", max_length=20, blank=True, help_text="Shown on invoices when set.")
+    gst_percent = models.DecimalField(
+        "GST (%)", max_digits=5, decimal_places=2, default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        help_text="GST percentage from 0 to 100. Saved for billing configuration; does not yet change checkout totals.",
+    )
     invoice_business_name = models.CharField(max_length=160, blank=True)
 
     email_notifications_enabled = models.BooleanField(default=True)
