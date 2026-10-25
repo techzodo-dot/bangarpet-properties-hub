@@ -3,7 +3,8 @@
 {% load i18n %}
 {% load static bph %}
 {% block title %}{{ site.site_name }} - {% translate "Houses, Flats, PG & Plots for Rent and Sale in Bangarpet" %}{% endblock %}
-{% block content %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/home-3d.css' %}">{% endblock %}
+{% block content %}<div class="home-depth">
 
 {# ======================= HERO ======================= #}
 <section class="home-hero" aria-labelledby="hero-title">
@@ -47,19 +48,7 @@
           <span><i class="bi bi-check-circle-fill" aria-hidden="true"></i>{% translate "Book visits online" %}</span>
         </div>
       </div>
-      <div class="col-lg-6 d-none d-md-block">
-        {% with hero_img=hero_property.primary_image %}
-        {% if hero_img %}
-        <a class="hero-photo" href="{{ hero_property.get_absolute_url }}" aria-label="{% blocktranslate with title=hero_property.title %}View {{ title }}{% endblocktranslate %}">
-          <img src="{{ hero_img.image.url }}" alt="{{ hero_img.alt_text }}" width="{{ hero_img.width|default:1200 }}" height="{{ hero_img.height|default:900 }}" fetchpriority="high">
-          <span class="hero-float check"><span class="ic ok"><i class="bi bi-shield-check" aria-hidden="true"></i></span><span><strong>{% translate "Reviewed listing" %}</strong><small>{% translate "Checked before publishing" %}</small></span></span>
-          <span class="hero-float price"><span class="ic"><i class="bi bi-house-door" aria-hidden="true"></i></span><span class="min-w-0"><strong>{% if hero_property.purpose == 'rent' %}{{ hero_property.price|inr }} / {% translate "month" %}{% else %}{{ hero_property.price|inr_short }}{% endif %}</strong><small class="text-truncate d-block">{{ hero_property.title|truncatechars:44 }}</small></span></span>
-        </a>
-        {% else %}
-        <div class="hero-photo d-grid" style="place-items:center"><img src="{% static 'img/skyline.svg' %}" alt="" style="width:80%;height:auto;opacity:.6"></div>
-        {% endif %}
-        {% endwith %}
-      </div>
+      <div class="col-lg-6">{% include "partials/home_3d.html" %}</div>
     </div>
   </div>
 </section>
@@ -418,6 +407,7 @@
     </div>
   </div>
 </section>
-{% endblock %}
+</div>{% endblock %}
 
 {% block extra_js %}<script src="{% static 'js/tour.js' %}" defer></script>{% endblock %}
+
