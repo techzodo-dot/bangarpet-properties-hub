@@ -23,6 +23,13 @@ class PlatformSetting(models.Model):
 
     site_name = models.CharField(max_length=120, default="Bangarpet Property Hub")
     tagline = models.CharField(max_length=160, default="Find. Rent. Buy. Manage.")
+    pricing_heading = models.CharField(
+        "Pricing page heading", max_length=160, default="Plans for owners & brokers",
+    )
+    pricing_description = models.TextField(
+        "Pricing page description",
+        default="Start free. Upgrade when you need more listings. Searching and enquiring is always free for tenants and buyers.",
+    )
     logo = models.ImageField(
         upload_to="branding/", blank=True,
         validators=[FileExtensionValidator(["png", "jpg", "jpeg", "webp"]), validate_image_file],

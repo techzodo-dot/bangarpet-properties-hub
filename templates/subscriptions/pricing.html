@@ -1,24 +1,23 @@
 {% extends "core/page_base.html" %}
 {% load bph %}
-{% block title %}Pricing for owners and brokers - {{ site.site_name }}{% endblock %}
-{% block meta_description %}Simple plans to list properties on Bangarpet Property Hub. Start free; upgrade for more listings, priority visibility and performance statistics.{% endblock %}
+{% block title %}{{ site.pricing_heading }} - {{ site.site_name }}{% endblock %}
+{% block meta_description %}{{ site.pricing_description }}{% endblock %}
 {% block crumb %}Pricing{% endblock %}
-{% block page_heading %}Plans for owners &amp; brokers{% endblock %}
-{% block page_sub %}<p class="section-lead mt-3 mb-0">Start free. Upgrade when you need more listings. Searching and enquiring is always free for tenants and buyers.</p>{% endblock %}
+{% block page_heading %}{{ site.pricing_heading }}{% endblock %}
+{% block page_sub %}<p class="section-lead mt-3 mb-0">{{ site.pricing_description|linebreaksbr }}</p>{% endblock %}
 {% block page_body %}
 <div class="row g-4">
   {% for plan in plans %}
   <div class="col-md-6 col-xl-3">
     {% if current and current.plan_id == plan.pk %}{% include "partials/plan_card.html" with is_current=True public_actions=True %}
     {% elif current_plan and not current and plan.is_default %}{% include "partials/plan_card.html" with is_current=True public_actions=True %}
-    {% elif forloop.counter == 3 %}{% include "partials/plan_card.html" with highlight=True public_actions=True %}
     {% else %}{% include "partials/plan_card.html" with public_actions=True %}{% endif %}
   </div>
-  {% endfor %}
+  {% empty %}<div class="col-12"><p class="text-muted">No subscription plans are currently available. Please check back soon.</p></div>{% endfor %}
 </div>
 <div class="text-center mt-4">
   {% if user.is_authenticated and user.is_partner %}<a class="btn btn-primary btn-lg" href="{% url 'dashboard:partner_subscription' %}">Manage my plan</a>
-  {% else %}<a class="btn btn-accent btn-lg" href="{% url 'accounts:register' %}?type=owner">Get started free</a>{% endif %}
+  {% else %}<a class="btn btn-accent btn-lg" href="{% url 'accounts:register' %}?type=owner">{% if has_free_plan %}Get started free{% else %}Get started{% endif %}</a>{% endif %}
   <p class="small text-muted mt-3">Prices in Indian Rupees. {% if ONLINE_PAYMENTS %}Payments are processed securely by PayU.{% else %}Pay by UPI, bank transfer or cash; your plan starts as soon as the payment is confirmed.{% endif %} "Priority visibility" moves your listings higher in the default sort order; it is not a guarantee of placement.</p>
 </div>
 {% endblock %}

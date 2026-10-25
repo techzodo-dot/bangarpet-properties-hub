@@ -35,6 +35,7 @@ class SubscriptionPlan(TimeStampedModel):
     )
     is_default = models.BooleanField(default=False, help_text="Plan applied to partners without a paid subscription.")
     is_active = models.BooleanField(default=True)
+    is_recommended = models.BooleanField(default=False, help_text="Highlight this plan as Recommended on public and partner pricing cards.")
     display_order = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
@@ -90,6 +91,33 @@ class SubscriptionPlan(TimeStampedModel):
     @property
     def feature_list(self):
         return [line.strip() for line in self.features.splitlines() if line.strip()]
+
+    @property
+    def audience_label(self):
+        roles = {role.strip() for role in self.for_roles.split(",")}
+        return " & ".join(label for role, label in (("owner", "Owners"), ("broker", "Brokers"), ("customer", "Tenants & buyers")) if role in roles)
+
+    @property
+    def card_features(self):
+        """Use configured entitlements instead of outdated stock feature claims."""
+        import re
+
+        features = []
+        if not self.unlimited_contacts:
+            features.append(f"Up to {self.listing_limit} active listing{'s' if self.listing_limit != 1 else ''}")
+            features.append(f"Listings stay live {self.listing_duration_days} days")
+            features.append("Priority visibility in default sorting" if self.has_priority_visibility else "Standard visibility")
+            if self.has_performance_stats:
+                features.append("Listing performance statistics")
+            if self.has_advanced_enquiry_tools:
+                features.append("Advanced enquiry management")
+        stock = {"standard visibility", "priority visibility in default sorting", "listing performance statistics", "advanced enquiry management"}
+        for line in self.feature_list:
+            if not self.unlimited_contacts and (line.lower() in stock or re.fullmatch(r"(?:up to )?\d+ active (?:property )?listings?", line, re.I)):
+                continue
+            if line not in features:
+                features.append(line)
+        return features
 
     def available_for(self, user):
         roles = {r.strip() for r in self.for_roles.split(",") if r.strip()}

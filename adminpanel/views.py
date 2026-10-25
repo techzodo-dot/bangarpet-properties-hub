@@ -511,7 +511,7 @@ CRUD = {
     },
     "plans": {
         "model": SubscriptionPlan, "form": f.PlanForm, "title": "Subscription plans", "singular": "plan", "active": "subscriptions",
-        "columns": [("Name", "name"), ("Price (₹)", "price"), ("Effective (₹)", "effective_price"),
+        "columns": [("Name", "name"), ("Plan price (₹)", "effective_price"), ("GST (₹)", "gst_amount"), ("Total (₹)", "total_price"),
                     ("Listing limit", "listing_limit"), ("Duration (days)", "listing_duration_days"),
                     ("Default", "is_default"), ("Active", "is_active")],
         "no_delete": True,

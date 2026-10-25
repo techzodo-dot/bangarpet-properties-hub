@@ -14,7 +14,7 @@ def pricing(request):
         # Visitors sign up as an owner unless the plan is only for brokers.
         plan.signup_type = "owner" if "owner" in roles or not roles else "broker"
         plan.can_choose = is_partner and plan.available_for(user)
-    ctx = {"plans": plans}
+    ctx = {"plans": plans, "has_free_plan": any(plan.is_free for plan in plans)}
     if is_partner:
         ctx.update(current=subs.current_subscription(user), current_plan=subs.current_plan(user))
     return render(request, "subscriptions/pricing.html", ctx)

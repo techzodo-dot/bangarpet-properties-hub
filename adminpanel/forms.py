@@ -54,9 +54,12 @@ class PlanForm(BootstrapFormMixin, forms.ModelForm):
             "name", "slug", "description", "price", "billing_period_days", "listing_limit", "listing_duration_days",
             "has_performance_stats", "has_priority_visibility", "has_advanced_enquiry_tools", "visibility_priority",
             "features", "for_roles", "unlimited_contacts", "discount_percent", "discount_label", "discount_ends_at", "is_default",
-            "is_active", "display_order",
+            "is_active", "is_recommended", "display_order",
         ]
         widgets = {"features": forms.Textarea(attrs={"rows": 4}), "discount_ends_at": DT_WIDGET}
+        help_texts = {
+            "features": "Additional benefits, one per line. Listing limits, duration, visibility and enabled tools are shown automatically from the fields above.",
+        }
 
     def clean_for_roles(self):
         roles = [r.strip().lower() for r in self.cleaned_data["for_roles"].split(",") if r.strip()]
@@ -192,6 +195,7 @@ class PlatformSettingForm(BootstrapFormMixin, forms.ModelForm):
             "listing_policy": forms.Textarea(attrs={"rows": 6}),
             "manual_payment_instructions": forms.Textarea(attrs={"rows": 3}),
             "office_address": forms.Textarea(attrs={"rows": 2}),
+            "pricing_description": forms.Textarea(attrs={"rows": 3}),
             "gst_percent": forms.NumberInput(attrs={"min": "0", "max": "100", "step": "0.01", "inputmode": "decimal"}),
         }
 

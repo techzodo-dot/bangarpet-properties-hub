@@ -8,7 +8,9 @@
   <div class="col-md-6 col-xl-3">
     <div class="surface p-3 h-100">
       <div class="d-flex justify-content-between"><strong>{{ p.name }}</strong>{% if p.is_active %}<span class="badge badge-status status-active">Active</span>{% else %}<span class="badge badge-status status-paused">Inactive</span>{% endif %}</div>
-      <div class="h5 mt-2 mb-0">{{ p.effective_price|inr }}{% if p.discount_active %} <small class="text-muted text-decoration-line-through">{{ p.price|inr }}</small>{% endif %}</div>
+      <div class="h5 mt-2 mb-0">₹{{ p.effective_price|floatformat:2 }}{% if p.discount_active %} <small class="text-muted text-decoration-line-through">₹{{ p.price|floatformat:2 }}</small>{% endif %}</div>
+      {% include "payments/_gst_breakdown.html" with plan=p hide_plan_price=True %}
+      <div class="small text-muted">For {{ p.audience_label }} &middot; {{ p.billing_period_days }}-day billing{% if p.is_recommended %} &middot; Recommended{% endif %}</div>
       <div class="small text-muted">{{ p.listing_limit }} listings &middot; {{ p.listing_duration_days }}-day listings{% if p.is_default %} &middot; default{% endif %}</div>
       <div class="small mt-1">{{ p.active_count }} active subscriber{{ p.active_count|pluralize }}</div>
       <a class="btn btn-sm btn-soft mt-2" href="{% url 'adminpanel:crud_edit' 'plans' p.pk %}">Edit plan</a>
