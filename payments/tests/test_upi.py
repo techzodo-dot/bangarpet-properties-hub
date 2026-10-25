@@ -61,7 +61,7 @@ class ManualUpiTests(TestCase):
         page = self.client.get(reverse("payments:manual", args=["basic"]))
         self.assertContains(page, "bph@okhdfcbank")
         self.assertContains(page, 'aria-label="UPI QR code"')
-        self.assertContains(page, f"upi://pay?pa=bph@okhdfcbank&amp;pn=BPH&amp;am=299.00&amp;cu=INR&amp;tn=BPH%20basic%20U{owner.pk}")
+        self.assertContains(page, f"upi://pay?pa=bph@okhdfcbank&amp;pn=BPH&amp;am=352.82&amp;cu=INR&amp;tn=BPH%20basic%20U{owner.pk}")
 
     def test_without_upi_id_page_points_to_whatsapp(self):
         set_site(upi_id="", whatsapp_number="+919445330547")
@@ -80,7 +80,7 @@ class ManualUpiTests(TestCase):
         # Submitting the same reference twice does not create a second payment.
         self.client.post(reverse("payments:manual", args=["basic"]), {"manual_reference": "412345678901"})
         payment = Payment.objects.get(user=owner)
-        self.assertEqual((payment.status, payment.gateway, payment.amount), ("pending_verification", "manual", 299))
+        self.assertEqual((payment.status, payment.gateway, payment.amount), ("pending_verification", "manual", payment.plan.total_price))
         self.approve(payment)
         self.assertEqual(current_plan(owner), SubscriptionPlan.objects.get(slug="basic"))
 
@@ -94,7 +94,7 @@ class ManualUpiTests(TestCase):
         resp = self.client.post(reverse("payments:manual", args=["contact-pass"]), {"manual_reference": "412345678902"})
         self.assertRedirects(resp, reverse("payments:contact_pass"), fetch_redirect_response=False)
         payment = Payment.objects.get(user=customer)
-        self.assertEqual(payment.amount, contact_pass_plan().effective_price)
+        self.assertEqual(payment.amount, contact_pass_plan().total_price)
         self.assertFalse(contacts.active_pass(customer))
         self.approve(payment)
         self.assertTrue(contacts.active_pass(customer))

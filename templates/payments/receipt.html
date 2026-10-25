@@ -20,8 +20,12 @@
     </div>
     <table class="table">
       <thead><tr><th>Description</th><th>Period</th><th class="text-end">Amount</th></tr></thead>
-      <tbody><tr><td>{{ invoice.description|default:payment.plan.name }}</td><td class="small">{% if invoice.period_start %}{{ invoice.period_start|date:"d M Y" }} - {{ invoice.period_end|date:"d M Y" }}{% endif %}</td><td class="text-end">{{ payment.amount|inr }}</td></tr></tbody>
-      <tfoot><tr><th colspan="2" class="text-end">Total paid</th><th class="text-end">{{ payment.amount|inr }}</th></tr></tfoot>
+      <tbody><tr><td>{{ invoice.description|default:payment.plan.name }}</td><td class="small">{% if invoice.period_start %}{{ invoice.period_start|date:"d M Y" }} - {{ invoice.period_end|date:"d M Y" }}{% endif %}</td><td class="text-end">₹{{ payment.base_amount|floatformat:2 }}</td></tr></tbody>
+      <tfoot>
+        {% if payment.subtotal != None %}<tr><th colspan="2" class="text-end">Plan price</th><td class="text-end">â‚¹{{ payment.base_amount|floatformat:2 }}</td></tr>
+        <tr><th colspan="2" class="text-end">GST ({{ payment.gst_percent|floatformat:-2 }}%)</th><td class="text-end">â‚¹{{ payment.gst_amount|floatformat:2 }}</td></tr>{% endif %}
+        <tr><th colspan="2" class="text-end">Total paid</th><th class="text-end">â‚¹{{ payment.amount|floatformat:2 }}</th></tr>
+      </tfoot>
     </table>
     <div class="small text-muted">Status: <strong>{{ payment.get_status_display }}</strong> &middot; Method: {{ payment.get_gateway_display }}{% if payment.gateway_payment_id %} &middot; Payment ID: {{ payment.gateway_payment_id }}{% endif %}{% if payment.manual_reference %} &middot; Reference: {{ payment.manual_reference }}{% endif %}{% if payment.paid_at %} &middot; Paid on {{ payment.paid_at|date:"d M Y, h:i A" }}{% endif %}</div>
     {% if not site.gstin %}<p class="small text-muted mt-3 mb-0">This is a payment receipt, not a GST tax invoice.</p>{% endif %}

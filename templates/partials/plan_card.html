@@ -8,7 +8,8 @@
     {% if plan.is_free %}<span class="plan-price">Free</span>
     {% else %}
       {% if plan.discount_active %}<span class="text-muted text-decoration-line-through me-1">{{ plan.price|inr }}</span>{% endif %}
-      <span class="plan-price">{{ plan.effective_price|inr }}</span><span class="text-muted small"> / {{ plan.billing_period_days }} days</span>
+      <span class="plan-price">₹{{ plan.total_price|floatformat:2 }}</span><span class="text-muted small"> / {{ plan.billing_period_days }} days</span>
+      {% include "payments/_gst_breakdown.html" %}
     {% endif %}
   </div>
   <p class="small text-muted mb-0">{{ plan.description }}</p>

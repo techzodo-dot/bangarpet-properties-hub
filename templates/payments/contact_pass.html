@@ -2,6 +2,7 @@
 {% load bph %}
 {% block title %}Contact Pass - {{ site.site_name }}{% endblock %}
 {% block dash_content %}
+{% if plan %}{% include "payments/_gst_breakdown.html" %}{% endif %}
 <div class="page-head"><h1>Contact Pass</h1>{% if next %}<a class="btn btn-soft" href="{{ next }}"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to the property</a>{% endif %}</div>
 
 <div class="row g-4">
@@ -16,11 +17,11 @@
       </dl>
       {% if plan and online %}
       <form method="post" action="{% url 'payments:contact_pass_subscribe' %}" data-once>{% csrf_token %}
-        <button class="btn btn-accent" type="submit"><i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>Extend now ({{ plan.effective_price|inr }} for {{ plan.billing_period_days }} more days)</button>
+        <button class="btn btn-accent" type="submit"><i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>Extend now (₹{{ plan.total_price|floatformat:2 }} for {{ plan.billing_period_days }} more days)</button>
       </form>
       {% if site.allow_manual_payments %}<a class="btn btn-link btn-sm px-0 mt-1" href="{% url 'payments:manual' plan.slug %}"><i class="bi bi-qr-code me-1" aria-hidden="true"></i>Or pay directly by UPI</a>{% endif %}
       {% elif plan and site.allow_manual_payments %}
-      <a class="btn btn-accent" href="{% url 'payments:manual' plan.slug %}"><i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>Extend now by UPI ({{ plan.effective_price|inr }} for {{ plan.billing_period_days }} more days)</a>
+      <a class="btn btn-accent" href="{% url 'payments:manual' plan.slug %}"><i class="bi bi-arrow-repeat me-1" aria-hidden="true"></i>Extend now by UPI (₹{{ plan.total_price|floatformat:2 }} for {{ plan.billing_period_days }} more days)</a>
       {% endif %}
       {% if plan %}<p class="small text-muted mt-2 mb-0">We'll remind you before your pass ends.</p>{% endif %}
     </div>
@@ -28,19 +29,19 @@
     <div class="surface p-4 h-100">
       <h2 class="h4 mb-1">{{ plan.name }}</h2>
       <p class="text-muted mb-3">{{ plan.description }}</p>
-      <div class="display-6 fw-bold text-navy mb-1">{{ plan.effective_price|inr }}<small class="fs-6 text-muted fw-normal"> / month</small></div>
+      <div class="display-6 fw-bold text-navy mb-1">₹{{ plan.total_price|floatformat:2 }}<small class="fs-6 text-muted fw-normal"> / month</small></div>
       <ul class="list-unstyled d-grid gap-2 my-4">
         {% for f in plan.feature_list %}<li><i class="bi bi-check-circle-fill text-verified me-2" aria-hidden="true"></i>{{ f }}</li>{% endfor %}
       </ul>
       {% if online %}
       <form method="post" action="{% url 'payments:contact_pass_subscribe' %}" data-once>{% csrf_token %}
         {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
-        <button class="btn btn-accent btn-lg w-100" type="submit"><i class="bi bi-unlock me-1" aria-hidden="true"></i>Get Contact Pass - {{ plan.effective_price|inr }}/month <span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
+        <button class="btn btn-accent btn-lg w-100" type="submit"><i class="bi bi-unlock me-1" aria-hidden="true"></i>Get Contact Pass - ₹{{ plan.total_price|floatformat:2 }}/month <span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
       </form>
       {% if site.allow_manual_payments %}<a class="btn btn-outline-secondary w-100 mt-2" href="{% url 'payments:manual' plan.slug %}"><i class="bi bi-qr-code me-1" aria-hidden="true"></i>Pay directly by UPI</a>{% endif %}
       <p class="small text-muted mt-3 mb-0"><i class="bi bi-shield-lock me-1" aria-hidden="true"></i>Secure payment through PayU by UPI, card, net banking or wallet{% if site.allow_manual_payments %}, or pay straight to our UPI ID and we activate the pass once we've checked it{% endif %}. The pass lasts {{ plan.billing_period_days }} days; we remind you before it ends, and nothing is charged automatically.</p>
       {% elif site.allow_manual_payments %}
-      <a class="btn btn-accent btn-lg w-100" href="{% url 'payments:manual' plan.slug %}"><i class="bi bi-qr-code me-1" aria-hidden="true"></i>Get Contact Pass - {{ plan.effective_price|inr }}/month</a>
+      <a class="btn btn-accent btn-lg w-100" href="{% url 'payments:manual' plan.slug %}"><i class="bi bi-qr-code me-1" aria-hidden="true"></i>Get Contact Pass - ₹{{ plan.total_price|floatformat:2 }}/month</a>
       <p class="small text-muted mt-3 mb-0">Pay by UPI from any app (GPay, PhonePe, Paytm, BHIM). We activate the pass as soon as we've checked the payment. It lasts {{ plan.billing_period_days }} days, and nothing is charged automatically.</p>
       {% else %}
       <div class="alert alert-info rounded-4 mb-0">Online payment is not available yet.{% if site.whatsapp_digits %} <a href="https://wa.me/{{ site.whatsapp_digits }}" target="_blank" rel="noopener">Message us on WhatsApp</a> to get the Contact Pass.{% endif %}</div>

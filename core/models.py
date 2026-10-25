@@ -83,7 +83,7 @@ class PlatformSetting(models.Model):
     gst_percent = models.DecimalField(
         "GST (%)", max_digits=5, decimal_places=2, default=0,
         validators=[MinValueValidator(0), MaxValueValidator(100)],
-        help_text="GST percentage from 0 to 100. Saved for billing configuration; does not yet change checkout totals.",
+        help_text="GST added to all paid plan prices after discounts. Applies to new payments only (0 to 100%).",
     )
     invoice_business_name = models.CharField(max_length=160, blank=True)
 

@@ -7,12 +7,14 @@
   {% if test_mode %}<div class="alert alert-warning rounded-4 small"><i class="bi bi-cone-striped me-1" aria-hidden="true"></i>PayU is in <strong>test mode</strong>. No real money will be charged.</div>{% endif %}
   <dl class="row mb-4">
     <dt class="col-5 text-muted fw-normal">Plan</dt><dd class="col-7 fw-semibold">{{ payment.plan.name }} ({{ payment.plan.billing_period_days }} days)</dd>
-    <dt class="col-5 text-muted fw-normal">Amount</dt><dd class="col-7 fw-semibold">{{ payment.amount|inr }}</dd>
+    <dt class="col-5 text-muted fw-normal">Plan price</dt><dd class="col-7">₹{{ payment.base_amount|floatformat:2 }}</dd>
+    <dt class="col-5 text-muted fw-normal">GST ({{ payment.gst_percent|floatformat:-2 }}%)</dt><dd class="col-7">₹{{ payment.gst_amount|floatformat:2 }}</dd>
+    <dt class="col-5 text-muted fw-normal">Total incl. GST</dt><dd class="col-7 fw-semibold">₹{{ payment.amount|floatformat:2 }}</dd>
     <dt class="col-5 text-muted fw-normal">Reference</dt><dd class="col-7 small">{{ payment.gateway_order_id }}</dd>
   </dl>
   <form method="post" action="{{ payu_url }}" data-once>
     {% for name, value in fields.items %}<input type="hidden" name="{{ name }}" value="{{ value }}">{% endfor %}
-    <button class="btn btn-accent btn-lg w-100" type="submit"><i class="bi bi-lock me-1" aria-hidden="true"></i>Pay {{ payment.amount|inr }} securely <span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
+    <button class="btn btn-accent btn-lg w-100" type="submit"><i class="bi bi-lock me-1" aria-hidden="true"></i>Pay ₹{{ payment.amount|floatformat:2 }} securely <span class="spinner-border spinner-border-sm spinner-inline ms-1" aria-hidden="true"></span></button>
   </form>
   <p class="small text-muted mt-3 mb-2">You'll be taken to PayU's secure page to pay by UPI, card, net banking or wallet, then brought back here. Your plan activates only after PayU confirms the payment to our server. We never see or store your card details.</p>
   <div class="border-top pt-3 mt-3 small">

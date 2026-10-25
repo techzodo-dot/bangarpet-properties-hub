@@ -1,0 +1,1 @@
+<p class="small text-muted mb-2">Plan price ₹{{ plan.effective_price|floatformat:2 }} + GST {{ plan.gst_percent|floatformat:-2 }}% (₹{{ plan.gst_amount|floatformat:2 }}) = <strong>₹{{ plan.total_price|floatformat:2 }} incl. GST</strong></p>

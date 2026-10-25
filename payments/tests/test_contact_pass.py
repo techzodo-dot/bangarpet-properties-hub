@@ -124,7 +124,7 @@ class ContactPassPaymentTests(TestCase):
         self.assertTrue(payment.gateway_order_id.startswith("BPH") and len(payment.gateway_order_id) <= 25)
         page = self.client.get(reverse("payments:pay", args=[payment.uid]))
         self.assertContains(page, 'action="https://test.payu.in/_payment"')
-        self.assertContains(page, 'name="amount" value="99.00"')
+        self.assertContains(page, 'name="amount" value="116.82"')
         self.assertContains(page, f'name="txnid" value="{payment.gateway_order_id}"')
         self.assertContains(page, 'name="surl" value="http://localhost:8000/payments/payu/return/"')
         self.assertContains(page, 'name="hash"')

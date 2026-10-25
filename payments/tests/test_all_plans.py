@@ -47,9 +47,9 @@ class AllPlansTests(TestCase):
                         self.assertEqual(resp.status_code, 403)
                         continue
                     payment = Payment.objects.get(user=user)
-                    self.assertEqual(payment.amount, plan.effective_price)
+                    self.assertEqual(payment.amount, plan.total_price)
                     page = self.client.get(reverse("payments:pay", args=[payment.uid]))
-                    self.assertContains(page, f'name="amount" value="{plan.effective_price:.2f}"')
+                    self.assertContains(page, f'name="amount" value="{plan.total_price:.2f}"')
                     self.assertContains(page, f"{plan.name} ({plan.billing_period_days} days)")
                     self.client.post(reverse("payments:payu_return"), payu_reply(payment, mihpayid=f"MIH{payment.pk}"))
                     payment.refresh_from_db()
@@ -63,7 +63,7 @@ class AllPlansTests(TestCase):
                     days, priority = listing_terms(user)
                     self.assertEqual(days, plan.listing_duration_days)
                     self.assertEqual(priority, plan.visibility_priority if plan.has_priority_visibility else 0)
-                    self.assertEqual(Invoice.objects.get(payment=payment).amount, plan.effective_price)
+                    self.assertEqual(Invoice.objects.get(payment=payment).amount, plan.total_price)
                     self.assertEqual(self.client.get(reverse("payments:receipt", args=[payment.uid])).status_code, 200)
 
     def test_every_paid_plan_can_be_bought_offline_and_approved_by_admin(self):
@@ -75,7 +75,7 @@ class AllPlansTests(TestCase):
                 self.client.force_login(user)
                 self.client.post(reverse("payments:request", args=[plan.slug]), {"phone": "9845012345"})
                 payment = Payment.objects.get(user=user, status=Payment.Status.PENDING_VERIFICATION)
-                self.assertEqual(payment.amount, plan.effective_price)
+                self.assertEqual(payment.amount, plan.total_price)
                 self.client.force_login(admin)
                 self.client.post(reverse("adminpanel:payment_action", args=[payment.pk, "approve"]))
                 self.assertEqual(current_plan(user), plan)
@@ -89,7 +89,7 @@ class AllPlansTests(TestCase):
         user = make_user(Role.OWNER)
         self.client.force_login(user)
         self.client.post(reverse("payments:checkout", args=["pro"]))
-        self.assertEqual(Payment.objects.get(user=user).amount, plan.effective_price)
+        self.assertEqual(Payment.objects.get(user=user).amount, plan.total_price)
         self.assertEqual(plan.effective_price, plan.price * 80 / 100)
 
     def test_contact_pass_is_for_customers_only_and_unlocks_contacts(self):
@@ -103,7 +103,7 @@ class AllPlansTests(TestCase):
         self.assertEqual(self.client.post(reverse("payments:checkout", args=["basic"])).status_code, 403)
         self.client.post(reverse("payments:contact_pass_subscribe"))
         payment = Payment.objects.get(user=customer)
-        self.assertEqual(payment.amount, plan.effective_price)
+        self.assertEqual(payment.amount, plan.total_price)
         self.client.post(reverse("payments:payu_return"), payu_reply(payment))
         self.assertTrue(contacts.active_pass(customer))
         # The pass is not a listing plan.

@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 
-from core.models import TimeStampedModel
+from core.models import PlatformSetting, TimeStampedModel
 
 
 class SubscriptionPlan(TimeStampedModel):
@@ -66,6 +66,26 @@ class SubscriptionPlan(TimeStampedModel):
     @property
     def is_customer_plan(self):
         return self.unlimited_contacts
+
+    @property
+    def payment_amounts(self):
+        """Quote GST after any discount; round tax once to the nearest paisa."""
+        subtotal = self.effective_price
+        rate = PlatformSetting.load().gst_percent if subtotal else Decimal("0")
+        tax = (subtotal * rate / Decimal("100")).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        return {"subtotal": subtotal, "gst_percent": rate, "gst_amount": tax, "amount": subtotal + tax}
+
+    @property
+    def total_price(self):
+        return self.payment_amounts["amount"]
+
+    @property
+    def gst_amount(self):
+        return self.payment_amounts["gst_amount"]
+
+    @property
+    def gst_percent(self):
+        return self.payment_amounts["gst_percent"]
 
     @property
     def feature_list(self):

@@ -12,6 +12,8 @@ class GstSettingsTests(TestCase):
     def setUp(self):
         cache.clear()
         self.site = PlatformSetting.load()
+        self.site.gst_percent = 0
+        self.site.save()
 
     def tearDown(self):
         cache.clear()

@@ -157,18 +157,18 @@ def manual_payment(request, slug):
             messages.error(request, "You already have payments awaiting verification.")
             return redirect(payments_url)
         payment = Payment.objects.create(
-            user=request.user, plan=plan, amount=plan.effective_price, gateway=Payment.Gateway.MANUAL,
+            user=request.user, plan=plan, **plan.payment_amounts, gateway=Payment.Gateway.MANUAL,
             status=Payment.Status.PENDING_VERIFICATION, manual_reference=reference,
         )
         log_action(request, "payment.manual_submitted", payment)
         notify_admins(Notification.Event.ADMIN_NOTICE, "UPI payment to verify",
-                      f"{request.user.display_name} paid {plan.effective_price} INR for {plan.name}. "
+                      f"{request.user.display_name} paid {payment.amount} INR for {plan.name}. "
                       f"UPI reference: {payment.manual_reference}. Check it in the bank/UPI app, then approve it.",
                       reverse("adminpanel:payments") + "?status=pending_verification")
         what = "Contact Pass" if customer else f"{plan.name} plan"
         messages.success(request, f"Thank you. Your {what} will be activated as soon as our team verifies the payment.")
         return redirect(payments_url)
-    link = upi.pay_link(site, plan.effective_price, upi.reference_note(request.user, plan))
+    link = upi.pay_link(site, plan.total_price, upi.reference_note(request.user, plan))
     return render(request, "payments/manual.html", {
         "form": form, "plan": plan, "site": site, "upi_link": link, "upi_qr": upi.qr_svg(link),
         "cancel_url": plan_home_url(plan),
@@ -199,13 +199,13 @@ def request_plan(request, slug):
             return redirect("dashboard:partner_payments")
         phone = form.cleaned_data["phone"]
         payment = Payment.objects.create(
-            user=request.user, plan=plan, amount=plan.effective_price, gateway=Payment.Gateway.MANUAL,
+            user=request.user, plan=plan, **plan.payment_amounts, gateway=Payment.Gateway.MANUAL,
             status=Payment.Status.PENDING_VERIFICATION, manual_reference=f"Plan request - call {phone}"[:80],
         )
         log_action(request, "payment.plan_requested", payment, phone=phone)
         note = form.cleaned_data["note"]
         notify_admins(Notification.Event.ADMIN_NOTICE, f"Plan request: {plan.name}",
-                      f"{request.user.display_name} ({phone}) wants the {plan.name} plan ({plan.effective_price} INR)."
+                      f"{request.user.display_name} ({phone}) wants the {plan.name} plan ({payment.amount} INR)."
                       + (f" Note: {note}" if note else "") + " Collect the payment, then approve it to activate the plan.",
                       reverse("adminpanel:payments") + "?status=pending_verification")
         messages.success(request, f"Request sent. Our team will call you on {phone} to complete the payment and activate your {plan.name} plan.")

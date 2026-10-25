@@ -30,10 +30,10 @@ class CheckoutTests(TestCase):
     def test_payment_created_server_side_with_correct_amount(self):
         payment = self._checkout()
         self.assertEqual(payment.gateway, Payment.Gateway.PAYU)
-        self.assertEqual(payment.amount, self.plan.price)
+        self.assertEqual(payment.amount, self.plan.total_price)
         resp = self.client.get(reverse("payments:pay", args=[payment.uid]))
         self.assertContains(resp, 'name="key" value="testKey1"')
-        self.assertContains(resp, 'name="amount" value="299.00"')
+        self.assertContains(resp, 'name="amount" value="352.82"')
         self.assertContains(resp, "test mode")
         self.assertNotContains(resp, "testSalt1")
 

@@ -2,14 +2,15 @@
 {% load bph %}
 {% block title %}Pay by UPI - {{ site.site_name }}{% endblock %}
 {% block dash_content %}
+{% if plan %}{% include "payments/_gst_breakdown.html" %}{% endif %}
 <div class="page-head"><h1>Pay by UPI</h1><a class="btn btn-soft" href="{{ cancel_url }}"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back</a></div>
 <div class="surface p-4" style="max-width:720px">
   <dl class="row mb-3">
     <dt class="col-5 col-sm-4 text-muted fw-normal">{% if plan.unlimited_contacts %}Pass{% else %}Plan{% endif %}</dt><dd class="col-7 col-sm-8 fw-semibold">{{ plan.name }} ({{ plan.billing_period_days }} days)</dd>
-    <dt class="col-5 col-sm-4 text-muted fw-normal">Amount to pay</dt><dd class="col-7 col-sm-8 fw-bold fs-5 text-navy">{{ plan.effective_price|inr }}</dd>
+    <dt class="col-5 col-sm-4 text-muted fw-normal">Amount to pay</dt><dd class="col-7 col-sm-8 fw-bold fs-5 text-navy">₹{{ plan.total_price|floatformat:2 }}</dd>
   </dl>
 
-  <h2 class="h6 mb-2"><span class="badge rounded-pill text-bg-primary me-1">1</span>Pay {{ plan.effective_price|inr }} from any UPI app</h2>
+  <h2 class="h6 mb-2"><span class="badge rounded-pill text-bg-primary me-1">1</span>Pay ₹{{ plan.total_price|floatformat:2 }} from any UPI app</h2>
   {% if site.upi_id %}
   <div class="row g-3 align-items-center mb-4">
     <div class="col-sm-auto text-center">
@@ -23,8 +24,8 @@
         <button class="btn btn-soft btn-sm" type="button" data-copy-text="{{ site.upi_id }}" aria-label="Copy UPI ID"><i class="bi bi-copy me-1" aria-hidden="true"></i><span>Copy</span></button>
       </div>
       <div class="small text-muted mb-3">Payee: {{ site.upi_payee_name|default:site.site_name }}</div>
-      <a class="btn btn-accent w-100 d-md-none" href="{{ upi_link }}"><i class="bi bi-phone me-1" aria-hidden="true"></i>Open UPI app to pay {{ plan.effective_price|inr }}</a>
-      <p class="small text-muted mt-2 mb-0">Pay exactly {{ plan.effective_price|inr }}. The amount and note are filled in when you scan the code or tap the button.</p>
+      <a class="btn btn-accent w-100 d-md-none" href="{{ upi_link }}"><i class="bi bi-phone me-1" aria-hidden="true"></i>Open UPI app to pay ₹{{ plan.total_price|floatformat:2 }}</a>
+      <p class="small text-muted mt-2 mb-0">Pay exactly ₹{{ plan.total_price|floatformat:2 }}. The amount and note are filled in when you scan the code or tap the button.</p>
     </div>
   </div>
   {% else %}

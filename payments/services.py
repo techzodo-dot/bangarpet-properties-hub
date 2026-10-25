@@ -36,7 +36,7 @@ def mark_paid(payment_id, gateway_payment_id=None, signature="", raw=None, verif
     payment.paid_at = now
     payment.failure_reason = ""
     payment.verified_by = verified_by
-    sub = activate_subscription(payment.user, payment.plan, amount_paid=payment.amount)
+    sub = activate_subscription(payment.user, payment.plan, amount_paid=payment.base_amount)
     payment.subscription = sub
     payment.save()
     user = payment.user
@@ -100,7 +100,7 @@ def mark_failed(payment_id, reason="", raw=None):
 def start_payu_payment(user, plan, next_url=""):
     """Create a payment and the PayU transaction ID it will be paid under."""
     payment = Payment.objects.create(
-        user=user, plan=plan, amount=plan.effective_price, gateway=Payment.Gateway.PAYU,
+        user=user, plan=plan, **plan.payment_amounts, gateway=Payment.Gateway.PAYU,
         raw_response={"next": next_url} if next_url else {},
     )
     payment.gateway_order_id = f"BPH{payment.uid.hex[:20].upper()}"  # PayU allows up to 25 characters

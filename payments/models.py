@@ -28,6 +28,9 @@ class Payment(TimeStampedModel):
     )
     gateway = models.CharField(max_length=10, choices=Gateway.choices, default=Gateway.PAYU)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    gst_percent = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    gst_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     currency = models.CharField(max_length=3, default="INR")
     status = models.CharField(max_length=24, choices=Status.choices, default=Status.CREATED, db_index=True)
     gateway_order_id = models.CharField(max_length=64, blank=True, null=True, unique=True)
@@ -53,6 +56,11 @@ class Payment(TimeStampedModel):
     @property
     def amount_paise(self):
         return int(self.amount * 100)
+
+    @property
+    def base_amount(self):
+        # Historical payments have no tax snapshot and retain their original amount.
+        return self.subtotal if self.subtotal is not None else self.amount
 
 
 class Invoice(models.Model):
